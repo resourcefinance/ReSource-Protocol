@@ -1,0 +1,10 @@
+type CreditLine @entity {
+  id: ID!
+  underwritee: Bytes!
+  underwriter: Bytes!
+  collateral: BigInt!
+  networkToken: Bytes!
+  issueDate: BigInt!
+  reward: BigInt!
+  totalRewards: BigInt!
+}

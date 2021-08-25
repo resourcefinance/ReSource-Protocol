@@ -1,0 +1,32 @@
+specVersion: 0.0.2
+schema:
+  file: ./src/schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: UnderwriteManager
+    network: localhost
+    source:
+      address: "{{UnderwriteManagerAddress}}"
+      abi: UnderwriteManager
+      startBlock: "{{UnderwriteManagerStartBlock}}"
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - CreditLine
+      abis:
+        - name: UnderwriteManager
+          file: ./abis/UnderwriteManager.json
+      eventHandlers:
+        - event: NewCreditLine((address,address,(uint256,address,uint256,uint256),uint256))
+          handler: handleNewCreditLine
+        - event: UpdateCreditLine((address,address,(uint256,address,uint256,uint256),uint256))
+          handler: handleUpdateCreditLine
+        - event: CreditLineReward((address,address,(uint256,address,uint256,uint256)))
+          handler: handleCreditLineReward
+        - event: CreditLineRewardClaimed(tuple[])
+          handler: handleCreditLineRewardClaimed
+        - event: CreditLineWithdrawal((address,address,(uint256,address,uint256,uint256),uint256))
+          handler: handleCreditLineWithdrawal
+      file: ./src/mapping.ts

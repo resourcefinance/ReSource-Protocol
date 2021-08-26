@@ -8,7 +8,7 @@ dataSources:
     source:
       address: "{{UnderwriteManagerAddress}}"
       abi: UnderwriteManager
-      startBlock: "{{UnderwriteManagerStartBlock}}"
+      startBlock: {{UnderwriteManagerStartBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4

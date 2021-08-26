@@ -25,7 +25,7 @@ function publishContract(contractName: string, networkName: string) {
     }
     graphConfig = JSON.parse(graphConfig);
     graphConfig[`${contractName}Address`] = contract.address;
-    graphConfig[`${contractName}StartBlock`] = contract.receipt.blockNumber;
+    graphConfig[`${contractName}StartBlock`] = Number(contract.receipt.blockNumber);
 
     const folderPath = graphConfigPath.replace("/config.json", "");
     if (!fs.existsSync(folderPath)) {

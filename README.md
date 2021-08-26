@@ -7,7 +7,6 @@
 > install and start the 👷‍ Hardhat chain:
 
 ```bash
-cd mu-dapp
 yarn
 yarn chain
 ```
@@ -15,30 +14,34 @@ yarn chain
 > start the 📱 frontend:
 
 ```bash
-cd mu-dapp
 yarn start
 ```
 
 > 🛰 deploy contracts:
 
 ```bash
-cd mu-dapp
 yarn deploy
 ```
 
 > start the local graph node
 
 ```bash
-cd mu-dapp/packages/services
-docker-compose up
+yarn run-graph-node
 ```
 
-> doploy the subgraph
+> if old graph node, clean graph node
+
+```bash
+yarn clean-graph-node
+```
+
+> build and doploy the subgraph
 
 ```bash
 yarn graph-prepare
 yarn graph-codegen
 yarn graph-build
+yarn graph-create-local
 yarn graph-deploy-local
 ```
 

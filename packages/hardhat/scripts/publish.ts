@@ -1,4 +1,4 @@
-import { copySync } from "fs-extra";
+import {copySync} from "fs-extra";
 const fs = require("fs");
 const chalk = require("chalk");
 const fse = require("fs-extra");
@@ -26,6 +26,7 @@ function publishContract(contractName: string, networkName: string) {
     graphConfig = JSON.parse(graphConfig);
     graphConfig[`${contractName}Address`] = contract.address;
     graphConfig[`${contractName}StartBlock`] = Number(contract.receipt.blockNumber);
+    graphConfig["network"] = networkName;
 
     const folderPath = graphConfigPath.replace("/config.json", "");
     if (!fs.existsSync(folderPath)) {

@@ -6,7 +6,7 @@
     "prepare": "mustache config/config.json  src/subgraph.template.yaml > subgraph.yaml",
     "codegen": "graph codegen",
     "build": "graph build",
-    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ GITHUB_USERNAME/mu-dapp",
+    "deploy-testnet": "graph deploy resource-network/resource_testnet --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs --access-token e8572d4fb01a4e08834f0e59e708bfb1",
     "create-local": "graph create --node http://localhost:8020/ mu-dapp",
     "remove-local": "graph remove --node http://localhost:8020/ mu-dapp",
     "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 mu-dapp"

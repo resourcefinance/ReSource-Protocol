@@ -10,7 +10,6 @@ import Button from "./Button"
 import WalletInfo from "./WalletInfo"
 
 export const headerHeight = "52px"
-export const footerHeight = "52px"
 
 const containerStyles: StackProps = {
   px: { base: 4, md: 6 },

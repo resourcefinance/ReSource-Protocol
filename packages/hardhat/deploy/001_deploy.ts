@@ -1,13 +1,13 @@
-import { HardhatRuntimeEnvironment } from "hardhat/types";
-import { DeployFunction } from "hardhat-deploy/types";
-import { ethers } from "ethers";
+import {HardhatRuntimeEnvironment} from "hardhat/types";
+import {DeployFunction} from "hardhat-deploy/types";
+import {ethers} from "ethers";
 
 const func: DeployFunction = async function(hre: HardhatRuntimeEnvironment) {
-  const { deployments, getNamedAccounts } = hre;
+  const {deployments, getNamedAccounts} = hre;
 
-  const { deploy } = deployments;
+  const {deploy} = deployments;
 
-  const { deployer } = await getNamedAccounts();
+  const {deployer} = await getNamedAccounts();
 
   //deploy network registry
   const networkRegistryDeploy = await deploy("NetworkRegistry", {
@@ -17,24 +17,24 @@ const func: DeployFunction = async function(hre: HardhatRuntimeEnvironment) {
       proxyContract: "OptimizedTransparentProxy",
       execute: {
         methodName: "initialize",
-        args: [[], []]
-      }
+        args: [[], []],
+      },
     },
-  })
+  });
 
   const networkRegistryAddress = networkRegistryDeploy.address;
 
-  // mutuality deploy 
+  // mutuality deploy
   const mutualityTokenDeploy = await deploy("MutualityToken", {
     from: deployer,
     proxy: {
       owner: deployer,
       execute: {
         methodName: "initialize",
-        args: [ethers.utils.parseEther("10000000")]
-      }
+        args: [ethers.utils.parseEther("10000000")],
+      },
     },
-  })
+  });
 
   const mutualityTokenAddress = mutualityTokenDeploy.address;
 
@@ -46,13 +46,12 @@ const func: DeployFunction = async function(hre: HardhatRuntimeEnvironment) {
       proxyContract: "OptimizedTransparentProxy",
       execute: {
         methodName: "initialize",
-        args: [mutualityTokenAddress]
-      }
+        args: [mutualityTokenAddress],
+      },
     },
-  })
+  });
 
   const underwriteManagerAddress = underwriteManagerDeploy.address;
-
 
   // // rUSD deploy
   await deploy("RUSD", {
@@ -62,10 +61,9 @@ const func: DeployFunction = async function(hre: HardhatRuntimeEnvironment) {
       proxyContract: "OptimizedTransparentProxy",
       execute: {
         methodName: "initializeRUSD",
-        args: [networkRegistryAddress, 7776000, underwriteManagerAddress]
-      }
+        args: [networkRegistryAddress, 7776000, underwriteManagerAddress],
+      },
     },
-  })
-
+  });
 };
 export default func;

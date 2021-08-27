@@ -27,7 +27,8 @@
     "react-scripts": "4.0.3",
     "recoil": "^0.4.0",
     "typescript": "^4.1.2",
-    "web-vitals": "^1.0.1"
+    "web-vitals": "^1.0.1",
+    "web3-react": "^5.0.5"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -55,11 +56,11 @@
     ]
   },
   "devDependencies": {
-    "@types/react-router-dom": "^5.1.8",
     "@graphql-codegen/cli": "1.21.3",
     "@graphql-codegen/introspection": "1.18.1",
     "@graphql-codegen/typescript": "1.21.1",
     "@graphql-codegen/typescript-operations": "1.17.15",
-    "@graphql-codegen/typescript-react-apollo": "2.2.3"
+    "@graphql-codegen/typescript-react-apollo": "2.2.3",
+    "@types/react-router-dom": "^5.1.8"
   }
 }

@@ -1,13 +1,15 @@
 import { Center, Flex, HStack, StackProps } from "@chakra-ui/layout"
-import { Image, ImageProps } from "@chakra-ui/react"
+import { Image, ImageProps, useDisclosure } from "@chakra-ui/react"
 import { faChartPie, faStore } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import React from "react"
+import React, { useEffect } from "react"
 import { useHistory } from "react-router-dom"
+import { useWeb3Context } from "web3-react"
 import logo from "../assets/mu.svg"
 // import AccountBalanceInfo from "../../services/ledger/components/WalletInfo"
 import Button from "./Button"
 import WalletInfo from "./WalletInfo"
+import WalletModal from "./WalletModal"
 
 export const headerHeight = "52px"
 
@@ -28,6 +30,15 @@ const containerStyles: StackProps = {
 export const Header = () => {
   const isConnected = false
   const history = useHistory()
+  const context = useWeb3Context()
+  const walletModal = useDisclosure()
+
+  useEffect(() => {
+    if (!context.active) {
+      history.push("/")
+      walletModal.onOpen()
+    }
+  }, [context])
 
   return (
     <Flex {...containerStyles}>
@@ -55,6 +66,7 @@ export const Header = () => {
         </Center>
         <WalletInfo />
       </HStack>
+      <WalletModal isOpen={walletModal.isOpen} onClose={walletModal.onClose} />
     </Flex>
   )
 }

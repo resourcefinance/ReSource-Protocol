@@ -7,7 +7,7 @@ import BusinessSearchBar from "../components/BusinessSearchBar"
 import { NoSearchResults } from "../components/NoSearchResults"
 
 const SearchBusinessesPage = ({ ...rest }: BoxProps) => {
-  const [find, { data, called }] = useFindBusinessByHandleLazyQuery()
+  const [find, { data, called, loading }] = useFindBusinessByHandleLazyQuery()
   const business = data?.findOneBusinessByHandle as Business
 
   const handleSearch = (searchText: string) => find({ variables: { handle: searchText } })
@@ -18,7 +18,7 @@ const SearchBusinessesPage = ({ ...rest }: BoxProps) => {
         <VStack justify="space-between" h="450px" w="400px">
           <BusinessSearchBar onSearch={handleSearch} />
           {business && <BusinessCard business={business} />}
-          {called && !business && <NoSearchResults />}
+          {called && !loading && !business && <NoSearchResults />}
         </VStack>
       </Center>
     </Container>

@@ -1,5 +1,6 @@
+import React from "react"
 import { Redirect, Route, Switch } from "react-router-dom"
-import BusinessTransactionsPage from "./pages/business/pages/BusinessTransactionsPage"
+import BusinessRouter from "./pages/business/BusinessRouter"
 import SearchBusinessesPage from "./pages/business/pages/SearchBusinessesPage"
 import PortfolioPage from "./pages/portfolio/pages/PortfolioPage"
 import TestTransactionPage from "./pages/testing/transactions"
@@ -7,11 +8,11 @@ import TestTransactionPage from "./pages/testing/transactions"
 const Routes = () => {
   return (
     <Switch>
-      <Route exact path="/businesses" component={SearchBusinessesPage} />
-      <Route exact path="/businesses/:handle" component={BusinessTransactionsPage} />
+      <Route exact path="/" component={SearchBusinessesPage} />
+      <BusinessRouter />
       <Route exact path="/portfolio" component={PortfolioPage} />
       <Route exact path="/tx-test" component={TestTransactionPage} />
-      <Redirect to={{ pathname: "/businesses" }} />
+      <Redirect to={{ pathname: "/" }} />
     </Switch>
   )
 }

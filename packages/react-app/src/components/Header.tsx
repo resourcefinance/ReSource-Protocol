@@ -59,7 +59,7 @@ export const Header = () => {
           <Button
             variant="link"
             colorScheme="blue"
-            onClick={() => history.push("/businesses")}
+            onClick={() => history.push("/")}
             leftIcon={<FontAwesomeIcon icon={faStore} />}
           >
             Businesses
@@ -85,12 +85,7 @@ export const Header = () => {
 const MuLogo = (props: ImageProps) => {
   const history = useHistory()
   return (
-    <Image
-      src={logo}
-      _hover={{ cursor: "pointer" }}
-      onClick={() => history.push("/businesses")}
-      {...props}
-    />
+    <Image src={logo} _hover={{ cursor: "pointer" }} onClick={() => history.push("/")} {...props} />
   )
 }
 

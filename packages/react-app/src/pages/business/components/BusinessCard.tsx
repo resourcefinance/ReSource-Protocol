@@ -28,7 +28,7 @@ export const BusinessCard = ({ business }: BusinessCardProps) => {
   if (!business.id) return null
 
   return (
-    <Link to={`/businesses/${business.handle}`}>
+    <Link to={`/businesses/${business.handle}/summary`}>
       <Flex {...cardStyles}>
         <CloudinaryImage
           quality={20}

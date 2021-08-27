@@ -1,12 +1,9 @@
 {
-  "arrowParens": "avoid",
-  "bracketSpacing": false,
-  "endOfLine": "auto",
-  "printWidth": 120,
-  "singleQuote": false,
   "semi": false,
-  "tabWidth": 2,
   "trailingComma": "all",
+  "printWidth": 100,
+  "tabWidth": 2,
+  "arrowParens": "always",
   "overrides": [
     {
       "files": "*.sol",

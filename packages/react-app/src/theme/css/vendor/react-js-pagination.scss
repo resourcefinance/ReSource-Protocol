@@ -1,0 +1,52 @@
+.pagination {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  border-color: var(--chakra-colors-primary-main);
+}
+
+ul.pagination {
+  li {
+    width: 35px;
+    display: flex;
+    justify-content: center;
+    font-size: var(--chakra-radii-2xl);
+    border-radius: var(--chakra-radii-2xl);
+    a {
+      text-decoration: none;
+      color: var(--chakra-colors-primary-main);
+      font-size: 18px;
+      &:not(.active) {
+        &:hover {
+          color: var(--chakra-colors-primary-dark);
+        }
+      }
+    }
+    a.active {
+      color: var(--chakra-colors-primary-dark);
+    }
+  }
+  li.active {
+    a {
+      color: white;
+    }
+    background-color: var(--chakra-colors-primary-main);
+  }
+}
+
+.page-selection {
+  width: 48px;
+  height: 30px;
+  color: #337ab7;
+}
+
+.pagination-wrapper {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}

@@ -1,0 +1,22 @@
+.PhoneInputInput {
+  padding: 0.5em 1em;
+  border: 1px solid;
+  border-color: var(--chakra-colors-gray-300);
+  border-radius: var(--chakra-radii-2xl);
+
+  &:hover {
+    box-shadow: var(--chakra-shadows-sm);
+    border: 1px solid var(--chakra-colors-gray-100);
+    transition: all 0.2s;
+  }
+
+  &:focus-visible {
+    outline: none;
+  }
+
+  &:focus {
+    background-color: var(--chakra-colors-gray-100);
+    border: 1px solid;
+    box-shadow: none;
+  }
+}

@@ -48,6 +48,7 @@
     "graph-remove-local": "yarn workspace @mu-dapp/subgraph graph remove --node http://localhost:8020/ mu-dapp",
     "graph-deploy-local": "yarn workspace @mu-dapp/subgraph graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 mu-dapp",
     "graph-ship-local": "yarn graph-prepare && yarn graph-codegen && yarn graph-deploy-local",
+    "graph-deploy-test": "yarn workspace @mu-dapp/subgraph deploy-testnet",
     "deploy-and-graph": "yarn deploy && yarn graph-ship-local",
     "theme": "yarn workspace @mu-dapp/react-app theme",
     "watch-theme": "yarn workspace @mu-dapp/react-app watch"

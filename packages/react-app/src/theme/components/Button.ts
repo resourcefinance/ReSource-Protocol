@@ -1,3 +1,4 @@
+import { ThemingProps } from "@chakra-ui/react"
 import { transparentize } from "@chakra-ui/theme-tools"
 import { gradients } from "../foundations/colors"
 import { body, body as bodyText, subheader, subheader as subheaderText } from "../textStyles"
@@ -205,7 +206,7 @@ const Button = {
   defaultProps,
 }
 
-export const buttonTextStyles = (colorScheme: "secondary" | "outline") => ({
+export const buttonTextStyles = (colorScheme: any) => ({
   secondary: secondaryVariantText(colorScheme),
   outline: outlineVariantText(colorScheme),
 })

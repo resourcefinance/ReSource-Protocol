@@ -5,12 +5,12 @@ interface Props extends BoxProps {
   key: string
 }
 
-const SearchBusinessesPage = ({ ...rest }: Props) => {
+const PortfolioPage = ({ ...rest }: Props) => {
   return (
     <Box {...rest}>
-      <p>SearchBusinessesPage works!</p>
+      <p>PortfolioPage works!</p>
     </Box>
   )
 }
 
-export default SearchBusinessesPage
+export default PortfolioPage

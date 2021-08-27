@@ -1,8 +1,9 @@
 import React from "react"
-import {BrowserRouter} from "react-router-dom"
-import {RecoilRoot} from "recoil"
+import { BrowserRouter } from "react-router-dom"
+import { RecoilRoot } from "recoil"
+import Header from "./components/Header"
 import Routes from "./routes"
-import {ThemeProvider} from "./theme"
+import { ThemeProvider } from "./theme"
 
 function App() {
   return (
@@ -10,6 +11,7 @@ function App() {
       <RecoilRoot>
         <ThemeProvider>
           <BrowserRouter>
+            <Header />
             <Routes />
           </BrowserRouter>
         </ThemeProvider>

@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@apollo/client": "^3.4.9",
     "@chakra-ui/react": "^1.6.6",
     "@emotion/react": "^11.4.1",
     "@emotion/styled": "^11.3.0",
@@ -32,7 +33,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "codegen": "yarn graphql-codegen --config codegen.yml"
   },
   "eslintConfig": {
     "extends": [
@@ -53,6 +55,11 @@
     ]
   },
   "devDependencies": {
-    "@types/react-router-dom": "^5.1.8"
+    "@types/react-router-dom": "^5.1.8",
+    "@graphql-codegen/cli": "1.21.3",
+    "@graphql-codegen/introspection": "1.18.1",
+    "@graphql-codegen/typescript": "1.21.1",
+    "@graphql-codegen/typescript-operations": "1.17.15",
+    "@graphql-codegen/typescript-react-apollo": "2.2.3"
   }
 }

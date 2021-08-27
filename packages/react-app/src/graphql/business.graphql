@@ -1,0 +1,29 @@
+fragment BusinessFields on Business {
+  id
+  name
+  tagline
+  description
+  address
+  logoUrl
+  coverUrl
+  externalLinks
+  phoneNumber
+  approved
+  handle
+  createdAt
+  email
+  ownerId
+  kmsTaxId
+  wallet {
+    id
+    isActive
+    multiSigAddress
+    creditLimit 
+  }
+}
+
+query findBusinessByHandle($handle: String!) {
+  findOneBusinessByHandle(handle: $handle) {
+    ...BusinessFields
+  }
+}

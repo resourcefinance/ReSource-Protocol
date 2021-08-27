@@ -1,7 +1,6 @@
 import { Box, BoxProps } from "@chakra-ui/layout"
 import { Center, HStack } from "@chakra-ui/react"
 import { useHistory } from "react-router-dom"
-import { useRecoilValue } from "recoil"
 import GlyphLabel from "../components/glyph/GlyphLabel"
 
 const pillContainerStyles: BoxProps = {
@@ -14,7 +13,7 @@ const pillContainerStyles: BoxProps = {
 
 const WalletInfo = ({ ...rest }: BoxProps) => {
   const history = useHistory()
-  // const { id, wallet } = useGetMe().myBusiness
+
   return (
     <Box {...rest} cursor="pointer" onClick={() => history.push("/wallet")}>
       <HStack spacing={-10}>

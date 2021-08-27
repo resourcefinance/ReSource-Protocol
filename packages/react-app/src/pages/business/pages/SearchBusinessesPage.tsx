@@ -1,15 +1,27 @@
+import { BoxProps, VStack } from "@chakra-ui/layout"
+import { Center, Container } from "@chakra-ui/react"
 import React from "react"
-import { Box, BoxProps } from "@chakra-ui/layout"
+import { Business, useFindBusinessByHandleLazyQuery } from "../../../generated/graphql"
+import { BusinessCard } from "../components/BusinessCard"
+import BusinessSearchBar from "../components/BusinessSearchBar"
+import { NoSearchResults } from "../components/NoSearchResults"
 
-interface Props extends BoxProps {
-  key: string
-}
+const SearchBusinessesPage = ({ ...rest }: BoxProps) => {
+  const [find, { data, called }] = useFindBusinessByHandleLazyQuery()
+  const business = data?.findOneBusinessByHandle as Business
 
-const SearchBusinessesPage = ({ ...rest }: Props) => {
+  const handleSearch = (searchText: string) => find({ variables: { handle: searchText } })
+
   return (
-    <Box {...rest}>
-      <p>SearchBusinessesPage works!</p>
-    </Box>
+    <Container>
+      <Center {...rest} h="100vh">
+        <VStack justify="space-between" h="450px" w="400px">
+          <BusinessSearchBar onSearch={handleSearch} />
+          {business && <BusinessCard business={business} />}
+          {called && !business && <NoSearchResults />}
+        </VStack>
+      </Center>
+    </Container>
   )
 }
 

@@ -1,16 +1,12 @@
-import {Text} from "@chakra-ui/layout"
-import {Box, BoxProps} from "@chakra-ui/layout"
+import { BoxProps, Text } from "@chakra-ui/layout"
+import { Center } from "@chakra-ui/react"
 import React from "react"
 
-interface Props extends BoxProps {
-  key: string
-}
-
-const BusinessTransactionsPage = ({...rest}: Props) => {
+const BusinessTransactionsPage = ({ ...rest }: BoxProps) => {
   return (
-    <Box {...rest}>
+    <Center pt="150px" h="full" w="full" {...rest}>
       <Text>Business transaction page</Text>
-    </Box>
+    </Center>
   )
 }
 

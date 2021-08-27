@@ -16,6 +16,11 @@ export const NETWORKS = {
   },
 }
 
+export const CONTRACTS = {
+  UnderwriteManager: "0x32EEce76C2C2e8758584A83Ee2F522D4788feA0f",
+  MutualityToken: "0xfcDB4564c18A9134002b9771816092C9693622e3",
+}
+
 export const NETWORK = (chainId: Number) => {
   for (const n in NETWORKS) {
     if ((NETWORKS as any)[n].chainId === chainId) {

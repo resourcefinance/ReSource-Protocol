@@ -1,6 +1,6 @@
 import { Center, Flex, HStack, StackProps } from "@chakra-ui/layout"
 import { Image, ImageProps, useDisclosure } from "@chakra-ui/react"
-import { faChartPie, faStore } from "@fortawesome/free-solid-svg-icons"
+import { faAdjust, faChartPie, faStore } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import React, { useEffect } from "react"
 import { useHistory } from "react-router-dom"
@@ -34,6 +34,7 @@ export const Header = () => {
   const walletModal = useDisclosure()
 
   useEffect(() => {
+    console.log(context)
     if (!context.active) {
       history.push("/")
       walletModal.onOpen()
@@ -44,6 +45,16 @@ export const Header = () => {
     <Flex {...containerStyles}>
       <MuLogo />
       <HStack align="center" spacing={6}>
+        <Center w="120px">
+          <Button
+            variant="link"
+            colorScheme="blue"
+            onClick={() => history.push("/tx-test")}
+            leftIcon={<FontAwesomeIcon icon={faAdjust} />}
+          >
+            Tx test
+          </Button>
+        </Center>
         <Center w="120px">
           <Button
             variant="link"

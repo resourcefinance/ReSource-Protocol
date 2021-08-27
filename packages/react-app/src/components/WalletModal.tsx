@@ -10,7 +10,6 @@ import {
 } from "@chakra-ui/react"
 import Button from "./Button"
 import { useWeb3Context } from "web3-react"
-import { ethers } from "ethers"
 import { getAbbreviatedAddress } from "../utils/stringFormat"
 import { useEffect, useState } from "react"
 
@@ -20,10 +19,6 @@ const WalletModal = ({ isOpen, onClose }) => {
 
   const connect = () => {
     if (!context.active) context.setFirstValidConnector(["MetaMask"])
-    else {
-      const provider = new ethers.providers.Web3Provider(context.library.provider)
-    }
-    console.log(context)
     if (context.error?.message.includes("Unsupported Network")) {
       setErrorMessage("Please change your network to Celo")
     }
@@ -33,13 +28,14 @@ const WalletModal = ({ isOpen, onClose }) => {
     if (context.error?.message.includes("Unsupported Network")) {
       setErrorMessage("Please change your network to Celo")
     } else if (context.error?.message.includes("Unable to set any valid connector")) {
-      setErrorMessage("Wallet refused connection")
+      setErrorMessage("Wallet refused connection, try changing your network")
     } else if (context.error?.message.includes("Ethereum account locked.")) {
       window.location.reload()
     } else {
       setErrorMessage("")
     }
     if (context.active) onClose()
+    // const provider = new ethers.providers.Web3Provider(context.library.provider)
   }, [context])
 
   return (

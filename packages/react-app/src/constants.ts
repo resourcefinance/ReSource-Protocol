@@ -1,5 +1,5 @@
 import { readFileSync } from "fs"
-import * as config from "./contracts/artifacts.json"
+// import * as config from "./contracts/artifacts.json"
 
 export const NETWORKS = {
   localhost: {
@@ -20,9 +20,9 @@ export const NETWORKS = {
 }
 
 export const CONTRACTS = {
-  UnderwriteManager: config.UnderwriteManager_Proxy,
-  MutualityToken: config.MutualityToken_Proxy,
-}
+  // UnderwriteManager: config.UnderwriteManager_Proxy,
+  // MutualityToken: config.MutualityToken_Proxy,
+} as any
 
 export const NETWORK = (chainId: Number) => {
   for (const n in NETWORKS) {

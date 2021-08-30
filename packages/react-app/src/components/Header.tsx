@@ -6,10 +6,8 @@ import React, { useEffect } from "react"
 import { useHistory } from "react-router-dom"
 import { useWeb3Context } from "web3-react"
 import logo from "../assets/mu.svg"
-// import AccountBalanceInfo from "../../services/ledger/components/WalletInfo"
 import Button from "./Button"
 import WalletInfo from "./WalletInfo"
-import WalletModal from "./WalletModal"
 
 export const headerHeight = "52px"
 
@@ -24,7 +22,7 @@ const containerStyles: StackProps = {
   height: headerHeight,
   position: "fixed",
   w: "100vw",
-  zIndex: 11, // this should go back down to 1 once chat styling is cleaned up
+  zIndex: 1,
 }
 
 export const Header = () => {
@@ -77,7 +75,7 @@ export const Header = () => {
         </Center>
         <WalletInfo />
       </HStack>
-      <WalletModal isOpen={walletModal.isOpen} onClose={walletModal.onClose} />
+      {/* <WalletModal isOpen={walletModal.isOpen} onClose={walletModal.onClose} /> */}
     </Flex>
   )
 }

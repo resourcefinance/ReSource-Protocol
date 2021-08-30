@@ -1,19 +1,18 @@
 import { BoxProps, StackProps, Text } from "@chakra-ui/layout"
 import { Box, HStack, VStack } from "@chakra-ui/react"
-import dayjs from "dayjs"
 import React from "react"
-import { useParams } from "react-router-dom"
-import { Business, useFindBusinessByHandleQuery } from "../../../generated/graphql"
+import { Business } from "../../../generated/graphql"
 import colors from "../../../theme/foundations/colors"
+import { localizedDayJs } from "../../../utils/dayjs"
 import { NoSearchResults } from "../components/NoSearchResults"
+import { useQueryBusinessViaHandleInUrl } from "../utils/hooks"
 
 interface Props extends BoxProps {
   key: string
 }
 
 const BusinessSummaryPage = ({ ...rest }: Props) => {
-  const { handle } = useParams<{ handle: string }>()
-  const { data, called, loading } = useFindBusinessByHandleQuery({ variables: { handle } })
+  const { data, called, loading } = useQueryBusinessViaHandleInUrl()
   const business = data?.findOneBusinessByHandle as Business
 
   if (loading) return null
@@ -26,7 +25,7 @@ const BusinessSummaryPage = ({ ...rest }: Props) => {
           <Text px={3}>Contacts</Text>
           <SolidCard label="email" value={business.email} />
           <SolidCard label="phone" value={business.phoneNumber} />
-          <SolidCard label="date joined" value={dayjs(business.createdAt).format("MMMM d, YYYY")} />
+          <SolidCard label="date joined" value={localizedDayJs(business.createdAt).format("LL")} />
           <SolidCard label="ambassador" value={business.ambassador?.handle} />
         </VStack>
         <VStack {...columnProps}>

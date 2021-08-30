@@ -6,6 +6,7 @@ import React from "react"
 import { Link, useLocation } from "react-router-dom"
 import { headerHeight } from "../../../components/Header"
 import { gradients } from "../../../theme/foundations/colors"
+import { useQueryBusinessViaHandleInUrl } from "../utils/hooks"
 
 const containerStyles: StackProps = {
   px: { base: 4, md: 6 },
@@ -19,14 +20,18 @@ const containerStyles: StackProps = {
   position: "fixed",
   w: "100vw",
   top: headerHeight,
+  zIndex: 1,
 }
 
 export const BusinessHeader = () => {
+  const { data } = useQueryBusinessViaHandleInUrl()
+  const business = data?.findOneBusinessByHandle
+
   return (
     <Flex {...containerStyles}>
       <HStack w="300px" spacing={4}>
-        <Heading size="subtitle">Business name</Heading>
-        <ViewStoreFrontButton handle={"cosmic-cacao"} />
+        <Heading size="subtitle">{business?.name}</Heading>
+        <ViewStoreFrontButton handle={business?.handle ?? ""} />
       </HStack>
       <ToggleButton />
 

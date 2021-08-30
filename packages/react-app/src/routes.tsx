@@ -9,7 +9,7 @@ const Routes = () => {
   return (
     <Switch>
       <Route exact path="/" component={SearchBusinessesPage} />
-      <BusinessRouter />
+      <Route path="/businesses" component={BusinessRouter} />
       <Route exact path="/portfolio" component={PortfolioPage} />
       <Route exact path="/tx-test" component={TestTransactionPage} />
       <Redirect to={{ pathname: "/" }} />

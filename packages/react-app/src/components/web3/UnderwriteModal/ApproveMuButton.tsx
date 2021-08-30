@@ -1,14 +1,17 @@
 import { BoxProps, VStack } from "@chakra-ui/layout"
 import { Button, Center, Container, Text, useToast } from "@chakra-ui/react"
-import { faThumbsUp } from "@fortawesome/free-solid-svg-icons"
+import { faCheckCircle, faThumbsUp } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import React, { useEffect, useState } from "react"
 import { useCheckApproved, useApprove, useListenForApproval } from "../../services/web3/mutuality"
 
-const ApproveMuButton = () => {
-  const checkApproved = useCheckApproved()
+export interface ApproveMuProps {
+  isApproved: boolean
+  setIsApproved: (value: boolean) => void
+}
+
+const ApproveMuButton = ({ isApproved, setIsApproved }: ApproveMuProps) => {
   const listenForApproval = useListenForApproval()
-  const [isApproved, setIsApproved] = useState(false)
   const approve = useApprove()
   const toast = useToast()
 
@@ -25,26 +28,13 @@ const ApproveMuButton = () => {
     }
   }
 
-  useEffect(() => {
-    const check = async () => {
-      try {
-        const approved = await checkApproved()
-        setIsApproved(approved)
-      } catch (e) {
-        console.log(e)
-        setIsApproved(false)
-      }
-    }
-    check()
-  }, [])
-
   return (
     <Button
       isDisabled={isApproved}
-      leftIcon={<FontAwesomeIcon icon={faThumbsUp} />}
+      leftIcon={<FontAwesomeIcon icon={isApproved ? faCheckCircle : faThumbsUp} />}
       onClick={async () => await handleApprove()}
     >
-      Approve
+      {isApproved ? "Approved" : "Approve"}
     </Button>
   )
 }

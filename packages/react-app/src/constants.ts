@@ -19,9 +19,16 @@ export const NETWORKS = {
   },
 }
 
+export const SUBGRAPH_URLS = {
+  localhost: "http://localhost:8020/",
+  testnet: "",
+  mainet: "",
+}
+
 export const CONTRACTS = {
   UnderwriteManager: config.UnderwriteManager_Proxy,
   MutualityToken: config.MutualityToken_Proxy,
+  RUSDToken: config.RUSD_Proxy,
 }
 
 export const NETWORK = (chainId: Number) => {

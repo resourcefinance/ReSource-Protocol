@@ -5,6 +5,12 @@ type CreditLine @entity {
   collateral: BigInt!
   networkToken: Bytes!
   issueDate: BigInt!
-  reward: BigInt!
+  outstandingReward: BigInt!
+  totalReward: BigInt!
+}
+
+type Underwriter @entity {
+  id: ID!
+  creditLines: CreditLine[]!
   totalRewards: BigInt!
 }

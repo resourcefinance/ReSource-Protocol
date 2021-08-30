@@ -50,20 +50,17 @@ const config: HardhatUserConfig = {
     localhost: {
       url: "http://localhost:8545",
       saveDeployments: true,
+      accounts: ["0x7A900e4b37D5635Ccec6Ab8751f5Feb652b6bc8d"],
     },
     "celo-alfajores": {
       url: "https://alfajores-forno.celo-testnet.org",
       chainId: chainIds.testnet,
-      accounts: {
-        mnemonic: mnemonic(),
-      },
+      accounts: [mnemonic(), "0x7A900e4b37D5635Ccec6Ab8751f5Feb652b6bc8d"],
     },
     celo: {
       url: "https://forno.celo.org",
       chainId: chainIds.mainnet,
-      accounts: {
-        mnemonic: mnemonic(),
-      },
+      accounts: [mnemonic(), "0x7A900e4b37D5635Ccec6Ab8751f5Feb652b6bc8d"],
     },
   },
   solidity: {
@@ -87,7 +84,8 @@ const config: HardhatUserConfig = {
   },
   namedAccounts: {
     deployer: {
-      default: 0, // here this will by default take the first account as deployer
+      default: 0,
+      devAccount: 1,
     },
   },
   paths: {
@@ -131,7 +129,7 @@ task("fundedwallet", "Create a wallet (pk) link and fund it with deployer?")
     console.log("🔐 WALLET Generated as " + randomWallet.address + "")
     let url = taskArgs.url ? taskArgs.url : "http://localhost:3000"
 
-    const myAddress = "0x30402E33D3b1C26adD718AA1AcC864566eB1Ee9C"
+    const myAddress = "0x5968F76dBF9c07156A1B1de24d609BC0d64036a2"
 
     let localDeployerMnemonic
     try {

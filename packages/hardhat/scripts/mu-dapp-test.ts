@@ -57,6 +57,7 @@ async function issueCreditLine() {
           )
       ).wait()
     }
+
     if (Number(ethers.utils.formatEther(await mutualityToken.balanceOf(operator.address))) == 0) {
       await (
         await mutualityToken.transfer(operator.address, ethers.utils.parseEther("100000.0"))

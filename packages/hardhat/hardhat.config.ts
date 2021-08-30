@@ -50,17 +50,16 @@ const config: HardhatUserConfig = {
     localhost: {
       url: "http://localhost:8545",
       saveDeployments: true,
-      accounts: ["0x7A900e4b37D5635Ccec6Ab8751f5Feb652b6bc8d"],
     },
     "celo-alfajores": {
       url: "https://alfajores-forno.celo-testnet.org",
       chainId: chainIds.testnet,
-      accounts: [mnemonic(), "0x7A900e4b37D5635Ccec6Ab8751f5Feb652b6bc8d"],
+      accounts: { mnemonic: mnemonic() },
     },
     celo: {
       url: "https://forno.celo.org",
       chainId: chainIds.mainnet,
-      accounts: [mnemonic(), "0x7A900e4b37D5635Ccec6Ab8751f5Feb652b6bc8d"],
+      accounts: { mnemonic: mnemonic() },
     },
   },
   solidity: {
@@ -122,14 +121,10 @@ task("wallet", "Create a wallet (pk) link", async (_, { ethers }) => {
 
 task("fundedwallet", "Create a wallet (pk) link and fund it with deployer?")
   .addOptionalParam("amount", "Amount of ETH to send to wallet after generating")
+  .addParam("address", "Address to fund")
   .addOptionalParam("url", "URL to add pk to")
   .setAction(async (taskArgs, { network, ethers }) => {
-    const randomWallet = ethers.Wallet.createRandom()
-    const privateKey = randomWallet._signingKey().privateKey
-    console.log("🔐 WALLET Generated as " + randomWallet.address + "")
     let url = taskArgs.url ? taskArgs.url : "http://localhost:3000"
-
-    const myAddress = "0x5968F76dBF9c07156A1B1de24d609BC0d64036a2"
 
     let localDeployerMnemonic
     try {
@@ -140,29 +135,13 @@ task("fundedwallet", "Create a wallet (pk) link and fund it with deployer?")
     }
 
     let amount = taskArgs.amount ? taskArgs.amount : "0.01"
+    let address = taskArgs.address
     const tx = {
-      to: myAddress,
+      to: address,
       value: ethers.utils.parseEther(amount),
     }
-
-    const accounts = await ethers.getSigners()
-
-    //SEND USING LOCAL DEPLOYER MNEMONIC IF THERE IS ONE
-    // IF NOT SEND USING LOCAL HARDHAT NODE:
-    // if (localDeployerMnemonic) {
-    //   let deployerWallet = ethers.Wallet.fromMnemonic(localDeployerMnemonic)
-    //   deployerWallet = deployerWallet.connect(ethers.provider)
-    //   console.log(
-    //     "💵 Sending " + amount + " ETH to " + myAddress + " using deployer account",
-    //   )
-    //   let sendresult = await deployerWallet.sendTransaction(tx)
-    //   console.log("\n" + url + "/pk#" + privateKey + "\n")
-    //   return
-    // } else {
-    console.log("💵 Sending " + amount + " ETH to " + myAddress + " using local node")
-    console.log("\n" + url + "/pk#" + privateKey + "\n")
+    console.log("💵 Sending " + amount + " ETH to " + address + " using local node")
     return send(ethers.provider.getSigner(), tx)
-    // }
   })
 
 task("generate", "Create a mnemonic for builder deploys", async (_, { ethers }) => {

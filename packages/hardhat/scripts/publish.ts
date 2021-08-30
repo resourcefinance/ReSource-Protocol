@@ -36,7 +36,6 @@ function publishContract(contractName: string, networkName: string) {
     fs.writeFileSync(graphConfigPath, JSON.stringify(graphConfig, null, 2))
 
     const clientConfigPath = `${publishDir}/artifacts.json`
-    console.log(clientConfigPath)
     let clientConfig
     try {
       if (fs.existsSync(clientConfigPath)) {

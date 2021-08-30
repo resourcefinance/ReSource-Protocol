@@ -35,7 +35,6 @@ const WalletModal = ({ isOpen, onClose }) => {
       setErrorMessage("")
     }
     if (context.active) onClose()
-    // const provider = new ethers.providers.Web3Provider(context.library.provider)
   }, [context])
 
   return (

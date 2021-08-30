@@ -3,7 +3,7 @@ import { ethers } from "ethers"
 import { CONTRACTS } from "../../constants"
 import { MutualityToken__factory } from "../../contracts/factories/MutualityToken__factory"
 import { MutualityToken } from "../../contracts/MutualityToken"
-import { Web3Context } from "web3-react/dist/context"
+import { useToast } from "@chakra-ui/react"
 
 export const useApprove = () => {
   const context = useWeb3Context()
@@ -18,8 +18,6 @@ export const useApprove = () => {
       provider,
     ) as MutualityToken
 
-    console.log(mutualityToken)
-
     await mutualityToken
       .connect(signer)
       .approve(
@@ -29,13 +27,37 @@ export const useApprove = () => {
   }
 }
 
+export const useListenForApproval = () => {
+  const context = useWeb3Context()
+  const toast = useToast()
+
+  return async (setIsApproved) => {
+    const provider = new ethers.providers.Web3Provider(context.library.provider)
+
+    const mutualityToken = new ethers.Contract(
+      CONTRACTS.MutualityToken,
+      MutualityToken__factory.createInterface(),
+      provider,
+    ) as MutualityToken
+
+    mutualityToken.once("Approval", async (args) => {
+      toast({
+        description: "Approved",
+        position: "top-right",
+        status: "success",
+        isClosable: true,
+      })
+      setIsApproved(true)
+    })
+  }
+}
+
 export const useCheckApproved = () => {
   const context = useWeb3Context()
 
   return async () => {
     if (!context.account) return false
     const provider = new ethers.providers.Web3Provider(context.library.provider)
-
     const mutualityToken = new ethers.Contract(
       CONTRACTS.MutualityToken,
       MutualityToken__factory.createInterface(),

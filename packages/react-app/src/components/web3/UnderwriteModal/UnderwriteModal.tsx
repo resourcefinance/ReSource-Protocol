@@ -10,11 +10,11 @@ import {
   Text,
 } from "@chakra-ui/react"
 import { useEffect, useState } from "react"
-import { useCheckApproved } from "../../services/web3/mutuality"
+import { useCheckApproved } from "../../../services/web3/mutuality"
 import ApproveMuButton from "./ApproveMuButton"
 import UnderwriteMuButton from "./UnderwriteMuButton"
-import { CONTRACTS } from "../../constants"
-import { Business } from "../../generated/graphql"
+import { CONTRACTS } from "../../../constants"
+import { Business } from "../../../generated/graphql"
 
 export interface UnderwriteModalProps {
   onClose: () => void

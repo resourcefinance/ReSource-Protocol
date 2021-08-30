@@ -3,7 +3,7 @@ import { Button, useToast } from "@chakra-ui/react"
 import { faCheckCircle } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import React, { useEffect, useState } from "react"
-import { useUnderwrite } from "../../services/web3/underwriteManager"
+import { useUnderwrite } from "../../../services/web3/underwriteManager"
 
 export interface StakeMuButtonProps {
   networkTokenAddress: string

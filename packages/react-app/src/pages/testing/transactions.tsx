@@ -1,8 +1,8 @@
 import { BoxProps, VStack } from "@chakra-ui/layout"
 import { Button, Center, Container, Text, useDisclosure } from "@chakra-ui/react"
 import React, { useEffect, useState } from "react"
-import ApproveMuButton from "../../components/web3/ApproveMuButton"
-import UnderwriteModal from "../../components/web3/UnderwriteModal"
+import ApproveMuButton from "../../components/web3/UnderwriteModal/ApproveMuButton"
+import UnderwriteModal from "../../components/web3/UnderwriteModal/UnderwriteModal"
 import { Business, Wallet } from "../../generated/graphql"
 
 import { useCheckApproved, useApprove } from "../../services/web3/mutuality"

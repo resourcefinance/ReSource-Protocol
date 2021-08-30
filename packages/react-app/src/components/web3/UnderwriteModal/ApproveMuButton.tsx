@@ -3,7 +3,11 @@ import { Button, Center, Container, Text, useToast } from "@chakra-ui/react"
 import { faCheckCircle, faThumbsUp } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import React, { useEffect, useState } from "react"
-import { useCheckApproved, useApprove, useListenForApproval } from "../../services/web3/mutuality"
+import {
+  useCheckApproved,
+  useApprove,
+  useListenForApproval,
+} from "../../../services/web3/mutuality"
 
 export interface ApproveMuProps {
   isApproved: boolean

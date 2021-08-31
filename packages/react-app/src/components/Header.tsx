@@ -8,8 +8,8 @@ import { useWeb3Context } from "web3-react"
 import logo from "../assets/mu.svg"
 // import AccountBalanceInfo from "../../services/ledger/components/WalletInfo"
 import Button from "./Button"
-import WalletInfo from "./WalletInfo"
-import WalletModal from "./WalletModal"
+import WalletInfo from "./wallet/WalletInfo"
+import WalletModal from "./wallet/WalletModal"
 
 export const headerHeight = "52px"
 

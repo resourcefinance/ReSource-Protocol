@@ -8,9 +8,9 @@ import {
   Text,
   Image,
 } from "@chakra-ui/react"
-import Button from "./Button"
+import Button from "../Button"
 import { useWeb3Context } from "web3-react"
-import { getAbbreviatedAddress } from "../utils/stringFormat"
+import { getAbbreviatedAddress } from "../../utils/stringFormat"
 import { useEffect, useState } from "react"
 
 const WalletModal = ({ isOpen, onClose }) => {

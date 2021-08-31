@@ -52,7 +52,9 @@
     "deploy-and-graph": "yarn deploy && yarn graph-ship-local",
     "theme": "yarn workspace @mu-dapp/react-app theme",
     "watch-theme": "yarn workspace @mu-dapp/react-app watch",
-    "codegen": "yarn workspace @mu-dapp/react-app codegen"
+    "codegen": "yarn workspace @mu-dapp/react-app codegen",
+    "start-subgraph": "yarn graph-prepare && yarn graph-codegen && yarn graph-build && yarn graph-create-local && yarn graph-deploy-local",
+    "start-all": "yarn deploy && yarn start-subgraph && yarn codegen && yarn start"
   },
   "workspaces": {
     "packages": [
@@ -65,5 +67,7 @@
       "**/hardhat/**"
     ]
   },
-  "dependencies": {}
+  "dependencies": {
+    "foreman": "^3.0.1"
+  }
 }

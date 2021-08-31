@@ -4,6 +4,20 @@
 
 # 🏄‍♂️ Quick Start
 
+> foreman start the local chain and graph node
+
+```bash
+foreman start
+```
+
+> start all processes
+
+```bash
+yarn start-all
+```
+
+# 🤓 Details
+
 > install and start the 👷‍ Hardhat chain:
 
 ```bash

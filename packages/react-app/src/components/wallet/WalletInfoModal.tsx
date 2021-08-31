@@ -9,12 +9,14 @@ import {
   Image,
   HStack,
   IconButton,
+  useToast,
 } from "@chakra-ui/react"
 import Button from "../Button"
 import { getAbbreviatedAddress } from "../../utils/stringFormat"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faCopy, faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons"
 import { useWeb3Context } from "web3-react"
+import { useClipboard } from "@chakra-ui/react"
 
 export interface WalletInfoModalProps {
   isOpen: boolean
@@ -24,6 +26,8 @@ export interface WalletInfoModalProps {
 
 const WalletInfoModal = ({ isOpen, onClose, address }: WalletInfoModalProps) => {
   const context = useWeb3Context()
+  const { hasCopied, onCopy } = useClipboard(address)
+  const toast = useToast()
 
   const handleDisconnect = () => {
     context.unsetConnector()
@@ -57,6 +61,16 @@ const WalletInfoModal = ({ isOpen, onClose, address }: WalletInfoModalProps) => 
               aria-label="copy"
               color="gray.cement"
               icon={<FontAwesomeIcon icon={faCopy} />}
+              onClick={() => {
+                onCopy()
+                toast({
+                  title: "Address copied.",
+                  // description: "We've created your account for you.",
+                  status: "info",
+                  // duration: 9000,
+                  // isClosable: true,
+                })
+              }}
             />
             <IconButton
               variant="ghost"

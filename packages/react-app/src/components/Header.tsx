@@ -48,16 +48,6 @@ export const Header = () => {
           <Button
             variant="link"
             colorScheme="blue"
-            onClick={() => history.push("/tx-test")}
-            leftIcon={<FontAwesomeIcon icon={faAdjust} />}
-          >
-            Tx test
-          </Button>
-        </Center>
-        <Center w="120px">
-          <Button
-            variant="link"
-            colorScheme="blue"
             onClick={() => history.push("/")}
             leftIcon={<FontAwesomeIcon icon={faStore} />}
           >

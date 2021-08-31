@@ -1,13 +1,17 @@
-import { ApolloClient, ApolloProvider as Provider, InMemoryCache } from "@apollo/client"
+import { ApolloClient, ApolloLink, ApolloProvider as Provider, InMemoryCache } from "@apollo/client"
 import React from "react"
-import { useGetLink } from "./apolloLink"
+import { subgraphLink, useGetNetworkLink } from "./apolloLink"
 
 export const cache: InMemoryCache = new InMemoryCache({})
 
 const ApolloProvider = (props) => {
-  const link = useGetLink()
+  const networkLink = useGetNetworkLink()
   const client = new ApolloClient({
-    link,
+    link: ApolloLink.split(
+      (operation) => operation.getContext().clientName === "subgraph",
+      subgraphLink,
+      networkLink,
+    ),
     cache,
     connectToDevTools: true,
   })

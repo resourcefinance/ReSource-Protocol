@@ -58,7 +58,10 @@ export const useTransactionsPageData = () => {
   useEffect(() => {
     if (!business?.id) return
     const where = generateFilters({ filteredTypes, currId: business?.wallet?.id || "" })
-    findManyTransactions({ variables: { where, page, limit: pageSize, orderBy } })
+    findManyTransactions({
+      variables: { where, page, limit: pageSize, orderBy },
+      context: { clientName: "subgraph" },
+    })
   }, [findManyTransactions, page, pageSize, filteredTypes, business?.wallet?.id, orderBy])
 
   // useEffect to update transactions state whenever gql fetch completes

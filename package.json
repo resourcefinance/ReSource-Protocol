@@ -51,7 +51,8 @@
     "graph-deploy-test": "yarn workspace @mu-dapp/subgraph deploy-testnet",
     "deploy-and-graph": "yarn deploy && yarn graph-ship-local",
     "theme": "yarn workspace @mu-dapp/react-app theme",
-    "watch-theme": "yarn workspace @mu-dapp/react-app watch"
+    "watch-theme": "yarn workspace @mu-dapp/react-app watch",
+    "codegen": "yarn workspace @mu-dapp/react-app codegen"
   },
   "workspaces": {
     "packages": [

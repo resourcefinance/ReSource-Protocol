@@ -1,9 +1,10 @@
 import { ApolloLink, HttpLink } from "@apollo/client"
 import { useState } from "react"
 // import { sentryErrorLink } from "../sentry"
+import { SUBGRAPH_URLS } from "../../constants"
 
 const networEndpoint = "http://localhost/graphql"
-const subgraphEndpoint = "http://localhost:8000/subgraphs/name/mu-dapp/graphql"
+const subgraphEndpoint = SUBGRAPH_URLS.localhost
 const networkLink = new HttpLink({ uri: networEndpoint })
 export const subgraphLink = new HttpLink({ uri: subgraphEndpoint })
 

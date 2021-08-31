@@ -11,12 +11,6 @@ yarn
 yarn chain
 ```
 
-> start the 📱 frontend:
-
-```bash
-yarn start
-```
-
 > 🛰 deploy contracts:
 
 ```bash
@@ -43,6 +37,18 @@ yarn graph-codegen
 yarn graph-build
 yarn graph-create-local
 yarn graph-deploy-local
+```
+
+> generate code for the frontend:
+
+```bash
+yarn codegen
+```
+
+> start the 📱 frontend:
+
+```bash
+yarn start
 ```
 
 🔏 smart contracts in `packages/hardhat/contracts`

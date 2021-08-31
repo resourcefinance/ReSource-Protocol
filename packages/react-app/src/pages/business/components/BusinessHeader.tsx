@@ -3,9 +3,10 @@ import { BoxProps, Button, Flex, Heading, HStack } from "@chakra-ui/react"
 import { faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import React from "react"
-import { Link, useLocation } from "react-router-dom"
+import { Link, useLocation, useParams } from "react-router-dom"
 import { headerHeight } from "../../../components/Header"
 import { gradients } from "../../../theme/foundations/colors"
+import { useQueryBusinessViaHandleInUrl } from "../utils/hooks"
 
 const containerStyles: StackProps = {
   px: { base: 4, md: 6 },
@@ -19,14 +20,18 @@ const containerStyles: StackProps = {
   position: "fixed",
   w: "100vw",
   top: headerHeight,
+  zIndex: 1,
 }
 
 export const BusinessHeader = () => {
+  const { data } = useQueryBusinessViaHandleInUrl()
+  const business = data?.findOneBusinessByHandle
+
   return (
     <Flex {...containerStyles}>
       <HStack w="300px" spacing={4}>
-        <Heading size="subtitle">Business name</Heading>
-        <ViewStoreFrontButton handle={"cosmic-cacao"} />
+        <Heading size="subtitle">{business?.name}</Heading>
+        <ViewStoreFrontButton handle={business?.handle ?? ""} />
       </HStack>
       <ToggleButton />
 
@@ -55,14 +60,17 @@ const toggleStyles = (active: boolean) => {
 
 const ToggleButton = () => {
   const location = useLocation()
-  const active = location.pathname.includes("summary")
+  const { handle } = useParams<{ handle: string }>()
+  const isOnSummaryPage = location.pathname.includes("summary")
+  const summaryPath = `/businesses/${handle}/summary`
+  const transactionsPath = `/businesses/${handle}/transactions`
 
   return (
     <HStack spacing="-4px" border="1px solid" borderColor="gray.500" borderRadius="full">
-      <Button as={Link} to="summary" {...toggleStyles(active)}>
+      <Button as={Link} to={summaryPath} {...toggleStyles(isOnSummaryPage)}>
         <Text>summary</Text>
       </Button>
-      <Button as={Link} to="transactions" {...toggleStyles(!active)}>
+      <Button as={Link} to={transactionsPath} {...toggleStyles(!isOnSummaryPage)}>
         <Text>transactions</Text>
       </Button>
     </HStack>

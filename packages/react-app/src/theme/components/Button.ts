@@ -143,7 +143,7 @@ const variantPrimary = (props: Dict) => {
 
 const variantChip = (props: Dict) => {
   const { colorScheme } = props
-  const activeBgColor = `${colorScheme}.light`
+  const activeBgColor = `${colorScheme}.dark`
 
   const variantChip = {
     ...bodyText,

@@ -1,13 +1,9 @@
-import { BoxProps, Text } from "@chakra-ui/layout"
-import { Center } from "@chakra-ui/react"
+import { BoxProps } from "@chakra-ui/layout"
 import React from "react"
+import TransactionsPage from "../../transactions/TransactionsPage"
 
 const BusinessTransactionsPage = ({ ...rest }: BoxProps) => {
-  return (
-    <Center pt="150px" h="full" w="full" {...rest}>
-      <Text>Business transaction page</Text>
-    </Center>
-  )
+  return <TransactionsPage />
 }
 
 export default BusinessTransactionsPage

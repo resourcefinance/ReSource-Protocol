@@ -1,0 +1,84 @@
+fragment TransactionFields on Transaction {
+  id
+  createdAt
+  amount
+  note
+  txHash
+  status
+}
+
+query findTransactionById($id: ID!) {
+  findTransactionById(id: $id) {
+    ...TransactionFields
+    sender {
+      id
+      multiSigAddress
+      business {
+        id
+        name
+        handle
+        logoUrl
+      }
+    }
+    recipient {
+      id
+      multiSigAddress
+      business {
+        id
+        name
+        handle
+        logoUrl
+      }
+    }
+    order {
+      id
+      quantity
+      status
+      note
+      listing {
+        title
+        cost
+      }
+    }
+  }
+}
+
+query findManyTransactions(
+  $where: TransactionWhereInput
+  $orderBy: TransactionOrderByInput
+  $limit: Int
+  $page: Int
+) {
+  findManyTransactions(where: $where, orderBy: $orderBy, limit: $limit, page: $page) {
+    transactions {
+      ...TransactionFields
+      sender {
+        id
+        business {
+          id
+          name
+          handle
+          logoUrl
+        }
+      }
+      recipient {
+        id
+        business {
+          id
+          name
+          handle
+          logoUrl
+        }
+      }
+      order {
+        id
+        quantity
+        status
+        listing {
+          title
+        }
+      }
+    }
+    total
+  }
+}

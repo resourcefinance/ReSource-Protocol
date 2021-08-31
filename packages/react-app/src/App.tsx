@@ -8,6 +8,7 @@ import ApolloProvider from "./services/apollo/ApolloProvider"
 import { ThemeProvider } from "./theme"
 import Web3Provider, { Connectors } from "web3-react"
 import { NETWORKS } from "./constants"
+import "./theme/App.scss"
 
 const { InjectedConnector } = Connectors
 

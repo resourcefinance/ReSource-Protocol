@@ -206,17 +206,17 @@ interface UnderwriteManagerInterface extends ethers.utils.Interface {
     "CreditLineReward(tuple)": EventFragment;
     "CreditLineRewardClaimed(tuple[])": EventFragment;
     "CreditLineWithdrawal(tuple)": EventFragment;
+    "ExtendCreditLine(tuple)": EventFragment;
     "NewCreditLine(tuple)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
-    "UpdateCreditLine(tuple)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "CreditLineReward"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "CreditLineRewardClaimed"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "CreditLineWithdrawal"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "ExtendCreditLine"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "NewCreditLine"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "UpdateCreditLine"): EventFragment;
 }
 
 export class UnderwriteManager extends BaseContract {
@@ -705,6 +705,57 @@ export class UnderwriteManager extends BaseContract {
       }
     >;
 
+    ExtendCreditLine(
+      creditLine?: null
+    ): TypedEventFilter<
+      [
+        [
+          string,
+          string,
+          [BigNumber, string, BigNumber, BigNumber] & {
+            collateral: BigNumber;
+            networkToken: string;
+            issueDate: BigNumber;
+            reward: BigNumber;
+          },
+          BigNumber
+        ] & {
+          underwriter: string;
+          underwritee: string;
+          data: [BigNumber, string, BigNumber, BigNumber] & {
+            collateral: BigNumber;
+            networkToken: string;
+            issueDate: BigNumber;
+            reward: BigNumber;
+          };
+          creditLimit: BigNumber;
+        }
+      ],
+      {
+        creditLine: [
+          string,
+          string,
+          [BigNumber, string, BigNumber, BigNumber] & {
+            collateral: BigNumber;
+            networkToken: string;
+            issueDate: BigNumber;
+            reward: BigNumber;
+          },
+          BigNumber
+        ] & {
+          underwriter: string;
+          underwritee: string;
+          data: [BigNumber, string, BigNumber, BigNumber] & {
+            collateral: BigNumber;
+            networkToken: string;
+            issueDate: BigNumber;
+            reward: BigNumber;
+          };
+          creditLimit: BigNumber;
+        };
+      }
+    >;
+
     NewCreditLine(
       creditLine?: null
     ): TypedEventFilter<
@@ -762,57 +813,6 @@ export class UnderwriteManager extends BaseContract {
     ): TypedEventFilter<
       [string, string],
       { previousOwner: string; newOwner: string }
-    >;
-
-    UpdateCreditLine(
-      creditLine?: null
-    ): TypedEventFilter<
-      [
-        [
-          string,
-          string,
-          [BigNumber, string, BigNumber, BigNumber] & {
-            collateral: BigNumber;
-            networkToken: string;
-            issueDate: BigNumber;
-            reward: BigNumber;
-          },
-          BigNumber
-        ] & {
-          underwriter: string;
-          underwritee: string;
-          data: [BigNumber, string, BigNumber, BigNumber] & {
-            collateral: BigNumber;
-            networkToken: string;
-            issueDate: BigNumber;
-            reward: BigNumber;
-          };
-          creditLimit: BigNumber;
-        }
-      ],
-      {
-        creditLine: [
-          string,
-          string,
-          [BigNumber, string, BigNumber, BigNumber] & {
-            collateral: BigNumber;
-            networkToken: string;
-            issueDate: BigNumber;
-            reward: BigNumber;
-          },
-          BigNumber
-        ] & {
-          underwriter: string;
-          underwritee: string;
-          data: [BigNumber, string, BigNumber, BigNumber] & {
-            collateral: BigNumber;
-            networkToken: string;
-            issueDate: BigNumber;
-            reward: BigNumber;
-          };
-          creditLimit: BigNumber;
-        };
-      }
     >;
   };
 

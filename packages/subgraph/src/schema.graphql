@@ -1,7 +1,14 @@
+type Underwriter @entity {
+  id: ID!
+  creditLines: [CreditLine]! @derivedFrom(field: "underwriter")
+  totalRewards: BigInt!
+  totalCollateral: BigInt!
+}
+
 type CreditLine @entity {
   id: ID!
   underwritee: Bytes!
-  underwriter: Bytes!
+  underwriter: Underwriter!
   collateral: BigInt!
   networkToken: Bytes!
   issueDate: BigInt!

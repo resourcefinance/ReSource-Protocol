@@ -47,12 +47,11 @@ contract UnderwriteManager is OwnableUpgradeable {
         uint256 creditLimit;
     }
 
-
     /*
      *  Events
      */
     event NewCreditLine(CreditLineLimitEvent creditLine);
-    event UpdateCreditLine(CreditLineLimitEvent creditLine);
+    event ExtendCreditLine(CreditLineLimitEvent creditLine);
     event CreditLineReward(CreditLineEvent creditLine);
     event CreditLineRewardClaimed(CreditLineEvent[] creditLines);
     event CreditLineWithdrawal(CreditLineLimitEvent creditLine);
@@ -131,7 +130,7 @@ contract UnderwriteManager is OwnableUpgradeable {
         creditLine.collateral += collateralAmount;
         uint256 creditLimit = calculateCredit(creditLine.collateral);
         CIP36(creditLine.networkToken).setCreditLimit(underwritee, creditLimit);
-        emit UpdateCreditLine(CreditLineLimitEvent(
+        emit ExtendCreditLine(CreditLineLimitEvent(
             msg.sender, 
             underwritee, 
             CreditLine(
@@ -151,7 +150,7 @@ contract UnderwriteManager is OwnableUpgradeable {
         uint256 creditBalance = CIP36(creditLine.networkToken).creditBalanceOf(underwritee);
         uint256 offsetBalance = creditBalance * MWEI;
         uint256 total = creditLine.collateral + creditLine.reward - offsetBalance;
-        // TODO: remove once balane can be repayed from underwriter collateral
+        // TODO: remove once balance can be repayed from underwriter collateral
         // TODO: convert offsetBalance to rUSD and transfer to underwritee
         require( offsetBalance > 0, "Can't withdraw from active credit line");
         CIP36(creditLine.networkToken).setCreditLimit(underwritee, 0);
@@ -193,7 +192,7 @@ contract UnderwriteManager is OwnableUpgradeable {
                 creditLine.collateral, 
                 creditLine.networkToken, 
                 creditLine.issueDate,
-                0
+                reward
             )
         ));
     }

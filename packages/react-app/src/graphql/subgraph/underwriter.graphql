@@ -1,0 +1,6 @@
+subscription underwriter($id: ID!) {
+  underwriter(id: $id) {
+    totalCollateral
+    totalRewards
+  }
+}

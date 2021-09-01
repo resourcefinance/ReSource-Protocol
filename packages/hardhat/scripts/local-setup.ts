@@ -1,12 +1,12 @@
-import { ethers, getNamedAccounts } from "hardhat"
-import { UnderwriteManager } from "../types/UnderwriteManager"
-import { UnderwriteManager__factory } from "../../react-app/src/contracts/factories/UnderwriteManager__factory"
-import { MutualityToken__factory } from "../../react-app/src/contracts/factories/MutualityToken__factory"
-import { MutualityToken } from "../../react-app/src/contracts/MutualityToken"
-import { parseEther } from "ethers/lib/utils"
-import { readFileSync } from "fs"
-import { NetworkRegistry__factory } from "../../react-app/src/contracts/factories/NetworkRegistry__factory"
-import { NetworkRegistry } from "../../react-app/src/contracts/NetworkRegistry"
+import {ethers, getNamedAccounts} from "hardhat"
+import {UnderwriteManager} from "../types/UnderwriteManager"
+import {UnderwriteManager__factory} from "../../react-app/src/contracts/factories/UnderwriteManager__factory"
+import {MutualityToken__factory} from "../../react-app/src/contracts/factories/MutualityToken__factory"
+import {MutualityToken} from "../../react-app/src/contracts/MutualityToken"
+import {parseEther} from "ethers/lib/utils"
+import {readFileSync} from "fs"
+import {NetworkRegistry__factory} from "../../react-app/src/contracts/factories/NetworkRegistry__factory"
+import {NetworkRegistry} from "../../react-app/src/contracts/NetworkRegistry"
 const fs = require("fs")
 
 const underwriteAbi = "./deployments/localhost/UnderwriteManager_Proxy.json"
@@ -14,9 +14,9 @@ const mutualityAbi = "./deployments/localhost/MutualityToken_Proxy.json"
 const rUSDAbi = "./deployments/localhost/RUSD_Proxy.json"
 const networkRegistryAbi = "./deployments/localhost/NetworkRegistry_Proxy.json"
 
-// Add your business's multiSig address
+// Add business multiSig addresses
 const members = ["0x7fB7a463A9817C88aF7F223242968Ce882A0D7fD"]
-// Add your underwriter address
+// Add underwriter addresses
 const underwriters = ["0x7A900e4b37D5635Ccec6Ab8751f5Feb652b6bc8d"]
 
 async function issueCreditLine() {

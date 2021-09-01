@@ -1,14 +1,15 @@
-import { Box, BoxProps } from "@chakra-ui/layout"
-import { Center, HStack, Text, useDisclosure } from "@chakra-ui/react"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { useEffect, useState } from "react"
-import { useHistory } from "react-router-dom"
+import {Box, BoxProps} from "@chakra-ui/layout"
+import {Center, HStack, Text, useDisclosure} from "@chakra-ui/react"
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome"
+import {useEffect, useState} from "react"
+import {useHistory} from "react-router-dom"
 import GlyphLabel from "../glyph/GlyphLabel"
-import { faCircle } from "@fortawesome/free-solid-svg-icons"
-import { ethers } from "ethers"
-import { useWeb3Context } from "web3-react"
-import { getAbbreviatedAddress } from "../../utils/stringFormat"
+import {faCircle} from "@fortawesome/free-solid-svg-icons"
+import {ethers} from "ethers"
+import {useWeb3Context} from "web3-react"
+import {getAbbreviatedAddress} from "../../utils/stringFormat"
 import WalletInfoModal from "./WalletInfoModal"
+import {useGetMuBalance} from "../../services/web3/mutuality"
 
 const pillContainerStyles: BoxProps = {
   bgColor: "white",
@@ -27,10 +28,12 @@ const walletPillContainerStyles: BoxProps = {
   marginLeft: "1em !important",
 }
 
-const WalletInfo = ({ ...rest }: BoxProps) => {
+const WalletInfo = ({...rest}: BoxProps) => {
   const history = useHistory()
   const context = useWeb3Context()
   const walletInfoModal = useDisclosure()
+  const getMuBalance = useGetMuBalance()
+  const [muBalance, setMuBalance] = useState("0.00")
 
   const [walletAddress, setWalletAddress] = useState("")
 
@@ -42,6 +45,8 @@ const WalletInfo = ({ ...rest }: BoxProps) => {
       }
       const provider = new ethers.providers.Web3Provider(context.library.provider)
       setWalletAddress(await provider.getSigner().getAddress())
+      const balance = await getMuBalance()
+      setMuBalance(balance)
     }
     setWallet()
   }, [context])
@@ -56,18 +61,18 @@ const WalletInfo = ({ ...rest }: BoxProps) => {
             mx={2}
             pr={10}
             size="sm"
-            variant="balance"
+            variant="gradient"
             value={0}
           />
         </Center>
-        <Center {...pillContainerStyles} right={0} borderColor="primary.dark">
+        <Center {...pillContainerStyles} right={0} borderColor="black">
           <GlyphLabel
             loading={false}
             lineHeight="0"
             mx={2}
             size="sm"
-            variant="gradient"
-            value={0}
+            variant="price"
+            value={muBalance}
           />
         </Center>
         {walletAddress && (

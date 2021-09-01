@@ -8,5 +8,5 @@ contract MutualityToken is ERC20Upgradeable {
         _mint(msg.sender, initialSupply);
     }
 
-    //TODO: locking mechanism
+    //TODO: lock down transfer function to underwriterManager contract for a certain time line
 }

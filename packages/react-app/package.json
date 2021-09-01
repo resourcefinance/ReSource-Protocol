@@ -41,7 +41,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "subgraph-codegen": "yarn graphql-codegen --config src/graphql/subgraph/codegen.yml",
-    "resource-network-codegen": "yarn graphql-codegen --config src/graphql/subgraph/codegen.yml",
+    "resource-network-codegen": "yarn graphql-codegen --config src/graphql/resource-network/codegen.yml",
     "codegen": "yarn run subgraph-codegen && yarn run resource-network-codegen"
   },
   "eslintConfig": {

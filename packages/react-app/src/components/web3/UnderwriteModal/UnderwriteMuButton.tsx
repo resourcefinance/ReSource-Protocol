@@ -1,30 +1,45 @@
-import { BoxProps, VStack } from "@chakra-ui/layout"
-import { Button, useToast } from "@chakra-ui/react"
+import { Button, ButtonProps, useToast } from "@chakra-ui/react"
 import { faCheckCircle } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import React, { useEffect, useState } from "react"
-import { useUnderwrite } from "../../../services/web3/underwriteManager"
+import { CONTRACTS } from "../../../constants"
+import {
+  useMututalityTokenContract,
+  useUnderwriteManagerContract,
+} from "../../../services/web3/contracts"
+import { useIsApprovedState, useRevertApproval } from "./utils"
 
-export interface StakeMuButtonProps {
-  networkTokenAddress: string
-  collateralAmount: string
+const MIN_CREDIT_LINE = 500
+
+export interface StakeMuButtonProps extends ButtonProps {
+  collateralAmount: number
+  creditLineAmount: number
   underwritee: string
-  isApproved: boolean
 }
 
-const UnderwriteMuButton = ({
-  isApproved,
-  collateralAmount,
-  underwritee,
-  networkTokenAddress,
-}: StakeMuButtonProps) => {
-  const underwrite = useUnderwrite()
+const UnderwriteMuButton = (props: StakeMuButtonProps) => {
+  const { collateralAmount, creditLineAmount, underwritee, ...rest } = props
+  const [insufficientAllowance, setInsufficientAllowance] = useState(true)
+  const insufficientCreditLine = creditLineAmount < MIN_CREDIT_LINE
+  const { underwrite } = useUnderwriteManagerContract()
+  const { allowance } = useMututalityTokenContract()
+  const revertApproval = useRevertApproval()
+  const isApproved = useIsApprovedState()
   const toast = useToast()
+
+  useEffect(() => {
+    allowance().then((res) => {
+      console.log("UnderwriteMuButton.tsx --  res", res)
+      setInsufficientAllowance(false)
+    })
+  }, [])
 
   const handleStake = async () => {
     try {
-      await underwrite({ collateralAmount, underwritee, networkTokenAddress })
-      // await listenForApproval(setIsApproved)
+      console.log("UnderwriteMuButton.tsx --  collateralAmount", collateralAmount)
+      console.log("UnderwriteMuButton.tsx --  underwritee", underwritee)
+      // await revertApproval()
+      // await underwrite({ collateralAmount, underwritee, networkTokenAddress: CONTRACTS.RUSDToken })
     } catch (e) {
       if (e.code === 4001) {
         toast({ description: "Transaction rejected", position: "top-right", status: "error" })
@@ -36,11 +51,13 @@ const UnderwriteMuButton = ({
 
   return (
     <Button
-      isDisabled={!isApproved}
+      colorScheme="blue"
+      isDisabled={!isApproved || insufficientCreditLine || insufficientAllowance}
       leftIcon={<FontAwesomeIcon icon={faCheckCircle} />}
       onClick={async () => await handleStake()}
+      {...rest}
     >
-      Stake MU
+      {insufficientCreditLine ? "Insufficient credit line" : "Stake MU"}
     </Button>
   )
 }

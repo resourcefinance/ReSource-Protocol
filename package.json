@@ -38,6 +38,7 @@
     "fundedwallet": "cd packages/hardhat && npx hardhat fundedwallet",
     "flatten": "cd packages/hardhat && npx hardhat flatten",
     "clean": "cd packages/hardhat && npx hardhat clean",
+    "local-setup": "hardhat run scripts/local-setup.ts",
     "run-graph-node": "yarn workspace @mu-dapp/services run-graph-node",
     "remove-graph-node": "yarn workspace @mu-dapp/services remove-graph-node",
     "clean-graph-node": "yarn workspace @mu-dapp/services clean-graph-node",

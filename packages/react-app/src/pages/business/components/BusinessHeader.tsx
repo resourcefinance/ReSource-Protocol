@@ -1,10 +1,13 @@
 import { StackProps, Text } from "@chakra-ui/layout"
-import { BoxProps, Button, Flex, Heading, HStack } from "@chakra-ui/react"
+import { Box, BoxProps, Button, Flex, Heading, HStack, useDisclosure } from "@chakra-ui/react"
 import { faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import React from "react"
 import { Link, useLocation, useParams } from "react-router-dom"
 import { headerHeight } from "../../../components/Header"
+import { ViewStorefrontButton } from "../../../components/ViewStorefrontButton"
+import UnderwriteModal from "../../../components/web3/UnderwriteModal/UnderwriteModal"
+import { Business } from "../../../generated/graphql"
 import { gradients } from "../../../theme/foundations/colors"
 import { useQueryBusinessViaHandleInUrl } from "../utils/hooks"
 
@@ -25,22 +28,39 @@ const containerStyles: StackProps = {
 
 export const BusinessHeader = () => {
   const { data } = useQueryBusinessViaHandleInUrl()
-  const business = data?.findOneBusinessByHandle
+  const business = data?.findOneBusinessByHandle as Business
 
   return (
     <Flex {...containerStyles}>
       <HStack w="300px" spacing={4}>
         <Heading size="subtitle">{business?.name}</Heading>
-        <ViewStoreFrontButton handle={business?.handle ?? ""} />
+        <ViewStorefrontButton handle={business?.handle ?? ""} />
       </HStack>
       <ToggleButton />
-
       <Flex w="300px" justify="flex-end">
-        <Button variant="primary" colorScheme="blue">
-          Underwrite
-        </Button>
+        <UnderwriteModalContainer business={business} />
       </Flex>
     </Flex>
+  )
+}
+
+interface ModalContainerProps extends BoxProps {
+  business?: Business | null
+}
+const UnderwriteModalContainer = ({ business, ...props }: ModalContainerProps) => {
+  const underwriteModal = useDisclosure()
+  if (!business) return null
+  return (
+    <Box>
+      <Button variant="primary" colorScheme="blue" onClick={underwriteModal.onOpen}>
+        Underwrite
+      </Button>
+      <UnderwriteModal
+        isOpen={underwriteModal.isOpen}
+        onClose={underwriteModal.onClose}
+        business={business}
+      />
+    </Box>
   )
 }
 
@@ -74,23 +94,6 @@ const ToggleButton = () => {
         <Text>transactions</Text>
       </Button>
     </HStack>
-  )
-}
-
-type Props = { handle: string } & BoxProps
-const ViewStoreFrontButton = ({ handle, ...rest }: Props) => {
-  return (
-    <Button
-      as={"a"}
-      variant="link"
-      color="blue.main"
-      target="_blank"
-      rel="noopener noreferrer"
-      href={`https://app.resourcenetwork.co/${handle}`}
-      rightIcon={<FontAwesomeIcon icon={faExternalLinkAlt} />}
-    >
-      View storefront
-    </Button>
   )
 }
 

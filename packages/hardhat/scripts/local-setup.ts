@@ -14,10 +14,16 @@ const mutualityAbi = "./deployments/localhost/MutualityToken_Proxy.json"
 const rUSDAbi = "./deployments/localhost/RUSD_Proxy.json"
 const networkRegistryAbi = "./deployments/localhost/NetworkRegistry_Proxy.json"
 
-// Add business multiSig addresses
-const members = ["0x7fB7a463A9817C88aF7F223242968Ce882A0D7fD"]
-// Add underwriter addresses
-const underwriters = ["0x7A900e4b37D5635Ccec6Ab8751f5Feb652b6bc8d"]
+// Add your business's multiSig address
+const members = [
+  "0x7fB7a463A9817C88aF7F223242968Ce882A0D7fD",
+  "0x9620C68f4B0CE33A32dEeEc22C9DDe28a7EFda6f", // nate local
+]
+// Add your underwriter address
+const underwriters = [
+  "0x7A900e4b37D5635Ccec6Ab8751f5Feb652b6bc8d", // bridger
+  "0xa7b9b3E61a5d3063510C54C9a6561A193c6a4a06", // nate
+]
 
 async function issueCreditLine() {
   try {

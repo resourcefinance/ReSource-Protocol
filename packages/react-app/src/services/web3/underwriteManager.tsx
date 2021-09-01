@@ -1,6 +1,6 @@
 import { useWeb3Context } from "web3-react"
 import { ethers } from "ethers"
-import { CONTRACTS } from "../../constants"
+import { CONTRACTS } from "./constants"
 import { useToast } from "@chakra-ui/react"
 import { UnderwriteManager__factory } from "../../contracts/factories/UnderwriteManager__factory"
 import { UnderwriteManager } from "../../contracts"

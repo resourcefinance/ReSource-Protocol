@@ -14,6 +14,7 @@ interface Props extends BoxProps {
 const BusinessSummaryPage = ({ ...rest }: Props) => {
   const { data, called, loading } = useQueryBusinessViaHandleInUrl()
   const business = data?.findOneBusinessByHandle as Business
+  console.log("BusinessSummaryPage.tsx --  business.wallet", business?.wallet)
 
   if (loading) return null
   if (called && !loading && !business?.id) return <NoSearchResults />

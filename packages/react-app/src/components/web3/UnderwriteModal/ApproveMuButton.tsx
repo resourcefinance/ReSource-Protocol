@@ -1,28 +1,20 @@
-import { BoxProps, VStack } from "@chakra-ui/layout"
-import { Button, Center, Container, Text, useToast } from "@chakra-ui/react"
+import { Button, ButtonProps, useToast } from "@chakra-ui/react"
 import { faCheckCircle, faThumbsUp } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import React, { useEffect, useState } from "react"
-import {
-  useCheckApproved,
-  useApprove,
-  useListenForApproval,
-} from "../../../services/web3/mutuality"
+import React from "react"
+import { useMututalityTokenContract } from "../../../services/web3/contracts"
+import { useIsApprovedState, useListenForApproval } from "./utils"
 
-export interface ApproveMuProps {
-  isApproved: boolean
-  setIsApproved: (value: boolean) => void
-}
-
-const ApproveMuButton = ({ isApproved, setIsApproved }: ApproveMuProps) => {
+const ApproveMuButton = (props: ButtonProps) => {
+  const isApproved = useIsApprovedState()
   const listenForApproval = useListenForApproval()
-  const approve = useApprove()
+  const { approve } = useMututalityTokenContract()
   const toast = useToast()
 
   const handleApprove = async () => {
     try {
       await approve()
-      await listenForApproval(setIsApproved)
+      await listenForApproval()
     } catch (e) {
       if (e.code === 4001) {
         toast({ description: "Transaction rejected", position: "top-right", status: "error" })
@@ -34,9 +26,12 @@ const ApproveMuButton = ({ isApproved, setIsApproved }: ApproveMuProps) => {
 
   return (
     <Button
+      colorScheme="blue"
+      variant="secondary"
       isDisabled={isApproved}
       leftIcon={<FontAwesomeIcon icon={isApproved ? faCheckCircle : faThumbsUp} />}
       onClick={async () => await handleApprove()}
+      {...props}
     >
       {isApproved ? "Approved" : "Approve"}
     </Button>

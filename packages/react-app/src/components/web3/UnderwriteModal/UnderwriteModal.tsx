@@ -1,4 +1,7 @@
 import {
+  Avatar,
+  Box,
+  Heading,
   HStack,
   Modal,
   ModalBody,
@@ -7,14 +10,12 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Text,
 } from "@chakra-ui/react"
-import { useEffect, useState } from "react"
-import { useCheckApproved } from "../../../services/web3/mutuality"
-import ApproveMuButton from "./ApproveMuButton"
-import UnderwriteMuButton from "./UnderwriteMuButton"
-import { CONTRACTS } from "../../../constants"
+import React, { useState } from "react"
+import { ViewStorefrontButton } from "../../../components/ViewStorefrontButton"
 import { Business } from "../../../generated/graphql"
+import { CONTRACTS } from "../../../services/web3/constants"
+import { UnderwriteForm } from "./UnderwriteForm"
 
 export interface UnderwriteModalProps {
   onClose: () => void
@@ -23,29 +24,24 @@ export interface UnderwriteModalProps {
 }
 
 const UnderwriteModal = ({ isOpen, onClose, business }: UnderwriteModalProps) => {
-  const [isApproved, setIsApproved] = useState(false)
-  const checkApproved = useCheckApproved()
-  const [collateralAmount, setCollateralAmount] = useState("0")
-  const [networkToken, setNetworkToken] = useState("")
-
   const underwritee = business.wallet?.multiSigAddress
-
-  useEffect(() => {
-    const check = async () => {
-      try {
-        const approved = await checkApproved()
-        console.log(approved)
-        setIsApproved(approved)
-      } catch (e) {
-        console.log(e)
-        setIsApproved(false)
-      }
-    }
-    check()
-    setNetworkToken(CONTRACTS.RUSDToken)
-  }, [])
-
   if (!underwritee) return null
+
+  const BusinessHeader = () => {
+    return (
+      <HStack mt={3} mb={4} align="stretch" justify="flex-start">
+        <Box>
+          <Avatar mb={4} h="50px" w="50px" src={business.logoUrl ?? ""} />
+        </Box>
+        <Box>
+          <Heading mx={1} size="header">
+            {business.name}
+          </Heading>
+          <ViewStorefrontButton handle={business.handle} />
+        </Box>
+      </HStack>
+    )
+  }
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} isCentered>
@@ -55,18 +51,11 @@ const UnderwriteModal = ({ isOpen, onClose, business }: UnderwriteModalProps) =>
           Underwrite Business
           <ModalCloseButton />
         </ModalHeader>
-        <ModalBody></ModalBody>
-        <ModalFooter>
-          <HStack>
-            <ApproveMuButton isApproved={isApproved} setIsApproved={setIsApproved} />
-            <UnderwriteMuButton
-              isApproved={isApproved}
-              collateralAmount={collateralAmount}
-              networkTokenAddress={networkToken}
-              underwritee={underwritee}
-            />
-          </HStack>
-        </ModalFooter>
+        <ModalBody>
+          <BusinessHeader />
+          <UnderwriteForm business={business} />
+        </ModalBody>
+        {/* <ModalFooter></ModalFooter> */}
       </ModalContent>
     </Modal>
   )

@@ -1,17 +1,16 @@
-import { BoxProps, VStack } from "@chakra-ui/layout"
-import { Button, Center, Container, Text, useToast } from "@chakra-ui/react"
-import { faCoins } from "@fortawesome/free-solid-svg-icons"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import React, { useEffect, useState } from "react"
-import { Business } from "../../generated/graphql"
-import { useClaimReward } from "../../services/web3/underwriteManager"
+import {Button, useToast} from "@chakra-ui/react"
+import {faCoins} from "@fortawesome/free-solid-svg-icons"
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome"
+import React from "react"
+import {Business} from "../../generated/graphql"
+import {useUnderwriteManagerContract} from "../../services/web3/contracts"
 
 export interface ClaimRewardsButtonProps {
   businesses: Business[]
 }
 
-const ClaimRewardsButton = ({ businesses }: ClaimRewardsButtonProps) => {
-  const claimRewards = useClaimReward()
+const ClaimRewardsButton = ({businesses}: ClaimRewardsButtonProps) => {
+  const {claimReward} = useUnderwriteManagerContract()
   const toast = useToast()
   let underwritees: string[] = new Array(businesses.length)
   for (let business of businesses) {
@@ -21,10 +20,10 @@ const ClaimRewardsButton = ({ businesses }: ClaimRewardsButtonProps) => {
 
   const handleClaimRewards = async () => {
     try {
-      if (underwritees.length > 0) await claimRewards({ underwritees })
+      if (underwritees.length > 0) await claimReward({underwritees})
     } catch (e) {
       if (e.code === 4001) {
-        toast({ description: "Transaction rejected", position: "top-right", status: "error" })
+        toast({description: "Transaction rejected", position: "top-right", status: "error"})
       } else {
         console.log(e)
       }

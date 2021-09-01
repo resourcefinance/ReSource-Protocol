@@ -1,16 +1,17 @@
 import {Box, BoxProps} from "@chakra-ui/layout"
 import {Center, HStack, Text, useDisclosure} from "@chakra-ui/react"
+import {faCircle} from "@fortawesome/free-solid-svg-icons"
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome"
+import {ethers} from "ethers"
 import {useEffect, useState} from "react"
 import {useHistory} from "react-router-dom"
-import GlyphLabel from "../glyph/GlyphLabel"
-import {faCircle} from "@fortawesome/free-solid-svg-icons"
-import {ethers} from "ethers"
 import {useWeb3Context} from "web3-react"
+import {CONTRACTS} from "../../constants"
+import {MutualityToken, MutualityToken__factory} from "../../contracts"
+import {useUnderwriterSubscription} from "../../generated/graphql"
 import {getAbbreviatedAddress} from "../../utils/stringFormat"
+import GlyphLabel from "../glyph/GlyphLabel"
 import WalletInfoModal from "./WalletInfoModal"
-import {useGetMuBalance} from "../../services/web3/mutuality"
-import {Underwriter, useUnderwriterSubscription} from "../../generated/graphql"
 
 const pillContainerStyles: BoxProps = {
   bgColor: "white",
@@ -102,6 +103,25 @@ const WalletInfo = ({...rest}: BoxProps) => {
       </HStack>
     </Box>
   )
+}
+
+const useGetMuBalance = () => {
+  const context = useWeb3Context()
+
+  return async () => {
+    const provider = new ethers.providers.Web3Provider(context.library.provider)
+    const signer = provider.getSigner()
+
+    const mutualityToken = new ethers.Contract(
+      CONTRACTS.MutualityToken,
+      MutualityToken__factory.createInterface(),
+      provider,
+    ) as MutualityToken
+
+    const address = await signer.getAddress()
+
+    return ethers.utils.formatEther(await mutualityToken.connect(signer).balanceOf(address))
+  }
 }
 
 export default WalletInfo

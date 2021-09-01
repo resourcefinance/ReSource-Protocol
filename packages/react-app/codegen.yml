@@ -7,7 +7,7 @@ generates:
     schema: http://localhost:8000/subgraphs/name/mu-dapp
     generates:
       config:
-        defaultBaseOptions: { context: { clientName: "subgraph" } }
+        defaultBaseOptions: {context: {clientName: "subgraph"}}
         withHooks: true
         preResolveTypes: true
       plugins:
@@ -19,5 +19,6 @@ generates:
       - "typescript-operations"
       - "typescript-react-apollo"
     config:
+      defaultBaseOptions: {context: {}}
       withHooks: true
       preResolveTypes: true

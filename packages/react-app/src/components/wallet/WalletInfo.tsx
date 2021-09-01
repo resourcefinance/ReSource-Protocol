@@ -34,7 +34,13 @@ const WalletInfo = ({...rest}: BoxProps) => {
   const context = useWeb3Context()
   const walletInfoModal = useDisclosure()
   const getMuBalance = useGetMuBalance()
-  const underwriterSubscription = useUnderwriterSubscription({variables: {id: context.account}})
+  const underwriterSubscription = useUnderwriterSubscription({
+    variables: {id: context.account || ""},
+  })
+
+  const {loading, data, error} = underwriterSubscription
+
+  console.log(data)
 
   const [muBalance, setMuBalance] = useState("0.00")
 

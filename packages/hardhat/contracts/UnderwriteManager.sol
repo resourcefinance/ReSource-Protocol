@@ -235,8 +235,13 @@ contract UnderwriteManager is OwnableUpgradeable {
         networks[networkAddress] = false;
     }
 
+    // Returns calculation in mwei units
     function calculateCredit(uint256 collateralAmount) public pure returns (uint256) {
         return ((collateralAmount / MWEI) * (LEVERAGE_DENOMINATOR)) / MU_PRICE_DENOMINATOR_USD;
+    }
+    // Returns calculation in ether units
+    function calculateCollateral(uint256 creditAmount) public pure returns (uint256) {
+        return ((creditAmount * MWEI) * (LEVERAGE_DENOMINATOR)) / MU_PRICE_DENOMINATOR_USD;
     }
 
     /*

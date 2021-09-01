@@ -10,6 +10,7 @@ import {useWeb3Context} from "web3-react"
 import {getAbbreviatedAddress} from "../../utils/stringFormat"
 import WalletInfoModal from "./WalletInfoModal"
 import {useGetMuBalance} from "../../services/web3/mutuality"
+import {Underwriter, useUnderwriterSubscription} from "../../generated/graphql"
 
 const pillContainerStyles: BoxProps = {
   bgColor: "white",
@@ -33,6 +34,8 @@ const WalletInfo = ({...rest}: BoxProps) => {
   const context = useWeb3Context()
   const walletInfoModal = useDisclosure()
   const getMuBalance = useGetMuBalance()
+  const underwriterSubscription = useUnderwriterSubscription({variables: {id: context.account}})
+
   const [muBalance, setMuBalance] = useState("0.00")
 
   const [walletAddress, setWalletAddress] = useState("")

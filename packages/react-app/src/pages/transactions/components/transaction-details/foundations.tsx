@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import React from "react"
 import GlyphLabel, { GlyphLabelProps } from "../../../../components/glyph/GlyphLabel"
 import config from "../../../../config"
-import { Transaction } from "../../../../generated/graphql"
+import { Transaction } from "../../../../generated/resource-network/graphql"
 import { transactionStatusPropsMap } from "../transaction-table/TransactionStatusCell"
 
 export const label: TextProps = {

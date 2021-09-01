@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import React from "react"
 import { CellProps } from "react-table"
 import { TransactionRowData } from "."
-import { Transaction } from "../../../../generated/graphql"
+import { Transaction } from "../../../../generated/resource-network/graphql"
 import { TransactionType } from "../../../../store/transaction"
 import { baseCellStyles, Header, TransactionColumn, transactionTypeIconMap } from "./foundations"
 

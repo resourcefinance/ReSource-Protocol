@@ -10,5 +10,3 @@ typechain/
 
 # files
 coverage.json
-*.yml
-*.yaml

@@ -33,7 +33,6 @@ export const Header = () => {
   const walletModal = useDisclosure()
 
   useEffect(() => {
-    console.log(context)
     if (!context.active) {
       history.push("/")
       walletModal.onOpen()

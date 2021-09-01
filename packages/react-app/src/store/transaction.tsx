@@ -1,6 +1,6 @@
 import { keyBy } from "lodash"
 import { atom, DefaultValue, selector, selectorFamily } from "recoil"
-import { Transaction, TransactionOrderByInput } from "../generated/graphql"
+import { Transaction, TransactionOrderByInput } from "../generated/resource-network/graphql"
 
 export type TransactionType =
   | "all"

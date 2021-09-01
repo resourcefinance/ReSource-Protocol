@@ -1,15 +1,15 @@
-import {Box, BoxProps} from "@chakra-ui/layout"
-import {Center, HStack, Text, useDisclosure} from "@chakra-ui/react"
-import {faCircle} from "@fortawesome/free-solid-svg-icons"
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome"
-import {ethers} from "ethers"
-import {useEffect, useState} from "react"
-import {useHistory} from "react-router-dom"
-import {useWeb3Context} from "web3-react"
-import {CONTRACTS} from "../../constants"
-import {MutualityToken, MutualityToken__factory} from "../../contracts"
-import {useUnderwriterSubscription} from "../../generated/graphql"
-import {getAbbreviatedAddress} from "../../utils/stringFormat"
+import { Box, BoxProps } from "@chakra-ui/layout"
+import { Center, HStack, Text, useDisclosure } from "@chakra-ui/react"
+import { faCircle } from "@fortawesome/free-solid-svg-icons"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { ethers } from "ethers"
+import { useEffect, useState } from "react"
+import { useHistory } from "react-router-dom"
+import { useWeb3Context } from "web3-react"
+import { CONTRACTS } from "../../constants"
+import { MutualityToken, MutualityToken__factory } from "../../contracts"
+import { useUnderwriterSubscription } from "../../generated/subgraph/graphql"
+import { getAbbreviatedAddress } from "../../utils/stringFormat"
 import GlyphLabel from "../glyph/GlyphLabel"
 import WalletInfoModal from "./WalletInfoModal"
 
@@ -30,18 +30,16 @@ const walletPillContainerStyles: BoxProps = {
   marginLeft: "1em !important",
 }
 
-const WalletInfo = ({...rest}: BoxProps) => {
+const WalletInfo = ({ ...rest }: BoxProps) => {
   const history = useHistory()
   const context = useWeb3Context()
   const walletInfoModal = useDisclosure()
   const getMuBalance = useGetMuBalance()
   const underwriterSubscription = useUnderwriterSubscription({
-    variables: {id: context.account || ""},
+    variables: { id: context.account || "" },
   })
 
-  const {loading, data, error} = underwriterSubscription
-
-  console.log(data)
+  const { loading, data, error } = underwriterSubscription
 
   const [muBalance, setMuBalance] = useState("0.00")
 

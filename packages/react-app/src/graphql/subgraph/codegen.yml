@@ -1,0 +1,16 @@
+overwrite: true
+schema:
+  - "http://localhost:8000/subgraphs/name/mu-dapp"
+documents:
+  - "src/graphql/subgraph/*.graphql"
+generates:
+  src/generated/subgraph/graphql.tsx:
+    schema: http://localhost:8000/subgraphs/name/mu-dapp
+    config:
+      defaultBaseOptions: {context: {clientName: "subgraph"}}
+      withHooks: true
+      preResolveTypes: true
+    plugins:
+      - "typescript"
+      - "typescript-operations"
+      - "typescript-react-apollo"

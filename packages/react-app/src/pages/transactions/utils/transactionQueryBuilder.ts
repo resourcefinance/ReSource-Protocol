@@ -1,5 +1,5 @@
 import { isEmpty } from "lodash"
-import { OrderStatus, TransactionWhereInput } from "../../../generated/graphql"
+import { OrderStatus, TransactionWhereInput } from "../../../generated/resource-network/graphql"
 import { TransactionType } from "../../../store/transaction"
 
 type FilterProps = {

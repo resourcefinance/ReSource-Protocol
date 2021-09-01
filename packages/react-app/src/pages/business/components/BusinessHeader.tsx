@@ -7,7 +7,7 @@ import { Link, useLocation, useParams } from "react-router-dom"
 import { headerHeight } from "../../../components/Header"
 import { ViewStorefrontButton } from "../../../components/ViewStorefrontButton"
 import UnderwriteModal from "../../../components/web3/UnderwriteModal/UnderwriteModal"
-import { Business } from "../../../generated/graphql"
+import { Business } from "../../../generated/resource-network/graphql"
 import { gradients } from "../../../theme/foundations/colors"
 import { useQueryBusinessViaHandleInUrl } from "../utils/hooks"
 

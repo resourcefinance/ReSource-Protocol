@@ -4,7 +4,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import React from "react"
 import { Link } from "react-router-dom"
 import { GlyphColor } from "../../../../components/glyph/Glyph"
-import { Business, Listing, Order, Transaction } from "../../../../generated/graphql"
+import {
+  Business,
+  Listing,
+  Order,
+  Transaction,
+} from "../../../../generated/resource-network/graphql"
 import { localizedDayJs } from "../../../../utils/dayjs"
 import { OrderStatusMenu } from "../OrderStatusMenu"
 import { transactionTypeIconMap } from "../transaction-table/foundations"

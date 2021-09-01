@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom"
 import {
   useFindBusinessByHandleQuery,
   useFindTransactionByIdQuery,
-} from "../../../generated/graphql"
+} from "../../../generated/resource-network/graphql"
 
 // this hook should only be used inside BusinessRoutes, otherwise, handle will be undfined and the
 // network call will not be executed

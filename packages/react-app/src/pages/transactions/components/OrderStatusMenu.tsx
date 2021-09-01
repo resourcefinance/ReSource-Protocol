@@ -1,7 +1,7 @@
 import { Box, HStack, MenuProps, Text } from "@chakra-ui/react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import React, { useState } from "react"
-import { Order } from "../../../generated/graphql"
+import { Order } from "../../../generated/resource-network/graphql"
 import { orderStatusPropsMap } from "./transaction-table/OrderCell"
 
 interface Props extends Omit<MenuProps, "children"> {

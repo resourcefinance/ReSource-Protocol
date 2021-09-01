@@ -2,7 +2,7 @@ import {Button, useToast} from "@chakra-ui/react"
 import {faCoins} from "@fortawesome/free-solid-svg-icons"
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome"
 import React from "react"
-import {Business} from "../../generated/graphql"
+import {Business} from "../../generated/resource-network/graphql"
 import {useUnderwriteManagerContract} from "../../services/web3/contracts"
 
 export interface ClaimRewardsButtonProps {

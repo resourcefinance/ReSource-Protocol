@@ -9,7 +9,7 @@ import {
 import React from "react"
 import { CellProps } from "react-table"
 import { TransactionRowData } from "."
-import { Order, OrderStatus, Transaction } from "../../../../generated/graphql"
+import { Order, OrderStatus, Transaction } from "../../../../generated/resource-network/graphql"
 import colors from "../../../../theme/foundations/colors"
 import { OrderStatusMenu } from "../OrderStatusMenu"
 import { Header, TransactionColumn } from "./foundations"

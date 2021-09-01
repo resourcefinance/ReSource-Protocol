@@ -10,6 +10,12 @@
       "options": {
         "tabWidth": 4
       }
+    },
+    {
+      "files": ["*.yml", "*.yaml"],
+      "options": {
+        "bracketSpacing": false
+      }
     }
   ]
 }

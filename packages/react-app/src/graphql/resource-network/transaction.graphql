@@ -30,16 +30,6 @@ query findTransactionById($id: ID!) {
         logoUrl
       }
     }
-    order {
-      id
-      quantity
-      status
-      note
-      listing {
-        title
-        cost
-      }
-    }
   }
 }
 
@@ -70,15 +60,7 @@ query findManyTransactions(
           logoUrl
         }
       }
-      order {
-        id
-        quantity
-        status
-        listing {
-          title
-        }
-      }
-    }
+   }
     total
   }
 }

@@ -1,7 +1,7 @@
 import { BoxProps, StackProps, Text } from "@chakra-ui/layout"
 import { Box, HStack, VStack } from "@chakra-ui/react"
 import React from "react"
-import { Business } from "../../../generated/graphql"
+import { Business } from "../../../generated/resource-network/graphql"
 import colors from "../../../theme/foundations/colors"
 import { localizedDayJs } from "../../../utils/dayjs"
 import { NoSearchResults } from "../components/NoSearchResults"

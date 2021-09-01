@@ -2,7 +2,7 @@ import { VStack } from "@chakra-ui/layout"
 import { Button, Center, Container, useDisclosure } from "@chakra-ui/react"
 import React from "react"
 import UnderwriteModal from "../../components/web3/UnderwriteModal/UnderwriteModal"
-import { Business } from "../../generated/graphql"
+import { Business } from "../../generated/resource-network/graphql"
 
 const TestTransactionPage = () => {
   const underwriteModal = useDisclosure()

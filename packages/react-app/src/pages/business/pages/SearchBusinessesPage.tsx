@@ -1,7 +1,10 @@
 import { BoxProps, VStack } from "@chakra-ui/layout"
 import { Center, Container } from "@chakra-ui/react"
 import React from "react"
-import { Business, useFindBusinessByHandleLazyQuery } from "../../../generated/graphql"
+import {
+  Business,
+  useFindBusinessByHandleLazyQuery,
+} from "../../../generated/resource-network/graphql"
 import { BusinessCard } from "../components/BusinessCard"
 import BusinessSearchBar from "../components/BusinessSearchBar"
 import { NoSearchResults } from "../components/NoSearchResults"

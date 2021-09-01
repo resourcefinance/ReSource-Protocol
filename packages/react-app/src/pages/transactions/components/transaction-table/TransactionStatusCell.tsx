@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import React from "react"
 import { CellProps } from "react-table"
 import { TransactionRowData } from "."
-import { Transaction, TransactionStatus } from "../../../../generated/graphql"
+import { Transaction, TransactionStatus } from "../../../../generated/resource-network/graphql"
 import colors from "../../../../theme/foundations/colors"
 import { baseCellStyles, Header, TransactionColumn } from "./foundations"
 

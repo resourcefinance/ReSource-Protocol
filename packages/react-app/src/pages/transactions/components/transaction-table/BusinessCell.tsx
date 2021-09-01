@@ -2,7 +2,7 @@ import { Avatar, HStack, Text } from "@chakra-ui/react"
 import React from "react"
 import { CellProps } from "react-table"
 import { TransactionRowData } from "."
-import { Transaction } from "../../../../generated/graphql"
+import { Transaction } from "../../../../generated/resource-network/graphql"
 import { baseCellStyles, Header, TransactionColumn } from "./foundations"
 
 export type BusinessCellData = { handle: string; logoUrl: string }

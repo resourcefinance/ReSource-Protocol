@@ -13,7 +13,7 @@ import {
 } from "@chakra-ui/react"
 import React, { useState } from "react"
 import { ViewStorefrontButton } from "../../../components/ViewStorefrontButton"
-import { Business } from "../../../generated/graphql"
+import { Business } from "../../../generated/resource-network/graphql"
 import { CONTRACTS } from "../../../services/web3/constants"
 import { UnderwriteForm } from "./UnderwriteForm"
 

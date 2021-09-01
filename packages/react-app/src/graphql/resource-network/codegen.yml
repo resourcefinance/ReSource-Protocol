@@ -1,0 +1,16 @@
+overwrite: true
+schema:
+  - "http://localhost/graphql"
+documents:
+  - "src/graphql/resource-network/*.graphql"
+generates:
+  src/generated/resource-network/graphql.tsx:
+    schema: http://localhost/graphql
+    config:
+      defaultBaseOptions: {context: {clientName: "resource-network"}}
+      withHooks: true
+      preResolveTypes: true
+    plugins:
+      - "typescript"
+      - "typescript-operations"
+      - "typescript-react-apollo"

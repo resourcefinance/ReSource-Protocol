@@ -3,7 +3,7 @@ import { faArrowLeft } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import React from "react"
 import { useHistory } from "react-router-dom"
-import { Transaction } from "../../generated/graphql"
+import { Transaction } from "../../generated/resource-network/graphql"
 import {
   useQueryBusinessViaHandleInUrl,
   useQueryTransactionViaIdInUrl,

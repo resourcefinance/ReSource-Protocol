@@ -1,5 +1,9 @@
 import { Column } from "react-table"
-import { Order, Transaction, TransactionStatus } from "../../../../generated/graphql"
+import {
+  Order,
+  Transaction,
+  TransactionStatus,
+} from "../../../../generated/resource-network/graphql"
 import { amountColumn } from "./AmountCell"
 import { BusinessCellData, businessColumn, getBusiness } from "./BusinessCell"
 import { dateColumn } from "./DateCell"
@@ -44,7 +48,7 @@ export const fullSchemaDesktop: Column[] = [
   { ...dateColumn, width: 140 },
   { ...amountColumn, width: 95 },
   { ...transactionStatusColumn, width: 100 },
-  { ...orderColumn, width: 100 },
+  // { ...orderColumn, width: 100 },
 ]
 
 export const fullSchemaMobile: Column[] = [
@@ -57,7 +61,7 @@ export const lightSchemaDesktop: Column[] = [
   { ...businessColumn, width: 150 },
   { ...dateColumn, width: 155 },
   { ...amountColumn, width: 95 },
-  { ...orderColumn, width: 115 },
+  // { ...orderColumn, width: 115 },
 ]
 
 export const lightSchemaMobile: Column[] = [{ ...typeColumn }, { ...amountColumn, width: 75 }]

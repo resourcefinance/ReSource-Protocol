@@ -4,7 +4,7 @@ import { Box, SkeletonText, useBreakpointValue } from "@chakra-ui/react"
 import React, { useMemo } from "react"
 import { useSetRecoilState } from "recoil"
 import Table, { OnOrderByProps } from "../../../components/Table"
-import { Transaction } from "../../../generated/graphql"
+import { Transaction } from "../../../generated/resource-network/graphql"
 import { transactionOrderBySelector } from "../../../store/transaction"
 import { useQueryBusinessViaHandleInUrl } from "../../business/utils/hooks"
 import {

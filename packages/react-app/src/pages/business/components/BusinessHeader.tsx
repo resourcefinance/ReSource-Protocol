@@ -1,7 +1,5 @@
 import { StackProps, Text } from "@chakra-ui/layout"
 import { Box, BoxProps, Button, Flex, Heading, HStack, useDisclosure } from "@chakra-ui/react"
-import { faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import React from "react"
 import { Link, useLocation, useParams } from "react-router-dom"
 import { headerHeight } from "../../../components/Header"

@@ -1,7 +1,4 @@
 import {
-  Avatar,
-  Box,
-  Heading,
   HStack,
   Modal,
   ModalBody,
@@ -10,12 +7,18 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  VStack,
 } from "@chakra-ui/react"
-import React, { useState } from "react"
-import { ViewStorefrontButton } from "../../../components/ViewStorefrontButton"
+import { faLink } from "@fortawesome/free-solid-svg-icons"
+import { useFormik } from "formik"
+import React from "react"
+import * as yup from "yup"
 import { Business } from "../../../generated/resource-network/graphql"
-import { CONTRACTS } from "../../../services/web3/constants"
-import { UnderwriteForm } from "./UnderwriteForm"
+import Icon from "../../Icon"
+import ApproveMuButton from "./components/ApproveMuButton"
+import { BusinessHeader } from "./components/BusinessHeader"
+import { CreditField, MuField, useSyncFields } from "./components/FormFields"
+import UnderwriteMuButton from "./components/UnderwriteMuButton"
 
 export interface UnderwriteModalProps {
   onClose: () => void
@@ -25,40 +28,55 @@ export interface UnderwriteModalProps {
 
 const UnderwriteModal = ({ isOpen, onClose, business }: UnderwriteModalProps) => {
   const underwritee = business.wallet?.multiSigAddress
+  const formik = useUnderwriteFormik()
+
+  useSyncFields(formik)
+
   if (!underwritee) return null
 
-  const BusinessHeader = () => {
-    return (
-      <HStack mt={3} mb={4} align="stretch" justify="flex-start">
-        <Box>
-          <Avatar mb={4} h="50px" w="50px" src={business.logoUrl ?? ""} />
-        </Box>
-        <Box>
-          <Heading mx={1} size="header">
-            {business.name}
-          </Heading>
-          <ViewStorefrontButton handle={business.handle} />
-        </Box>
-      </HStack>
-    )
-  }
-
   return (
-    <Modal isOpen={isOpen} onClose={onClose} isCentered>
+    <Modal size="lg" isOpen={isOpen} onClose={onClose} isCentered>
       <ModalOverlay />
-      <ModalContent m="1em">
+      <ModalContent>
         <ModalHeader>
           Underwrite Business
-          <ModalCloseButton />
+          <ModalCloseButton mt={2} />
         </ModalHeader>
         <ModalBody>
-          <BusinessHeader />
-          <UnderwriteForm business={business} />
+          <VStack align="stretch" spacing={6}>
+            <BusinessHeader business={business} />
+            <CreditField formik={formik} />
+            <Icon icon={faLink} alignSelf="center" />
+            <MuField formik={formik} />
+          </VStack>
         </ModalBody>
-        {/* <ModalFooter></ModalFooter> */}
+        <ModalFooter>
+          <HStack>
+            <ApproveMuButton />
+            <UnderwriteMuButton
+              collateralAmount={formik.values.mu}
+              creditLineAmount={formik.values.rusd}
+              underwritee={business.wallet!.multiSigAddress!}
+            />
+          </HStack>
+        </ModalFooter>
       </ModalContent>
     </Modal>
   )
+}
+
+const validation = yup.object({
+  mu: yup.string().required("staked mu value is required"),
+  rusd: yup.string().required("credit line is required"),
+})
+
+const useUnderwriteFormik = () => {
+  return useFormik({
+    validateOnChange: false,
+    validationSchema: validation,
+    initialValues: { mu: 0, rusd: 0 },
+    onSubmit: async (values: { mu: number; rusd: number }) => {},
+  })
 }
 
 export default UnderwriteModal

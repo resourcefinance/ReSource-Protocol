@@ -1,6 +1,6 @@
 import { Center, Flex, HStack, StackProps } from "@chakra-ui/layout"
 import { Image, ImageProps, useDisclosure } from "@chakra-ui/react"
-import { faAdjust, faChartPie, faStore } from "@fortawesome/free-solid-svg-icons"
+import { faChartPie, faStore } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import React, { useEffect } from "react"
 import { useHistory } from "react-router-dom"

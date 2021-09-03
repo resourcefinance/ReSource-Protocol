@@ -2,8 +2,8 @@ import { Button, ButtonProps, useToast } from "@chakra-ui/react"
 import { faCheckCircle, faThumbsUp } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import React from "react"
-import { useMututalityTokenContract } from "../../../services/web3/contracts"
-import { useIsApprovedState, useListenForApproval } from "./utils"
+import { useMututalityTokenContract } from "../../../../services/web3/contracts"
+import { useIsApprovedState, useListenForApproval } from "../utils"
 
 const ApproveMuButton = (props: ButtonProps) => {
   const isApproved = useIsApprovedState()

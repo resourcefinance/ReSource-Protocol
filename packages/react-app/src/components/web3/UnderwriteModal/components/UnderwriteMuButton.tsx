@@ -2,12 +2,11 @@ import { Button, ButtonProps, useToast } from "@chakra-ui/react"
 import { faCheckCircle } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import React, { useEffect, useState } from "react"
-import { CONTRACTS } from "../../../constants"
 import {
   useMututalityTokenContract,
   useUnderwriteManagerContract,
-} from "../../../services/web3/contracts"
-import { useIsApprovedState, useRevertApproval } from "./utils"
+} from "../../../../services/web3/contracts"
+import { useIsApprovedState, useRevertApproval } from "../utils"
 
 const MIN_CREDIT_LINE = 500
 

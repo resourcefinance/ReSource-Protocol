@@ -1,0 +1,14 @@
+fragment WalletFields on Wallet {
+  id
+  isActive
+  multiSigAddress
+  creditLimit
+}
+
+query walletBalance($id: ID!) {
+  walletBalance(id: $id) {
+    availableCredit
+    balance
+    creditLimit
+  }
+}

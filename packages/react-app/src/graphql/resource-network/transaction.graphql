@@ -64,3 +64,10 @@ query findManyTransactions(
     total
   }
 }
+
+query businessTransactionStats($businessId: ID!) {
+  businessTransactionStats(businessId: $businessId) {
+    volume
+    count
+  }
+} 

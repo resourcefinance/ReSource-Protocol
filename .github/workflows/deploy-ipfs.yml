@@ -1,0 +1,49 @@
+name: "Mu dApp - Deploy"
+
+on:
+  push:
+    branches:
+      - production
+      - staging
+
+jobs:
+  bucket_push:
+    runs-on: ubuntu-latest
+    name: push textile bucket
+    steps:
+      - uses: actions/checkout@v1
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install Packages
+        run: SKIP_POSTINSTALL=1 yarn
+
+      - name: Build app
+        run: CI=false yarn codegen && yarn build
+
+      - name: upload
+        id: upload
+        uses: ReSource-Network/ipfs-action@v1.8.1
+        with:
+          path: ./packages/react-app/build
+          pinataPinName: mu-dapp
+          service: pinata
+          pinataKey: ${{ secrets.PINATA_KEY }}
+          pinataSecret: ${{ secrets.PINATA_SECRET }}
+
+      - name: Update DNSLink
+        env:
+          TOKEN: ${{ secrets.CLOUDFLARE_TOKEN }}
+          ZONE_ID: ${{ secrets.CLOUDFLARE_ZONE_ID }}
+          CID: ${{ steps.upload.outputs.hash }}
+          RECORD_DOMAIN: "resource.finance"
+          RECORD_NAME: "_dnslink.app"
+        run: |
+          echo "ENV CID=$CID" >> ${GITHUB_WORKSPACE}/Dockerfile
+          echo "ENV RECORD_DOMAIN=$RECORD_DOMAIN" >> ${GITHUB_WORKSPACE}/Dockerfile
+          echo "ENV RECORD_NAME=$RECORD_NAME" >> ${GITHUB_WORKSPACE}/Dockerfile
+
+          docker build --build-arg CLOUDFLARE_TOKEN=$TOKEN --build-arg CLOUDFLARE_ZONE_ID=$ZONE_ID -t cloudflare-dns .
+          docker run cloudflare-dns

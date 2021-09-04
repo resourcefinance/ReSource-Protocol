@@ -63,7 +63,7 @@ export const Header = () => {
             Portfolio
           </Button>
         </Center>
-        <WalletInfo />
+        {context.library && <WalletInfo />}
       </HStack>
       <WalletModal isOpen={walletModal.isOpen} onClose={walletModal.onClose} />
     </Flex>

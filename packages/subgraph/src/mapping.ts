@@ -1,4 +1,4 @@
-import {BigInt, Address} from "@graphprotocol/graph-ts"
+import { BigInt, Address } from "@graphprotocol/graph-ts"
 import {
   NewCreditLine,
   CreditLineReward,
@@ -6,7 +6,7 @@ import {
   CreditLineWithdrawal,
   ExtendCreditLine,
 } from "../generated/UnderwriteManager/UnderwriteManager"
-import {CreditLine, Underwriter} from "../generated/schema"
+import { CreditLine, Underwriter } from "../generated/schema"
 
 export function handleNewCreditLine(event: NewCreditLine): void {
   let underwriter = Underwriter.load(event.params.creditLine.underwriter.toHex())

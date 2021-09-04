@@ -10,12 +10,23 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  useToast,
 } from "@chakra-ui/react"
+import { ethers } from "ethers"
 import React, { useState } from "react"
+import { useHistory } from "react-router-dom"
+import { useSetRecoilState } from "recoil"
 import { ViewStorefrontButton } from "../../../components/ViewStorefrontButton"
+import { CONTRACTS } from "../../../constants"
 import { Business } from "../../../generated/resource-network/graphql"
-import { CONTRACTS } from "../../../services/web3/constants"
+import {
+  useMututalityTokenContract,
+  useUnderwriteManagerContract,
+} from "../../../services/web3/contracts"
+import { waitForTxEvent } from "../../../services/web3/utils/waitForTxEvent"
+import { useFetchBalance } from "../../../store/wallet"
 import { UnderwriteForm } from "./UnderwriteForm"
+import { isApprovedSelector } from "./utils"
 
 export interface UnderwriteModalProps {
   onClose: () => void
@@ -24,8 +35,65 @@ export interface UnderwriteModalProps {
 }
 
 const UnderwriteModal = ({ isOpen, onClose, business }: UnderwriteModalProps) => {
+  const { underwrite } = useUnderwriteManagerContract()
+  const toast = useToast()
+  const fetchBalance = useFetchBalance()
   const underwritee = business.wallet?.multiSigAddress
+  const setIsApproved = useSetRecoilState(isApprovedSelector)
+  const { approve } = useMututalityTokenContract()
+  const history = useHistory()
+
   if (!underwritee) return null
+
+  const handleStake = async (collateralAmount: number) => {
+    try {
+      const tx = await underwrite({
+        collateralAmount: ethers.utils.parseEther(collateralAmount.toString()).toString(),
+        underwritee,
+        networkTokenAddress: CONTRACTS.RUSDToken,
+      })
+      const confirmed = await waitForTxEvent(tx, "NewCreditLine")
+      if (confirmed) {
+        toast({
+          description: "Approved",
+          position: "top-right",
+          status: "success",
+          isClosable: true,
+        })
+        fetchBalance()
+        onClose()
+        history.push("/portfolio")
+      }
+    } catch (e) {
+      if (e.code === 4001) {
+        toast({ description: "Transaction rejected", position: "top-right", status: "error" })
+      } else {
+        console.log(e)
+      }
+    }
+  }
+
+  const handleApprove = async () => {
+    try {
+      const tx = await approve()
+      const confirmed = await waitForTxEvent(tx, "Approval")
+      if (confirmed) {
+        toast({
+          description: "Approved",
+          position: "top-right",
+          status: "success",
+          isClosable: true,
+        })
+        setIsApproved(true)
+      }
+    } catch (e) {
+      if (e.code === 4001) {
+        toast({ description: "Transaction rejected", position: "top-right", status: "error" })
+      } else {
+        console.log(e)
+      }
+    }
+  }
 
   const BusinessHeader = () => {
     return (
@@ -53,7 +121,7 @@ const UnderwriteModal = ({ isOpen, onClose, business }: UnderwriteModalProps) =>
         </ModalHeader>
         <ModalBody>
           <BusinessHeader />
-          <UnderwriteForm business={business} />
+          <UnderwriteForm business={business} submit={handleStake} approve={handleApprove} />
         </ModalBody>
         {/* <ModalFooter></ModalFooter> */}
       </ModalContent>

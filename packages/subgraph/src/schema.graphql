@@ -8,7 +8,7 @@ type Underwriter @entity {
 type CreditLine @entity {
   id: ID!
   underwritee: Bytes!
-  underwriter: Underwriter!
+  underwriter: Underwriter
   collateral: BigInt!
   networkToken: Bytes!
   issueDate: BigInt!

@@ -6,7 +6,7 @@ dataSources:
     name: UnderwriteManager
     network: "{{network}}"
     source:
-      address: "{{UnderwriteManager_ProxyAddress}}"
+      address: "{{UnderwriteManagerAddress}}"
       abi: UnderwriteManager
       startBlock: {{UnderwriteManagerStartBlock}}
     mapping:

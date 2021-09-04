@@ -9,6 +9,7 @@ import { useWeb3Context } from "web3-react"
 import { CONTRACTS } from "../../constants"
 import { MutualityToken, MutualityToken__factory } from "../../contracts"
 import { useUnderwriterSubscription } from "../../generated/subgraph/graphql"
+import { useGetWallet, useFetchBalance } from "../../store/wallet"
 import { getAbbreviatedAddress } from "../../utils/stringFormat"
 import GlyphLabel from "../glyph/GlyphLabel"
 import WalletInfoModal from "./WalletInfoModal"
@@ -34,14 +35,13 @@ const WalletInfo = ({ ...rest }: BoxProps) => {
   const history = useHistory()
   const context = useWeb3Context()
   const walletInfoModal = useDisclosure()
-  const getMuBalance = useGetMuBalance()
+  const { balance, loading: balanceLoading, error: balanceError } = useGetWallet()
+  const fetchBalance = useFetchBalance()
   const underwriterSubscription = useUnderwriterSubscription({
     variables: { id: context.account || "" },
   })
 
   const { loading, data, error } = underwriterSubscription
-
-  const [muBalance, setMuBalance] = useState("0.00")
 
   const [walletAddress, setWalletAddress] = useState("")
 
@@ -53,8 +53,9 @@ const WalletInfo = ({ ...rest }: BoxProps) => {
       }
       const provider = new ethers.providers.Web3Provider(context.library.provider)
       setWalletAddress(await provider.getSigner().getAddress())
-      const balance = await getMuBalance()
-      setMuBalance(balance)
+      if (provider) {
+        fetchBalance()
+      }
     }
     setWallet()
   }, [context])
@@ -80,7 +81,7 @@ const WalletInfo = ({ ...rest }: BoxProps) => {
             mx={2}
             size="sm"
             variant="price"
-            value={muBalance}
+            value={balance}
           />
         </Center>
         {walletAddress && (
@@ -101,25 +102,6 @@ const WalletInfo = ({ ...rest }: BoxProps) => {
       </HStack>
     </Box>
   )
-}
-
-const useGetMuBalance = () => {
-  const context = useWeb3Context()
-
-  return async () => {
-    const provider = new ethers.providers.Web3Provider(context.library.provider)
-    const signer = provider.getSigner()
-
-    const mutualityToken = new ethers.Contract(
-      CONTRACTS.MutualityToken,
-      MutualityToken__factory.createInterface(),
-      provider,
-    ) as MutualityToken
-
-    const address = await signer.getAddress()
-
-    return ethers.utils.formatEther(await mutualityToken.connect(signer).balanceOf(address))
-  }
 }
 
 export default WalletInfo

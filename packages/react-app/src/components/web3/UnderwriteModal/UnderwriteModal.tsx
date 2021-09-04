@@ -20,7 +20,7 @@ import { BusinessHeader } from "./components/BusinessHeader"
 import { CreditField, MuField, useSyncFields } from "./components/FormFields"
 import UnderwriteMuButton from "./components/UnderwriteMuButton"
 
-export interface UnderwriteModalProps {
+interface UnderwriteModalProps {
   onClose: () => void
   isOpen: boolean
   business: Business
@@ -43,7 +43,7 @@ const UnderwriteModal = ({ isOpen, onClose, business }: UnderwriteModalProps) =>
           <ModalCloseButton mt={2} />
         </ModalHeader>
         <ModalBody>
-          <VStack align="stretch" spacing={6}>
+          <VStack align="stretch" spacing={5}>
             <BusinessHeader business={business} />
             <CreditField formik={formik} />
             <Icon icon={faLink} alignSelf="center" />

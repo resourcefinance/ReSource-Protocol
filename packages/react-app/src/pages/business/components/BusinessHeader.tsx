@@ -4,6 +4,7 @@ import React from "react"
 import { Link, useLocation, useParams } from "react-router-dom"
 import { headerHeight } from "../../../components/Header"
 import { ViewStorefrontButton } from "../../../components/ViewStorefrontButton"
+import ExtendCreditModal from "../../../components/web3/UnderwriteModal/ExtendCreditModal"
 import UnderwriteModal from "../../../components/web3/UnderwriteModal/UnderwriteModal"
 import { Business } from "../../../generated/resource-network/graphql"
 import { gradients } from "../../../theme/foundations/colors"
@@ -53,7 +54,12 @@ const UnderwriteModalContainer = ({ business, ...props }: ModalContainerProps) =
       <Button variant="primary" colorScheme="blue" onClick={underwriteModal.onOpen}>
         Underwrite
       </Button>
-      <UnderwriteModal
+      {/* <UnderwriteModal
+        isOpen={underwriteModal.isOpen}
+        onClose={underwriteModal.onClose}
+        business={business}
+      /> */}
+      <ExtendCreditModal
         isOpen={underwriteModal.isOpen}
         onClose={underwriteModal.onClose}
         business={business}

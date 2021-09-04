@@ -10,24 +10,29 @@ import { GradientGlyphPurple } from "../../../glyph/Glyph"
 
 interface Props extends BoxProps {
   formik: any
+  extendCredit?: boolean
 }
-export const CreditField = ({ formik, ...rest }: Props) => {
+
+export const CreditField = ({ formik, extendCredit, ...rest }: Props) => {
+  const label = `Credit to ${extendCredit ? "extend" : "assign"} & underwrite`
   const setMin = () => formik.setValues({ ...formik.values, rusd: 500 })
 
   return (
     <Box {...containerStyles} {...rest}>
       <HStack justify="space-between">
-        <Text color="gray.700">Credit to assign & underwrite</Text>
-        <Text color="gray.500">min = 500.00</Text>
+        <Text color="gray.700">{label}</Text>
+        {!extendCredit && <Text color="gray.500">min = 500.00</Text>}
       </HStack>
       <HStack align="center" justify="space-between">
         <FormikField formik={formik} formikKey="rusd">
           <Input {...inputStyles} bg={gradients.primary} />
         </FormikField>
         <HStack align="center">
-          <Button {...minButtonStyles} onClick={setMin}>
-            MIN
-          </Button>
+          {!extendCredit && (
+            <Button {...minButtonStyles} onClick={setMin}>
+              MIN
+            </Button>
+          )}
           <GradientGlyphPurple boxSize="36px" />
         </HStack>
       </HStack>

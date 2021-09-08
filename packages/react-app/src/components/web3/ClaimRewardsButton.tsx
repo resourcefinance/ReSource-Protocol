@@ -1,17 +1,18 @@
-import {Button, useToast} from "@chakra-ui/react"
-import {faCoins} from "@fortawesome/free-solid-svg-icons"
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome"
+import { Button } from "@chakra-ui/react"
+import { faCoins } from "@fortawesome/free-solid-svg-icons"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import React from "react"
-import {Business} from "../../generated/resource-network/graphql"
-import {useUnderwriteManagerContract} from "../../services/web3/contracts"
+import { Business } from "../../generated/resource-network/graphql"
+import { useUnderwriteManagerContract } from "../../services/web3/contracts"
+import { useTxToast } from "../../utils/useTxToast"
 
 export interface ClaimRewardsButtonProps {
   businesses: Business[]
 }
 
-const ClaimRewardsButton = ({businesses}: ClaimRewardsButtonProps) => {
-  const {claimReward} = useUnderwriteManagerContract()
-  const toast = useToast()
+const ClaimRewardsButton = ({ businesses }: ClaimRewardsButtonProps) => {
+  const { claimReward } = useUnderwriteManagerContract()
+  const toast = useTxToast()
   let underwritees: string[] = new Array(businesses.length)
   for (let business of businesses) {
     if (!business.wallet?.multiSigAddress) return
@@ -20,10 +21,10 @@ const ClaimRewardsButton = ({businesses}: ClaimRewardsButtonProps) => {
 
   const handleClaimRewards = async () => {
     try {
-      if (underwritees.length > 0) await claimReward({underwritees})
+      if (underwritees.length > 0) await claimReward({ underwritees })
     } catch (e) {
       if (e.code === 4001) {
-        toast({description: "Transaction rejected", position: "top-right", status: "error"})
+        toast({ description: "Transaction rejected", status: "error" })
       } else {
         console.log(e)
       }

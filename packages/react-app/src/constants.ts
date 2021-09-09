@@ -20,7 +20,7 @@ export const NETWORKS = {
 }
 
 export const SUBGRAPH_URLS = {
-  localhost: "http://localhost:8000/subgraphs/name/mu-dapp/graphql",
+  localhost: "http://localhost:8000/subgraphs/name/mu-dapp",
   testnet: "",
   mainet: "",
 }

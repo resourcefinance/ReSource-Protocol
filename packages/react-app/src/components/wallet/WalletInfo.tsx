@@ -6,10 +6,8 @@ import { ethers } from "ethers"
 import { useEffect, useState } from "react"
 import { useHistory } from "react-router-dom"
 import { useWeb3Context } from "web3-react"
-import { CONTRACTS } from "../../constants"
-import { MutualityToken, MutualityToken__factory } from "../../contracts"
-import { useUnderwriterSubscription } from "../../generated/subgraph/graphql"
-import { useGetWallet, useFetchBalance } from "../../store/wallet"
+import { useGetTotalCollateralLazyQuery } from "../../generated/subgraph/graphql"
+import { useGetWallet, useFetchWallet } from "../../store/wallet"
 import { getAbbreviatedAddress } from "../../utils/stringFormat"
 import GlyphLabel from "../glyph/GlyphLabel"
 import WalletInfoModal from "./WalletInfoModal"
@@ -35,13 +33,8 @@ const WalletInfo = ({ ...rest }: BoxProps) => {
   const history = useHistory()
   const context = useWeb3Context()
   const walletInfoModal = useDisclosure()
-  const { balance, loading: balanceLoading, error: balanceError } = useGetWallet()
-  const fetchBalance = useFetchBalance()
-  const underwriterSubscription = useUnderwriterSubscription({
-    variables: { id: context.account || "" },
-  })
-
-  const { loading, data, error } = underwriterSubscription
+  const { balance, totalCollateral, loading: balanceLoading, error: balanceError } = useGetWallet()
+  const fetchWallet = useFetchWallet()
 
   const [walletAddress, setWalletAddress] = useState("")
 
@@ -53,8 +46,8 @@ const WalletInfo = ({ ...rest }: BoxProps) => {
       }
       const provider = new ethers.providers.Web3Provider(context.library.provider)
       setWalletAddress(await provider.getSigner().getAddress())
-      if (provider) {
-        fetchBalance()
+      if (provider && context.account) {
+        fetchWallet()
       }
     }
     setWallet()
@@ -71,7 +64,7 @@ const WalletInfo = ({ ...rest }: BoxProps) => {
             pr={10}
             size="sm"
             variant="gradient"
-            value={0}
+            value={totalCollateral}
           />
         </Center>
         <Center {...pillContainerStyles} right={0} borderColor="black">

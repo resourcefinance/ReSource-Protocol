@@ -10,7 +10,7 @@ import { subgraphLink, useGetNetworkLink } from "./apolloLink"
 
 const defaultOptions: DefaultOptions = {
   query: {
-    // fetchPolicy: "no-cache",
+    fetchPolicy: "no-cache",
     // errorPolicy: "all",
   },
 }

@@ -1,6 +1,18 @@
-subscription underwriter($id: ID!) {
+query getTotalCollateral($id: ID!) {
   underwriter(id: $id) {
     totalCollateral
+  }
+}
+
+query getPortfolio($id: ID!) {
+  underwriter(id: $id) {
     totalRewards
+    creditLines {
+      collateral
+      underwritee
+      totalReward
+      outstandingReward
+      networkToken
+    }
   }
 }

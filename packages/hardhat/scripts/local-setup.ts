@@ -1,12 +1,12 @@
-import {ethers, getNamedAccounts} from "hardhat"
-import {UnderwriteManager} from "../types/UnderwriteManager"
-import {UnderwriteManager__factory} from "../../react-app/src/contracts/factories/UnderwriteManager__factory"
-import {MutualityToken__factory} from "../../react-app/src/contracts/factories/MutualityToken__factory"
-import {MutualityToken} from "../../react-app/src/contracts/MutualityToken"
-import {parseEther} from "ethers/lib/utils"
-import {readFileSync} from "fs"
-import {NetworkRegistry__factory} from "../../react-app/src/contracts/factories/NetworkRegistry__factory"
-import {NetworkRegistry} from "../../react-app/src/contracts/NetworkRegistry"
+import { ethers, getNamedAccounts } from "hardhat"
+import { UnderwriteManager } from "../types/UnderwriteManager"
+import { UnderwriteManager__factory } from "../../react-app/src/contracts/factories/UnderwriteManager__factory"
+import { MutualityToken__factory } from "../../react-app/src/contracts/factories/MutualityToken__factory"
+import { MutualityToken } from "../../react-app/src/contracts/MutualityToken"
+import { parseEther } from "ethers/lib/utils"
+import { readFileSync } from "fs"
+import { NetworkRegistry__factory } from "../../react-app/src/contracts/factories/NetworkRegistry__factory"
+import { NetworkRegistry } from "../../react-app/src/contracts/NetworkRegistry"
 const fs = require("fs")
 
 const underwriteAbi = "./deployments/localhost/UnderwriteManager_Proxy.json"
@@ -72,6 +72,8 @@ async function issueCreditLine() {
         await mutualityToken
           .connect(deployer)
           .transfer(underwriter, ethers.utils.parseEther("1000.0"))
+
+    // TODO: create test business
   } catch (e) {
     console.log(e)
   }

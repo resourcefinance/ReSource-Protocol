@@ -24,9 +24,9 @@ import {
   useUnderwriteManagerContract,
 } from "../../../services/web3/contracts"
 import { waitForTxEvent } from "../../../services/web3/utils/waitForTxEvent"
-import { useFetchBalance } from "../../../store/wallet"
 import { UnderwriteForm } from "./UnderwriteForm"
 import { isApprovedSelector } from "./utils"
+import { useFetchWallet } from "../../../store/wallet"
 
 export interface UnderwriteModalProps {
   onClose: () => void
@@ -37,7 +37,7 @@ export interface UnderwriteModalProps {
 const UnderwriteModal = ({ isOpen, onClose, business }: UnderwriteModalProps) => {
   const { underwrite } = useUnderwriteManagerContract()
   const toast = useToast()
-  const fetchBalance = useFetchBalance()
+  const fetchWallet = useFetchWallet()
   const underwritee = business.wallet?.multiSigAddress
   const setIsApproved = useSetRecoilState(isApprovedSelector)
   const { approve } = useMututalityTokenContract()
@@ -60,7 +60,9 @@ const UnderwriteModal = ({ isOpen, onClose, business }: UnderwriteModalProps) =>
           status: "success",
           isClosable: true,
         })
-        fetchBalance()
+        setTimeout(function() {
+          fetchWallet()
+        }, 1000)
         onClose()
         history.push("/portfolio")
       }

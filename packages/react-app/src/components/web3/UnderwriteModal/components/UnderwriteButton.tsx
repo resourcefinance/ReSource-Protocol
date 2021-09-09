@@ -9,7 +9,7 @@ import {
   useUnderwriteManagerContract,
 } from "../../../../services/web3/contracts"
 import { waitForTxEvent } from "../../../../services/web3/utils/waitForTxEvent"
-import { useFetchBalance } from "../../../../store/wallet"
+import { useFetchWallet } from "../../../../store/wallet"
 import { useTxToast } from "../../../../utils/useTxToast"
 import { MIN_CREDIT_LINE, useIsApprovedState } from "../utils"
 
@@ -26,7 +26,7 @@ const UnderwriteButton = (props: StakeMuButtonProps) => {
   const { underwrite } = useUnderwriteManagerContract()
   const { allowance } = useMututalityTokenContract()
   const [isApproved] = useIsApprovedState()
-  const fetchBalance = useFetchBalance()
+  const fetchWallet = useFetchWallet()
   const toast = useTxToast()
 
   useEffect(() => {
@@ -43,7 +43,7 @@ const UnderwriteButton = (props: StakeMuButtonProps) => {
       const confirmed = await waitForTxEvent(tx, "NewCreditLine")
       if (confirmed) {
         toast({ description: "Approved", status: "success" })
-        fetchBalance()
+        fetchWallet()
       }
     } catch (e) {
       if (e.code === 4001) {

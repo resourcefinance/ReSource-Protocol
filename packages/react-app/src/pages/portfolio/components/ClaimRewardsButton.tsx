@@ -2,9 +2,9 @@ import { Button } from "@chakra-ui/react"
 import { faCoins } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import React from "react"
-import { Business } from "../../generated/resource-network/graphql"
-import { useUnderwriteManagerContract } from "../../services/web3/contracts"
-import { useTxToast } from "../../utils/useTxToast"
+import { Business } from "../../../generated/resource-network/graphql"
+import { useUnderwriteManagerContract } from "../../../services/web3/contracts"
+import { useTxToast } from "../../../utils/useTxToast"
 
 export interface ClaimRewardsButtonProps {
   businesses: Business[]
@@ -15,7 +15,7 @@ const ClaimRewardsButton = ({ businesses }: ClaimRewardsButtonProps) => {
   const toast = useTxToast()
   let underwritees: string[] = new Array(businesses.length)
   for (let business of businesses) {
-    if (!business.wallet?.multiSigAddress) return
+    if (!business.wallet?.multiSigAddress) return null
     underwritees.push(business.wallet?.multiSigAddress)
   }
 
@@ -33,6 +33,7 @@ const ClaimRewardsButton = ({ businesses }: ClaimRewardsButtonProps) => {
 
   return (
     <Button
+      colorScheme="blue"
       leftIcon={<FontAwesomeIcon icon={faCoins} />}
       onClick={async () => await handleClaimRewards()}
     >

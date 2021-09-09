@@ -1,4 +1,4 @@
-import { BigInt, Address } from "@graphprotocol/graph-ts"
+import { BigInt } from "@graphprotocol/graph-ts"
 import {
   NewCreditLine,
   CreditLineReward,
@@ -55,18 +55,13 @@ export function handleCreditLineReward(event: CreditLineReward): void {
   let id =
     event.params.creditLine.underwritee.toHex() + "-" + event.params.creditLine.underwriter.toHex()
   let creditLine = CreditLine.load(id)
-  if (creditLine == null) {
-    return
-  }
   creditLine.outstandingReward = creditLine.outstandingReward.plus(
-    event.params.creditLine.creditLine.reward,
+    event.params.creditLine.data.reward,
   )
-  creditLine.totalReward = creditLine.totalReward.plus(event.params.creditLine.creditLine.reward)
+  creditLine.totalReward = creditLine.totalReward.plus(event.params.creditLine.data.reward)
   creditLine.save()
   let underwriter = Underwriter.load(creditLine.underwriter)
-  underwriter.totalRewards = underwriter.totalRewards.plus(
-    event.params.creditLine.creditLine.reward,
-  )
+  underwriter.totalRewards = underwriter.totalRewards.plus(event.params.creditLine.data.reward)
   underwriter.save()
 }
 
@@ -78,7 +73,7 @@ export function handleCreditLineRewardClaimed(event: CreditLineRewardClaimed): v
     if (creditLine == null) {
       return
     }
-    creditLine.outstandingReward = creditLines[i].creditLine.reward
+    creditLine.outstandingReward = creditLines[i].data.reward
     creditLine.save()
   }
 }

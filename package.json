@@ -38,7 +38,6 @@
     "fundedwallet": "cd packages/hardhat && npx hardhat fundedwallet",
     "flatten": "cd packages/hardhat && npx hardhat flatten",
     "clean": "cd packages/hardhat && npx hardhat clean",
-    "local-setup": "hardhat run scripts/local-setup.ts",
     "run-graph-node": "yarn workspace @mu-dapp/services run-graph-node",
     "remove-graph-node": "yarn workspace @mu-dapp/services remove-graph-node",
     "clean-graph-node": "yarn workspace @mu-dapp/services clean-graph-node",
@@ -55,7 +54,7 @@
     "watch-theme": "yarn workspace @mu-dapp/react-app watch",
     "codegen": "yarn workspace @mu-dapp/react-app codegen",
     "setup-local": "yarn workspace @mu-dapp/hardhat hardhat run scripts/local-setup.ts",
-    "start-subgraph": "yarn graph-prepare && yarn graph-codegen && yarn graph-build && yarn graph-create-local && yarn graph-deploy-local",
+    "start-subgraph": "yarn graph-prepare && yarn graph-codegen && yarn graph-build && yarn graph-remove-local && yarn graph-create-local && yarn graph-deploy-local",
     "start-all": "yarn deploy && yarn start-subgraph && yarn codegen && yarn setup-local && yarn start"
   },
   "workspaces": {

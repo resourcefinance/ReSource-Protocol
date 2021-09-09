@@ -37,7 +37,7 @@ contract UnderwriteManager is OwnableUpgradeable {
     struct CreditLineEvent {
         address underwriter;
         address underwritee;
-        CreditLine creditLine;
+        CreditLine data;
     }
 
         struct CreditLineLimitEvent {
@@ -186,7 +186,7 @@ contract UnderwriteManager is OwnableUpgradeable {
         uint256 reward = calculateReward(txAmount);
         creditLine.reward += reward;
         emit CreditLineReward(CreditLineEvent(
-            msg.sender, 
+            underwriter, 
             underwritee, 
             CreditLine(
                 creditLine.collateral, 

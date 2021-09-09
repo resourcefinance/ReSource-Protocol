@@ -600,7 +600,7 @@ export class UnderwriteManager extends BaseContract {
         ] & {
           underwriter: string;
           underwritee: string;
-          creditLine: [BigNumber, string, BigNumber, BigNumber] & {
+          data: [BigNumber, string, BigNumber, BigNumber] & {
             collateral: BigNumber;
             networkToken: string;
             issueDate: BigNumber;
@@ -621,7 +621,7 @@ export class UnderwriteManager extends BaseContract {
         ] & {
           underwriter: string;
           underwritee: string;
-          creditLine: [BigNumber, string, BigNumber, BigNumber] & {
+          data: [BigNumber, string, BigNumber, BigNumber] & {
             collateral: BigNumber;
             networkToken: string;
             issueDate: BigNumber;
@@ -647,7 +647,7 @@ export class UnderwriteManager extends BaseContract {
         ] & {
           underwriter: string;
           underwritee: string;
-          creditLine: [BigNumber, string, BigNumber, BigNumber] & {
+          data: [BigNumber, string, BigNumber, BigNumber] & {
             collateral: BigNumber;
             networkToken: string;
             issueDate: BigNumber;
@@ -668,7 +668,7 @@ export class UnderwriteManager extends BaseContract {
         ] & {
           underwriter: string;
           underwritee: string;
-          creditLine: [BigNumber, string, BigNumber, BigNumber] & {
+          data: [BigNumber, string, BigNumber, BigNumber] & {
             collateral: BigNumber;
             networkToken: string;
             issueDate: BigNumber;

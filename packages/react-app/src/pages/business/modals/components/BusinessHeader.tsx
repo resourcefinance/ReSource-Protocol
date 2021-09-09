@@ -2,7 +2,7 @@ import { BoxProps } from "@chakra-ui/layout"
 import { Avatar, Box, Heading, HStack } from "@chakra-ui/react"
 import React from "react"
 import { Business } from "../../../../generated/resource-network/graphql"
-import { ViewStorefrontButton } from "../../../ViewStorefrontButton"
+import { ViewStorefrontButton } from "../../../../components/ViewStorefrontButton"
 
 interface Props extends BoxProps {
   business: Business

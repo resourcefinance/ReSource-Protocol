@@ -12,25 +12,24 @@ import {
 import { faLink } from "@fortawesome/free-solid-svg-icons"
 import { useFormik } from "formik"
 import React from "react"
-import { useHistory } from "react-router-dom"
+import { useHistory } from "react-router"
 import * as yup from "yup"
 import { Business } from "../../../generated/resource-network/graphql"
-import Icon from "../../Icon"
+import Icon from "../../../components/Icon"
 import ApproveMuButton from "./components/ApproveMuButton"
 import { BusinessHeader } from "./components/BusinessHeader"
-import { CurrentUnderwriteMetrics, ProspectiveMetrics } from "./components/ExtendCreditLabels"
 import { CollateralField, CreditField } from "./components/FormFields"
 import UnderwriteButton from "./components/UnderwriteButton"
 
-interface ExtendCreditModalProps {
+interface UnderwriteModalProps {
   onClose: () => void
   isOpen: boolean
   business: Business
 }
 
-const ExtendCreditModal = ({ isOpen, onClose, business }: ExtendCreditModalProps) => {
+const UnderwriteModal = ({ isOpen, onClose, business }: UnderwriteModalProps) => {
   const underwritee = business.wallet?.multiSigAddress
-  const formik = useExtendCreditFormik()
+  const formik = useUnderwriteFormik()
   const history = useHistory()
 
   if (!underwritee) return null
@@ -40,17 +39,15 @@ const ExtendCreditModal = ({ isOpen, onClose, business }: ExtendCreditModalProps
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>
-          Extend Credit
+          Underwrite Business
           <ModalCloseButton mt={2} />
         </ModalHeader>
         <ModalBody>
-          <VStack align="stretch" spacing={5} mb={5}>
+          <VStack align="stretch" spacing={5}>
             <BusinessHeader business={business} />
-            <CurrentUnderwriteMetrics business={business} />
-            <CreditField formik={formik} extendCredit />
+            <CreditField formik={formik} />
             <Icon icon={faLink} alignSelf="center" />
-            <CollateralField formik={formik} extendCredit />
-            <ProspectiveMetrics business={business} formik={formik} />
+            <CollateralField formik={formik} />
           </VStack>
         </ModalBody>
         <ModalFooter>
@@ -76,13 +73,15 @@ const validation = yup.object({
   credit: yup.string().required("credit line is required"),
 })
 
-const useExtendCreditFormik = () => {
+const useUnderwriteFormik = () => {
   return useFormik({
     validateOnChange: false,
     validationSchema: validation,
     initialValues: { collateral: 0, credit: 0 },
-    onSubmit: async (values: { collateral: number; credit: number }) => {},
+    onSubmit: async (values: { collateral: number; credit: number }) => {
+      console.log("UnderwriteModal.tsx -- hi")
+    },
   })
 }
 
-export default ExtendCreditModal
+export default UnderwriteModal

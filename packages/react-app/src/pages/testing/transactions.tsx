@@ -1,7 +1,7 @@
 import { VStack } from "@chakra-ui/layout"
 import { Button, Center, Container, useDisclosure } from "@chakra-ui/react"
 import React from "react"
-import UnderwriteModal from "../../components/web3/UnderwriteModal/UnderwriteModal"
+import UnderwriteModal from "../business/modals/UnderwriteModal"
 import { Business } from "../../generated/resource-network/graphql"
 
 const TestTransactionPage = () => {

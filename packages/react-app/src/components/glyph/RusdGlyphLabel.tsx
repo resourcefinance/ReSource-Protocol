@@ -1,7 +1,7 @@
 import { Box, BoxProps, Text, TextProps } from "@chakra-ui/react"
 import React from "react"
 import { gradients } from "../../theme/foundations/colors"
-import Glyph, { GlyphColor } from "./Glyph"
+import Glyph, { GlyphColor } from "./RusdGlyph"
 
 const formatOptions = { minimumFractionDigits: 2, maximumFractionDigits: 2 }
 
@@ -39,14 +39,13 @@ const GlyphLabel = (props: GlyphLabelProps) => {
 
   return (
     <Box h="full" whiteSpace="nowrap" {...textProps}>
-      {iconPosition === "left" && <Glyph size={size} bgColor={glyphColor} {...marginSizes[size]} />}
+      {iconPosition === "left" && <Glyph size={size} bgColor={glyphColor} />}
       <Text
         as="span"
         variant="number"
         data-testid="glyph-label"
         color={props.textColor || textColor}
         {...(variant === "gradient" ? gradientStyles : {})}
-        {...numberSizes[size]}
         lineHeight={lineHeight || "inherit"}
       >
         {formattedValue}
@@ -54,28 +53,14 @@ const GlyphLabel = (props: GlyphLabelProps) => {
       {iconPosition === "right" && (
         <>
           {variant === "gradient" ? (
-            // todo: get gradient glyph working in header
-            // <GradientGlyphPurple zIndex={2} size={size} {...marginSizes[size]} />
-            <Glyph size={size} bgColor="purple" {...marginSizes[size]} />
+            <Glyph size={size} bgColor="purple" />
           ) : (
-            <Glyph size={size} bgColor={glyphColor} {...marginSizes[size]} />
+            <Glyph size={size} bgColor={glyphColor} />
           )}
         </>
       )}
     </Box>
   )
-}
-
-const marginSizes = {
-  sm: { mb: "1px", ml: 2 },
-  md: { mb: 1, ml: 2 },
-  lg: { ml: 2 },
-}
-
-const numberSizes = {
-  sm: { fontSize: "16px" },
-  md: { fontSize: "24px" },
-  lg: { fontSize: "48px", fontWeight: 700 },
 }
 
 const gradientStyles: BoxProps = {

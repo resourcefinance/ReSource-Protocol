@@ -8,8 +8,9 @@ import { useHistory } from "react-router-dom"
 import { useWeb3Context } from "web3-react"
 import { useGetTotalCollateralLazyQuery } from "../../generated/subgraph/graphql"
 import { useGetWallet, useFetchWallet } from "../../store/wallet"
+import colors from "../../theme/foundations/colors"
 import { getAbbreviatedAddress } from "../../utils/stringFormat"
-import GlyphLabel from "../glyph/GlyphLabel"
+import { GlyphLabel } from "../glyph/MuGlyphLabel"
 import WalletInfoModal from "./WalletInfoModal"
 
 const pillContainerStyles: BoxProps = {
@@ -55,27 +56,12 @@ const WalletInfo = ({ ...rest }: BoxProps) => {
 
   return (
     <Box {...rest} cursor="pointer">
-      <HStack spacing={-10}>
-        <Center {...pillContainerStyles} left={0} borderColor="gray.700">
-          <GlyphLabel
-            loading={false}
-            lineHeight="0"
-            mx={2}
-            pr={10}
-            size="sm"
-            variant="gradient"
-            value={totalCollateral}
-          />
+      <HStack spacing={-14}>
+        <Center {...pillContainerStyles} pr="60px" left={0} borderColor={colors.blue.main}>
+          <GlyphLabel color={colors.blue.main} mx={1} value={totalCollateral} />
         </Center>
         <Center {...pillContainerStyles} right={0} borderColor="black">
-          <GlyphLabel
-            loading={false}
-            lineHeight="0"
-            mx={2}
-            size="sm"
-            variant="price"
-            value={balance}
-          />
+          <GlyphLabel mx={1} value={balance} />
         </Center>
         {walletAddress && (
           <>

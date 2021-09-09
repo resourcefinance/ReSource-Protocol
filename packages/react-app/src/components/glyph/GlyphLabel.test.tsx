@@ -1,6 +1,6 @@
 import { render } from "@testing-library/react"
 import colors from "../../theme/foundations/colors"
-import GlyphLabel from "./GlyphLabel"
+import GlyphLabel from "./RusdGlyphLabel"
 
 beforeEach(() => {
   jest.resetModules()

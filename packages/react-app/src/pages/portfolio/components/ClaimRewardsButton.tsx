@@ -1,4 +1,4 @@
-import { Button } from "@chakra-ui/react"
+import { Button, ButtonProps } from "@chakra-ui/react"
 import { faCoins } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import React from "react"
@@ -6,11 +6,11 @@ import { Business } from "../../../generated/resource-network/graphql"
 import { useUnderwriteManagerContract } from "../../../services/web3/contracts"
 import { useTxToast } from "../../../utils/useTxToast"
 
-export interface ClaimRewardsButtonProps {
+export interface ClaimRewardsButtonProps extends ButtonProps {
   businesses: Business[]
 }
 
-const ClaimRewardsButton = ({ businesses }: ClaimRewardsButtonProps) => {
+const ClaimRewardsButton = ({ businesses, ...rest }: ClaimRewardsButtonProps) => {
   const { claimReward } = useUnderwriteManagerContract()
   const toast = useTxToast()
   let underwritees: string[] = new Array(businesses.length)
@@ -35,7 +35,8 @@ const ClaimRewardsButton = ({ businesses }: ClaimRewardsButtonProps) => {
     <Button
       colorScheme="blue"
       leftIcon={<FontAwesomeIcon icon={faCoins} />}
-      onClick={async () => await handleClaimRewards()}
+      onClick={rest.onClick}
+      // onClick={async () => await handleClaimRewards()}
     >
       Claim rewards
     </Button>

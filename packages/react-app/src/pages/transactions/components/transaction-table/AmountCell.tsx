@@ -2,7 +2,7 @@ import { HStack } from "@chakra-ui/react"
 import React from "react"
 import { CellProps } from "react-table"
 import { TransactionRowData } from "."
-import GlyphLabel from "../../../../components/glyph/GlyphLabel"
+import GlyphLabel from "../../../../components/glyph/RusdGlyphLabel"
 import { baseCellStyles, Header, TransactionColumn } from "./foundations"
 
 type AmountCellProps = CellProps<TransactionRowData, number>

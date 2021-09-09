@@ -2,7 +2,7 @@ import { Box, BoxProps, HStack, Link, Stack, StackProps, Text, TextProps } from 
 import { faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import React from "react"
-import GlyphLabel, { GlyphLabelProps } from "../../../../components/glyph/GlyphLabel"
+import GlyphLabel, { GlyphLabelProps } from "../../../../components/glyph/RusdGlyphLabel"
 import config from "../../../../config"
 import { Transaction } from "../../../../generated/resource-network/graphql"
 import { transactionStatusPropsMap } from "../transaction-table/TransactionStatusCell"

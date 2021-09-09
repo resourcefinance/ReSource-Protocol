@@ -1,12 +1,12 @@
 import { Box, BoxProps, Text } from "@chakra-ui/layout"
 import { ButtonProps, HStack, Image, Input, InputProps } from "@chakra-ui/react"
 import React, { useEffect, useState } from "react"
-import muLogo from "../../../../assets/mu.svg"
+import muLogo from "../../../../assets/glyphs/mu.svg"
 import colors, { gradients } from "../../../../theme/foundations/colors"
 import { body, caption, title } from "../../../../theme/textStyles"
 import Button from "../../../../components/Button"
 import FormikField from "../../../../components/FormikField"
-import { GradientGlyphPurple } from "../../../../components/glyph/Glyph"
+import { GradientGlyphPurple } from "../../../../components/glyph/RusdGlyph"
 import { MIN_CREDIT_LINE } from "../utils"
 
 interface Props extends BoxProps {

@@ -1,34 +1,37 @@
-import { StackProps } from "@chakra-ui/layout"
-import { Box, BoxProps, Flex, Heading, HStack } from "@chakra-ui/react"
-import React from "react"
-import GlyphLabel from "../../../components/glyph/GlyphLabel"
+import { Box, StackProps } from "@chakra-ui/layout"
+import { BoxProps, Flex, Heading, HStack } from "@chakra-ui/react"
+import React, { useState } from "react"
+import { GlyphLabel } from "../../../components/glyph/MuGlyphLabel"
 import { headerHeight } from "../../../components/Header"
+import colors from "../../../theme/foundations/colors"
 import ClaimRewardsButton from "./ClaimRewardsButton"
 
 export const PortfolioHeader = () => {
+  const [rewards, setRewards] = useState(0)
   return (
     <Flex {...containerStyles}>
       <Heading size="subtitle">My Portfolio</Heading>
       <HStack justify="flex-end" align="center">
-        <OutstandingRewards {...outstandingRewardsStyles} />
-        <ClaimRewardsButton businesses={[]} />
+        <OutstandingRewards {...outstandingRewardsStyles} value={rewards} />
+        <ClaimRewardsButton onClick={() => setRewards((v) => v + 10)} businesses={[]} />
       </HStack>
     </Flex>
   )
 }
-const OutstandingRewards = ({ ...rest }: BoxProps) => {
+
+type Props = BoxProps & { value: number }
+const OutstandingRewards = ({ value, ...rest }: Props) => {
   return (
-    <Box {...rest}>
-      <GlyphLabel loading={false} lineHeight="0" size="sm" variant="gradient" value={0} />
+    <Box {...outstandingRewardsStyles}>
+      <GlyphLabel color={colors.blue.main} value={value} />
     </Box>
   )
 }
 
 const outstandingRewardsStyles: BoxProps = {
-  bgColor: "white",
+  border: `1px solid ${colors.blue.main}`,
   borderRadius: "2xl",
-  border: "1px solid",
-  py: "5px",
+  py: "6px",
   px: 4,
 }
 

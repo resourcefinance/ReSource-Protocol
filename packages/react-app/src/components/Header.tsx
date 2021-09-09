@@ -1,30 +1,14 @@
 import { Center, Flex, HStack, StackProps } from "@chakra-ui/layout"
-import { Image, ImageProps, useDisclosure } from "@chakra-ui/react"
+import { useDisclosure } from "@chakra-ui/react"
 import { faChartPie, faStore } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import React, { useEffect } from "react"
 import { useHistory } from "react-router-dom"
 import { useWeb3Context } from "web3-react"
-import logo from "../assets/mu.svg"
 import Button from "./Button"
+import { MuGlyph } from "./glyph/MuGlyph"
 import WalletInfo from "./wallet/WalletInfo"
 import WalletModal from "./wallet/WalletModal"
-
-export const headerHeight = "52px"
-
-const containerStyles: StackProps = {
-  px: { base: 4, md: 6 },
-  py: { base: 2, md: 3 },
-  justify: "space-between",
-  alignItems: "center",
-  borderBottom: "solid 1px",
-  borderColor: "gray.300",
-  bgColor: "white !important",
-  height: headerHeight,
-  position: "fixed",
-  w: "100vw",
-  zIndex: 1,
-}
 
 export const Header = () => {
   const isConnected = false
@@ -41,7 +25,7 @@ export const Header = () => {
 
   return (
     <Flex {...containerStyles}>
-      <MuLogo />
+      <MuGlyph boxSize="36px" onClick={() => history.push("/")} _hover={{ cursor: "pointer" }} />
       <HStack align="center" spacing={6}>
         <Center w="120px">
           <Button
@@ -70,11 +54,20 @@ export const Header = () => {
   )
 }
 
-const MuLogo = (props: ImageProps) => {
-  const history = useHistory()
-  return (
-    <Image src={logo} _hover={{ cursor: "pointer" }} onClick={() => history.push("/")} {...props} />
-  )
+export const headerHeight = "52px"
+
+const containerStyles: StackProps = {
+  px: { base: 4, md: 6 },
+  py: { base: 2, md: 3 },
+  justify: "space-between",
+  alignItems: "center",
+  borderBottom: "solid 1px",
+  borderColor: "gray.300",
+  bgColor: "white !important",
+  height: headerHeight,
+  position: "fixed",
+  w: "100vw",
+  zIndex: 1,
 }
 
 export default Header

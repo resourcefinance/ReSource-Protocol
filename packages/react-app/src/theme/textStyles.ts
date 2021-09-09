@@ -41,6 +41,7 @@ export const number = {
   fontFamily: fonts.mono,
   fontWeight: fontWeights.normal,
   fontStyle: "normal",
+  lineHeight: "none",
 }
 
 export const caption = {
@@ -57,7 +58,6 @@ export const body = {
   fontFamily: fonts.body,
   fontWeight: fontWeights.normal,
   fontStyle: "normal",
-  lineHeight: "21px",
 }
 
 // convenience for alternate naming convention

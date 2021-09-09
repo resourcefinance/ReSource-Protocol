@@ -8,6 +8,7 @@ import ClaimRewardsButton from "./ClaimRewardsButton"
 
 export const PortfolioHeader = () => {
   const [rewards, setRewards] = useState(0)
+
   return (
     <Flex {...containerStyles}>
       <Heading size="subtitle">My Portfolio</Heading>

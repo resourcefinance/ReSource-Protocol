@@ -1,27 +1,16 @@
 import { Center, Flex, HStack, StackProps } from "@chakra-ui/layout"
-import { useDisclosure } from "@chakra-ui/react"
 import { faChartPie, faStore } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import React, { useEffect } from "react"
+import React from "react"
 import { useHistory } from "react-router-dom"
 import { useWeb3Context } from "web3-react"
 import Button from "./Button"
 import { MuGlyph } from "./glyph/MuGlyph"
 import WalletInfo from "./wallet/WalletInfo"
-import WalletModal from "./wallet/WalletModal"
 
 export const Header = () => {
-  const isConnected = false
   const history = useHistory()
   const context = useWeb3Context()
-  const walletModal = useDisclosure()
-
-  useEffect(() => {
-    if (!context.active) {
-      history.push("/")
-      walletModal.onOpen()
-    }
-  }, [context])
 
   return (
     <Flex {...containerStyles}>
@@ -49,7 +38,6 @@ export const Header = () => {
         </Center>
         {context.library && <WalletInfo />}
       </HStack>
-      <WalletModal isOpen={walletModal.isOpen} onClose={walletModal.onClose} />
     </Flex>
   )
 }

@@ -9,11 +9,11 @@ import {
   Image,
 } from "@chakra-ui/react"
 import Button from "../Button"
-import {useWeb3Context} from "web3-react"
-import {getAbbreviatedAddress} from "../../utils/stringFormat"
-import {useEffect, useState} from "react"
+import { useWeb3Context } from "web3-react"
+import { getAbbreviatedAddress } from "../../utils/stringFormat"
+import { useEffect, useState } from "react"
 
-const WalletModal = ({isOpen, onClose}) => {
+const ConnectWalletModal = ({ isOpen, onClose }) => {
   const context = useWeb3Context()
   const [errorMessage, setErrorMessage] = useState("")
 
@@ -70,4 +70,4 @@ const WalletModal = ({isOpen, onClose}) => {
   )
 }
 
-export default WalletModal
+export default ConnectWalletModal

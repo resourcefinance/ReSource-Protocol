@@ -6,12 +6,14 @@ import PortfolioRoutes from "./pages/portfolio/PortfolioRoutes"
 
 const Routes = () => {
   return (
-    <Switch>
-      <Route exact path="/" component={SearchBusinessesPage} />
-      <Route path="/businesses/:handle" component={BusinessRoutes} />
-      <Route exact path="/portfolio" component={PortfolioRoutes} />
-      <Redirect to={{ pathname: "/" }} />
-    </Switch>
+    <>
+      <Switch>
+        <Route exact path="/" component={SearchBusinessesPage} />
+        <Route path="/businesses/:handle" component={BusinessRoutes} />
+        <Route exact path="/portfolio" component={PortfolioRoutes} />
+        <Redirect to={{ pathname: "/" }} />
+      </Switch>
+    </>
   )
 }
 

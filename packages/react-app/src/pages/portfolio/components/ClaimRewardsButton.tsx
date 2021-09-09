@@ -13,6 +13,7 @@ export interface ClaimRewardsButtonProps extends ButtonProps {
 const ClaimRewardsButton = ({ businesses, ...rest }: ClaimRewardsButtonProps) => {
   const { claimReward } = useUnderwriteManagerContract()
   const toast = useTxToast()
+
   let underwritees: string[] = new Array(businesses.length)
   for (let business of businesses) {
     if (!business.wallet?.multiSigAddress) return null

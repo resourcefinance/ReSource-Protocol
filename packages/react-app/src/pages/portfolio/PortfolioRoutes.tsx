@@ -1,15 +1,16 @@
 import React from "react"
 import { Route, Switch, useRouteMatch } from "react-router-dom"
+import { useWeb3Context } from "web3-react"
 import PortfolioHeader from "./components/PortfolioHeader"
 import PortfolioPage from "./pages/PortfolioPage"
 
 const PortfolioRoutes = () => {
   const { path } = useRouteMatch()
-  console.log("PortfolioRoutes.tsx --  path", path)
+  const context = useWeb3Context()
 
   return (
     <>
-      <PortfolioHeader />
+      {context.library && <PortfolioHeader />}
       <Switch>
         <Route path={`${path}`} component={PortfolioPage} />
       </Switch>

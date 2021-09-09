@@ -1,6 +1,5 @@
-import { useToast } from "@chakra-ui/react"
 import { useEffect } from "react"
-import { atom, DefaultValue, selector, useRecoilState, useSetRecoilState } from "recoil"
+import { atom, DefaultValue, selector, useRecoilState } from "recoil"
 import { useMututalityTokenContract } from "../../../services/web3/contracts"
 
 export const underwriteModalAtom = atom({
@@ -21,11 +20,16 @@ export const isApprovedSelector = selector({
 
 // only used for developement convenience
 export const useRevertApproval = () => {
+  const [, setIsApproved] = useIsApprovedState()
   const { approve } = useMututalityTokenContract()
-  return async () => approve("0x00")
+  return async () =>
+    (await approve("0x00"))
+      .wait()
+      .then(() => setIsApproved(false))
+      .then(() => console.log("utils.tsx -- done"))
 }
 
-export const useIsApprovedState = () => {
+export const useIsApprovedState = (): any => {
   const [isApproved, setIsApproved] = useRecoilState(isApprovedSelector)
   const { allowance } = useMututalityTokenContract()
 
@@ -36,23 +40,7 @@ export const useIsApprovedState = () => {
       .catch(() => setIsApproved(false))
   }, [])
 
-  return isApproved
+  return [isApproved, setIsApproved]
 }
 
-export const useListenForApproval = () => {
-  const { contract } = useMututalityTokenContract()
-  const setIsApproved = useSetRecoilState(isApprovedSelector)
-  const toast = useToast()
-
-  return async () => {
-    contract.once("Approval", async (args) => {
-      toast({
-        description: "Approved",
-        position: "top-right",
-        status: "success",
-        isClosable: true,
-      })
-      setIsApproved(true)
-    })
-  }
-}
+export const MIN_CREDIT_LINE = 600

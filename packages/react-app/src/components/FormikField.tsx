@@ -26,7 +26,7 @@ const FormikField = (props: FormFieldProps) => {
   const externalProps = formElement.props
   const internalProps = {
     name: key,
-    value: formik.values[key] ?? "",
+    value: formik.values[key] || "",
     onChange: formik.handleChange,
     isInvalid: !!formik.errors[key],
     errorMessage: formik.errors[key],

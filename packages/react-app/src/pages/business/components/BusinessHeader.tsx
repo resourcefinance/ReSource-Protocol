@@ -1,11 +1,10 @@
 import { StackProps, Text } from "@chakra-ui/layout"
 import { Box, BoxProps, Button, Flex, Heading, HStack, useDisclosure } from "@chakra-ui/react"
-import { faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import React from "react"
 import { Link, useLocation, useParams } from "react-router-dom"
 import { headerHeight } from "../../../components/Header"
 import { ViewStorefrontButton } from "../../../components/ViewStorefrontButton"
+import ExtendCreditModal from "../../../components/web3/UnderwriteModal/ExtendCreditModal"
 import UnderwriteModal from "../../../components/web3/UnderwriteModal/UnderwriteModal"
 import { Business } from "../../../generated/resource-network/graphql"
 import { gradients } from "../../../theme/foundations/colors"
@@ -49,15 +48,26 @@ interface ModalContainerProps extends BoxProps {
 }
 const UnderwriteModalContainer = ({ business, ...props }: ModalContainerProps) => {
   const underwriteModal = useDisclosure()
+  const extendCreditModal = useDisclosure()
+  const hasStaked = true
   if (!business) return null
   return (
     <Box>
-      <Button variant="primary" colorScheme="blue" onClick={underwriteModal.onOpen}>
-        Underwrite
+      <Button
+        variant="primary"
+        colorScheme="blue"
+        onClick={hasStaked ? extendCreditModal.onOpen : underwriteModal.onOpen}
+      >
+        {hasStaked ? "Extend credit" : "Underwrite"}
       </Button>
       <UnderwriteModal
         isOpen={underwriteModal.isOpen}
         onClose={underwriteModal.onClose}
+        business={business}
+      />
+      <ExtendCreditModal
+        isOpen={extendCreditModal.isOpen}
+        onClose={extendCreditModal.onClose}
         business={business}
       />
     </Box>

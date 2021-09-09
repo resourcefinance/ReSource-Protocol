@@ -10,8 +10,6 @@ export const useGetEthersProviderAndSigner = () => {
   const [signer, setSigner] = useState(provider.getSigner())
 
   useEffect(() => {
-    console.log("useGetEthersProviderAndSigner.ts -- hm")
-
     const newProvider = new ethers.providers.Web3Provider(context.library.provider)
     setProvider(newProvider)
     setSigner(newProvider.getSigner())

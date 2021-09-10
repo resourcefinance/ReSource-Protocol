@@ -1,4 +1,4 @@
 import { useUnderwriteManagerContract } from "./underwriteManager/index"
-import { useMututalityTokenContract } from "./reSourceToken/index"
+import { useMututalityTokenContract } from "./mutualityToken/index"
 
 export { useMututalityTokenContract, useUnderwriteManagerContract }

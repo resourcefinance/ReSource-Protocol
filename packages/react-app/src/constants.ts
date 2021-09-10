@@ -26,9 +26,9 @@ export const SUBGRAPH_URLS = {
 }
 
 export const CONTRACTS = {
-  UnderwriteManager: config.UnderwriteManager_Proxy,
-  ReSourceToken: config.ReSourceToken_Proxy,
-  RUSDToken: config.RUSD_Proxy,
+  UnderwriteManager: config.UnderwriteManager,
+  ReSourceToken: config.ReSourceToken,
+  RUSDToken: config.RUSD,
 }
 
 export const NETWORK = (chainId: Number) => {

@@ -1,8 +1,8 @@
 import { ethers, getNamedAccounts } from "hardhat"
 import { UnderwriteManager } from "../types/UnderwriteManager"
 import { UnderwriteManager__factory } from "../../react-app/src/contracts/factories/UnderwriteManager__factory"
-import { MutualityToken__factory } from "../../react-app/src/contracts/factories/MutualityToken__factory"
-import { MutualityToken } from "../../react-app/src/contracts/MutualityToken"
+import { ResourceToken__factory } from "../../react-app/src/contracts/factories/ResourceToken__factory"
+import { ResourceToken } from "../../react-app/src/contracts/ResourceToken"
 import { parseEther } from "ethers/lib/utils"
 import { readFileSync } from "fs"
 import { NetworkRegistry__factory } from "../../react-app/src/contracts/factories/NetworkRegistry__factory"
@@ -12,7 +12,7 @@ import { RUSD } from "../../react-app/src/contracts/RUSD"
 const fs = require("fs")
 
 const underwriteAbi = "./deployments/localhost/UnderwriteManager_Proxy.json"
-const mutualityAbi = "./deployments/localhost/MutualityToken_Proxy.json"
+const mutualityAbi = "./deployments/localhost/ResourceToken_Proxy.json"
 const rUSDAbi = "./deployments/localhost/RUSD_Proxy.json"
 const networkRegistryAbi = "./deployments/localhost/NetworkRegistry_Proxy.json"
 
@@ -59,11 +59,11 @@ async function issueCreditLine() {
       deployer,
     ) as UnderwriteManager
 
-    const mutualityToken = MutualityToken__factory.getContract(
+    const resourceToken = ResourceToken__factory.getContract(
       mutualityAddress,
-      MutualityToken__factory.createInterface(),
+      ResourceToken__factory.createInterface(),
       deployer,
-    ) as MutualityToken
+    ) as ResourceToken
 
     const networkRegistry = NetworkRegistry__factory.getContract(
       networkRegistryAddress,
@@ -83,8 +83,8 @@ async function issueCreditLine() {
         await (await networkRegistry.connect(deployer).addMember(member)).wait
     }
     for (var underwriter of underwriters)
-      if (Number(ethers.utils.formatEther(await mutualityToken.balanceOf(underwriter))) < 1000)
-        await mutualityToken
+      if (Number(ethers.utils.formatEther(await resourceToken.balanceOf(underwriter))) < 1000)
+        await resourceToken
           .connect(deployer)
           .transfer(underwriter, ethers.utils.parseEther("10000.0"))
 
@@ -104,7 +104,7 @@ async function issueCreditLine() {
     await (await signer.sendTransaction(tx)).wait()
 
     await (
-      await mutualityToken
+      await resourceToken
         .connect(underwriterWallet)
         .approve(underwriteAddress, ethers.utils.parseEther("1000000000000"))
     ).wait()

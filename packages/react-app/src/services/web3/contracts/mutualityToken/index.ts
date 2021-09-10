@@ -1,7 +1,7 @@
 import {ethers} from "ethers"
 import {useEffect, useState} from "react"
 import {useWeb3Context} from "web3-react"
-import {MutualityToken, MutualityToken__factory} from "../../../../contracts"
+import {ResourceToken, ResourceToken__factory} from "../../../../contracts"
 import {CONTRACTS} from "../../constants"
 import {useGetEthersProviderAndSigner} from "../../utils/useGetEthersProviderAndSigner"
 
@@ -10,10 +10,10 @@ const APPROVED_VALUE = "0xffffffffffffffffffffffffffffffffffffffffffffffffffffff
 export const useMututalityTokenContract = () => {
   const context = useWeb3Context()
   const {provider, signer} = useGetEthersProviderAndSigner()
-  const [contract, setContract] = useState<MutualityToken>(getMutualityTokenContract(provider))
+  const [contract, setContract] = useState<ResourceToken>(getResourceTokenContract(provider))
 
   useEffect(() => {
-    setContract(getMutualityTokenContract(provider))
+    setContract(getResourceTokenContract(provider))
   }, [provider])
 
   return {
@@ -31,9 +31,9 @@ export const useMututalityTokenContract = () => {
   }
 }
 
-const getMutualityTokenContract = (provider: ethers.providers.Web3Provider) =>
+const getResourceTokenContract = (provider: ethers.providers.Web3Provider) =>
   new ethers.Contract(
-    CONTRACTS.MutualityToken,
-    MutualityToken__factory.createInterface(),
+    CONTRACTS.ResourceToken,
+    ResourceToken__factory.createInterface(),
     provider,
-  ) as MutualityToken
+  ) as ResourceToken

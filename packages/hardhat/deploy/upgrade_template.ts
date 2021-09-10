@@ -1,7 +1,7 @@
 // import { HardhatRuntimeEnvironment } from "hardhat/types"
 // import { DeployFunction } from "hardhat-deploy/types"
 // import { ethers } from "hardhat"
-// import { MutualityTokenV2__factory } from "../../react-app/src/contracts/factories/MutualityTokenV2__factory"
+// import { ResourceTokenV2__factory } from "../../react-app/src/contracts/factories/ResourceTokenV2__factory"
 // import { saveDeployment } from "../utils"
 
 // const func: DeployFunction = async function({
@@ -15,13 +15,13 @@
 
 //   const { deployer } = await getNamedAccounts()
 
-//   const MutualityTokenV2 = await ethers.getContractFactory("MutualityTokenV2")
-//   const MutualityTokenV2Abi = MutualityTokenV2__factory.abi
+//   const ResourceTokenV2 = await ethers.getContractFactory("ResourceTokenV2")
+//   const ResourceTokenV2Abi = ResourceTokenV2__factory.abi
 
-//   const proxy = await deployments.get("MutualityToken")
+//   const proxy = await deployments.get("ResourceToken")
 //   console.log(proxy.address)
-//   const mutualityToken = await upgrades.upgradeProxy(proxy.address, MutualityTokenV2)
-//   await saveDeployment("MutualityTokenV2", deployments, mutualityToken, MutualityTokenV2Abi)
+//   const resourceToken = await upgrades.upgradeProxy(proxy.address, ResourceTokenV2)
+//   await saveDeployment("ResourceTokenV2", deployments, resourceToken, ResourceTokenV2Abi)
 // }
 const func = () => {}
 export default func

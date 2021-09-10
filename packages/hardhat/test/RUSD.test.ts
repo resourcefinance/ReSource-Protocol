@@ -5,7 +5,7 @@ import chai from "chai"
 import { solidity } from "ethereum-waffle"
 import { RUSD } from "../types/RUSD"
 import { NetworkRegistry } from "../types/NetworkRegistry"
-import { MutualityToken } from "../types/MutualityToken"
+import { ResourceToken } from "../types/ResourceToken"
 import { UnderwriteManager } from "../types/UnderwriteManager"
 chai.use(solidity)
 
@@ -26,7 +26,7 @@ describe("RUSD Tests", function() {
   let nonMemberC: SignerWithAddress
   let operatorA: SignerWithAddress
   let rUSD: RUSD
-  let mutualityToken: MutualityToken
+  let resourceToken: ResourceToken
   let networkRegistry: NetworkRegistry
 
   before(async function() {
@@ -48,16 +48,16 @@ describe("RUSD Tests", function() {
       [operatorA.address],
     ])) as NetworkRegistry
 
-    const mutualityTokenFactory = await ethers.getContractFactory("MutualityToken")
+    const resourceTokenFactory = await ethers.getContractFactory("ResourceToken")
 
-    mutualityToken = (await upgrades.deployProxy(mutualityTokenFactory, [
+    resourceToken = (await upgrades.deployProxy(resourceTokenFactory, [
       ethers.utils.parseEther("10000000"),
-    ])) as MutualityToken
+    ])) as ResourceToken
 
     const underwriteManagerFactory = await ethers.getContractFactory("UnderwriteManager")
 
     const underwriteManager = (await upgrades.deployProxy(underwriteManagerFactory, [
-      mutualityToken.address,
+      resourceToken.address,
     ])) as UnderwriteManager
 
     const rUSDFactory = await ethers.getContractFactory("RUSD")

@@ -27,7 +27,7 @@ export const SUBGRAPH_URLS = {
 
 export const CONTRACTS = {
   UnderwriteManager: config.UnderwriteManager_Proxy,
-  MutualityToken: config.MutualityToken_Proxy,
+  ResourceToken: config.ResourceToken_Proxy,
   RUSDToken: config.RUSD_Proxy,
 }
 

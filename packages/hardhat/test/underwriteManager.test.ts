@@ -4,7 +4,7 @@ import chai from "chai"
 import { solidity } from "ethereum-waffle"
 import { RUSD } from "../types/RUSD"
 import { NetworkRegistry } from "../types/NetworkRegistry"
-import { MutualityToken } from "../types/MutualityToken"
+import { ResourceToken } from "../types/ResourceToken"
 import { UnderwriteManager } from "../types/UnderwriteManager"
 import { UnderwriteManager__factory } from "../types/factories/UnderwriteManager__factory"
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/dist/src/signers"
@@ -19,7 +19,7 @@ describe("UnderwriteManager Tests", function() {
   let underwriterA: SignerWithAddress
   let underwriterB: SignerWithAddress
   let rUSD: RUSD
-  let mutualityToken: MutualityToken
+  let resourceToken: ResourceToken
   let networkRegistry: NetworkRegistry
   let underwriteManager: UnderwriteManager
 
@@ -42,16 +42,16 @@ describe("UnderwriteManager Tests", function() {
       [operatorA.address],
     ])) as NetworkRegistry
 
-    const mutualityTokenFactory = await ethers.getContractFactory("MutualityToken")
+    const resourceTokenFactory = await ethers.getContractFactory("ResourceToken")
 
-    mutualityToken = (await upgrades.deployProxy(mutualityTokenFactory, [
+    resourceToken = (await upgrades.deployProxy(resourceTokenFactory, [
       ethers.utils.parseEther("10000000"),
-    ])) as MutualityToken
+    ])) as ResourceToken
 
     const underwriteManagerFactory = await ethers.getContractFactory("UnderwriteManager")
 
     underwriteManager = (await upgrades.deployProxy(underwriteManagerFactory, [
-      mutualityToken.address,
+      resourceToken.address,
     ])) as UnderwriteManager
 
     const rUSDFactory = await ethers.getContractFactory("RUSD")
@@ -75,17 +75,17 @@ describe("UnderwriteManager Tests", function() {
 
   it("Send 100,000 mu to underwriterA", async function() {
     await expect(
-      mutualityToken.transfer(underwriterA.address, ethers.utils.parseEther("100000")),
-    ).to.emit(mutualityToken, "Transfer")
+      resourceToken.transfer(underwriterA.address, ethers.utils.parseEther("100000")),
+    ).to.emit(resourceToken, "Transfer")
 
-    expect(ethers.utils.formatEther(await mutualityToken.balanceOf(underwriterA.address))).to.equal(
+    expect(ethers.utils.formatEther(await resourceToken.balanceOf(underwriterA.address))).to.equal(
       "100000.0",
     )
   })
 
   it("underwriterA approves underwriteManager", async function() {
     await expect(
-      mutualityToken
+      resourceToken
         .connect(underwriterA)
         .approve(
           underwriteManager.address,
@@ -110,7 +110,7 @@ describe("UnderwriteManager Tests", function() {
       ),
     ).to.equal("10000.0")
 
-    expect(ethers.utils.formatEther(await mutualityToken.balanceOf(underwriterA.address))).to.equal(
+    expect(ethers.utils.formatEther(await resourceToken.balanceOf(underwriterA.address))).to.equal(
       "90000.0",
     )
 
@@ -130,7 +130,7 @@ describe("UnderwriteManager Tests", function() {
         ),
     ).to.be.reverted
 
-    expect(ethers.utils.formatEther(await mutualityToken.balanceOf(underwriterA.address))).to.equal(
+    expect(ethers.utils.formatEther(await resourceToken.balanceOf(underwriterA.address))).to.equal(
       "90000.0",
     )
 
@@ -160,7 +160,7 @@ describe("UnderwriteManager Tests", function() {
 
     expect(
       ethers.utils.formatEther(
-        await mutualityToken.connect(underwriterA).balanceOf(underwriterA.address),
+        await resourceToken.connect(underwriterA).balanceOf(underwriterA.address),
       ),
     ).to.equal("90020.0")
   })
@@ -185,7 +185,7 @@ describe("UnderwriteManager Tests", function() {
       ),
     ).to.equal("15000.0")
 
-    expect(ethers.utils.formatEther(await mutualityToken.balanceOf(underwriterA.address))).to.equal(
+    expect(ethers.utils.formatEther(await resourceToken.balanceOf(underwriterA.address))).to.equal(
       "85020.0",
     )
 

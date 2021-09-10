@@ -1,6 +1,7 @@
 import { HardhatRuntimeEnvironment } from "hardhat/types"
 import { DeployFunction } from "hardhat-deploy/types"
 import { saveDeployment } from "../utils"
+import { retry } from "ts-retry"
 
 const func: DeployFunction = async function({
   getNamedAccounts,
@@ -18,30 +19,42 @@ const func: DeployFunction = async function({
 
   const networkRegistryAbi = (await artifacts.readArtifact("NetworkRegistry")).abi
 
-  const networkRegistry = await upgrades.deployProxy(networkRegistryFactory, [[], []])
+  let networkRegistry
+  await retry(
+    async () => {
+      networkRegistry = await upgrades.deployProxy(networkRegistryFactory, [[], []])
+    },
+    { delay: 200, maxTry: 10 },
+  )
   const networkRegistryAddress = networkRegistry.address
 
   await saveDeployment("NetworkRegistry", deployments, networkRegistry, networkRegistryAbi)
 
-  // resourceToken deploy
-  const resourceTokenFactory = await ethers.getContractFactory("ResourceToken")
-  const resourceTokenAbi = (await artifacts.readArtifact("ResourceToken")).abi
+  // reSourceToken deploy
+  const reSourceTokenFactory = await ethers.getContractFactory("ReSourceToken")
+  const reSourceTokenAbi = (await artifacts.readArtifact("ReSourceToken")).abi
 
-  const resourceToken = await upgrades.deployProxy(resourceTokenFactory, [
+  const reSourceToken = await upgrades.deployProxy(reSourceTokenFactory, [
     ethers.utils.parseEther("10000000"),
   ])
 
-  const resourceTokenAddress = resourceToken.address
+  const reSourceTokenAddress = reSourceToken.address
 
-  await saveDeployment("ResourceToken", deployments, resourceToken, resourceTokenAbi)
+  await saveDeployment("ReSourceToken", deployments, reSourceToken, reSourceTokenAbi)
 
   // underwriteManager deploy
   const underwriteManagerFactory = await ethers.getContractFactory("UnderwriteManager")
   const underwriteManagerAbi = (await artifacts.readArtifact("UnderwriteManager")).abi
 
-  const underwriteManager = await upgrades.deployProxy(underwriteManagerFactory, [
-    resourceTokenAddress,
-  ])
+  let underwriteManager
+  await retry(
+    async () => {
+      underwriteManager = await upgrades.deployProxy(underwriteManagerFactory, [
+        reSourceTokenAddress,
+      ])
+    },
+    { delay: 200, maxTry: 10 },
+  )
 
   const underwriteManagerAddress = underwriteManager.address
 
@@ -51,12 +64,18 @@ const func: DeployFunction = async function({
   const rUSDFactory = await ethers.getContractFactory("RUSD")
   const rUSDAbi = (await artifacts.readArtifact("RUSD")).abi
 
-  const rUSD = await upgrades.deployProxy(
-    rUSDFactory,
-    [networkRegistryAddress, 20, underwriteManagerAddress],
-    {
-      initializer: "initializeRUSD",
+  let rUSD
+  await retry(
+    async () => {
+      rUSD = await upgrades.deployProxy(
+        rUSDFactory,
+        [networkRegistryAddress, 20, underwriteManagerAddress],
+        {
+          initializer: "initializeRUSD",
+        },
+      )
     },
+    { delay: 200, maxTry: 10 },
   )
 
   await saveDeployment("RUSD", deployments, rUSD, rUSDAbi)

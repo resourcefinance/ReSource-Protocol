@@ -34,9 +34,15 @@ const func: DeployFunction = async function({
   const reSourceTokenFactory = await ethers.getContractFactory("ReSourceToken")
   const reSourceTokenAbi = (await artifacts.readArtifact("ReSourceToken")).abi
 
-  const reSourceToken = await upgrades.deployProxy(reSourceTokenFactory, [
-    ethers.utils.parseEther("10000000"),
-  ])
+  let reSourceToken
+  await retry(
+    async () => {
+      reSourceToken = await upgrades.deployProxy(reSourceTokenFactory, [
+        ethers.utils.parseEther("10000000"),
+      ])
+    },
+    { delay: 200, maxTry: 10 },
+  )
 
   const reSourceTokenAddress = reSourceToken.address
 

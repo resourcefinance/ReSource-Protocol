@@ -39,6 +39,7 @@ function mnemonic() {
 }
 
 enum chainIds {
+  localhost = 31337,
   testnet = 44787,
   mainnet = 42220,
 }
@@ -49,6 +50,7 @@ const config: HardhatUserConfig = {
   networks: {
     localhost: {
       url: "http://localhost:8545",
+      chainId: 31337,
       saveDeployments: true,
     },
     "celo-alfajores": {

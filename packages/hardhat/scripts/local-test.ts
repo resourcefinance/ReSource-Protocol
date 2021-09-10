@@ -1,8 +1,8 @@
 import { ethers, getNamedAccounts } from "hardhat"
 import { UnderwriteManager } from "../types/UnderwriteManager"
 import { UnderwriteManager__factory } from "../../react-app/src/contracts/factories/UnderwriteManager__factory"
-import { ResourceToken__factory } from "../../react-app/src/contracts/factories/ResourceToken__factory"
-import { ResourceToken } from "../../react-app/src/contracts/ResourceToken"
+import { ReSourceToken__factory } from "../../react-app/src/contracts/factories/ReSourceToken__factory"
+import { ReSourceToken } from "../../react-app/src/contracts/ReSourceToken"
 import { parseEther } from "ethers/lib/utils"
 import { readFileSync } from "fs"
 import { NetworkRegistry__factory } from "../../react-app/src/contracts/factories/NetworkRegistry__factory"
@@ -10,7 +10,7 @@ import { NetworkRegistry } from "../../react-app/src/contracts/NetworkRegistry"
 const fs = require("fs")
 
 const underwriteAbi = "./deployments/localhost/UnderwriteManager_Proxy.json"
-const mutualityAbi = "./deployments/localhost/ResourceToken_Proxy.json"
+const mutualityAbi = "./deployments/localhost/ReSourceToken_Proxy.json"
 const rUSDAbi = "./deployments/localhost/RUSD_Proxy.json"
 const networkRegistryAbi = "./deployments/localhost/NetworkRegistry_Proxy.json"
 
@@ -40,11 +40,11 @@ async function test() {
       deployer,
     ) as UnderwriteManager
 
-    const resourceToken = ResourceToken__factory.getContract(
+    const reSourceToken = ReSourceToken__factory.getContract(
       mutualityAddress,
-      ResourceToken__factory.createInterface(),
+      ReSourceToken__factory.createInterface(),
       deployer,
-    ) as ResourceToken
+    ) as ReSourceToken
 
     const networkRegistry = NetworkRegistry__factory.getContract(
       networkRegistryAddress,
@@ -64,13 +64,13 @@ async function test() {
     await (await deployer.sendTransaction(tx)).wait()
 
     await (
-      await resourceToken
+      await reSourceToken
         .connect(deployer)
         .transfer(underwriter.address, ethers.utils.parseEther("10000.0"))
     ).wait()
 
     await (
-      await resourceToken
+      await reSourceToken
         .connect(underwriter)
         .approve(
           underwriteAddress,

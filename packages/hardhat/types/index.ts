@@ -10,7 +10,7 @@ export type { IERC20 } from "./IERC20";
 export type { CIP36 } from "./CIP36";
 export type { MultiSigWallet } from "./MultiSigWallet";
 export type { NetworkRegistry } from "./NetworkRegistry";
-export type { ResourceToken } from "./ResourceToken";
+export type { ReSourceToken } from "./ReSourceToken";
 export type { RUSD } from "./RUSD";
 export type { UnderwriteManager } from "./UnderwriteManager";
 
@@ -23,6 +23,6 @@ export { IERC20__factory } from "./factories/IERC20__factory";
 export { CIP36__factory } from "./factories/CIP36__factory";
 export { MultiSigWallet__factory } from "./factories/MultiSigWallet__factory";
 export { NetworkRegistry__factory } from "./factories/NetworkRegistry__factory";
-export { ResourceToken__factory } from "./factories/ResourceToken__factory";
+export { ReSourceToken__factory } from "./factories/ReSourceToken__factory";
 export { RUSD__factory } from "./factories/RUSD__factory";
 export { UnderwriteManager__factory } from "./factories/UnderwriteManager__factory";

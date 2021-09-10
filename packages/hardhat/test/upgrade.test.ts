@@ -2,13 +2,13 @@ import { ethers, upgrades, getNamedAccounts } from "hardhat"
 import { expect } from "chai"
 import chai from "chai"
 import { solidity } from "ethereum-waffle"
-import { ResourceToken } from "../types/ResourceToken"
+import { ReSourceToken } from "../types/ReSourceToken"
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/dist/src/signers"
 chai.use(solidity)
 
 describe("UnderwriteManager Tests", function() {
   let deployer: SignerWithAddress
-  let resourceToken: ResourceToken
+  let reSourceToken: ReSourceToken
 
   before(async function() {
     const accounts = await ethers.getSigners()
@@ -16,11 +16,11 @@ describe("UnderwriteManager Tests", function() {
   })
 
   it("Successfully deploys proxy mutuality token", async function() {
-    const resourceTokenFactory = await ethers.getContractFactory("ResourceToken")
+    const reSourceTokenFactory = await ethers.getContractFactory("ReSourceToken")
 
-    resourceToken = (await upgrades.deployProxy(resourceTokenFactory, [
+    reSourceToken = (await upgrades.deployProxy(reSourceTokenFactory, [
       ethers.utils.parseEther("10000000"),
-    ])) as ResourceToken
+    ])) as ReSourceToken
   })
 })
 

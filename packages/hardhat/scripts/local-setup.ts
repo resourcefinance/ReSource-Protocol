@@ -1,8 +1,8 @@
 import { ethers, getNamedAccounts } from "hardhat"
 import { UnderwriteManager } from "../types/UnderwriteManager"
 import { UnderwriteManager__factory } from "../../react-app/src/contracts/factories/UnderwriteManager__factory"
-import { ResourceToken__factory } from "../../react-app/src/contracts/factories/ResourceToken__factory"
-import { ResourceToken } from "../../react-app/src/contracts/ResourceToken"
+import { ReSourceToken__factory } from "../../react-app/src/contracts/factories/ReSourceToken__factory"
+import { ReSourceToken } from "../../react-app/src/contracts/ReSourceToken"
 import { parseEther } from "ethers/lib/utils"
 import { readFileSync } from "fs"
 import { NetworkRegistry__factory } from "../../react-app/src/contracts/factories/NetworkRegistry__factory"
@@ -12,7 +12,7 @@ import { RUSD } from "../../react-app/src/contracts/RUSD"
 const fs = require("fs")
 
 const underwriteAbi = "./deployments/localhost/UnderwriteManager_Proxy.json"
-const mutualityAbi = "./deployments/localhost/ResourceToken_Proxy.json"
+const mutualityAbi = "./deployments/localhost/ReSourceToken_Proxy.json"
 const rUSDAbi = "./deployments/localhost/RUSD_Proxy.json"
 const networkRegistryAbi = "./deployments/localhost/NetworkRegistry_Proxy.json"
 
@@ -59,11 +59,11 @@ async function issueCreditLine() {
       deployer,
     ) as UnderwriteManager
 
-    const resourceToken = ResourceToken__factory.getContract(
+    const reSourceToken = ReSourceToken__factory.getContract(
       mutualityAddress,
-      ResourceToken__factory.createInterface(),
+      ReSourceToken__factory.createInterface(),
       deployer,
-    ) as ResourceToken
+    ) as ReSourceToken
 
     const networkRegistry = NetworkRegistry__factory.getContract(
       networkRegistryAddress,
@@ -83,8 +83,8 @@ async function issueCreditLine() {
         await (await networkRegistry.connect(deployer).addMember(member)).wait
     }
     for (var underwriter of underwriters)
-      if (Number(ethers.utils.formatEther(await resourceToken.balanceOf(underwriter))) < 1000)
-        await resourceToken
+      if (Number(ethers.utils.formatEther(await reSourceToken.balanceOf(underwriter))) < 1000)
+        await reSourceToken
           .connect(deployer)
           .transfer(underwriter, ethers.utils.parseEther("10000.0"))
 
@@ -104,7 +104,7 @@ async function issueCreditLine() {
     await (await signer.sendTransaction(tx)).wait()
 
     await (
-      await resourceToken
+      await reSourceToken
         .connect(underwriterWallet)
         .approve(underwriteAddress, ethers.utils.parseEther("1000000000000"))
     ).wait()

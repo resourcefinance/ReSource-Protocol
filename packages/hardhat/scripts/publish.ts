@@ -8,6 +8,8 @@ const deploymentsDir = "./deployments"
 const typesDir = "./types"
 const publishDir = "./../react-app/src/contracts"
 
+//TODO: store the deployed contracts into a single file with the contract address and blockNumber
+
 function publishContract(contractName: string, networkName: string) {
   try {
     let contract = fs
@@ -67,6 +69,7 @@ function publishContract(contractName: string, networkName: string) {
 
 async function main() {
   const directories = fs.readdirSync(deploymentsDir)
+
   directories.forEach(function(directory) {
     const files = fs.readdirSync(`${deploymentsDir}/${directory}`)
     files.forEach(function(file) {

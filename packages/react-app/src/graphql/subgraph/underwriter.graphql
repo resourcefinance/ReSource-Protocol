@@ -9,6 +9,7 @@ query getPortfolio($id: ID!) {
     totalRewards
     creditLines {
       collateral
+      underwritee
       totalReward
       outstandingReward
       networkToken

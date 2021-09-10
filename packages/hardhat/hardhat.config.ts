@@ -93,6 +93,7 @@ const config: HardhatUserConfig = {
     sources: "./contracts",
     tests: "./test",
     deployments: "./deployments",
+    deploy: "./deploy",
     imports: "./artifacts",
   },
 

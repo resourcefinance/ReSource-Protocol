@@ -12,10 +12,9 @@ import {
 import { faLink } from "@fortawesome/free-solid-svg-icons"
 import { useFormik } from "formik"
 import React from "react"
-import { useHistory } from "react-router"
 import * as yup from "yup"
-import { Business } from "../../../generated/resource-network/graphql"
 import Icon from "../../../components/Icon"
+import { Business } from "../../../generated/resource-network/graphql"
 import ApproveMuButton from "./components/ApproveMuButton"
 import { BusinessHeader } from "./components/BusinessHeader"
 import { CollateralField, CreditField } from "./components/FormFields"
@@ -30,7 +29,6 @@ interface UnderwriteModalProps {
 const UnderwriteModal = ({ isOpen, onClose, business }: UnderwriteModalProps) => {
   const underwritee = business.wallet?.multiSigAddress
   const formik = useUnderwriteFormik()
-  const history = useHistory()
 
   if (!underwritee) return null
 
@@ -53,14 +51,7 @@ const UnderwriteModal = ({ isOpen, onClose, business }: UnderwriteModalProps) =>
         <ModalFooter>
           <HStack>
             <ApproveMuButton />
-            <UnderwriteButton
-              formik={formik}
-              underwritee={underwritee}
-              onClick={() => {
-                onClose()
-                history.push("/portfolio")
-              }}
-            />
+            <UnderwriteButton formik={formik} underwritee={underwritee} onClick={onClose} />
           </HStack>
         </ModalFooter>
       </ModalContent>
@@ -78,9 +69,7 @@ const useUnderwriteFormik = () => {
     validateOnChange: false,
     validationSchema: validation,
     initialValues: { collateral: 0, credit: 0 },
-    onSubmit: async (values: { collateral: number; credit: number }) => {
-      console.log("UnderwriteModal.tsx -- hi")
-    },
+    onSubmit: async (values: { collateral: number; credit: number }) => {},
   })
 }
 

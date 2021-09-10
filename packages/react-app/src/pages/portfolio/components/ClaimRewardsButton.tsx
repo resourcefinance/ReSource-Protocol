@@ -3,6 +3,7 @@ import { faCoins } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import React from "react"
 import { Business } from "../../../generated/resource-network/graphql"
+import { parseRPCError } from "../../../services/errors/rpcErrors"
 import { useUnderwriteManagerContract } from "../../../services/web3/contracts"
 import { useTxToast } from "../../../utils/useTxToast"
 
@@ -23,12 +24,8 @@ const ClaimRewardsButton = ({ businesses, ...rest }: ClaimRewardsButtonProps) =>
   const handleClaimRewards = async () => {
     try {
       if (underwritees.length > 0) await claimReward({ underwritees })
-    } catch (e) {
-      if (e.code === 4001) {
-        toast({ description: "Transaction rejected", status: "error" })
-      } else {
-        console.log(e)
-      }
+    } catch (error) {
+      toast({ status: "error", description: parseRPCError(error) })
     }
   }
 

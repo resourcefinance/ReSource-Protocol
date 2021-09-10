@@ -3,6 +3,7 @@ import { faCheckCircle, faThumbsUp } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import React, { useState } from "react"
 import config from "../../../../config"
+import { parseRPCError } from "../../../../services/errors/rpcErrors"
 import { useMututalityTokenContract } from "../../../../services/web3/contracts"
 import { waitForTxEvent } from "../../../../services/web3/utils/waitForTxEvent"
 import { useTxToast } from "../../../../utils/useTxToast"
@@ -26,12 +27,8 @@ const ApproveMuButton = (props: ButtonProps) => {
         toast({ description: "Approved", status: "success" })
         setIsApproved(true)
       }
-    } catch (e) {
-      if (e.code === 4001) {
-        toast({ description: "Transaction rejected", status: "error" })
-      } else {
-        console.log(e)
-      }
+    } catch (error) {
+      toast({ status: "error", description: parseRPCError(error) })
     } finally {
       setIsLoading(false)
     }

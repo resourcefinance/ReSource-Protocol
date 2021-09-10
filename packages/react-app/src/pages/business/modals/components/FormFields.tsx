@@ -1,12 +1,15 @@
 import { Box, BoxProps, Text } from "@chakra-ui/layout"
 import { ButtonProps, HStack, Image, Input, InputProps } from "@chakra-ui/react"
+import { BigNumberish } from "ethers"
 import React, { useEffect, useState } from "react"
 import muLogo from "../../../../assets/glyphs/mu.svg"
-import colors, { gradients } from "../../../../theme/foundations/colors"
-import { body, caption, title } from "../../../../theme/textStyles"
 import Button from "../../../../components/Button"
 import FormikField from "../../../../components/FormikField"
 import { GradientGlyphPurple } from "../../../../components/glyph/RusdGlyph"
+import { useMututalityTokenContract } from "../../../../services/web3/contracts"
+import { formatEther } from "../../../../services/web3/utils/etherUtils"
+import colors, { gradients } from "../../../../theme/foundations/colors"
+import { body, caption, title } from "../../../../theme/textStyles"
 import { MIN_CREDIT_LINE } from "../utils"
 
 interface Props extends BoxProps {
@@ -50,6 +53,13 @@ export const CreditField = ({ formik, extendCredit, ...rest }: Props) => {
 }
 
 export const CollateralField = ({ formik, ...rest }: Props) => {
+  const [balance, setBalance] = useState<BigNumberish>(0)
+  const { balanceOf } = useMututalityTokenContract()
+
+  useEffect(() => {
+    balanceOf().then((bal) => setBalance(bal))
+  }, [])
+
   useEffect(() => {
     const updateCredit = async () => {
       await formik.setFieldValue("credit", formik.values.collateral)
@@ -61,7 +71,7 @@ export const CollateralField = ({ formik, ...rest }: Props) => {
   return (
     <Box {...containerStyles} {...rest}>
       <HStack justify="space-between">
-        <Box>
+        <Box noOfLines={1} minW="280px">
           <Text as="span" color="gray.700">
             Mu to stake
           </Text>
@@ -69,7 +79,9 @@ export const CollateralField = ({ formik, ...rest }: Props) => {
             (1 MU = 0.2 rUSD, Leverage = 5x)
           </Text>
         </Box>
-        <Text color="gray.500">Balance: 100,000.00</Text>
+        <Text color="gray.500" overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap">
+          Balance: {formatEther(balance)}
+        </Text>
       </HStack>
       <HStack align="center" justify="space-between">
         <FormikField formik={formik} formikKey="collateral">

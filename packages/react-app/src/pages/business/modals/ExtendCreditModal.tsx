@@ -18,9 +18,11 @@ import { Business } from "../../../generated/resource-network/graphql"
 import Icon from "../../../components/Icon"
 import ApproveMuButton from "./components/ApproveMuButton"
 import { BusinessHeader } from "./components/BusinessHeader"
-import { CurrentUnderwriteMetrics, ProspectiveMetrics } from "./components/ExtendCreditLabels"
+import { CurrentUnderwriteMetrics, NewUnderwriteMetrics } from "./components/ExtendCreditLabels"
 import { CollateralField, CreditField } from "./components/FormFields"
 import UnderwriteButton from "./components/UnderwriteButton"
+import { useGetCreditLineId } from "../../../services/web3/utils/useGetCreditLineId"
+import { useGetCreditLineQuery } from "../../../generated/subgraph/graphql"
 
 interface ExtendCreditModalProps {
   onClose: () => void
@@ -29,11 +31,11 @@ interface ExtendCreditModalProps {
 }
 
 const ExtendCreditModal = ({ isOpen, onClose, business }: ExtendCreditModalProps) => {
-  const underwritee = business.wallet?.multiSigAddress
   const formik = useExtendCreditFormik()
-  const history = useHistory()
+  const underwritee = business.wallet?.multiSigAddress
+  const { collateral, credit, loading, called } = useGetCreditLineData(business)
 
-  if (!underwritee) return null
+  if (!underwritee || loading || !called) return null
 
   return (
     <Modal size="lg" isOpen={isOpen} onClose={onClose} isCentered>
@@ -46,29 +48,36 @@ const ExtendCreditModal = ({ isOpen, onClose, business }: ExtendCreditModalProps
         <ModalBody>
           <VStack align="stretch" spacing={5} mb={5}>
             <BusinessHeader business={business} />
-            <CurrentUnderwriteMetrics business={business} />
+            <CurrentUnderwriteMetrics collateral={collateral} credit={credit} />
             <CreditField formik={formik} extendCredit />
             <Icon icon={faLink} alignSelf="center" />
             <CollateralField formik={formik} extendCredit />
-            <ProspectiveMetrics business={business} formik={formik} />
+            <NewUnderwriteMetrics collateral={collateral} credit={credit} formik={formik} />
           </VStack>
         </ModalBody>
         <ModalFooter>
           <HStack>
             <ApproveMuButton />
             <UnderwriteButton
+              extendCredit
               formik={formik}
               underwritee={underwritee}
-              onClick={() => {
-                onClose()
-                history.push("/portfolio")
-              }}
+              onClick={onClose}
             />
           </HStack>
         </ModalFooter>
       </ModalContent>
     </Modal>
   )
+}
+
+const useGetCreditLineData = (business: Business) => {
+  const id = useGetCreditLineId(business)
+  const { data, loading, called } = useGetCreditLineQuery({ variables: { id }, skip: !id })
+  const collateral = data?.creditLine?.collateral ?? 0
+  const credit = data?.creditLine?.creditLimit ?? 0
+
+  return { collateral, credit, loading, called }
 }
 
 const validation = yup.object({

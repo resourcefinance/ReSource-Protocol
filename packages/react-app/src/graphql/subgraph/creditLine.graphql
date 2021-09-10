@@ -1,0 +1,28 @@
+fragment CreditLineFields on CreditLine {
+    id
+    active
+    underwritee
+    collateral
+    creditLimit
+    balance
+    networkToken
+    issueDate
+    outstandingReward
+    totalReward
+}
+
+query getCreditLine($id: ID!) {
+  creditLine(id: $id) {
+	...CreditLineFields
+	underwriter {
+      id
+    }
+  }
+}
+
+query getCreditLines($where: CreditLine_filter) {
+  creditLines(where: $where) {
+    id
+  }
+}
+

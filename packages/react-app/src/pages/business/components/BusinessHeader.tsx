@@ -1,29 +1,13 @@
 import { StackProps, Text } from "@chakra-ui/layout"
-import { Box, BoxProps, Button, Flex, Heading, HStack, useDisclosure } from "@chakra-ui/react"
+import { Button, Flex, Heading, HStack } from "@chakra-ui/react"
 import React from "react"
 import { Link, useLocation, useParams } from "react-router-dom"
 import { headerHeight } from "../../../components/Header"
 import { ViewStorefrontButton } from "../../../components/ViewStorefrontButton"
-import ExtendCreditModal from "../modals/ExtendCreditModal"
-import UnderwriteModal from "../modals/UnderwriteModal"
 import { Business } from "../../../generated/resource-network/graphql"
 import { gradients } from "../../../theme/foundations/colors"
 import { useQueryBusinessViaHandleInUrl } from "../utils/hooks"
-
-const containerStyles: StackProps = {
-  px: { base: 4, md: 6 },
-  py: { base: 2, md: 3 },
-  justify: "space-between",
-  alignItems: "center",
-  borderBottom: "solid 1px",
-  borderColor: "gray.300",
-  bgColor: "white !important",
-  height: "60px",
-  position: "fixed",
-  w: "100vw",
-  top: headerHeight,
-  zIndex: 1,
-}
+import { UnderwriteModalContainer } from "./UnderwriteModalContainer"
 
 export const BusinessHeader = () => {
   const { data } = useQueryBusinessViaHandleInUrl()
@@ -42,50 +26,19 @@ export const BusinessHeader = () => {
     </Flex>
   )
 }
-
-interface ModalContainerProps extends BoxProps {
-  business?: Business | null
-}
-const UnderwriteModalContainer = ({ business, ...props }: ModalContainerProps) => {
-  const underwriteModal = useDisclosure()
-  const extendCreditModal = useDisclosure()
-  const hasStaked = true
-  if (!business) return null
-  return (
-    <Box>
-      <Button
-        variant="primary"
-        colorScheme="blue"
-        onClick={hasStaked ? extendCreditModal.onOpen : underwriteModal.onOpen}
-      >
-        {hasStaked ? "Extend credit" : "Underwrite"}
-      </Button>
-      <UnderwriteModal
-        isOpen={underwriteModal.isOpen}
-        onClose={underwriteModal.onClose}
-        business={business}
-      />
-      <ExtendCreditModal
-        isOpen={extendCreditModal.isOpen}
-        onClose={extendCreditModal.onClose}
-        business={business}
-      />
-    </Box>
-  )
-}
-
-const toggleStyles = (active: boolean) => {
-  return {
-    py: 4,
-    px: 5,
-    h: "25px",
-    _hover: {},
-    _active: { shadow: "inner", fontWeight: "bold" },
-    border: "none",
-    variant: "ghost",
-    bg: active ? gradients.blue : "",
-    color: active ? "white" : "gray.main",
-  }
+const containerStyles: StackProps = {
+  px: { base: 4, md: 6 },
+  py: { base: 2, md: 3 },
+  justify: "space-between",
+  alignItems: "center",
+  borderBottom: "solid 1px",
+  borderColor: "gray.300",
+  bgColor: "white !important",
+  height: "60px",
+  position: "fixed",
+  w: "100vw",
+  top: headerHeight,
+  zIndex: 1,
 }
 
 const ToggleButton = () => {
@@ -105,6 +58,20 @@ const ToggleButton = () => {
       </Button>
     </HStack>
   )
+}
+
+const toggleStyles = (active: boolean) => {
+  return {
+    py: 4,
+    px: 5,
+    h: "25px",
+    _hover: {},
+    _active: { shadow: "inner", fontWeight: "bold" },
+    border: "none",
+    variant: "ghost",
+    bg: active ? gradients.blue : "",
+    color: active ? "white" : "gray.main",
+  }
 }
 
 export default BusinessHeader

@@ -1,0 +1,18 @@
+query getUnderwritee($id: ID!) {
+  underwritee(id: $id) {
+    id
+    creditLine {
+      ...CreditLineFields
+      underwriter {
+        id
+      }
+    }
+  }
+}
+
+query getUnderwritees($where: Underwritee_filter) {
+  underwritees(where: $where) {
+    id
+  }
+}
+

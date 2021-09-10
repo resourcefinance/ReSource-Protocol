@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { ethers } from "ethers"
 import React, { useEffect, useState } from "react"
 import { CONTRACTS } from "../../../../constants"
+import { parseRPCError } from "../../../../services/errors/rpcErrors"
 import {
   useMututalityTokenContract,
   useUnderwriteManagerContract,
@@ -16,13 +17,14 @@ import { MIN_CREDIT_LINE, useIsApprovedState } from "../utils"
 export interface StakeMuButtonProps extends ButtonProps {
   formik: any
   underwritee: string
+  extendCredit?: boolean
 }
 
 const UnderwriteButton = (props: StakeMuButtonProps) => {
-  const { formik, underwritee, onClick, ...rest } = props
+  const { formik, underwritee, onClick, extendCredit, ...rest } = props
   const { credit, collateral } = formik.values
   const [insufficientAllowance, setInsufficientAllowance] = useState(true)
-  const insufficientCreditLine = credit < MIN_CREDIT_LINE
+  const insufficientCreditLine = !extendCredit && credit < MIN_CREDIT_LINE
   const { underwrite } = useUnderwriteManagerContract()
   const { allowance } = useMututalityTokenContract()
   const [isApproved] = useIsApprovedState()
@@ -33,7 +35,7 @@ const UnderwriteButton = (props: StakeMuButtonProps) => {
     allowance().then((res) => setInsufficientAllowance(false))
   }, [])
 
-  const handleStake = async () => {
+  const handleStake = async (event) => {
     try {
       const tx = await underwrite({
         collateralAmount: ethers.utils.parseEther(collateral.toString()).toString(),
@@ -44,13 +46,10 @@ const UnderwriteButton = (props: StakeMuButtonProps) => {
       if (confirmed) {
         toast({ description: "Approved", status: "success" })
         fetchWallet()
+        onClick?.(event)
       }
-    } catch (e) {
-      if (e.code === 4001) {
-        toast({ description: "Transaction rejected", status: "error" })
-      } else {
-        console.log(e)
-      }
+    } catch (error) {
+      toast({ status: "error", description: parseRPCError(error) })
     }
   }
 
@@ -59,10 +58,7 @@ const UnderwriteButton = (props: StakeMuButtonProps) => {
       colorScheme="blue"
       isDisabled={!isApproved || insufficientCreditLine || insufficientAllowance}
       leftIcon={<FontAwesomeIcon icon={faCheckCircle} />}
-      onClick={async (e) => {
-        await handleStake()
-        onClick?.(e)
-      }}
+      onClick={async (event) => handleStake(event)}
       {...rest}
     >
       {insufficientCreditLine ? "Insufficient credit line" : "Stake MU"}

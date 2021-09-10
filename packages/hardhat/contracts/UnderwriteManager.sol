@@ -108,8 +108,6 @@ contract UnderwriteManager is OwnableUpgradeable {
         creditLine.networkToken = networkToken;
         creditLine.issueDate = block.timestamp;
         uint256 creditLimit = calculateCredit(collateralAmount);
-        CIP36(networkToken).setCreditLimit(underwritee, creditLimit); 
-        underwriters[underwritee] = msg.sender;
         emit NewCreditLine(CreditLineLimitEvent(
             msg.sender, 
             underwritee, 
@@ -121,6 +119,8 @@ contract UnderwriteManager is OwnableUpgradeable {
             ),
             creditLimit
         ));
+        CIP36(networkToken).setCreditLimit(underwritee, creditLimit); 
+        underwriters[underwritee] = msg.sender;
     }
 
     function extendCreditLine(address underwritee, uint256 collateralAmount) external ownedCreditLine(msg.sender, underwritee) {

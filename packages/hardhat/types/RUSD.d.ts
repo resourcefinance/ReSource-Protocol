@@ -24,6 +24,7 @@ interface RUSDInterface extends ethers.utils.Interface {
     "allowance(address,address)": FunctionFragment;
     "approve(address,uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
+    "bulkTransfer(address[],uint256[])": FunctionFragment;
     "burn(uint256)": FunctionFragment;
     "burnFrom(address,uint256)": FunctionFragment;
     "creditBalanceOf(address)": FunctionFragment;
@@ -62,6 +63,10 @@ interface RUSDInterface extends ethers.utils.Interface {
     values: [string, BigNumberish]
   ): string;
   encodeFunctionData(functionFragment: "balanceOf", values: [string]): string;
+  encodeFunctionData(
+    functionFragment: "bulkTransfer",
+    values: [string[], BigNumberish[]]
+  ): string;
   encodeFunctionData(functionFragment: "burn", values: [BigNumberish]): string;
   encodeFunctionData(
     functionFragment: "burnFrom",
@@ -156,6 +161,10 @@ interface RUSDInterface extends ethers.utils.Interface {
   decodeFunctionResult(functionFragment: "allowance", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "bulkTransfer",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "burn", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "burnFrom", data: BytesLike): Result;
   decodeFunctionResult(
@@ -240,6 +249,7 @@ interface RUSDInterface extends ethers.utils.Interface {
 
   events: {
     "Approval(address,address,uint256)": EventFragment;
+    "BalanceUpdate(address,address,uint256,uint256,uint256,uint256)": EventFragment;
     "CreditLimitUpdate(address,uint256)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
     "RestrictionExpirationUpdated(uint256)": EventFragment;
@@ -248,6 +258,7 @@ interface RUSDInterface extends ethers.utils.Interface {
   };
 
   getEvent(nameOrSignatureOrTopic: "Approval"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "BalanceUpdate"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "CreditLimitUpdate"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
   getEvent(
@@ -314,6 +325,12 @@ export class RUSD extends BaseContract {
     ): Promise<ContractTransaction>;
 
     balanceOf(account: string, overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    bulkTransfer(
+      _to: string[],
+      _values: BigNumberish[],
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
 
     burn(
       amount: BigNumberish,
@@ -444,6 +461,12 @@ export class RUSD extends BaseContract {
 
   balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
 
+  bulkTransfer(
+    _to: string[],
+    _values: BigNumberish[],
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   burn(
     amount: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
@@ -570,6 +593,12 @@ export class RUSD extends BaseContract {
 
     balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
 
+    bulkTransfer(
+      _to: string[],
+      _values: BigNumberish[],
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     burn(amount: BigNumberish, overrides?: CallOverrides): Promise<void>;
 
     burnFrom(
@@ -682,6 +711,25 @@ export class RUSD extends BaseContract {
       { owner: string; spender: string; value: BigNumber }
     >;
 
+    BalanceUpdate(
+      sender?: null,
+      recipient?: null,
+      senderBalance?: null,
+      senderCreditBalance?: null,
+      recipientBalance?: null,
+      recipientCreditBalance?: null
+    ): TypedEventFilter<
+      [string, string, BigNumber, BigNumber, BigNumber, BigNumber],
+      {
+        sender: string;
+        recipient: string;
+        senderBalance: BigNumber;
+        senderCreditBalance: BigNumber;
+        recipientBalance: BigNumber;
+        recipientCreditBalance: BigNumber;
+      }
+    >;
+
     CreditLimitUpdate(
       member?: null,
       limit?: null
@@ -730,6 +778,12 @@ export class RUSD extends BaseContract {
     ): Promise<BigNumber>;
 
     balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    bulkTransfer(
+      _to: string[],
+      _values: BigNumberish[],
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
 
     burn(
       amount: BigNumberish,
@@ -862,6 +916,12 @@ export class RUSD extends BaseContract {
     balanceOf(
       account: string,
       overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    bulkTransfer(
+      _to: string[],
+      _values: BigNumberish[],
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     burn(

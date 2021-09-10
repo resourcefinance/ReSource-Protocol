@@ -19,6 +19,15 @@ contract RUSD is CIP36 {
      */
     event RestrictionUpdated(Restriction indexed state);
     event RestrictionExpirationUpdated(uint256 restrictionRenewal);
+    event BalanceUpdate(
+        address sender, 
+        address recipient, 
+        uint256 senderBalance, 
+        uint256 senderCreditBalance, 
+        uint256 recipientBalance, 
+        uint256 recipientCreditBalance);
+
+
 
     /*
      *  Storage
@@ -54,6 +63,21 @@ contract RUSD is CIP36 {
         _verifyNetworkRegistry(_from, _to, _amount);
         super._transfer(_from, _to, _amount);
         underwriteManager.updateReward(_from, _amount);
+        emit BalanceUpdate(
+            _from,
+            _to, 
+            balanceOf(_from), 
+            super.creditBalanceOf(_from),
+            balanceOf(_to),
+            super.creditBalanceOf(_to));
+    }
+
+    function bulkTransfer(address[] memory _to, uint256[] memory _values) public  
+    {
+        require(_to.length == _values.length);
+        for (uint256 i = 0; i < _to.length; i++) {
+            super._transfer(msg.sender, _to[i], _values[i]);
+        }
     }
 
     function _verifyNetworkRegistry(

@@ -5,11 +5,19 @@ type Underwriter @entity {
   totalCollateral: BigInt!
 }
 
+type Underwritee @entity {
+  id: ID!
+  creditLine: CreditLine
+}
+
 type CreditLine @entity {
   id: ID!
+  active: Boolean!
   underwritee: Bytes!
-  underwriter: Underwriter
+  underwriter: Underwriter!
   collateral: BigInt!
+  creditLimit: BigInt!
+  balance: BigInt!
   networkToken: Bytes!
   issueDate: BigInt!
   outstandingReward: BigInt!

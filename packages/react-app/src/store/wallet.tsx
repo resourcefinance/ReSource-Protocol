@@ -4,6 +4,7 @@ import { atom, selector, useRecoilValue, useSetRecoilState } from "recoil"
 import { useWeb3Context } from "web3-react"
 import { useGetTotalCollateralLazyQuery } from "../generated/subgraph/graphql"
 import { useMututalityTokenContract } from "../services/web3/contracts"
+import { useGetMyWalletAddress } from "../services/web3/utils/useGetMyWalletAddress"
 
 interface Props {
   balance: string
@@ -43,7 +44,7 @@ export const useGetWallet = () => {
 }
 
 export const useFetchWallet = () => {
-  const context = useWeb3Context()
+  const myWalletAddress = useGetMyWalletAddress()
   const setWallet = useSetRecoilState(walletAtom)
   const { balanceOf } = useMututalityTokenContract()
   const [fetchTotalCollateral] = useGetTotalCollateralLazyQuery({
@@ -59,10 +60,10 @@ export const useFetchWallet = () => {
   })
 
   return useCallback(() => {
-    if (!context.account) return
+    if (!myWalletAddress) return
     setWallet((prevState) => ({ ...prevState, loading: true }))
     // TODO: figure out why this is not being called on modal close
-    fetchTotalCollateral({ variables: { id: context?.account?.toLowerCase() } })
+    fetchTotalCollateral({ variables: { id: myWalletAddress } })
     balanceOf().then((value) => {
       setWallet((prevState) => ({
         ...prevState,

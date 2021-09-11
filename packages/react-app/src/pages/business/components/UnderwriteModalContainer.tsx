@@ -1,8 +1,8 @@
 import { Box, BoxProps, Button, useDisclosure } from "@chakra-ui/react"
 import React, { useEffect, useState } from "react"
-import { useWeb3Context } from "web3-react"
 import { Business } from "../../../generated/resource-network/graphql"
 import { useGetUnderwriteeQuery } from "../../../generated/subgraph/graphql"
+import { useGetMyWalletAddress } from "../../../services/web3/utils/useGetMyWalletAddress"
 import ExtendCreditModal from "../modals/ExtendCreditModal"
 import UnderwriteModal from "../modals/UnderwriteModal"
 
@@ -12,8 +12,8 @@ interface Props extends BoxProps {
 export const UnderwriteModalContainer = ({ business, ...props }: Props) => {
   const underwriteModal = useDisclosure()
   const extendCreditModal = useDisclosure()
+  const myWalletAddress = useGetMyWalletAddress()
 
-  const myWalletAddress = useWeb3Context().account?.toLowerCase()
   const id = business?.wallet?.multiSigAddress?.toLowerCase() ?? ""
   const { data, loading, called } = useGetUnderwriteeQuery({ variables: { id: id }, skip: !id })
 

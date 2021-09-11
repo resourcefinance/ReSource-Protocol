@@ -1,9 +1,9 @@
-import { useWeb3Context } from "web3-react"
 import { Business } from "../../../generated/resource-network/graphql"
+import { useGetMyWalletAddress } from "./useGetMyWalletAddress"
 
 export const useGetCreditLineId = (business?: Business | null) => {
-  const { account } = useWeb3Context()
+  const myWalletAddress = useGetMyWalletAddress()
   const businessMultiSig = business?.wallet?.multiSigAddress
-  if (!account || !businessMultiSig) return ""
-  return `${businessMultiSig.toLowerCase()}-${account.toLowerCase()}`
+  if (!myWalletAddress || !businessMultiSig) return ""
+  return `${businessMultiSig}-${myWalletAddress}`
 }

@@ -11,10 +11,10 @@ import { RUSD__factory } from "../../react-app/src/contracts/factories/RUSD__fac
 import { RUSD } from "../../react-app/src/contracts/RUSD"
 const fs = require("fs")
 
-const underwriteAbi = "./deployments/localhost/UnderwriteManager_Proxy.json"
-const mutualityAbi = "./deployments/localhost/ReSourceToken_Proxy.json"
-const rUSDAbi = "./deployments/localhost/RUSD_Proxy.json"
-const networkRegistryAbi = "./deployments/localhost/NetworkRegistry_Proxy.json"
+const underwriteAbi = "./deployments/localhost/UnderwriteManager.json"
+const mutualityAbi = "./deployments/localhost/ReSourceToken.json"
+const rUSDAbi = "./deployments/localhost/RUSD.json"
+const networkRegistryAbi = "./deployments/localhost/NetworkRegistry.json"
 
 const member1 = ethers.Wallet.createRandom().connect(ethers.provider)
 const member2 = ethers.Wallet.createRandom()

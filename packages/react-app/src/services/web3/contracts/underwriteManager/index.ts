@@ -1,4 +1,4 @@
-import { ethers } from "ethers"
+import { BigNumberish, ethers } from "ethers"
 import { useEffect, useState } from "react"
 import { UnderwriteManager, UnderwriteManager__factory } from "../../../../contracts"
 import { CONTRACTS } from "../../constants"
@@ -9,6 +9,12 @@ interface UnderwriteProps {
   collateralAmount: string
   underwritee: string
 }
+
+interface ExtendCreditLineProps {
+  underwritee: string
+  collateralAmount: BigNumberish
+}
+
 interface ClaimRewardsProps {
   underwritees: string[]
 }
@@ -27,6 +33,8 @@ export const useUnderwriteManagerContract = () => {
     contract,
     underwrite: ({ collateralAmount, underwritee, networkTokenAddress }: UnderwriteProps) =>
       contract.connect(signer).underwrite(networkTokenAddress, collateralAmount, underwritee),
+    extendCreditLine: ({ underwritee, collateralAmount }: ExtendCreditLineProps) =>
+      contract.connect(signer).extendCreditLine(underwritee, collateralAmount),
     claimReward: ({ underwritees }: ClaimRewardsProps) =>
       contract.connect(signer).claimRewards(underwritees),
   }

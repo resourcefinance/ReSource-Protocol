@@ -23,8 +23,7 @@ export const CreditField = ({ formik, extendCredit, ...rest }: Props) => {
 
   useEffect(() => {
     const updateCollateral = async () => {
-      await formik.setFieldValue("collateral", formik.values.credit)
-      await formik.setValues({ ...formik.values, collateral: formik.values.credit })
+      formik.setFieldValue("collateral", formik.values.credit)
     }
     updateCollateral()
   }, [formik.values.credit])
@@ -36,7 +35,7 @@ export const CreditField = ({ formik, extendCredit, ...rest }: Props) => {
         {!extendCredit && <Text color="gray.500">min = {MIN_CREDIT_LINE.toFixed(2)}</Text>}
       </HStack>
       <HStack align="center" justify="space-between">
-        <FormikField formik={formik} formikKey="credit">
+        <FormikField formik={formik} formikKey="credit" hideErrorMessage>
           <Input {...creditInputStyles} />
         </FormikField>
         <HStack align="center">
@@ -62,8 +61,7 @@ export const CollateralField = ({ formik, ...rest }: Props) => {
 
   useEffect(() => {
     const updateCredit = async () => {
-      await formik.setFieldValue("credit", formik.values.collateral)
-      await formik.setValues({ ...formik.values, credit: formik.values.collateral })
+      formik.setFieldValue("credit", formik.values.collateral)
     }
     updateCredit()
   }, [formik.values.collateral])
@@ -84,7 +82,7 @@ export const CollateralField = ({ formik, ...rest }: Props) => {
         </Text>
       </HStack>
       <HStack align="center" justify="space-between">
-        <FormikField formik={formik} formikKey="collateral">
+        <FormikField formik={formik} formikKey="collateral" hideErrorMessage>
           <Input {...collateralInputStyles} />
         </FormikField>
         <HStack align="center">

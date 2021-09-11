@@ -10,19 +10,25 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import { faLink } from "@fortawesome/free-solid-svg-icons"
-import { useFormik } from "formik"
+import { FormikProvider, useFormik } from "formik"
 import React from "react"
-import { useHistory } from "react-router-dom"
 import * as yup from "yup"
-import { Business } from "../../../generated/resource-network/graphql"
 import Icon from "../../../components/Icon"
+import { Business } from "../../../generated/resource-network/graphql"
+import { useGetCreditLineQuery } from "../../../generated/subgraph/graphql"
+import { parseRPCError } from "../../../services/errors/rpcErrors"
+import { useUnderwriteManagerContract } from "../../../services/web3/contracts"
+import { parseEther } from "../../../services/web3/utils/etherUtils"
+import { useGetCreditLineId } from "../../../services/web3/utils/useGetCreditLineId"
+import { waitForTxEvent } from "../../../services/web3/utils/waitForTxEvent"
+import { useFetchWallet } from "../../../store/wallet"
+import { useTxToast } from "../../../utils/useTxToast"
 import ApproveMuButton from "./components/ApproveMuButton"
 import { BusinessHeader } from "./components/BusinessHeader"
 import { CurrentUnderwriteMetrics, NewUnderwriteMetrics } from "./components/ExtendCreditLabels"
 import { CollateralField, CreditField } from "./components/FormFields"
-import UnderwriteButton from "./components/UnderwriteButton"
-import { useGetCreditLineId } from "../../../services/web3/utils/useGetCreditLineId"
-import { useGetCreditLineQuery } from "../../../generated/subgraph/graphql"
+import StakeButton from "./components/StakeButton"
+import { useIsApprovedState } from "./utils"
 
 interface ExtendCreditModalProps {
   onClose: () => void
@@ -30,44 +36,88 @@ interface ExtendCreditModalProps {
   business: Business
 }
 
+const validation = yup.object({
+  collateral: yup
+    .number()
+    .required("staked mu value is required")
+    .min(0),
+  credit: yup
+    .number()
+    .required("credit line is required")
+    .min(0),
+})
+
 const ExtendCreditModal = ({ isOpen, onClose, business }: ExtendCreditModalProps) => {
-  const formik = useExtendCreditFormik()
-  const underwritee = business.wallet?.multiSigAddress
   const { collateral, credit, loading, called } = useGetCreditLineData(business)
+  const { extendCreditLine } = useUnderwriteManagerContract()
+  const underwritee = business.wallet?.multiSigAddress?.toLowerCase()
+  const [isApproved] = useIsApprovedState()
+  const fetchWallet = useFetchWallet()
+  const toast = useTxToast()
+
+  const id = useGetCreditLineId(business)
+  const { data } = useGetCreditLineQuery({ variables: { id: id }, skip: !id })
+  console.log("ExtendCreditModal.tsx --  data.creditLine", data?.creditLine)
+
+  const formik = useFormik({
+    validateOnChange: true,
+    validationSchema: validation,
+    initialValues: { collateral: 0, credit: 0 },
+    onSubmit: async (values: { collateral: number; credit: number }) => {
+      try {
+        const collateralAmount = parseEther(values.collateral).toString()
+        console.log("ExtendCreditModal.tsx --  collateralAmount", collateralAmount)
+        console.log("ExtendCreditModal.tsx --  underwritee", underwritee)
+        const tx = await extendCreditLine({ collateralAmount, underwritee: underwritee! })
+        const confirmed = await waitForTxEvent(tx, "NewCreditLine")
+        if (confirmed) {
+          toast({ description: "Approved", status: "success" })
+          fetchWallet()
+          onClose()
+        }
+      } catch (error) {
+        toast({ status: "error", description: parseRPCError(error) })
+      }
+    },
+  })
+
+  const maySubmit = () => {
+    if (!formik.isValid) return false
+    if (!underwritee) return false
+    if (!isApproved) return false
+    return true
+  }
 
   if (!underwritee || loading || !called) return null
 
   return (
-    <Modal size="lg" isOpen={isOpen} onClose={onClose} isCentered>
-      <ModalOverlay />
-      <ModalContent>
-        <ModalHeader>
-          Extend Credit
-          <ModalCloseButton mt={2} />
-        </ModalHeader>
-        <ModalBody>
-          <VStack align="stretch" spacing={5} mb={5}>
-            <BusinessHeader business={business} />
-            <CurrentUnderwriteMetrics collateral={collateral} credit={credit} />
-            <CreditField formik={formik} extendCredit />
-            <Icon icon={faLink} alignSelf="center" />
-            <CollateralField formik={formik} extendCredit />
-            <NewUnderwriteMetrics collateral={collateral} credit={credit} formik={formik} />
-          </VStack>
-        </ModalBody>
-        <ModalFooter>
-          <HStack>
-            <ApproveMuButton />
-            <UnderwriteButton
-              extendCredit
-              formik={formik}
-              underwritee={underwritee}
-              onClick={onClose}
-            />
-          </HStack>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+    <FormikProvider value={formik}>
+      <Modal size="lg" isOpen={isOpen} onClose={onClose} isCentered>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>
+            Extend Credit
+            <ModalCloseButton mt={2} />
+          </ModalHeader>
+          <ModalBody>
+            <VStack align="stretch" spacing={5} mb={5}>
+              <BusinessHeader business={business} />
+              <CurrentUnderwriteMetrics collateral={collateral} credit={credit} />
+              <CreditField formik={formik} extendCredit />
+              <Icon icon={faLink} alignSelf="center" />
+              <CollateralField formik={formik} extendCredit />
+              <NewUnderwriteMetrics collateral={collateral} credit={credit} formik={formik} />
+            </VStack>
+          </ModalBody>
+          <ModalFooter>
+            <HStack>
+              <ApproveMuButton />
+              <StakeButton isDisabled={!maySubmit()} formik={formik} onClick={formik.submitForm} />
+            </HStack>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </FormikProvider>
   )
 }
 
@@ -78,20 +128,6 @@ const useGetCreditLineData = (business: Business) => {
   const credit = data?.creditLine?.creditLimit ?? 0
 
   return { collateral, credit, loading, called }
-}
-
-const validation = yup.object({
-  collateral: yup.string().required("staked mu value is required"),
-  credit: yup.string().required("credit line is required"),
-})
-
-const useExtendCreditFormik = () => {
-  return useFormik({
-    validateOnChange: false,
-    validationSchema: validation,
-    initialValues: { collateral: 0, credit: 0 },
-    onSubmit: async (values: { collateral: number; credit: number }) => {},
-  })
 }
 
 export default ExtendCreditModal

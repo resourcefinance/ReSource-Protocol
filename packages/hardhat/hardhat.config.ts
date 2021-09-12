@@ -1,12 +1,13 @@
 const fs = require("fs")
 const chalk = require("chalk")
 
-import "@typechain/hardhat"
 import "@nomiclabs/hardhat-waffle"
+import "@typechain/hardhat"
 import "@tenderly/hardhat-tenderly"
 import "hardhat-deploy"
-import "@nomiclabs/hardhat-ethers"
 import "@openzeppelin/hardhat-upgrades"
+import "hardhat-gas-reporter"
+import "solidity-coverage"
 
 import { utils } from "ethers"
 
@@ -50,18 +51,21 @@ const config: HardhatUserConfig = {
   networks: {
     localhost: {
       url: "http://localhost:8545",
-      chainId: 31337,
+      chainId: chainIds.localhost,
       saveDeployments: true,
+      tags: ["local", "testing"],
     },
     "celo-alfajores": {
       url: "https://alfajores-forno.celo-testnet.org",
       chainId: chainIds.testnet,
       accounts: { mnemonic: mnemonic() },
+      tags: ["alfajores", "staging"],
     },
     celo: {
       url: "https://forno.celo.org",
       chainId: chainIds.mainnet,
       accounts: { mnemonic: mnemonic() },
+      tags: ["production", "mainnet"],
     },
   },
   solidity: {
@@ -88,6 +92,7 @@ const config: HardhatUserConfig = {
       default: 0,
       devAccount: 1,
     },
+    coSigner: "0xae59c014f77f6aba717a18547df62f1f487c7f45",
   },
   paths: {
     artifacts: "./artifacts",
@@ -100,7 +105,7 @@ const config: HardhatUserConfig = {
   },
 
   typechain: {
-    outDir: "./types",
+    outDir: "types",
     target: "ethers-v5",
   },
 }

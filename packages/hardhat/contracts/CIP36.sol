@@ -20,25 +20,21 @@ contract CIP36 is OwnableUpgradeable, ERC20BurnableUpgradeable {
         uint128 creditLimit;
     }
 
-    modifier onlyUnderwriter() {
-        require(msg.sender == underwriteManagerAddress || msg.sender == owner(), "invalid underwriter address");
-        _;
-    }
-
     mapping(address => Member) private _members;
-
-    address public underwriteManagerAddress;
 
     event CreditLimitUpdate(address member, uint256 limit);
 
     function initialize(
         string memory name_,
-        string memory symbol_,
-        address _underwriteManagerAddress
+        string memory symbol_
     ) public virtual initializer {
         __ERC20_init(name_, symbol_);
         __Ownable_init();
-        underwriteManagerAddress = _underwriteManagerAddress;
+    }
+
+    modifier onlyAuthorized() virtual {
+        require(msg.sender == owner(), "invalid caller address");
+        _;
     }
 
     function decimals() public view virtual override returns (uint8) {
@@ -61,7 +57,7 @@ contract CIP36 is OwnableUpgradeable, ERC20BurnableUpgradeable {
         return _localMember.creditLimit - _localMember.creditBalance;
     }
 
-    function setCreditLimit(address _member, uint256 _limit) external onlyUnderwriter() {
+    function setCreditLimit(address _member, uint256 _limit) public virtual onlyAuthorized() {
         _members[_member].creditLimit = _limit.toUInt128();
         emit CreditLimitUpdate(_member, _limit);
     }

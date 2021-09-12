@@ -33,7 +33,7 @@ interface RUSDInterface extends ethers.utils.Interface {
     "decimals()": FunctionFragment;
     "decreaseAllowance(address,uint256)": FunctionFragment;
     "increaseAllowance(address,uint256)": FunctionFragment;
-    "initialize(string,string,address)": FunctionFragment;
+    "initialize(string,string)": FunctionFragment;
     "initializeRUSD(address,uint256,address)": FunctionFragment;
     "name()": FunctionFragment;
     "owner()": FunctionFragment;
@@ -95,7 +95,7 @@ interface RUSDInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "initialize",
-    values: [string, string, string]
+    values: [string, string]
   ): string;
   encodeFunctionData(
     functionFragment: "initializeRUSD",
@@ -375,7 +375,6 @@ export class RUSD extends BaseContract {
     initialize(
       name_: string,
       symbol_: string,
-      _underwriteManagerAddress: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -507,7 +506,6 @@ export class RUSD extends BaseContract {
   initialize(
     name_: string,
     symbol_: string,
-    _underwriteManagerAddress: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -639,7 +637,6 @@ export class RUSD extends BaseContract {
     initialize(
       name_: string,
       symbol_: string,
-      _underwriteManagerAddress: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -828,7 +825,6 @@ export class RUSD extends BaseContract {
     initialize(
       name_: string,
       symbol_: string,
-      _underwriteManagerAddress: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -967,7 +963,6 @@ export class RUSD extends BaseContract {
     initialize(
       name_: string,
       symbol_: string,
-      _underwriteManagerAddress: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 

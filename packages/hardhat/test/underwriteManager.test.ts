@@ -139,6 +139,14 @@ describe("UnderwriteManager Tests", function() {
     )
   })
 
+  it("Revert setCreditLimit with invalid wallet", async function() {
+    await expect(
+      rUSD
+        .connect(memberA)
+        .setCreditLimit(memberB.address, ethers.utils.parseUnits("100.0", "mwei")),
+    ).to.be.reverted
+  })
+
   it("Successfully use memberA credit line and claim underwriterA reward", async function() {
     await expect(
       rUSD.connect(memberA).transfer(memberB.address, ethers.utils.parseUnits("1000.0", "mwei")),

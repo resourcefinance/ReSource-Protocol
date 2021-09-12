@@ -1,5 +1,7 @@
 import { DeploymentsExtension } from "hardhat-deploy/types"
 import { Contract, ContractFactory, ethers } from "ethers"
+import { HardhatRuntimeEnvironment } from "hardhat/types"
+import { retry } from "ts-retry"
 
 const formatDeploymentReceipt = (deployTransaction) => {
   return {
@@ -14,17 +16,32 @@ const formatDeploymentReceipt = (deployTransaction) => {
   }
 }
 
-export const saveDeployment = async (
+export const deployProxyAndSave = async (
   name: string,
-  deployments: DeploymentsExtension,
-  deployment: Contract,
+  args: any[],
+  hardhat: HardhatRuntimeEnvironment,
   abi,
-) => {
-  const networkRegistryDeployment = {
-    address: deployment.address,
+  initializer?: {},
+): Promise<Contract> => {
+  const contractFactory = await hardhat.ethers.getContractFactory(name)
+
+  const contractAbi = (await hardhat.artifacts.readArtifact(name)).abi
+
+  let contract
+  await retry(
+    async () => {
+      contract = await hardhat.upgrades.deployProxy(contractFactory, args, initializer)
+    },
+    { delay: 200, maxTry: 10 },
+  )
+
+  const contractDeployment = {
+    address: contract.address,
     abi,
-    receipt: formatDeploymentReceipt(deployment.deployTransaction),
+    receipt: formatDeploymentReceipt(contract.deployTransaction),
   }
 
-  deployments.save(name, networkRegistryDeployment)
+  hardhat.deployments.save(name, contractDeployment)
+
+  return contract
 }

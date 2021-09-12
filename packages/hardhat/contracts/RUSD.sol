@@ -27,8 +27,6 @@ contract RUSD is CIP36 {
         uint256 recipientBalance, 
         uint256 recipientCreditBalance);
 
-
-
     /*
      *  Storage
      */
@@ -39,6 +37,12 @@ contract RUSD is CIP36 {
     uint256 restrictionRenewal;
     uint256 expirationSeconds;
 
+
+    modifier onlyAuthorized() override {
+        require(msg.sender == address(underwriteManager) || msg.sender == owner(), "invalid caller address");
+        _;
+    }
+
     function initializeRUSD(
         address registryAddress,
         uint256 _expiration,
@@ -46,11 +50,14 @@ contract RUSD is CIP36 {
     ) external virtual initializer {
         registry = NetworkRegistry(registryAddress);
         underwriteManager = UnderwriteManager(underwriteManagerAddress);
-        CIP36.initialize("rUSD", "rUSD", address(underwriteManager));
+        CIP36.initialize("rUSD", "rUSD");
         restrictionState = Restriction.REGISTERED;
         restrictionRenewal = block.timestamp;
         expirationSeconds = _expiration;
     }
+
+    address public underwriteManagerAddress;
+
 
     /*
      *  Overrides
@@ -78,6 +85,10 @@ contract RUSD is CIP36 {
         for (uint256 i = 0; i < _to.length; i++) {
             super._transfer(msg.sender, _to[i], _values[i]);
         }
+    }
+
+    function setCreditLimit(address _member, uint256 _limit) public override onlyAuthorized() {
+        super.setCreditLimit(_member, _limit);
     }
 
     function _verifyNetworkRegistry(

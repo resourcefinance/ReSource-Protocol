@@ -32,7 +32,7 @@ interface CIP36Interface extends ethers.utils.Interface {
     "decimals()": FunctionFragment;
     "decreaseAllowance(address,uint256)": FunctionFragment;
     "increaseAllowance(address,uint256)": FunctionFragment;
-    "initialize(string,string,address)": FunctionFragment;
+    "initialize(string,string)": FunctionFragment;
     "name()": FunctionFragment;
     "owner()": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
@@ -42,7 +42,6 @@ interface CIP36Interface extends ethers.utils.Interface {
     "transfer(address,uint256)": FunctionFragment;
     "transferFrom(address,address,uint256)": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
-    "underwriteManagerAddress()": FunctionFragment;
   };
 
   encodeFunctionData(
@@ -82,7 +81,7 @@ interface CIP36Interface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "initialize",
-    values: [string, string, string]
+    values: [string, string]
   ): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
@@ -110,10 +109,6 @@ interface CIP36Interface extends ethers.utils.Interface {
   encodeFunctionData(
     functionFragment: "transferOwnership",
     values: [string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "underwriteManagerAddress",
-    values?: undefined
   ): string;
 
   decodeFunctionResult(functionFragment: "allowance", data: BytesLike): Result;
@@ -165,10 +160,6 @@ interface CIP36Interface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "transferOwnership",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "underwriteManagerAddress",
     data: BytesLike
   ): Result;
 
@@ -286,7 +277,6 @@ export class CIP36 extends BaseContract {
     initialize(
       name_: string,
       symbol_: string,
-      _underwriteManagerAddress: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -325,8 +315,6 @@ export class CIP36 extends BaseContract {
       newOwner: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
-
-    underwriteManagerAddress(overrides?: CallOverrides): Promise<[string]>;
   };
 
   allowance(
@@ -383,7 +371,6 @@ export class CIP36 extends BaseContract {
   initialize(
     name_: string,
     symbol_: string,
-    _underwriteManagerAddress: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -422,8 +409,6 @@ export class CIP36 extends BaseContract {
     newOwner: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
-
-  underwriteManagerAddress(overrides?: CallOverrides): Promise<string>;
 
   callStatic: {
     allowance(
@@ -480,7 +465,6 @@ export class CIP36 extends BaseContract {
     initialize(
       name_: string,
       symbol_: string,
-      _underwriteManagerAddress: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -517,8 +501,6 @@ export class CIP36 extends BaseContract {
       newOwner: string,
       overrides?: CallOverrides
     ): Promise<void>;
-
-    underwriteManagerAddress(overrides?: CallOverrides): Promise<string>;
   };
 
   filters: {
@@ -615,7 +597,6 @@ export class CIP36 extends BaseContract {
     initialize(
       name_: string,
       symbol_: string,
-      _underwriteManagerAddress: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -654,8 +635,6 @@ export class CIP36 extends BaseContract {
       newOwner: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
-
-    underwriteManagerAddress(overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
@@ -719,7 +698,6 @@ export class CIP36 extends BaseContract {
     initialize(
       name_: string,
       symbol_: string,
-      _underwriteManagerAddress: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -757,10 +735,6 @@ export class CIP36 extends BaseContract {
     transferOwnership(
       newOwner: string,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    underwriteManagerAddress(
-      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
   };
 }

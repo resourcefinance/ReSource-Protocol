@@ -24,11 +24,7 @@ describe("CIP36 Tests", function() {
 
   it("Successfully deploys CIP36 contract", async function() {
     const CIP36Factory = await ethers.getContractFactory("CIP36")
-    CIP36Contract = (await upgrades.deployProxy(CIP36Factory, [
-      "RUSD",
-      "RUSD",
-      underwriteManagerFaker.address,
-    ])) as CIP36
+    CIP36Contract = (await upgrades.deployProxy(CIP36Factory, ["RUSD", "RUSD"])) as CIP36
     expect(CIP36Contract.address).to.properAddress
   })
 

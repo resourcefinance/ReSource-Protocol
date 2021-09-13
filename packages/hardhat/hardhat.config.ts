@@ -6,8 +6,8 @@ import "@typechain/hardhat"
 import "@tenderly/hardhat-tenderly"
 import "hardhat-deploy"
 import "@openzeppelin/hardhat-upgrades"
-// import "hardhat-gas-reporter"
-// import "solidity-coverage"
+import "hardhat-gas-reporter"
+import "solidity-coverage"
 
 import { utils } from "ethers"
 

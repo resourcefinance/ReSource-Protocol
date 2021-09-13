@@ -46,10 +46,7 @@ export const UnderwriteModalContainer = ({ business, ...props }: Props) => {
       </Button>
       <UnderwriteModal
         isOpen={underwriteModal.isOpen}
-        onClose={() => {
-          underwriteModal.onClose()
-          setCurrentlyUnderwriting(true)
-        }}
+        onClose={underwriteModal.onClose}
         business={business}
       />
       <ExtendCreditModal

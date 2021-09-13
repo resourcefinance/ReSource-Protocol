@@ -1,7 +1,6 @@
 import { ethers } from "ethers"
 import { useCallback } from "react"
 import { atom, selector, useRecoilValue, useSetRecoilState } from "recoil"
-import { useWeb3Context } from "web3-react"
 import { useGetTotalCollateralLazyQuery } from "../generated/subgraph/graphql"
 import { useMututalityTokenContract } from "../services/web3/contracts"
 import { useGetMyWalletAddress } from "../services/web3/utils/useGetMyWalletAddress"

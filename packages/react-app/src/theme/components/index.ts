@@ -8,6 +8,7 @@ import NumberInput from "./NumberInput"
 import Progress from "./Progress"
 import Select from "./Select"
 import Tabs from "./Tabs"
+import Tooltip from "./Tooltip"
 import Text from "./Text"
 import Textarea from "./Textarea"
 
@@ -20,6 +21,7 @@ export default {
   Select,
   Heading,
   Text,
+  Tooltip,
   Tabs,
   Progress,
   Menu,

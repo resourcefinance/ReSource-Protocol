@@ -31,6 +31,7 @@ const ClaimRewardsButton = ({ businesses, ...rest }: ClaimRewardsButtonProps) =>
 
   return (
     <Button
+      maxH="37px"
       colorScheme="blue"
       leftIcon={<FontAwesomeIcon icon={faCoins} />}
       onClick={rest.onClick}

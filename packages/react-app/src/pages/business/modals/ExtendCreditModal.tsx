@@ -55,10 +55,6 @@ const ExtendCreditModal = ({ isOpen, onClose, business }: ExtendCreditModalProps
   const fetchWallet = useFetchWallet()
   const toast = useTxToast()
 
-  const id = useGetCreditLineId(business)
-  const { data } = useGetCreditLineQuery({ variables: { id: id }, skip: !id })
-  console.log("ExtendCreditModal.tsx --  data.creditLine", data?.creditLine)
-
   const formik = useFormik({
     validateOnChange: true,
     validationSchema: validation,
@@ -66,8 +62,6 @@ const ExtendCreditModal = ({ isOpen, onClose, business }: ExtendCreditModalProps
     onSubmit: async (values: { collateral: number; credit: number }) => {
       try {
         const collateralAmount = parseEther(values.collateral).toString()
-        console.log("ExtendCreditModal.tsx --  collateralAmount", collateralAmount)
-        console.log("ExtendCreditModal.tsx --  underwritee", underwritee)
         const tx = await extendCreditLine({ collateralAmount, underwritee: underwritee! })
         const confirmed = await waitForTxEvent(tx, "NewCreditLine")
         if (confirmed) {

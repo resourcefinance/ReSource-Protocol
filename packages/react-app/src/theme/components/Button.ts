@@ -192,6 +192,9 @@ const defaultProps = {
 
 const Button = {
   baseStyle,
+  sizes: {
+    xs: { px: 2, h: "24px" },
+  },
   variants: {
     unstyled: {},
     ghost: variantGhost,

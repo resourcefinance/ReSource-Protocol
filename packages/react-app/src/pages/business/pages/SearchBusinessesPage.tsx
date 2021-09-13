@@ -1,4 +1,4 @@
-import { BoxProps, VStack } from "@chakra-ui/layout"
+import { VStack } from "@chakra-ui/layout"
 import { Center, Container } from "@chakra-ui/react"
 import React from "react"
 import {
@@ -9,7 +9,7 @@ import { BusinessCard } from "../components/BusinessCard"
 import BusinessSearchBar from "../components/BusinessSearchBar"
 import { NoSearchResults } from "../components/NoSearchResults"
 
-const SearchBusinessesPage = ({ ...rest }: BoxProps) => {
+const SearchBusinessesPage = () => {
   const [find, { data, called, loading }] = useFindBusinessByHandleLazyQuery()
   const business = data?.findOneBusinessByHandle as Business
 
@@ -17,7 +17,7 @@ const SearchBusinessesPage = ({ ...rest }: BoxProps) => {
 
   return (
     <Container>
-      <Center {...rest} h="100vh">
+      <Center h="100vh">
         <VStack justify="space-between" h="450px" w="400px">
           <BusinessSearchBar onSearch={handleSearch} />
           {business && <BusinessCard business={business} />}

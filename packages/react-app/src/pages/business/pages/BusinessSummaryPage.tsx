@@ -11,11 +11,7 @@ import { localizedDayJs } from "../../../utils/dayjs"
 import { NoSearchResults } from "../components/NoSearchResults"
 import { useQueryBusinessViaHandleInUrl } from "../utils/hooks"
 
-interface Props extends BoxProps {
-  key: string
-}
-
-const BusinessSummaryPage = ({ ...rest }: Props) => {
+const BusinessSummaryPage = () => {
   const { data, called, loading } = useQueryBusinessViaHandleInUrl()
   const business = (data?.findOneBusinessByHandle as Business) ?? null
   const summaryData = useGetRelevantSummaryData(business)

@@ -1,13 +1,12 @@
 import { Box, BoxProps } from "@chakra-ui/layout"
-import { Center, HStack, Text, useDisclosure } from "@chakra-ui/react"
+import { Center, HStack, Text, Tooltip, useDisclosure } from "@chakra-ui/react"
 import { faCircle } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { ethers } from "ethers"
-import { useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
 import { useHistory } from "react-router-dom"
 import { useWeb3Context } from "web3-react"
-import { useGetTotalCollateralLazyQuery } from "../../generated/subgraph/graphql"
-import { useGetWallet, useFetchWallet } from "../../store/wallet"
+import { useFetchWallet, useGetWallet } from "../../store/wallet"
 import colors from "../../theme/foundations/colors"
 import { getAbbreviatedAddress } from "../../utils/stringFormat"
 import { GlyphLabel } from "../glyph/MuGlyphLabel"
@@ -55,14 +54,18 @@ const WalletInfo = ({ ...rest }: BoxProps) => {
   }, [context])
 
   return (
-    <Box {...rest} cursor="pointer">
+    <Box {...rest}>
       <HStack spacing={-14}>
-        <Center {...pillContainerStyles} pr="60px" left={0} borderColor={colors.blue.main}>
-          <GlyphLabel color={colors.blue.main} mx={1} value={totalCollateral} />
-        </Center>
-        <Center {...pillContainerStyles} right={0} borderColor="black">
-          <GlyphLabel mx={1} value={balance} />
-        </Center>
+        <Tooltip label="Staked MU" shouldWrapChildren>
+          <Center {...pillContainerStyles} pr="60px" left={0} borderColor={colors.blue.main}>
+            <GlyphLabel color={colors.blue.main} mx={1} value={totalCollateral} />
+          </Center>
+        </Tooltip>
+        <Tooltip label="MU balance" shouldWrapChildren>
+          <Center {...pillContainerStyles} right={0} borderColor="black">
+            <GlyphLabel mx={1} value={balance} />
+          </Center>
+        </Tooltip>
         {walletAddress && (
           <>
             <Center {...walletPillContainerStyles} onClick={walletInfoModal.onOpen}>

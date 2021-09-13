@@ -41,8 +41,10 @@ const Label = (props: GlyphLabelProps) => {
 
 type OptionsType = { decimals: number }
 export const walletValueToString = (val: number, options?: OptionsType) => {
-  return val.toLocaleString(undefined, {
-    minimumFractionDigits: options?.decimals ?? 2,
-    maximumFractionDigits: options?.decimals ?? 2,
-  })
+  return (
+    val?.toLocaleString(undefined, {
+      minimumFractionDigits: options?.decimals ?? 2,
+      maximumFractionDigits: options?.decimals ?? 2,
+    }) ?? ""
+  )
 }

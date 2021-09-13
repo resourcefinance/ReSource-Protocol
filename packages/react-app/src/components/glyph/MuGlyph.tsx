@@ -23,14 +23,14 @@ export const MuGlyphSolid = ({ color, ...props }: RusdGlyphSolidProps) => {
           fill="black"
         />
         <path
-          fill-rule="evenodd"
-          clip-rule="evenodd"
+          fillRule="evenodd"
+          clipRule="evenodd"
           d="M5.70391 4.7812L4.39618 7.04616L3.08729 4.77905L2.58152 5.65501L2.41664 5.94482L1.77756 7.05178L1.26425 6.11355L3.08848 2.95386L4.39618 5.21882L5.70387 2.95386L7.01348 5.22213L7.87552 3.74617H8.80137L7.0156 7.05317L5.70391 4.7812Z"
           fill="white"
         />
         <path
-          fill-rule="evenodd"
-          clip-rule="evenodd"
+          fillRule="evenodd"
+          clipRule="evenodd"
           d="M7.01157 6.76924L5.70387 4.50427L4.39618 6.76924L3.08726 4.50212L2.29383 5.87639L2.29676 5.87562L1.7808 6.76924L1.42307 6.11539L3.08849 3.23077L4.39618 5.49574L5.70387 3.23077L7.0128 5.49789L7.95499 3.88462H8.56926L7.01157 6.76924Z"
           fill="white"
         />

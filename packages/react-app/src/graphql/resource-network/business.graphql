@@ -29,3 +29,14 @@ query findBusinessByHandle($handle: String!) {
     ...BusinessFields
   }
 }
+
+query findManyBusiness($where: BusinessWhereInput, $page: Int, $limit: Int) {
+  findManyBusiness(where: $where, page: $page, limit: $limit) {
+    businesses {
+      id
+      name
+      handle
+      logoUrl
+    }
+  }
+}

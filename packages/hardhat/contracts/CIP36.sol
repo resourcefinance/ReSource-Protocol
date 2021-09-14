@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts/utils/math/Math.sol";
-import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC20/extensions/ERC20BurnableUpgradeable.sol";
 
 library ExtraMath {
     function toUInt128(uint256 _a) internal pure returns (uint128) {
@@ -11,7 +12,7 @@ library ExtraMath {
     }
 }
 
-contract CIP36 is ERC20Burnable {
+contract CIP36 is OwnableUpgradeable, ERC20BurnableUpgradeable {
     using ExtraMath for *;
 
     struct Member {
@@ -23,7 +24,13 @@ contract CIP36 is ERC20Burnable {
 
     event CreditLimitUpdate(address member, uint256 limit);
 
-    constructor() ERC20("rUSD", "rUSD") {}
+    function initialize(
+        string memory name_,
+        string memory symbol_
+    ) public virtual initializer {
+        __ERC20_init(name_, symbol_);
+        __Ownable_init();
+    }
 
     modifier onlyAuthorized() virtual {
         require(msg.sender == owner(), "invalid caller address");

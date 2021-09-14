@@ -125,7 +125,7 @@ contract UnderwriteManager is OwnableUpgradeable {
 
     function extendCreditLine(address underwritee, uint256 collateralAmount) external ownedCreditLine(msg.sender, underwritee) {
         CreditLine storage creditLine = creditLines[msg.sender][underwritee];
-        require(creditLine.collateral > MINIMUM_COLLATERAL, "Credit line not underwritten");
+        require(creditLine.collateral >= MINIMUM_COLLATERAL, "Credit line not underwritten");
         collateralToken.transferFrom(msg.sender, address(this), collateralAmount);
         creditLine.collateral += collateralAmount;
         uint256 creditLimit = calculateCredit(creditLine.collateral);

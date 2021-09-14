@@ -3,11 +3,12 @@ import { Box, BoxProps, HStack, Text } from "@chakra-ui/layout"
 import { Button } from "@chakra-ui/react"
 import { Tooltip } from "@chakra-ui/tooltip"
 import React from "react"
+import { Business } from "../../../../generated/resource-network/graphql"
 import ExtendCreditModal from "../../../business/modals/ExtendCreditModal"
 import { mockBusiness } from "../../mocks/tableData"
 
 interface Props extends BoxProps {
-  value: string
+  value: Business
 }
 
 export const ActionsHeader = () => {
@@ -21,7 +22,7 @@ export const ActionsHeader = () => {
 export const ActionsCell = ({ value, ...rest }: Props) => {
   const disclosure = useDisclosure()
 
-  if (!value) return null
+  if (!value?.id) return null
 
   return (
     <>
@@ -35,7 +36,7 @@ export const ActionsCell = ({ value, ...rest }: Props) => {
           Extend credit
         </Button>
       </HStack>
-      {disclosure.isOpen && <ExtendCreditModal business={mockBusiness} {...disclosure} />}
+      {disclosure.isOpen && <ExtendCreditModal business={value} {...disclosure} />}
     </>
   )
 }

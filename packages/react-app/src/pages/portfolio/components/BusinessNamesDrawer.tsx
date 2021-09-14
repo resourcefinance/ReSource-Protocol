@@ -28,14 +28,14 @@ const BusinessNamesDrawer = ({ businesses, ...rest }: Props) => {
           const bgColor = index % 2 === 0 ? "gray.100" : "white"
           return (
             <HStack
-              key={index}
-              align="center"
-              h={tableRowHeight}
-              spacing={2}
-              bgColor={bgColor}
               px={4}
+              key={index}
+              spacing={2}
+              align="center"
+              bgColor={bgColor}
+              h={tableRowHeight}
             >
-              {business.logoUrl && <Avatar boxSize="22px" src={business.logoUrl ?? ""} />}
+              {business.name && <Avatar boxSize="22px" src={business.logoUrl ?? ""} />}
               <Text>{business.name}</Text>
             </HStack>
           )
@@ -44,7 +44,7 @@ const BusinessNamesDrawer = ({ businesses, ...rest }: Props) => {
       <Box
         w="5px"
         h="100%"
-        left="200px"
+        left={tableDrawerWidth}
         pos="absolute"
         opacity={0.3}
         background="#699DFF"

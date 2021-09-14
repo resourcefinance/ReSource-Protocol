@@ -15,21 +15,14 @@ export const UnderwriteModalContainer = ({ business, ...props }: Props) => {
   const myWalletAddress = useGetMyWalletAddress()
 
   const id = business?.wallet?.multiSigAddress?.toLowerCase() ?? ""
-  const { data, loading, called } = useGetUnderwriteeQuery({ variables: { id: id }, skip: !id })
+  const { data, loading, called, refetch } = useGetUnderwriteeQuery({
+    variables: { id: id },
+    skip: !id,
+  })
 
   const underwriterAddress = data?.underwritee?.creditLine?.underwriter.id
+  const currentlyUnderwriting = underwriterAddress === myWalletAddress
   const isUnavailable = !!underwriterAddress && underwriterAddress !== myWalletAddress
-  console.log("UnderwriteModalContainer.tsx --  underwiteeAddress", id)
-  console.log("UnderwriteModalContainer.tsx --  underwiterAddress", underwriterAddress)
-  console.log("UnderwriteModalContainer.tsx --  myWalletAddress", myWalletAddress)
-
-  const [currentlyUnderwriting, setCurrentlyUnderwriting] = useState(
-    underwriterAddress === myWalletAddress,
-  )
-
-  useEffect(() => {
-    setCurrentlyUnderwriting(underwriterAddress === myWalletAddress)
-  }, [myWalletAddress, underwriterAddress])
 
   if (!business || !called) return null
 
@@ -45,14 +38,19 @@ export const UnderwriteModalContainer = ({ business, ...props }: Props) => {
         {currentlyUnderwriting ? "Extend credit" : isUnavailable ? "Unavailable" : "Underwrite"}
       </Button>
       <UnderwriteModal
-        isOpen={underwriteModal.isOpen}
-        onClose={underwriteModal.onClose}
         business={business}
+        isOpen={underwriteModal.isOpen}
+        onClose={(shouldRefetch) => {
+          if (!shouldRefetch) return
+          delay(3000)
+            .then(() => refetch())
+            .finally(underwriteModal.onClose)
+        }}
       />
       <ExtendCreditModal
+        business={business}
         isOpen={extendCreditModal.isOpen}
         onClose={extendCreditModal.onClose}
-        business={business}
       />
     </Box>
   )

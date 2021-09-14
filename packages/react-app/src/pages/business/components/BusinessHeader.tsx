@@ -6,6 +6,7 @@ import { headerHeight } from "../../../components/Header"
 import { ViewStorefrontButton } from "../../../components/ViewStorefrontButton"
 import { Business } from "../../../generated/resource-network/graphql"
 import { gradients } from "../../../theme/foundations/colors"
+import { ellipsesOnOverflow } from "../../../theme/utils/text"
 import { useQueryBusinessViaHandleInUrl } from "../utils/hooks"
 import { UnderwriteModalContainer } from "./UnderwriteModalContainer"
 
@@ -15,12 +16,14 @@ export const BusinessHeader = () => {
 
   return (
     <Flex {...containerStyles}>
-      <HStack w="300px" spacing={4}>
-        <Heading size="subtitle">{business?.name}</Heading>
+      <HStack w="25%" spacing={4}>
+        <Heading {...ellipsesOnOverflow} size="subtitle">
+          {business?.name}
+        </Heading>
         <ViewStorefrontButton handle={business?.handle ?? ""} />
       </HStack>
       <ToggleButton />
-      <Flex w="300px" justify="flex-end">
+      <Flex w="25%" justify="flex-end">
         <UnderwriteModalContainer business={business} />
       </Flex>
     </Flex>

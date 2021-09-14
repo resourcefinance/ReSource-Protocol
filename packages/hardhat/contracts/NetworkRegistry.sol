@@ -9,7 +9,7 @@ contract NetworkRegistry is OwnableUpgradeable  {
     /*
      *  Events
      */
-    event MemberAddition(address indexed member);
+    event MemberAddition(address[] indexed member);
     event MemberRemoval(address indexed member);
     event OperatorAddition(address indexed operator);
     event OperatorRemoval(address indexed operator);
@@ -77,12 +77,15 @@ contract NetworkRegistry is OwnableUpgradeable  {
         isOperator[owner()] = true;
     }
 
-    /// @dev Allows to add a new member. Transaction has to be sent by an operator wallet.
-    /// @param member Address of new member.
-    function addMember(address member) external onlyOperator(msg.sender) memberDoesNotExist(member) notNull(member) {
-        isMember[member] = true;
-        members.push(member);
-        emit MemberAddition(member);
+    /// @dev Allows operator to add a new member. Transaction has to be sent by an operator wallet.
+    /// @param _members Addresses of new members.
+    function addMembers(address[] memory _members) external onlyOperator(msg.sender) {
+        for (uint256 i = 0; i < _members.length; i++) {
+            require(!isMember[_members[i]] && _members[i] != address(0));
+            isMember[_members[i]] = true;
+            members.push(_members[i]);
+        }
+        emit MemberAddition(_members);
     }
 
     /// @dev Allows to remove a member. Transaction has to be sent by operator.

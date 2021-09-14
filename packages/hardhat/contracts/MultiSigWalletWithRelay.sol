@@ -1,9 +1,12 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
 
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+
+
 /// @title Multisignature wallet - Allows multiple parties to agree on transactions before execution.
 /// @author Stefan George - <stefan.george@consensys.net>
-contract MultiSigWallet {
+contract MultiSigWallet is OwnableUpgradeable {
     /*
      *  Events
      */
@@ -100,7 +103,8 @@ contract MultiSigWallet {
     /// @dev Contract constructor sets initial owners and required number of confirmations.
     /// @param _owners List of initial owners.
     /// @param _required Number of required confirmations.
-    constructor(address[] memory _owners, uint256 _required) validRequirement(_owners.length, _required) {
+    function initialize(address[] memory _owners, uint256 _required) external virtual initializer validRequirement(_owners.length, _required) {
+        __Ownable_init();
         for (uint256 i = 0; i < _owners.length; i++) {
             require(!isOwner[_owners[i]] && _owners[i] != address(0));
             isOwner[_owners[i]] = true;
@@ -488,21 +492,21 @@ contract MultiSigWallet {
     /// @param pending Include pending transactions.
     /// @param executed Include executed transactions.
     /// @return _transactionIds Returns array of transaction IDs.
-    function getTransactionIds(
-        uint256 from,
-        uint256 to,
-        bool pending,
-        bool executed
-    ) external view returns (uint256[] memory _transactionIds) {
-        uint256[] memory transactionIdsTemp = new uint256[](transactionCount);
-        uint256 count = 0;
-        uint256 i;
-        for (i = 0; i < transactionCount; i++)
-            if ((pending && !transactions[i].executed) || (executed && transactions[i].executed)) {
-                transactionIdsTemp[count] = i;
-                count += 1;
-            }
-        _transactionIds = new uint256[](to - from);
-        for (i = from; i < to; i++) _transactionIds[i - from] = transactionIdsTemp[i];
-    }
+    // function getTransactionIds(
+    //     uint256 from,
+    //     uint256 to,
+    //     bool pending,
+    //     bool executed
+    // ) external view returns (uint256[] memory _transactionIds) {
+    //     uint256[] memory transactionIdsTemp = new uint256[](transactionCount);
+    //     uint256 count = 0;
+    //     uint256 i;
+    //     for (i = 0; i < transactionCount; i++)
+    //         if ((pending && !transactions[i].executed) || (executed && transactions[i].executed)) {
+    //             transactionIdsTemp[count] = i;
+    //             count += 1;
+    //         }
+    //     _transactionIds = new uint256[](to - from);
+    //     for (i = from; i < to; i++) _transactionIds[i - from] = transactionIdsTemp[i];
+    // }
 }

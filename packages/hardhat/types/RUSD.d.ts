@@ -34,8 +34,9 @@ interface RUSDInterface extends ethers.utils.Interface {
     "decreaseAllowance(address,uint256)": FunctionFragment;
     "increaseAllowance(address,uint256)": FunctionFragment;
     "initialize(string,string)": FunctionFragment;
-    "initializeRUSD(address,uint256,address)": FunctionFragment;
+    "initializeRUSD(address,uint256,address,address)": FunctionFragment;
     "name()": FunctionFragment;
+    "operator()": FunctionFragment;
     "owner()": FunctionFragment;
     "registry()": FunctionFragment;
     "removeRestrictions()": FunctionFragment;
@@ -50,7 +51,6 @@ interface RUSDInterface extends ethers.utils.Interface {
     "transferFrom(address,address,uint256)": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
     "underwriteManager()": FunctionFragment;
-    "underwriteManagerAddress()": FunctionFragment;
     "updateRestrictionExpiration()": FunctionFragment;
   };
 
@@ -99,9 +99,10 @@ interface RUSDInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "initializeRUSD",
-    values: [string, BigNumberish, string]
+    values: [string, BigNumberish, string, string]
   ): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
+  encodeFunctionData(functionFragment: "operator", values?: undefined): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(functionFragment: "registry", values?: undefined): string;
   encodeFunctionData(
@@ -150,10 +151,6 @@ interface RUSDInterface extends ethers.utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "underwriteManagerAddress",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
     functionFragment: "updateRestrictionExpiration",
     values?: undefined
   ): string;
@@ -194,6 +191,7 @@ interface RUSDInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "operator", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "registry", data: BytesLike): Result;
   decodeFunctionResult(
@@ -239,10 +237,6 @@ interface RUSDInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "underwriteManagerAddress",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "updateRestrictionExpiration",
     data: BytesLike
   ): Result;
@@ -250,6 +244,7 @@ interface RUSDInterface extends ethers.utils.Interface {
   events: {
     "Approval(address,address,uint256)": EventFragment;
     "BalanceUpdate(address,address,uint256,uint256,uint256,uint256)": EventFragment;
+    "BulkBalanceUpdate(address,address[],uint256,uint256,uint256[],uint256[])": EventFragment;
     "CreditLimitUpdate(address,uint256)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
     "RestrictionExpirationUpdated(uint256)": EventFragment;
@@ -259,6 +254,7 @@ interface RUSDInterface extends ethers.utils.Interface {
 
   getEvent(nameOrSignatureOrTopic: "Approval"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "BalanceUpdate"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "BulkBalanceUpdate"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "CreditLimitUpdate"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
   getEvent(
@@ -382,10 +378,13 @@ export class RUSD extends BaseContract {
       registryAddress: string,
       _expiration: BigNumberish,
       underwriteManagerAddress: string,
+      operatorAddress: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     name(overrides?: CallOverrides): Promise<[string]>;
+
+    operator(overrides?: CallOverrides): Promise<[string]>;
 
     owner(overrides?: CallOverrides): Promise<[string]>;
 
@@ -438,8 +437,6 @@ export class RUSD extends BaseContract {
     ): Promise<ContractTransaction>;
 
     underwriteManager(overrides?: CallOverrides): Promise<[string]>;
-
-    underwriteManagerAddress(overrides?: CallOverrides): Promise<[string]>;
 
     updateRestrictionExpiration(
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -513,10 +510,13 @@ export class RUSD extends BaseContract {
     registryAddress: string,
     _expiration: BigNumberish,
     underwriteManagerAddress: string,
+    operatorAddress: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   name(overrides?: CallOverrides): Promise<string>;
+
+  operator(overrides?: CallOverrides): Promise<string>;
 
   owner(overrides?: CallOverrides): Promise<string>;
 
@@ -569,8 +569,6 @@ export class RUSD extends BaseContract {
   ): Promise<ContractTransaction>;
 
   underwriteManager(overrides?: CallOverrides): Promise<string>;
-
-  underwriteManagerAddress(overrides?: CallOverrides): Promise<string>;
 
   updateRestrictionExpiration(
     overrides?: Overrides & { from?: string | Promise<string> }
@@ -644,10 +642,13 @@ export class RUSD extends BaseContract {
       registryAddress: string,
       _expiration: BigNumberish,
       underwriteManagerAddress: string,
+      operatorAddress: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
     name(overrides?: CallOverrides): Promise<string>;
+
+    operator(overrides?: CallOverrides): Promise<string>;
 
     owner(overrides?: CallOverrides): Promise<string>;
 
@@ -693,8 +694,6 @@ export class RUSD extends BaseContract {
 
     underwriteManager(overrides?: CallOverrides): Promise<string>;
 
-    underwriteManagerAddress(overrides?: CallOverrides): Promise<string>;
-
     updateRestrictionExpiration(overrides?: CallOverrides): Promise<void>;
   };
 
@@ -724,6 +723,25 @@ export class RUSD extends BaseContract {
         senderCreditBalance: BigNumber;
         recipientBalance: BigNumber;
         recipientCreditBalance: BigNumber;
+      }
+    >;
+
+    BulkBalanceUpdate(
+      sender?: null,
+      recipients?: null,
+      senderBalance?: null,
+      senderCreditBalance?: null,
+      recipientBalances?: null,
+      recipientCreditBalances?: null
+    ): TypedEventFilter<
+      [string, string[], BigNumber, BigNumber, BigNumber[], BigNumber[]],
+      {
+        sender: string;
+        recipients: string[];
+        senderBalance: BigNumber;
+        senderCreditBalance: BigNumber;
+        recipientBalances: BigNumber[];
+        recipientCreditBalances: BigNumber[];
       }
     >;
 
@@ -832,10 +850,13 @@ export class RUSD extends BaseContract {
       registryAddress: string,
       _expiration: BigNumberish,
       underwriteManagerAddress: string,
+      operatorAddress: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     name(overrides?: CallOverrides): Promise<BigNumber>;
+
+    operator(overrides?: CallOverrides): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -888,8 +909,6 @@ export class RUSD extends BaseContract {
     ): Promise<BigNumber>;
 
     underwriteManager(overrides?: CallOverrides): Promise<BigNumber>;
-
-    underwriteManagerAddress(overrides?: CallOverrides): Promise<BigNumber>;
 
     updateRestrictionExpiration(
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -970,10 +989,13 @@ export class RUSD extends BaseContract {
       registryAddress: string,
       _expiration: BigNumberish,
       underwriteManagerAddress: string,
+      operatorAddress: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    operator(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
@@ -1026,10 +1048,6 @@ export class RUSD extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     underwriteManager(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    underwriteManagerAddress(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
 
     updateRestrictionExpiration(
       overrides?: Overrides & { from?: string | Promise<string> }

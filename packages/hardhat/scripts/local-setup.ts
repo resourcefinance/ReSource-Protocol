@@ -80,7 +80,7 @@ async function issueCreditLine() {
     const curMembers = await networkRegistry.getMembers()
     for (var member of members) {
       if (!curMembers.includes(member))
-        await (await networkRegistry.connect(deployer).addMember(member)).wait
+        await (await networkRegistry.connect(deployer).addMembers([member])).wait
     }
     for (var underwriter of underwriters)
       if (Number(ethers.utils.formatEther(await reSourceToken.balanceOf(underwriter))) < 1000)
@@ -95,6 +95,12 @@ async function issueCreditLine() {
       value: ethers.utils.parseEther("1"),
     }
     const signer = ethers.provider.getSigner()
+    await (await signer.sendTransaction(tx)).wait()
+
+    tx = {
+      to: "0xe105fb303e5ffee9e27726267e2db11c37260865",
+      value: ethers.utils.parseEther("1"),
+    }
     await (await signer.sendTransaction(tx)).wait()
 
     tx = {

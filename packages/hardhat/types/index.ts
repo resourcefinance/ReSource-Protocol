@@ -13,6 +13,7 @@ export type { NetworkRegistry } from "./NetworkRegistry";
 export type { ReSourceToken } from "./ReSourceToken";
 export type { RUSD } from "./RUSD";
 export type { UnderwriteManager } from "./UnderwriteManager";
+export type { WalletRegistry } from "./WalletRegistry";
 
 export { OwnableUpgradeable__factory } from "./factories/OwnableUpgradeable__factory";
 export { ERC20Upgradeable__factory } from "./factories/ERC20Upgradeable__factory";
@@ -26,3 +27,4 @@ export { NetworkRegistry__factory } from "./factories/NetworkRegistry__factory";
 export { ReSourceToken__factory } from "./factories/ReSourceToken__factory";
 export { RUSD__factory } from "./factories/RUSD__factory";
 export { UnderwriteManager__factory } from "./factories/UnderwriteManager__factory";
+export { WalletRegistry__factory } from "./factories/WalletRegistry__factory";

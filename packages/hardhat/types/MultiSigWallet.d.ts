@@ -31,22 +31,25 @@ interface MultiSigWalletInterface extends ethers.utils.Interface {
     "getConfirmations(uint256)": FunctionFragment;
     "getOwners()": FunctionFragment;
     "getTransactionCount(bool,bool)": FunctionFragment;
-    "getTransactionIds(uint256,uint256,bool,bool)": FunctionFragment;
+    "initialize(address[],uint256)": FunctionFragment;
     "isConfirmed(uint256)": FunctionFragment;
     "isOwner(address)": FunctionFragment;
     "nonces(address)": FunctionFragment;
+    "owner()": FunctionFragment;
     "owners(uint256)": FunctionFragment;
     "prepareConfirmTransaction(uint256,uint256)": FunctionFragment;
     "prepareExecuteTransaction(uint256,uint256)": FunctionFragment;
     "prepareRevokeConfirmation(uint256,uint256)": FunctionFragment;
     "prepareSubmitTransaction(address,uint256,bytes,uint256)": FunctionFragment;
     "removeOwner(address)": FunctionFragment;
+    "renounceOwnership()": FunctionFragment;
     "replaceOwner(address,address)": FunctionFragment;
     "required()": FunctionFragment;
     "revokeConfirmationByRelay(uint256,bytes,address)": FunctionFragment;
     "submitTransactionByRelay(address,uint256,bytes,bytes,address)": FunctionFragment;
     "transactionCount()": FunctionFragment;
     "transactions(uint256)": FunctionFragment;
+    "transferOwnership(address)": FunctionFragment;
   };
 
   encodeFunctionData(
@@ -84,8 +87,8 @@ interface MultiSigWalletInterface extends ethers.utils.Interface {
     values: [boolean, boolean]
   ): string;
   encodeFunctionData(
-    functionFragment: "getTransactionIds",
-    values: [BigNumberish, BigNumberish, boolean, boolean]
+    functionFragment: "initialize",
+    values: [string[], BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "isConfirmed",
@@ -93,6 +96,7 @@ interface MultiSigWalletInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(functionFragment: "isOwner", values: [string]): string;
   encodeFunctionData(functionFragment: "nonces", values: [string]): string;
+  encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "owners",
     values: [BigNumberish]
@@ -115,6 +119,10 @@ interface MultiSigWalletInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(functionFragment: "removeOwner", values: [string]): string;
   encodeFunctionData(
+    functionFragment: "renounceOwnership",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "replaceOwner",
     values: [string, string]
   ): string;
@@ -134,6 +142,10 @@ interface MultiSigWalletInterface extends ethers.utils.Interface {
   encodeFunctionData(
     functionFragment: "transactions",
     values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "transferOwnership",
+    values: [string]
   ): string;
 
   decodeFunctionResult(
@@ -170,16 +182,14 @@ interface MultiSigWalletInterface extends ethers.utils.Interface {
     functionFragment: "getTransactionCount",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(
-    functionFragment: "getTransactionIds",
-    data: BytesLike
-  ): Result;
+  decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "isConfirmed",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "isOwner", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "nonces", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owners", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "prepareConfirmTransaction",
@@ -199,6 +209,10 @@ interface MultiSigWalletInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "removeOwner",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "renounceOwnership",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -222,6 +236,10 @@ interface MultiSigWalletInterface extends ethers.utils.Interface {
     functionFragment: "transactions",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "transferOwnership",
+    data: BytesLike
+  ): Result;
 
   events: {
     "Confirmation(address,uint256)": EventFragment;
@@ -230,6 +248,7 @@ interface MultiSigWalletInterface extends ethers.utils.Interface {
     "ExecutionFailure(uint256)": EventFragment;
     "OwnerAddition(address)": EventFragment;
     "OwnerRemoval(address)": EventFragment;
+    "OwnershipTransferred(address,address)": EventFragment;
     "RequirementChange(uint256)": EventFragment;
     "Revocation(address,uint256)": EventFragment;
     "Submission(uint256)": EventFragment;
@@ -241,6 +260,7 @@ interface MultiSigWalletInterface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: "ExecutionFailure"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnerAddition"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnerRemoval"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RequirementChange"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Revocation"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Submission"): EventFragment;
@@ -340,13 +360,11 @@ export class MultiSigWallet extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber] & { count: BigNumber }>;
 
-    getTransactionIds(
-      from: BigNumberish,
-      to: BigNumberish,
-      pending: boolean,
-      executed: boolean,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber[]] & { _transactionIds: BigNumber[] }>;
+    initialize(
+      _owners: string[],
+      _required: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
 
     isConfirmed(
       transactionId: BigNumberish,
@@ -356,6 +374,8 @@ export class MultiSigWallet extends BaseContract {
     isOwner(arg0: string, overrides?: CallOverrides): Promise<[boolean]>;
 
     nonces(arg0: string, overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    owner(overrides?: CallOverrides): Promise<[string]>;
 
     owners(arg0: BigNumberish, overrides?: CallOverrides): Promise<[string]>;
 
@@ -387,6 +407,10 @@ export class MultiSigWallet extends BaseContract {
 
     removeOwner(
       owner: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    renounceOwnership(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -427,6 +451,11 @@ export class MultiSigWallet extends BaseContract {
         executed: boolean;
       }
     >;
+
+    transferOwnership(
+      newOwner: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
   };
 
   MAX_OWNER_COUNT(overrides?: CallOverrides): Promise<BigNumber>;
@@ -479,13 +508,11 @@ export class MultiSigWallet extends BaseContract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
-  getTransactionIds(
-    from: BigNumberish,
-    to: BigNumberish,
-    pending: boolean,
-    executed: boolean,
-    overrides?: CallOverrides
-  ): Promise<BigNumber[]>;
+  initialize(
+    _owners: string[],
+    _required: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
 
   isConfirmed(
     transactionId: BigNumberish,
@@ -495,6 +522,8 @@ export class MultiSigWallet extends BaseContract {
   isOwner(arg0: string, overrides?: CallOverrides): Promise<boolean>;
 
   nonces(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+  owner(overrides?: CallOverrides): Promise<string>;
 
   owners(arg0: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
@@ -526,6 +555,10 @@ export class MultiSigWallet extends BaseContract {
 
   removeOwner(
     owner: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  renounceOwnership(
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -566,6 +599,11 @@ export class MultiSigWallet extends BaseContract {
       executed: boolean;
     }
   >;
+
+  transferOwnership(
+    newOwner: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
 
   callStatic: {
     MAX_OWNER_COUNT(overrides?: CallOverrides): Promise<BigNumber>;
@@ -615,13 +653,11 @@ export class MultiSigWallet extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    getTransactionIds(
-      from: BigNumberish,
-      to: BigNumberish,
-      pending: boolean,
-      executed: boolean,
+    initialize(
+      _owners: string[],
+      _required: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<BigNumber[]>;
+    ): Promise<void>;
 
     isConfirmed(
       transactionId: BigNumberish,
@@ -631,6 +667,8 @@ export class MultiSigWallet extends BaseContract {
     isOwner(arg0: string, overrides?: CallOverrides): Promise<boolean>;
 
     nonces(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    owner(overrides?: CallOverrides): Promise<string>;
 
     owners(arg0: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
@@ -661,6 +699,8 @@ export class MultiSigWallet extends BaseContract {
     ): Promise<string>;
 
     removeOwner(owner: string, overrides?: CallOverrides): Promise<void>;
+
+    renounceOwnership(overrides?: CallOverrides): Promise<void>;
 
     replaceOwner(
       owner: string,
@@ -699,6 +739,11 @@ export class MultiSigWallet extends BaseContract {
         executed: boolean;
       }
     >;
+
+    transferOwnership(
+      newOwner: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
   };
 
   filters: {
@@ -733,6 +778,14 @@ export class MultiSigWallet extends BaseContract {
     OwnerRemoval(
       owner?: string | null
     ): TypedEventFilter<[string], { owner: string }>;
+
+    OwnershipTransferred(
+      previousOwner?: string | null,
+      newOwner?: string | null
+    ): TypedEventFilter<
+      [string, string],
+      { previousOwner: string; newOwner: string }
+    >;
 
     RequirementChange(
       required?: null
@@ -802,12 +855,10 @@ export class MultiSigWallet extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    getTransactionIds(
-      from: BigNumberish,
-      to: BigNumberish,
-      pending: boolean,
-      executed: boolean,
-      overrides?: CallOverrides
+    initialize(
+      _owners: string[],
+      _required: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     isConfirmed(
@@ -818,6 +869,8 @@ export class MultiSigWallet extends BaseContract {
     isOwner(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     nonces(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    owner(overrides?: CallOverrides): Promise<BigNumber>;
 
     owners(arg0: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -852,6 +905,10 @@ export class MultiSigWallet extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    renounceOwnership(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     replaceOwner(
       owner: string,
       newOwner: string,
@@ -881,6 +938,11 @@ export class MultiSigWallet extends BaseContract {
     transactions(
       arg0: BigNumberish,
       overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    transferOwnership(
+      newOwner: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
   };
 
@@ -935,12 +997,10 @@ export class MultiSigWallet extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    getTransactionIds(
-      from: BigNumberish,
-      to: BigNumberish,
-      pending: boolean,
-      executed: boolean,
-      overrides?: CallOverrides
+    initialize(
+      _owners: string[],
+      _required: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     isConfirmed(
@@ -957,6 +1017,8 @@ export class MultiSigWallet extends BaseContract {
       arg0: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
+
+    owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     owners(
       arg0: BigNumberish,
@@ -994,6 +1056,10 @@ export class MultiSigWallet extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
+    renounceOwnership(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
     replaceOwner(
       owner: string,
       newOwner: string,
@@ -1023,6 +1089,11 @@ export class MultiSigWallet extends BaseContract {
     transactions(
       arg0: BigNumberish,
       overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    transferOwnership(
+      newOwner: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
   };
 }

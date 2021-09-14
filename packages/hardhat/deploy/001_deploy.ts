@@ -3,10 +3,10 @@ import { DeployFunction } from "hardhat-deploy/types"
 import { deployProxyAndSave } from "../utils"
 
 const func: DeployFunction = async function(hardhat: HardhatRuntimeEnvironment) {
-  const { deployer, coSigner } = await hardhat.getNamedAccounts()
+  const { deployer, relaySigner } = await hardhat.getNamedAccounts()
   //deploy network registry
   const networkRegistryAbi = (await hardhat.artifacts.readArtifact("NetworkRegistry")).abi
-  const networkArgs = [[], [coSigner]]
+  const networkArgs = [[], [relaySigner]]
   const networkRegistry = await deployProxyAndSave(
     "NetworkRegistry",
     networkArgs,
@@ -35,12 +35,16 @@ const func: DeployFunction = async function(hardhat: HardhatRuntimeEnvironment) 
     underwriteManagerAbi,
   )
 
-  // // rUSD deploy
+  // rUSD deploy
   const rUSDAbi = (await hardhat.artifacts.readArtifact("RUSD")).abi
-  const rUSDArgs = [networkRegistry.address, 20, underwriterManager.address]
-
-  console.log(rUSDArgs)
+  const rUSDArgs = [networkRegistry.address, 20, underwriterManager.address, relaySigner]
 
   await deployProxyAndSave("RUSD", rUSDArgs, hardhat, rUSDAbi, { initializer: "initializeRUSD" })
+
+  // walletRegistry deploy
+  const walletRegistryAbi = (await hardhat.artifacts.readArtifact("WalletRegistry")).abi
+  const walletRegistryArgs = [[], relaySigner]
+
+  await deployProxyAndSave("WalletRegistry", walletRegistryArgs, hardhat, walletRegistryAbi)
 }
 export default func

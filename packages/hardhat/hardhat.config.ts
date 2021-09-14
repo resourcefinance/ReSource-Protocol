@@ -8,6 +8,7 @@ import "hardhat-deploy"
 import "@openzeppelin/hardhat-upgrades"
 import "hardhat-gas-reporter"
 import "solidity-coverage"
+import "hardhat-contract-sizer"
 
 import { utils } from "ethers"
 
@@ -40,6 +41,7 @@ function mnemonic() {
 }
 
 enum chainIds {
+  celoLocal = 1337,
   localhost = 31337,
   testnet = 44787,
   mainnet = 42220,
@@ -54,6 +56,12 @@ const config: HardhatUserConfig = {
       chainId: chainIds.localhost,
       saveDeployments: true,
       tags: ["local", "testing"],
+    },
+    celolocal: {
+      url: "http://localhost:8545",
+      chainId: chainIds.celoLocal,
+      saveDeployments: true,
+      tags: ["local", "testing", "celo"],
     },
     "celo-alfajores": {
       url: "https://alfajores-forno.celo-testnet.org",
@@ -92,7 +100,7 @@ const config: HardhatUserConfig = {
       default: 0,
       devAccount: 1,
     },
-    coSigner: "0xae59c014f77f6aba717a18547df62f1f487c7f45",
+    relaySigner: "0xe105fb303e5ffee9e27726267e2db11c37260865",
   },
   paths: {
     artifacts: "./artifacts",

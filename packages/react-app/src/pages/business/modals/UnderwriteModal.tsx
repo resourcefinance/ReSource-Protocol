@@ -29,7 +29,7 @@ import StakeButton from "./components/StakeButton"
 import { MIN_CREDIT_LINE, useIsApprovedState } from "./utils"
 
 interface UnderwriteModalProps {
-  onClose: () => void
+  onClose: (shouldRefetchUnderwritee?: boolean) => void
   isOpen: boolean
   business: Business
 }
@@ -44,7 +44,7 @@ const validation = yup.object({
 
 const UnderwriteModal = ({ isOpen, onClose, business }: UnderwriteModalProps) => {
   const { underwrite } = useUnderwriteManagerContract()
-  const [underwritee] = useState(business.wallet?.multiSigAddress)
+  const underwritee = business.wallet?.multiSigAddress
   const [isApproved] = useIsApprovedState()
   const fetchWallet = useFetchWallet()
   const toast = useTxToast()
@@ -54,6 +54,7 @@ const UnderwriteModal = ({ isOpen, onClose, business }: UnderwriteModalProps) =>
     validationSchema: validation,
     initialValues: { collateral: 0, credit: 0 },
     onSubmit: async (values: { collateral: number; credit: number }) => {
+      console.log("UnderwriteModal.tsx --  underwritee", underwritee)
       try {
         const tx = await underwrite({
           collateralAmount: parseEther(values.collateral).toString(),
@@ -64,7 +65,7 @@ const UnderwriteModal = ({ isOpen, onClose, business }: UnderwriteModalProps) =>
         if (confirmed) {
           toast({ description: "Approved", status: "success" })
           fetchWallet()
-          onClose()
+          onClose(true)
         }
       } catch (error) {
         toast({ status: "error", description: parseRPCError(error) })
@@ -83,7 +84,7 @@ const UnderwriteModal = ({ isOpen, onClose, business }: UnderwriteModalProps) =>
 
   return (
     <FormikProvider value={formik}>
-      <Modal size="lg" isOpen={isOpen} onClose={onClose} isCentered>
+      <Modal size="lg" isOpen={isOpen} onClose={() => onClose()} isCentered>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>

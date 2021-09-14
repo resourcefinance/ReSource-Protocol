@@ -60,6 +60,7 @@ const ExtendCreditModal = ({ isOpen, onClose, business }: ExtendCreditModalProps
     validationSchema: validation,
     initialValues: { collateral: 0, credit: 0 },
     onSubmit: async (values: { collateral: number; credit: number }) => {
+      console.log("ExtendCreditModal.tsx --  underwritee", underwritee)
       try {
         const collateralAmount = parseEther(values.collateral).toString()
         const tx = await extendCreditLine({ collateralAmount, underwritee: underwritee! })

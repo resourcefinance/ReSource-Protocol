@@ -7,6 +7,7 @@ export const ViewStorefrontButton = ({ handle, ...rest }: Props) => {
   return (
     <Button
       as={"a"}
+      minW="100px"
       variant="link"
       color="blue.main"
       target={"_blank"}

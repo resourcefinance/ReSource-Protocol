@@ -51,7 +51,7 @@ export const CreditField = ({ formik, extendCredit, ...rest }: Props) => {
   )
 }
 
-export const CollateralField = ({ formik, ...rest }: Props) => {
+export const CollateralField = ({ formik, extendCredit, ...rest }: Props) => {
   const [balance, setBalance] = useState<BigNumberish>(0)
   const { balanceOf } = useMututalityTokenContract()
 

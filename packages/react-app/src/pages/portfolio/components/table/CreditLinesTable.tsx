@@ -3,6 +3,7 @@ import { Box, TableColumnHeaderProps, Tbody, Td } from "@chakra-ui/react"
 import { Table, TableCellProps, TableRowProps, Th, Thead, Tr } from "@chakra-ui/table"
 import React from "react"
 import { useTable } from "react-table"
+import { Business } from "../../../../generated/resource-network/graphql"
 import { CreditLineFieldsFragment } from "../../../../generated/subgraph/graphql"
 import { formatEther, formatMwei } from "../../../../services/web3/utils/etherUtils"
 import { textStyles } from "../../../../theme/textStyles"
@@ -10,8 +11,10 @@ import { getArrayOfEmptyObjects } from "../../mocks/tableData"
 import { tableDrawerWidth, tableHeaderHeight, tableRowHeight } from "./constants"
 import { tableSchema } from "./tableSchema"
 
+type CreditLineTableData = CreditLineFieldsFragment & { business: Business }
+
 interface Props extends BoxProps {
-  creditLines: CreditLineFieldsFragment[]
+  creditLines: CreditLineTableData[]
 }
 
 const CreditLinesTable = ({ creditLines, ...rest }: Props) => {
@@ -19,7 +22,7 @@ const CreditLinesTable = ({ creditLines, ...rest }: Props) => {
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = tableInstance
 
   return (
-    <Box overflowX="auto" ml="200px" paddingLeft={tableDrawerWidth} {...rest} pl={0}>
+    <Box overflowX="auto" ml={tableDrawerWidth} {...rest}>
       {/* apply the table props */}
       <Table w="full" minW="1100px" variant="striped" {...getTableProps()}>
         <Thead h={tableHeaderHeight}>
@@ -75,7 +78,7 @@ const CreditLinesTable = ({ creditLines, ...rest }: Props) => {
   )
 }
 
-const useGetTableInstance = (creditLines: CreditLineFieldsFragment[]) => {
+const useGetTableInstance = (creditLines: CreditLineTableData[]) => {
   const data = React.useMemo(
     () => [...creditLines.map(dataFormatter), ...backfill(creditLines)],
     [],
@@ -85,7 +88,7 @@ const useGetTableInstance = (creditLines: CreditLineFieldsFragment[]) => {
   return useTable({ columns, data })
 }
 
-const dataFormatter = (creditLine: CreditLineFieldsFragment) => {
+const dataFormatter = (creditLine: CreditLineTableData) => {
   return {
     ...creditLine,
     balance: { value: creditLine.balance, label: "rUSD" },
@@ -93,13 +96,13 @@ const dataFormatter = (creditLine: CreditLineFieldsFragment) => {
     outstandingReward: { value: creditLine.outstandingReward, label: "MU" },
     creditLimit: { value: formatMwei(creditLine.creditLimit), label: "rUSD" },
     collateral: { value: formatEther(creditLine.collateral), label: "MU" },
-    actions: true,
+    actions: creditLine.business,
   }
 }
 
 // this function returns a bunch of "empty" credit lines so that table is filled with
 // rows that maintain alternating background colors
-function backfill(creditLines: CreditLineFieldsFragment[]) {
+function backfill(creditLines: CreditLineTableData[]) {
   return getArrayOfEmptyObjects(29)
 }
 

@@ -1,4 +1,4 @@
-import { Button, ButtonProps, useToast } from "@chakra-ui/react"
+import { Button, ButtonProps } from "@chakra-ui/react"
 import { faCheckCircle, faThumbsUp } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import React, { useState } from "react"

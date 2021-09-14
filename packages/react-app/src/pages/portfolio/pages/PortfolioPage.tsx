@@ -1,7 +1,10 @@
 import { Box, BoxProps } from "@chakra-ui/layout"
-import React from "react"
+import React, { useCallback } from "react"
 import { footerHeight } from "../../../components/Footer"
-import { Business, useFindManyBusinessQuery } from "../../../generated/resource-network/graphql"
+import {
+  Business,
+  useFindBusinessesForPortfolioQuery,
+} from "../../../generated/resource-network/graphql"
 import {
   CreditLineFieldsFragment,
   useGetCreditLinesQuery,
@@ -9,21 +12,30 @@ import {
 import { useGetMyWalletAddress } from "../../../services/web3/utils/useGetMyWalletAddress"
 import BusinessNamesDrawer from "../components/BusinessNamesDrawer"
 import CreditLinesTable from "../components/table/CreditLinesTable"
-import { getMockBusinesses, getMockCreditLines } from "../mocks/tableData"
 
 const PortfolioPage = () => {
+  const { data, loading, called } = useGetData()
+
+  if (loading) return null
+
+  return (
+    <Box {...containerStyles}>
+      <BusinessNamesDrawer businesses={data.map((d) => d.business)} />
+      <CreditLinesTable creditLines={data} />
+    </Box>
+  )
+}
+
+const useGetData = () => {
   const myAddress = useGetMyWalletAddress()
   const { creditLines, creditLinesLoading, creditLinesCalled } = useGetCreditLines(myAddress)
   const { businesses, businessesLoading, businessesCalled } = useGetBusinesses(creditLines)
 
-  if (businessesLoading || creditLinesLoading) return null
-
-  return (
-    <Box {...containerStyles}>
-      <BusinessNamesDrawer businesses={businesses} />
-      <CreditLinesTable creditLines={creditLines} />
-    </Box>
-  )
+  return {
+    data: useCombineData(creditLines, businesses),
+    loading: creditLinesLoading || businessesLoading,
+    called: creditLinesCalled && businessesCalled,
+  }
 }
 
 const useGetCreditLines = (underwriterAddress?: string) => {
@@ -43,8 +55,9 @@ const useGetCreditLines = (underwriterAddress?: string) => {
 
 const useGetBusinesses = (creditLines: CreditLineFieldsFragment[]) => {
   const underwritees = creditLines.map((creditLine) => creditLine.underwritee)
-  const query = useFindManyBusinessQuery({
+  const query = useFindBusinessesForPortfolioQuery({
     variables: { where: { wallet: { multiSigAddress: { in: underwritees } } } },
+    skip: !underwritees.length,
   })
 
   return {
@@ -63,3 +76,13 @@ const containerStyles: BoxProps = {
 }
 
 export default PortfolioPage
+
+function useCombineData(creditLines: CreditLineFieldsFragment[], businesses: Business[]) {
+  const findBusiness = useCallback(
+    (cl: CreditLineFieldsFragment) =>
+      businesses.find((biz) => biz?.wallet?.multiSigAddress === cl.underwritee) ?? ({} as Business),
+    [businesses],
+  )
+
+  return creditLines.map((cl) => ({ ...cl, business: findBusiness(cl) }))
+}

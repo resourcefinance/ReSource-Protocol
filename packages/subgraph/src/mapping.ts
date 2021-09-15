@@ -50,6 +50,7 @@ export function handleExtendCreditLine(event: ExtendCreditLine): void {
     return
   }
   creditLine.collateral = event.params.creditLine.data.collateral
+  creditLine.creditLimit = event.params.creditLine.creditLimit
   creditLine.networkToken = event.params.creditLine.data.networkToken
   creditLine.issueDate = event.params.creditLine.data.issueDate
   creditLine.outstandingReward = event.params.creditLine.data.reward

@@ -14,7 +14,7 @@ export const PortfolioHeader = () => {
       <Heading size="subtitle">My Portfolio</Heading>
       <HStack justify="flex-end" align="center">
         <OutstandingRewards {...outstandingRewardsStyles} value={rewards} />
-        <ClaimRewardsButton onClick={() => setRewards((v) => v + 10)} businesses={[]} />
+        <ClaimRewardsButton onClick={() => setRewards((v) => v + 10)} creditLines={[]} />
       </HStack>
     </Flex>
   )

@@ -4,7 +4,6 @@ import { faCircle } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { ethers } from "ethers"
 import React, { useEffect, useState } from "react"
-import { useHistory } from "react-router-dom"
 import { useWeb3Context } from "web3-react"
 import { useFetchWallet, useGetWallet } from "../../store/wallet"
 import colors from "../../theme/foundations/colors"
@@ -12,25 +11,7 @@ import { getAbbreviatedAddress } from "../../utils/stringFormat"
 import { GlyphLabel } from "../glyph/MuGlyphLabel"
 import WalletInfoModal from "./WalletInfoModal"
 
-const pillContainerStyles: BoxProps = {
-  bgColor: "white",
-  borderRadius: "2xl",
-  border: "1px solid",
-  py: 1,
-  px: 2,
-}
-
-const walletPillContainerStyles: BoxProps = {
-  bgColor: "gray.cultured",
-  borderRadius: "2xl",
-  border: "1px solid gray.cultured",
-  py: 1,
-  px: 2,
-  marginLeft: "1em !important",
-}
-
 const WalletInfo = ({ ...rest }: BoxProps) => {
-  const history = useHistory()
   const context = useWeb3Context()
   const walletInfoModal = useDisclosure()
   const { balance, totalCollateral, loading: balanceLoading, error: balanceError } = useGetWallet()
@@ -69,7 +50,7 @@ const WalletInfo = ({ ...rest }: BoxProps) => {
         {walletAddress && (
           <>
             <Center {...walletPillContainerStyles} onClick={walletInfoModal.onOpen}>
-              <FontAwesomeIcon icon={faCircle} color={"green"} />
+              <FontAwesomeIcon icon={faCircle} color={colors.green.main} />
               <Text as="span" lineHeight="2" mx={".5em"}>
                 {getAbbreviatedAddress(walletAddress)}
               </Text>
@@ -84,6 +65,23 @@ const WalletInfo = ({ ...rest }: BoxProps) => {
       </HStack>
     </Box>
   )
+}
+
+const pillContainerStyles: BoxProps = {
+  bgColor: "white",
+  borderRadius: "2xl",
+  border: "1px solid",
+  py: 1,
+  px: 2,
+}
+
+const walletPillContainerStyles: BoxProps = {
+  bgColor: "gray.cultured",
+  borderRadius: "2xl",
+  border: "1px solid gray.cultured",
+  py: 1,
+  px: 2,
+  marginLeft: "1em !important",
 }
 
 export default WalletInfo

@@ -1,9 +1,10 @@
 import { ethers } from "ethers"
 import { useCallback } from "react"
-import { atom, selector, useRecoilValue, useSetRecoilState } from "recoil"
+import { atom, useRecoilValue, useSetRecoilState } from "recoil"
 import { useGetTotalCollateralLazyQuery } from "../generated/subgraph/graphql"
 import { useMututalityTokenContract } from "../services/web3/contracts"
 import { useGetMyWalletAddress } from "../services/web3/utils/useGetMyWalletAddress"
+import { delay } from "../utils/delay"
 
 interface Props {
   balance: string
@@ -29,14 +30,6 @@ export const walletAtom = atom<{
   default: defaultWalletState,
 })
 
-export const balanceSelector = selector({
-  key: "walletSelector",
-  get: ({ get }) => get(walletAtom).balance,
-  set: ({ set, get }, { wallet }: any) => {
-    set(walletAtom, (prevState) => ({ ...prevState, wallet }))
-  },
-})
-
 export const useGetWallet = () => {
   const { balance, totalCollateral, loading, error } = useRecoilValue(walletAtom)
   return { balance, totalCollateral, loading, error }
@@ -46,7 +39,8 @@ export const useFetchWallet = () => {
   const myWalletAddress = useGetMyWalletAddress()
   const setWallet = useSetRecoilState(walletAtom)
   const { balanceOf } = useMututalityTokenContract()
-  const [fetchTotalCollateral] = useGetTotalCollateralLazyQuery({
+  const [fetchTotalCollateral, { startPolling, stopPolling }] = useGetTotalCollateralLazyQuery({
+    fetchPolicy: "network-only",
     onCompleted: ({ underwriter }) => {
       if (!underwriter) return
       const totalCollateral = Number(underwriter.totalCollateral) / 1000000000000000000
@@ -58,11 +52,9 @@ export const useFetchWallet = () => {
     },
   })
 
-  return useCallback(() => {
+  return useCallback(async () => {
     if (!myWalletAddress) return
     setWallet((prevState) => ({ ...prevState, loading: true }))
-    // TODO: figure out why this is not being called on modal close
-    fetchTotalCollateral({ variables: { id: myWalletAddress } })
     balanceOf().then((value) => {
       setWallet((prevState) => ({
         ...prevState,
@@ -70,5 +62,6 @@ export const useFetchWallet = () => {
         loading: false,
       }))
     })
-  }, [setWallet])
+    fetchTotalCollateral({ variables: { id: myWalletAddress } })
+  }, [balanceOf, fetchTotalCollateral, myWalletAddress, setWallet])
 }

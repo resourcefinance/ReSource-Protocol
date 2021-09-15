@@ -1,8 +1,9 @@
 import { Box, BoxProps, Button, useDisclosure } from "@chakra-ui/react"
-import React, { useEffect, useState } from "react"
+import React from "react"
 import { Business } from "../../../generated/resource-network/graphql"
 import { useGetUnderwriteeQuery } from "../../../generated/subgraph/graphql"
 import { useGetMyWalletAddress } from "../../../services/web3/utils/useGetMyWalletAddress"
+import { delay } from "../../../utils/delay"
 import ExtendCreditModal from "../modals/ExtendCreditModal"
 import UnderwriteModal from "../modals/UnderwriteModal"
 
@@ -41,7 +42,7 @@ export const UnderwriteModalContainer = ({ business, ...props }: Props) => {
         business={business}
         isOpen={underwriteModal.isOpen}
         onClose={(shouldRefetch) => {
-          if (!shouldRefetch) return
+          if (!shouldRefetch) return underwriteModal.onClose()
           delay(3000)
             .then(() => refetch())
             .finally(underwriteModal.onClose)
@@ -54,8 +55,4 @@ export const UnderwriteModalContainer = ({ business, ...props }: Props) => {
       />
     </Box>
   )
-}
-
-export const delay = async (ms: number) => {
-  return await new Promise((resolve) => setTimeout(resolve, ms))
 }

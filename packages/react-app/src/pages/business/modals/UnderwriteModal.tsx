@@ -54,10 +54,9 @@ const UnderwriteModal = ({ isOpen, onClose, business }: UnderwriteModalProps) =>
     validationSchema: validation,
     initialValues: { collateral: 0, credit: 0 },
     onSubmit: async (values: { collateral: number; credit: number }) => {
-      console.log("UnderwriteModal.tsx --  underwritee", underwritee)
       try {
         const tx = await underwrite({
-          collateralAmount: parseEther(values.collateral).toString(),
+          collateralAmount: parseEther(values.collateral),
           networkTokenAddress: CONTRACTS.RUSDToken,
           underwritee: underwritee!,
         })

@@ -6,7 +6,7 @@ import { useGetEthersProviderAndSigner } from "../../utils/useGetEthersProviderA
 
 interface UnderwriteProps {
   networkTokenAddress: string
-  collateralAmount: string
+  collateralAmount: BigNumberish
   underwritee: string
 }
 

@@ -49,7 +49,7 @@ const validation = yup.object({
 
 const ExtendCreditModal = ({ isOpen, onClose, business }: ExtendCreditModalProps) => {
   const { collateral, credit, loading, called } = useGetCreditLineData(business)
-  const { extendCreditLine } = useUnderwriteManagerContract()
+  const { extendCreditLine, contract } = useUnderwriteManagerContract()
   const underwritee = business.wallet?.multiSigAddress?.toLowerCase()
   const [isApproved] = useIsApprovedState()
   const fetchWallet = useFetchWallet()
@@ -60,14 +60,13 @@ const ExtendCreditModal = ({ isOpen, onClose, business }: ExtendCreditModalProps
     validationSchema: validation,
     initialValues: { collateral: 0, credit: 0 },
     onSubmit: async (values: { collateral: number; credit: number }) => {
-      console.log("ExtendCreditModal.tsx --  underwritee", underwritee)
       try {
-        const collateralAmount = parseEther(values.collateral).toString()
+        const collateralAmount = parseEther(values.collateral)
         const tx = await extendCreditLine({ collateralAmount, underwritee: underwritee! })
-        const confirmed = await waitForTxEvent(tx, "NewCreditLine")
+        const confirmed = await waitForTxEvent(tx, "ExtendCreditLine")
         if (confirmed) {
           toast({ description: "Approved", status: "success" })
-          fetchWallet()
+          await fetchWallet()
           onClose()
         }
       } catch (error) {
@@ -118,7 +117,12 @@ const ExtendCreditModal = ({ isOpen, onClose, business }: ExtendCreditModalProps
 
 const useGetCreditLineData = (business: Business) => {
   const id = useGetCreditLineId(business)
-  const { data, loading, called } = useGetCreditLineQuery({ variables: { id }, skip: !id })
+  const { data, loading, called } = useGetCreditLineQuery({
+    // fetchPolicy: "network-only",
+    // pollInterval: 1000,
+    variables: { id },
+    skip: !id,
+  })
   const collateral = data?.creditLine?.collateral ?? 0
   const credit = data?.creditLine?.creditLimit ?? 0
 

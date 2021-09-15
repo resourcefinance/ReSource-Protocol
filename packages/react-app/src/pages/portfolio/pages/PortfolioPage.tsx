@@ -69,14 +69,6 @@ const useGetBusinesses = (creditLines: CreditLineFieldsFragment[]) => {
   }
 }
 
-const containerStyles: BoxProps = {
-  mt: "110px",
-  mb: footerHeight,
-  position: "relative",
-}
-
-export default PortfolioPage
-
 function useCombineData(creditLines: CreditLineFieldsFragment[], businesses: Business[]) {
   const findBusiness = useCallback(
     (cl: CreditLineFieldsFragment) =>
@@ -86,3 +78,11 @@ function useCombineData(creditLines: CreditLineFieldsFragment[], businesses: Bus
 
   return creditLines.map((cl) => ({ ...cl, business: findBusiness(cl) }))
 }
+
+const containerStyles: BoxProps = {
+  mt: "110px",
+  mb: footerHeight,
+  position: "relative",
+}
+
+export default PortfolioPage

@@ -2,24 +2,27 @@ import { Button, ButtonProps } from "@chakra-ui/react"
 import { faCoins } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import React from "react"
-import { Business } from "../../../generated/resource-network/graphql"
+import {
+  CreditLineFieldsFragment,
+  useGetCreditLinesQuery,
+} from "../../../generated/subgraph/graphql"
 import { parseRPCError } from "../../../services/errors/rpcErrors"
 import { useUnderwriteManagerContract } from "../../../services/web3/contracts"
+import { useGetMyWalletAddress } from "../../../services/web3/utils/useGetMyWalletAddress"
 import { useTxToast } from "../../../utils/useTxToast"
 
 export interface ClaimRewardsButtonProps extends ButtonProps {
-  businesses: Business[]
+  creditLines: CreditLineFieldsFragment[]
 }
 
-const ClaimRewardsButton = ({ businesses, ...rest }: ClaimRewardsButtonProps) => {
+const ClaimRewardsButton = ({ ...rest }: ClaimRewardsButtonProps) => {
+  const myAddress = useGetMyWalletAddress()
+  const { creditLines, creditLinesLoading } = useGetCreditLines(myAddress)
   const { claimReward } = useUnderwriteManagerContract()
+  const underwritees = creditLines
+    .map((creditLine) => creditLine.underwritee)
+    .filter((underwritee) => !!underwritee)
   const toast = useTxToast()
-
-  let underwritees: string[] = new Array(businesses.length)
-  for (let business of businesses) {
-    if (!business.wallet?.multiSigAddress) return null
-    underwritees.push(business.wallet?.multiSigAddress)
-  }
 
   const handleClaimRewards = async () => {
     try {
@@ -40,6 +43,21 @@ const ClaimRewardsButton = ({ businesses, ...rest }: ClaimRewardsButtonProps) =>
       Claim rewards
     </Button>
   )
+}
+
+const useGetCreditLines = (underwriterAddress?: string) => {
+  const query = useGetCreditLinesQuery({
+    variables: { where: { underwriter: underwriterAddress } },
+    skip: !underwriterAddress,
+  })
+
+  return {
+    // creditLines: getMockCreditLines(),
+    creditLines: query.data?.creditLines ?? [],
+    creditLinesLoading: query.loading,
+    creditLinesCalled: query.called,
+    ...query,
+  }
 }
 
 export default ClaimRewardsButton

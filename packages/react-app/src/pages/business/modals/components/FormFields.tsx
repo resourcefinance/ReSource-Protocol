@@ -22,10 +22,7 @@ export const CreditField = ({ formik, extendCredit, ...rest }: Props) => {
   const setMin = () => formik.setValues({ ...formik.values, credit: MIN_CREDIT_LINE })
 
   useEffect(() => {
-    const updateCollateral = async () => {
-      formik.setFieldValue("collateral", formik.values.credit)
-    }
-    updateCollateral()
+    formik.setFieldValue("collateral", formik.values.credit)
   }, [formik.values.credit])
 
   return (
@@ -60,10 +57,7 @@ export const CollateralField = ({ formik, extendCredit, ...rest }: Props) => {
   }, [])
 
   useEffect(() => {
-    const updateCredit = async () => {
-      formik.setFieldValue("credit", formik.values.collateral)
-    }
-    updateCredit()
+    formik.setFieldValue("credit", formik.values.collateral)
   }, [formik.values.collateral])
 
   return (

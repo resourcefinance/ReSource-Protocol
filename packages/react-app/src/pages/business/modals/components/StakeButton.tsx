@@ -9,10 +9,9 @@ import { parseEther } from "../../../../services/web3/utils/etherUtils"
 export interface StakeMuButtonProps extends ButtonProps {
   formik: any
 }
-
 const StakeButton = (props: StakeMuButtonProps) => {
   const { formik, ...rest } = props
-  const formCollateral = ethers.BigNumber.from(formik.values.collateral || 0)
+  const [error, setError] = useState(false)
   const [insufficientBalance, setInsufficientBalance] = useState(true)
   const [availableCollateral, setAvailableCollateral] = useState(ethers.BigNumber.from(0))
   const { balanceOf } = useMututalityTokenContract()
@@ -22,12 +21,16 @@ const StakeButton = (props: StakeMuButtonProps) => {
   }, [])
 
   useEffect(() => {
-    const availableValue = ethers.BigNumber.from(availableCollateral || 0)
-    const formValue = ethers.BigNumber.from(parseEther(formCollateral || 0))
-    setInsufficientBalance(availableValue.lt(formValue))
-  }, [formCollateral, availableCollateral])
+    try {
+      const collateralFromForm = parseEther(formik.values.collateral)
+      setInsufficientBalance(availableCollateral.lt(collateralFromForm))
+      setError(false)
+    } catch (e) {
+      setError(true)
+    }
+  }, [availableCollateral, formik.values.collateral])
 
-  const isDisabled = props.isDisabled || formCollateral.lt(0) || insufficientBalance
+  const isDisabled = props.isDisabled || insufficientBalance || error
 
   return (
     <Button

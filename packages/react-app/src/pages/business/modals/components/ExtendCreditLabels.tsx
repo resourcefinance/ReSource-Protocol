@@ -1,4 +1,4 @@
-import { Box, BoxProps, Text, TextProps } from "@chakra-ui/react"
+import { Box, BoxProps, Flex, HStack, Text, TextProps } from "@chakra-ui/react"
 import { BigNumberish } from "ethers"
 import React from "react"
 import {
@@ -9,8 +9,6 @@ import {
 } from "../../../../services/web3/utils/etherUtils"
 import { gradients } from "../../../../theme/foundations/colors"
 
-const textStyles: TextProps = { as: "span", mx: 1, variant: "caption" }
-
 interface Props extends BoxProps {
   formik?: any
   collateral: BigNumberish
@@ -19,10 +17,10 @@ interface Props extends BoxProps {
 
 export const CurrentUnderwriteMetrics = ({ collateral, credit }: Props) => {
   return (
-    <Box as="span">
-      <Text {...textStyles}>Credit line currently underwritten</Text>
+    <Flex px={2} alignItems="baseline" flexWrap="wrap">
+      <Text mr={2}>Credit line currently underwritten:</Text>
       <LeverageRatio collateral={collateral} credit={credit} />
-    </Box>
+    </Flex>
   )
 }
 
@@ -31,10 +29,10 @@ export const NewUnderwriteMetrics = ({ collateral, credit, formik }: Props) => {
   const newCredit = parseMwei(formik.values.credit).add(credit)
 
   return (
-    <Box as="span">
-      <Text {...textStyles}>New total credit line</Text>
+    <Flex px={2} alignItems="baseline" flexWrap="wrap">
+      <Text mr={2}>New total credit line:</Text>
       <LeverageRatio collateral={newCollateral} credit={newCredit} />
-    </Box>
+    </Flex>
   )
 }
 
@@ -45,16 +43,16 @@ interface LeverageRatioProps extends BoxProps {
 
 const LeverageRatio = ({ collateral, credit }: LeverageRatioProps) => {
   return (
-    <Box as="span">
-      <Text {...textStyles} variant="number" bg={gradients.primary} bgClip="text">
+    <HStack pt={1}>
+      <Text variant="number" bg={gradients.primary} bgClip="text">
         {formatMwei(credit)}
       </Text>
-      <Text {...textStyles}>rUSD</Text>
-      <Text {...textStyles}>/</Text>
-      <Text {...textStyles} variant="number" bg={gradients.blue} bgClip="text">
+      <Text variant="caption">rUSD</Text>
+      <Text variant="caption">/</Text>
+      <Text variant="number" bg={gradients.blue} bgClip="text">
         {formatEther(collateral)}
       </Text>
-      <Text {...textStyles}>MU</Text>
-    </Box>
+      <Text variant="caption">MU</Text>
+    </HStack>
   )
 }

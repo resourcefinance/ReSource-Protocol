@@ -1,20 +1,29 @@
 import { Box, StackProps } from "@chakra-ui/layout"
 import { BoxProps, Flex, Heading, HStack } from "@chakra-ui/react"
-import React, { useState } from "react"
+import { formatEther } from "@ethersproject/units"
+import React from "react"
 import { GlyphLabel } from "../../../components/glyph/MuGlyphLabel"
 import { headerHeight } from "../../../components/Header"
+import {
+  CreditLineFieldsFragment,
+  useGetUnderwriterQuery,
+} from "../../../generated/subgraph/graphql"
+import { useGetMyWalletAddress } from "../../../services/web3/utils/useGetMyWalletAddress"
 import colors from "../../../theme/foundations/colors"
 import ClaimRewardsButton from "./ClaimRewardsButton"
 
 export const PortfolioHeader = () => {
-  const [rewards, setRewards] = useState(0)
+  const address = useGetMyWalletAddress()
+  const { data } = useGetUnderwriterQuery({ variables: { id: address ?? "" }, skip: !address })
+  const rewards = data?.underwriter?.totalRewards ?? 0
+  const creditLines = (data?.underwriter?.creditLines ?? []) as CreditLineFieldsFragment[]
 
   return (
     <Flex {...containerStyles}>
       <Heading size="subtitle">My Portfolio</Heading>
       <HStack justify="flex-end" align="center">
         <OutstandingRewards {...outstandingRewardsStyles} value={rewards} />
-        <ClaimRewardsButton onClick={() => setRewards((v) => v + 10)} creditLines={[]} />
+        <ClaimRewardsButton creditLines={creditLines} />
       </HStack>
     </Flex>
   )
@@ -24,7 +33,7 @@ type Props = BoxProps & { value: number }
 const OutstandingRewards = ({ value, ...rest }: Props) => {
   return (
     <Box {...outstandingRewardsStyles}>
-      <GlyphLabel color={colors.blue.main} value={value} />
+      <GlyphLabel color={colors.blue.main} value={formatEther(value)} />
     </Box>
   )
 }

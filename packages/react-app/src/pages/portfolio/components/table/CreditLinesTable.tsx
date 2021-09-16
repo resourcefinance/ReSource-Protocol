@@ -90,9 +90,9 @@ const useGetTableInstance = (creditLines: CreditLineTableData[]) => {
 const dataFormatter = (creditLine: CreditLineTableData) => {
   return {
     ...creditLine,
-    balance: { value: creditLine.balance, label: "rUSD" },
-    totalReward: { value: creditLine.totalReward, label: "MU" },
-    outstandingReward: { value: creditLine.outstandingReward, label: "MU" },
+    balance: { value: formatMwei(creditLine.balance), label: "rUSD" },
+    totalReward: { value: formatEther(creditLine.totalReward), label: "MU" },
+    outstandingReward: { value: formatEther(creditLine.outstandingReward), label: "MU" },
     creditLimit: { value: formatMwei(creditLine.creditLimit), label: "rUSD" },
     collateral: { value: formatEther(creditLine.collateral), label: "MU" },
     actions: creditLine.business,

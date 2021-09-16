@@ -4,21 +4,14 @@ query getTotalCollateral($id: ID!) {
   }
 }
 
-query getPortfolio($id: ID!) {
+query getUnderwriter($id: ID!) {
   underwriter(id: $id) {
     totalRewards
     creditLines {
-      collateral
-      underwritee
-      totalReward
-      outstandingReward
-      networkToken
+      ...CreditLineFields
       underwriter {
         id
       }
     }
   }
 }
-
-
-

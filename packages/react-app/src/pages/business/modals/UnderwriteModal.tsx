@@ -11,7 +11,7 @@ import {
 } from "@chakra-ui/react"
 import { faLink } from "@fortawesome/free-solid-svg-icons"
 import { FormikProvider, useFormik } from "formik"
-import React, { useState } from "react"
+import React from "react"
 import * as yup from "yup"
 import Icon from "../../../components/Icon"
 import { CONTRACTS } from "../../../constants"
@@ -20,7 +20,7 @@ import { parseRPCError } from "../../../services/errors/rpcErrors"
 import { useUnderwriteManagerContract } from "../../../services/web3/contracts"
 import { parseEther } from "../../../services/web3/utils/etherUtils"
 import { waitForTxEvent } from "../../../services/web3/utils/waitForTxEvent"
-import { useFetchWallet } from "../../../store/wallet"
+import { useRefetchData } from "../../../utils/useRefetchData"
 import { useTxToast } from "../../../utils/useTxToast"
 import ApproveMuButton from "./components/ApproveMuButton"
 import { BusinessHeader } from "./components/BusinessHeader"
@@ -46,7 +46,7 @@ const UnderwriteModal = ({ isOpen, onClose, business }: UnderwriteModalProps) =>
   const { underwrite } = useUnderwriteManagerContract()
   const underwritee = business.wallet?.multiSigAddress
   const [isApproved] = useIsApprovedState()
-  const fetchWallet = useFetchWallet()
+  const refetchData = useRefetchData()
   const toast = useTxToast()
 
   const formik = useFormik({
@@ -63,7 +63,11 @@ const UnderwriteModal = ({ isOpen, onClose, business }: UnderwriteModalProps) =>
         const confirmed = await waitForTxEvent(tx, "NewCreditLine")
         if (confirmed) {
           toast({ description: "Approved", status: "success" })
-          fetchWallet()
+          refetchData({
+            queryNames: ["getTotalCollateral", "getCreditLines"],
+            contractNames: ["balanceOf"],
+            options: { delay: 2000 },
+          })
           onClose(true)
         }
       } catch (error) {

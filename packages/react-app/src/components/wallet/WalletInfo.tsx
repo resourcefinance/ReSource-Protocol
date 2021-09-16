@@ -4,35 +4,21 @@ import { faCircle } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { ethers } from "ethers"
 import React, { useEffect, useState } from "react"
-import { useWeb3Context } from "web3-react"
-import { useFetchWallet, useGetWallet } from "../../store/wallet"
+import { useEffectOnce } from "react-use"
+import { useRecoilState } from "recoil"
+import { useGetTotalCollateralQuery } from "../../generated/subgraph/graphql"
+import { useMututalityTokenContract } from "../../services/web3/contracts"
+import { useGetMyWalletAddress } from "../../services/web3/utils/useGetMyWalletAddress"
 import colors from "../../theme/foundations/colors"
 import { getAbbreviatedAddress } from "../../utils/stringFormat"
+import { refetchContractsAtom } from "../../utils/useRefetchData"
 import { GlyphLabel } from "../glyph/MuGlyphLabel"
 import WalletInfoModal from "./WalletInfoModal"
 
 const WalletInfo = ({ ...rest }: BoxProps) => {
-  const context = useWeb3Context()
+  const { balance, totalCollateral } = useGetWalletValues()
+  const walletAddress = useGetMyWalletAddress()
   const walletInfoModal = useDisclosure()
-  const { balance, totalCollateral, loading: balanceLoading, error: balanceError } = useGetWallet()
-  const fetchWallet = useFetchWallet()
-
-  const [walletAddress, setWalletAddress] = useState("")
-
-  useEffect(() => {
-    const setWallet = async () => {
-      if (!context.library) {
-        setWalletAddress("")
-        return false
-      }
-      const provider = new ethers.providers.Web3Provider(context.library.provider)
-      setWalletAddress(await provider.getSigner().getAddress())
-      if (provider && context.account) {
-        fetchWallet()
-      }
-    }
-    setWallet()
-  }, [context])
 
   return (
     <Box {...rest}>
@@ -65,6 +51,27 @@ const WalletInfo = ({ ...rest }: BoxProps) => {
       </HStack>
     </Box>
   )
+}
+
+export const useGetWalletValues = () => {
+  const address = useGetMyWalletAddress()
+  const [balance, setBalance] = useState<any>(0)
+  const { balanceOf } = useMututalityTokenContract()
+  const [refetchCalls, setRefetchCalls] = useRecoilState(refetchContractsAtom)
+  const { data } = useGetTotalCollateralQuery({ variables: { id: address ?? "" }, skip: !address })
+  const totalCollateral = ethers.utils.formatEther(data?.underwriter?.totalCollateral ?? "0")
+
+  const fetchBalance = () => balanceOf().then((res) => setBalance(ethers.utils.formatEther(res)))
+
+  useEffectOnce(fetchBalance as () => void)
+
+  useEffect(() => {
+    if (refetchCalls.includes("balanceOf")) {
+      fetchBalance().then(() => setRefetchCalls((vals) => vals.filter((v) => v !== "balanceOf")))
+    }
+  }, [refetchCalls])
+
+  return { balance, totalCollateral }
 }
 
 const pillContainerStyles: BoxProps = {

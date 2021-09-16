@@ -79,10 +79,9 @@ const CreditLinesTable = ({ creditLines, ...rest }: Props) => {
 }
 
 const useGetTableInstance = (creditLines: CreditLineTableData[]) => {
-  const data = React.useMemo(
-    () => [...creditLines.map(dataFormatter), ...backfill(creditLines)],
-    [],
-  ) as any
+  const data = React.useMemo(() => {
+    return [...creditLines.map(dataFormatter), ...backfill(creditLines)]
+  }, [creditLines]) as any
   const columns = React.useMemo(() => tableSchema, [])
 
   return useTable({ columns, data })

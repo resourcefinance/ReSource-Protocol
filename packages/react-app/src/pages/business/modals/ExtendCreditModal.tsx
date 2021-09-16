@@ -21,7 +21,7 @@ import { useUnderwriteManagerContract } from "../../../services/web3/contracts"
 import { parseEther } from "../../../services/web3/utils/etherUtils"
 import { useGetCreditLineId } from "../../../services/web3/utils/useGetCreditLineId"
 import { waitForTxEvent } from "../../../services/web3/utils/waitForTxEvent"
-import { useFetchWallet } from "../../../store/wallet"
+import { useRefetchData } from "../../../utils/useRefetchData"
 import { useTxToast } from "../../../utils/useTxToast"
 import ApproveMuButton from "./components/ApproveMuButton"
 import { BusinessHeader } from "./components/BusinessHeader"
@@ -49,10 +49,10 @@ const validation = yup.object({
 
 const ExtendCreditModal = ({ isOpen, onClose, business }: ExtendCreditModalProps) => {
   const { collateral, credit, loading, called } = useGetCreditLineData(business)
-  const { extendCreditLine, contract } = useUnderwriteManagerContract()
+  const { extendCreditLine } = useUnderwriteManagerContract()
   const underwritee = business.wallet?.multiSigAddress?.toLowerCase()
   const [isApproved] = useIsApprovedState()
-  const fetchWallet = useFetchWallet()
+  const refetchData = useRefetchData()
   const toast = useTxToast()
 
   const formik = useFormik({
@@ -66,7 +66,11 @@ const ExtendCreditModal = ({ isOpen, onClose, business }: ExtendCreditModalProps
         const confirmed = await waitForTxEvent(tx, "ExtendCreditLine")
         if (confirmed) {
           toast({ description: "Approved", status: "success" })
-          await fetchWallet()
+          refetchData({
+            queryNames: ["getTotalCollateral", "getCreditLines"],
+            contractNames: ["balanceOf"],
+            options: { delay: 2000 },
+          })
           onClose()
         }
       } catch (error) {
@@ -118,8 +122,6 @@ const ExtendCreditModal = ({ isOpen, onClose, business }: ExtendCreditModalProps
 const useGetCreditLineData = (business: Business) => {
   const id = useGetCreditLineId(business)
   const { data, loading, called } = useGetCreditLineQuery({
-    // fetchPolicy: "network-only",
-    // pollInterval: 1000,
     variables: { id },
     skip: !id,
   })

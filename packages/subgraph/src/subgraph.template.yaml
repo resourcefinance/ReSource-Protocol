@@ -30,7 +30,7 @@ dataSources:
           handler: handleCreditLineRewardClaimed
         - event: CreditLineWithdrawal((address,address,(uint256,address,uint256,uint256),uint256))
           handler: handleCreditLineWithdrawal
-      file: ./src/mapping.ts
+      file: ./src/mapping/UnderwriteManager/index.ts
   - kind: ethereum/contract
     name: RUSD
     network: "{{network}}"
@@ -50,4 +50,4 @@ dataSources:
       eventHandlers:
         - event: BalanceUpdate(address,address,uint256,uint256,uint256,uint256)
           handler: handleBalanceUpdate
-      file: ./src/mapping.ts
+      file: ./src/mapping/RUSD/index.ts

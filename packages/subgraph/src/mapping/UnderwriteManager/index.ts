@@ -1,5 +1,5 @@
 export { handleCreditLineReward } from "./CreditLineReward"
-export { handleCreditLineRewardClaimed } from "./CreditLineRewardsClaimed"
+export { handleCreditLineRewardClaimed } from "./CreditLineRewardClaimed"
 export { handleCreditLineWithdrawal } from "./CreditLineWithDrawal"
 export { handleExtendCreditLine } from "./ExtendCreditLine"
 export { handleNewCreditLine } from "./NewCreditLine"

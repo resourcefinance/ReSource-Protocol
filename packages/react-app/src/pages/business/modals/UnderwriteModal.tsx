@@ -11,15 +11,20 @@ import {
 } from "@chakra-ui/react"
 import { faLink } from "@fortawesome/free-solid-svg-icons"
 import { FormikProvider, useFormik } from "formik"
-import React from "react"
+import React, { useState } from "react"
 import * as yup from "yup"
 import Icon from "../../../components/Icon"
 import { CONTRACTS } from "../../../constants"
 import { Business } from "../../../generated/resource-network/graphql"
+import {
+  GetTotalCollateralDocument,
+  GetUnderwriteeDocument,
+} from "../../../generated/subgraph/graphql"
 import { parseRPCError } from "../../../services/errors/rpcErrors"
 import { useUnderwriteManagerContract } from "../../../services/web3/contracts"
 import { parseEther } from "../../../services/web3/utils/etherUtils"
 import { waitForTxEvent } from "../../../services/web3/utils/waitForTxEvent"
+import { ModalProps } from "../../../utils/types"
 import { useRefetchData } from "../../../utils/useRefetchData"
 import { useTxToast } from "../../../utils/useTxToast"
 import ApproveMuButton from "./components/ApproveMuButton"
@@ -28,9 +33,7 @@ import { CollateralField, CreditField } from "./components/FormFields"
 import StakeButton from "./components/StakeButton"
 import { MIN_CREDIT_LINE, useIsApprovedState } from "./utils"
 
-interface UnderwriteModalProps {
-  onClose: (shouldRefetchUnderwritee?: boolean) => void
-  isOpen: boolean
+interface UnderwriteModalProps extends ModalProps {
   business: Business
 }
 
@@ -45,6 +48,7 @@ const validation = yup.object({
 const UnderwriteModal = ({ isOpen, onClose, business }: UnderwriteModalProps) => {
   const { underwrite } = useUnderwriteManagerContract()
   const underwritee = business.wallet?.multiSigAddress
+  const [isLoading, setIsLoading] = useState(false)
   const [isApproved] = useIsApprovedState()
   const refetchData = useRefetchData()
   const toast = useTxToast()
@@ -54,6 +58,7 @@ const UnderwriteModal = ({ isOpen, onClose, business }: UnderwriteModalProps) =>
     validationSchema: validation,
     initialValues: { collateral: 0, credit: 0 },
     onSubmit: async (values: { collateral: number; credit: number }) => {
+      setIsLoading(true)
       try {
         const tx = await underwrite({
           collateralAmount: parseEther(values.collateral),
@@ -62,16 +67,18 @@ const UnderwriteModal = ({ isOpen, onClose, business }: UnderwriteModalProps) =>
         })
         const confirmed = await waitForTxEvent(tx, "NewCreditLine")
         if (confirmed) {
-          toast({ description: "Approved", status: "success" })
-          refetchData({
-            queryNames: ["getTotalCollateral", "getCreditLines"],
+          await refetchData({
+            queryNames: [GetTotalCollateralDocument, GetUnderwriteeDocument],
             contractNames: ["balanceOf"],
             options: { delay: 2000 },
           })
-          onClose(true)
+          toast({ description: "Business underwritten", status: "success" })
+          onClose()
         }
       } catch (error) {
         toast({ status: "error", description: parseRPCError(error) })
+      } finally {
+        setIsLoading(false)
       }
     },
   })
@@ -87,7 +94,7 @@ const UnderwriteModal = ({ isOpen, onClose, business }: UnderwriteModalProps) =>
 
   return (
     <FormikProvider value={formik}>
-      <Modal size="lg" isOpen={isOpen} onClose={() => onClose()} isCentered>
+      <Modal size="lg" isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>
@@ -105,7 +112,12 @@ const UnderwriteModal = ({ isOpen, onClose, business }: UnderwriteModalProps) =>
           <ModalFooter>
             <HStack>
               <ApproveMuButton />
-              <StakeButton formik={formik} isDisabled={!maySubmit()} onClick={formik.submitForm} />
+              <StakeButton
+                formik={formik}
+                isLoading={isLoading}
+                isDisabled={!maySubmit()}
+                onClick={formik.submitForm}
+              />
             </HStack>
           </ModalFooter>
         </ModalContent>

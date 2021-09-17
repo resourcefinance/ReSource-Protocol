@@ -3,7 +3,6 @@ import React from "react"
 import { Business } from "../../../generated/resource-network/graphql"
 import { useGetUnderwriteeQuery } from "../../../generated/subgraph/graphql"
 import { useGetMyWalletAddress } from "../../../services/web3/utils/useGetMyWalletAddress"
-import { delay } from "../../../utils/delay"
 import ExtendCreditModal from "../modals/ExtendCreditModal"
 import UnderwriteModal from "../modals/UnderwriteModal"
 
@@ -16,10 +15,7 @@ export const UnderwriteModalContainer = ({ business, ...props }: Props) => {
   const myWalletAddress = useGetMyWalletAddress()
 
   const id = business?.wallet?.multiSigAddress?.toLowerCase() ?? ""
-  const { data, loading, called, refetch } = useGetUnderwriteeQuery({
-    variables: { id: id },
-    skip: !id,
-  })
+  const { data, loading, called } = useGetUnderwriteeQuery({ variables: { id: id }, skip: !id })
 
   const underwriterAddress = data?.underwritee?.creditLine?.underwriter.id
   const currentlyUnderwriting = underwriterAddress === myWalletAddress
@@ -41,12 +37,7 @@ export const UnderwriteModalContainer = ({ business, ...props }: Props) => {
       <UnderwriteModal
         business={business}
         isOpen={underwriteModal.isOpen}
-        onClose={(shouldRefetch) => {
-          if (!shouldRefetch) return underwriteModal.onClose()
-          delay(3000)
-            .then(() => refetch())
-            .finally(underwriteModal.onClose)
-        }}
+        onClose={underwriteModal.onClose}
       />
       <ExtendCreditModal
         business={business}

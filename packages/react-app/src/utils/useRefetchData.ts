@@ -7,8 +7,8 @@ interface RefetchOptions {
 }
 
 interface RefetchDataProps {
-  queryNames: RefetchQueriesInclude
-  contractNames: string[]
+  queryNames?: RefetchQueriesInclude
+  contractNames?: string[]
   options: RefetchOptions
 }
 
@@ -16,16 +16,18 @@ export const useRefetchData = () => {
   const refetchQueries = useRefetchQueries()
   const refetchContractCalls = useRefetchContractCalls()
 
-  return ({ queryNames, contractNames, options }: RefetchDataProps) => {
-    refetchQueries(queryNames, options)
-    refetchContractCalls(contractNames, options)
+  return async ({ queryNames, contractNames, options }: RefetchDataProps) => {
+    return Promise.all([
+      await refetchQueries(queryNames, options),
+      await refetchContractCalls(contractNames, options),
+    ])
   }
 }
 
 export const useRefetchQueries = () => {
   const client = useApolloClient()
 
-  return async (queryNames: RefetchQueriesInclude, options?: RefetchOptions) => {
+  return async (queryNames?: RefetchQueriesInclude, options?: RefetchOptions) => {
     if (options?.delay) await delay(options.delay)
     client.refetchQueries({ include: queryNames || "active" })
   }
@@ -39,7 +41,8 @@ export const refetchContractsAtom = atom({
 export const useRefetchContractCalls = () => {
   const setContractsToRefetch = useSetRecoilState(refetchContractsAtom)
 
-  return async (contractsToRefetch: string[], options?: RefetchOptions) => {
+  return async (contractsToRefetch?: string[], options?: RefetchOptions) => {
+    if (!contractsToRefetch) return
     if (options?.delay) await delay(options.delay)
     setContractsToRefetch(contractsToRefetch)
   }

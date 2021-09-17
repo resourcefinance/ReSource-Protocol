@@ -45,7 +45,6 @@ const useGetCreditLines = (underwriterAddress?: string) => {
   })
 
   return {
-    // creditLines: getMockCreditLines(),
     creditLines: query.data?.creditLines ?? [],
     creditLinesLoading: query.loading,
     creditLinesCalled: query.called,
@@ -61,7 +60,6 @@ const useGetBusinesses = (creditLines: CreditLineFieldsFragment[]) => {
   })
 
   return {
-    // businesses: getMockBusinesses(),
     businesses: (query.data?.findManyBusiness?.businesses ?? []) as Business[],
     businessesLoading: query.loading,
     businessesCalled: query.called,

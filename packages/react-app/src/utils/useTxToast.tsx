@@ -1,3 +1,8 @@
-import { useToast } from "@chakra-ui/react"
+import { useToast, UseToastOptions } from "@chakra-ui/react"
 
-export const useTxToast = () => useToast({ isClosable: true, position: "top-right" })
+export const useTxToast = () =>
+  useToast({
+    variant: "solid",
+    isClosable: true,
+    position: "top-right",
+  })

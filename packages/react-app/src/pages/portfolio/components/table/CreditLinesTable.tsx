@@ -91,10 +91,10 @@ const dataFormatter = (creditLine: CreditLineTableData) => {
   return {
     ...creditLine,
     balance: { value: formatMwei(creditLine.balance), label: "rUSD" },
-    totalReward: { value: formatEther(creditLine.totalReward), label: "MU" },
-    outstandingReward: { value: formatEther(creditLine.outstandingReward), label: "MU" },
+    totalReward: { value: formatEther(creditLine.totalReward), label: "SOURCE" },
+    outstandingReward: { value: formatEther(creditLine.outstandingReward), label: "SOURCE" },
     creditLimit: { value: formatMwei(creditLine.creditLimit), label: "rUSD" },
-    collateral: { value: formatEther(creditLine.collateral), label: "MU" },
+    collateral: { value: formatEther(creditLine.collateral), label: "SOURCE" },
     actions: creditLine.business,
   }
 }

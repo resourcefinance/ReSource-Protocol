@@ -27,7 +27,7 @@ export const ActionsCell = ({ value, ...rest }: Props) => {
   return (
     <>
       <HStack justify="flex-end" {...rest} pr={4}>
-        <Tooltip label="Staked MU can only be withdrawn every 6 months" shouldWrapChildren>
+        <Tooltip label="Staked SOURCE can only be withdrawn every 6 months" shouldWrapChildren>
           <Button size="xs" colorScheme="blue" variant="outline" isDisabled>
             Withdraw
           </Button>

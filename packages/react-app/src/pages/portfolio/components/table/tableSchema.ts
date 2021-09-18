@@ -14,7 +14,7 @@ export const tableSchema = [
     Cell: TableCell,
   },
   {
-    Header: "staked MU",
+    Header: "staked SOURCE",
     accessor: "collateral",
     Cell: TableCell,
   },

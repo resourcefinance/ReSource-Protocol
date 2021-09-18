@@ -59,7 +59,7 @@ const ConnectWalletModal = ({ isOpen, onClose }) => {
             {context.active ? getAbbreviatedAddress(context.account || "") : "Connect Wallet"}
           </Button>
           <Text mt="2em">
-            Connect to a wallet holding MU tokens to access staking and underwriting
+            Connect to a wallet holding SOURCE tokens to access staking and underwriting
           </Text>
         </ModalBody>
         <ModalFooter>

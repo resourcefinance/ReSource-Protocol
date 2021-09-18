@@ -23,12 +23,12 @@ const WalletInfo = ({ ...rest }: BoxProps) => {
   return (
     <Box {...rest}>
       <HStack spacing={-14}>
-        <Tooltip label="Staked MU" shouldWrapChildren>
+        <Tooltip label="Staked SOURCE" shouldWrapChildren>
           <Center {...pillContainerStyles} pr="60px" left={0} borderColor={colors.blue.main}>
             <GlyphLabel color={colors.blue.main} mx={1} value={totalCollateral} />
           </Center>
         </Tooltip>
-        <Tooltip label="MU balance" shouldWrapChildren>
+        <Tooltip label="SOURCE balance" shouldWrapChildren>
           <Center {...pillContainerStyles} right={0} borderColor="black">
             <GlyphLabel mx={1} value={balance} />
           </Center>

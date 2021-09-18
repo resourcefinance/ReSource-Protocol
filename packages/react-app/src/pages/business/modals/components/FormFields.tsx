@@ -65,10 +65,10 @@ export const CollateralField = ({ formik, extendCredit, ...rest }: Props) => {
       <HStack justify="space-between">
         <Box noOfLines={1} minW="280px">
           <Text as="span" color="gray.700">
-            Mu to stake
+            SOURCE to stake
           </Text>
           <Text as="span" {...caption} mx={1} color="gray.500">
-            (1 MU = 0.2 rUSD, Leverage = 5x)
+            (1 SOURCE = 0.2 rUSD, Leverage = 5x)
           </Text>
         </Box>
         <Text color="gray.500" overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap">

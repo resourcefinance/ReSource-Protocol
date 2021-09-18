@@ -16,6 +16,7 @@ import * as yup from "yup"
 import Icon from "../../../components/Icon"
 import { Business } from "../../../generated/resource-network/graphql"
 import {
+  GetCreditLinesDocument,
   GetTotalCollateralDocument,
   GetUnderwriteeDocument,
   useGetUnderwriteeQuery,
@@ -41,7 +42,7 @@ interface ExtendCreditModalProps extends ModalProps {
 const validation = yup.object({
   collateral: yup
     .number()
-    .required("staked mu value is required")
+    .required("collateral value is required")
     .min(0),
   credit: yup
     .number()
@@ -70,7 +71,11 @@ const ExtendCreditModal = ({ isOpen, onClose, business }: ExtendCreditModalProps
         const confirmed = await waitForTxEvent(tx, "ExtendCreditLine")
         if (confirmed) {
           await refetchData({
-            queryNames: [GetUnderwriteeDocument, GetTotalCollateralDocument],
+            queryNames: [
+              GetUnderwriteeDocument,
+              GetTotalCollateralDocument,
+              GetCreditLinesDocument,
+            ],
             contractNames: ["balanceOf"],
             options: { delay: 2000 },
           })

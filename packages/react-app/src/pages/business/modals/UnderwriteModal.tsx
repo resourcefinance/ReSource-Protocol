@@ -17,6 +17,7 @@ import Icon from "../../../components/Icon"
 import { CONTRACTS } from "../../../constants"
 import { Business } from "../../../generated/resource-network/graphql"
 import {
+  GetCreditLinesDocument,
   GetTotalCollateralDocument,
   GetUnderwriteeDocument,
 } from "../../../generated/subgraph/graphql"
@@ -38,7 +39,7 @@ interface UnderwriteModalProps extends ModalProps {
 }
 
 const validation = yup.object({
-  collateral: yup.number().required("staked mu value is required"),
+  collateral: yup.number().required("collateral value is required"),
   credit: yup
     .number()
     .min(MIN_CREDIT_LINE)
@@ -67,8 +68,13 @@ const UnderwriteModal = ({ isOpen, onClose, business }: UnderwriteModalProps) =>
         })
         const confirmed = await waitForTxEvent(tx, "NewCreditLine")
         if (confirmed) {
+          console.log("UnderwriteModal.tsx -- confirmed")
           await refetchData({
-            queryNames: [GetTotalCollateralDocument, GetUnderwriteeDocument],
+            queryNames: [
+              GetTotalCollateralDocument,
+              GetUnderwriteeDocument,
+              GetCreditLinesDocument,
+            ],
             contractNames: ["balanceOf"],
             options: { delay: 2000 },
           })

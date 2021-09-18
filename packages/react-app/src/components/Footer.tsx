@@ -17,7 +17,7 @@ const Footer = ({ ...rest }: BoxProps) => {
     <Flex {...footerStyles} {...rest}>
       <HStack>
         <Text>ReSource Network</Text>
-        <Text color="gray.500">MU dApp</Text>
+        <Text color="gray.500">SOURCE dApp</Text>
       </HStack>
       <HStack>
         <Text color="gray.500">({label})</Text>

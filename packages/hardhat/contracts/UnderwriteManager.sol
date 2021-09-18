@@ -1,6 +1,5 @@
 pragma solidity ^0.8.0;
 
-import "hardhat/console.sol";
 import "./CIP36.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
@@ -40,7 +39,7 @@ contract UnderwriteManager is OwnableUpgradeable {
         CreditLine data;
     }
 
-        struct CreditLineLimitEvent {
+    struct CreditLineLimitEvent {
         address underwriter;
         address underwritee;
         CreditLine data;
@@ -53,7 +52,12 @@ contract UnderwriteManager is OwnableUpgradeable {
     event NewCreditLine(CreditLineLimitEvent creditLine);
     event ExtendCreditLine(CreditLineLimitEvent creditLine);
     event CreditLineReward(CreditLineEvent creditLine);
-    event CreditLineRewardClaimed(CreditLineEvent[] creditLines);
+    event CreditLineRewardClaimed(
+        address underwriter,
+        address[] underwritees,
+        uint256[] rewards,
+        uint256 totalClaimed
+    );
     event CreditLineWithdrawal(CreditLineLimitEvent creditLine);
 
     function initialize(address _collateralTokenAddress) external virtual initializer {
@@ -199,28 +203,20 @@ contract UnderwriteManager is OwnableUpgradeable {
 
     function claimRewards(address[] memory underwritees) external {
         uint256 totalReward = 0;
-        CreditLineEvent[] memory updatedCreditLines = new CreditLineEvent[](underwritees.length);
+        // CreditLineEvent[] memory updatedCreditLines = new CreditLineEvent[](underwritees.length);
+        uint256[] memory rewards = new uint256[](underwritees.length);
         for (uint256 i = 0; i < underwritees.length; i++) {
             CreditLine storage creditLine = creditLines[msg.sender][underwritees[i]];
             if (creditLine.reward > 0) {
+                rewards[i] = creditLine.reward;
                 totalReward += creditLine.reward;
                 creditLine.reward = 0;
-                updatedCreditLines[i] = CreditLineEvent(
-                    msg.sender, 
-                    underwritees[i], 
-                    CreditLine(
-                        creditLine.collateral, 
-                        creditLine.networkToken, 
-                        creditLine.issueDate,
-                        0
-                    )
-                );
             }
         }
-
         require(totalReward > 0, "No reward to claim");
         collateralToken.transfer(msg.sender, totalReward);
-        emit CreditLineRewardClaimed(updatedCreditLines);
+        emit CreditLineRewardClaimed(msg.sender, underwritees, rewards, totalReward);
+        // emit CreditLineRewardClaimed(updatedCreditLines);
     }
 
     function toggleActive() external onlyOwner() {

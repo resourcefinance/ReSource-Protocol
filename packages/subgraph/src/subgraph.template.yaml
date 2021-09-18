@@ -26,7 +26,7 @@ dataSources:
           handler: handleExtendCreditLine
         - event: CreditLineReward((address,address,(uint256,address,uint256,uint256)))
           handler: handleCreditLineReward
-        - event: CreditLineRewardClaimed(tuple[])
+        - event: CreditLineRewardClaimed(address,address[],uint256[],uint256)
           handler: handleCreditLineRewardClaimed
         - event: CreditLineWithdrawal((address,address,(uint256,address,uint256,uint256),uint256))
           handler: handleCreditLineWithdrawal

@@ -2,25 +2,31 @@ import { Center, Flex, HStack, StackProps } from "@chakra-ui/layout"
 import { faChartPie, faStore } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import React from "react"
-import { useHistory } from "react-router-dom"
+import { useHistory, useLocation } from "react-router-dom"
 import { useWeb3Context } from "web3-react"
 import Button from "./Button"
-import { MuGlyph } from "./glyph/MuGlyph"
+import { RusdGlyphGradient } from "./glyph/MuGlyph"
 import WalletInfo from "./wallet/WalletInfo"
 
 export const Header = () => {
   const history = useHistory()
+  const location = useLocation()
   const context = useWeb3Context()
 
   return (
     <Flex {...containerStyles}>
-      <MuGlyph boxSize="36px" onClick={() => history.push("/")} _hover={{ cursor: "pointer" }} />
+      <RusdGlyphGradient
+        boxSize="36px"
+        onClick={() => history.push("/")}
+        _hover={{ cursor: "pointer" }}
+      />
       <HStack align="center" spacing={6}>
         <Center w="120px">
           <Button
             variant="link"
             colorScheme="blue"
             onClick={() => history.push("/")}
+            isActive={!location.pathname.includes("/portfolio")}
             leftIcon={<FontAwesomeIcon icon={faStore} />}
           >
             Businesses
@@ -31,6 +37,7 @@ export const Header = () => {
             variant="link"
             colorScheme="blue"
             onClick={() => history.push("/portfolio")}
+            isActive={location.pathname.includes("/portfolio")}
             leftIcon={<FontAwesomeIcon icon={faChartPie} />}
           >
             Portfolio

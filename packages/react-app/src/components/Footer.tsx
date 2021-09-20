@@ -3,15 +3,19 @@ import { Flex } from "@chakra-ui/react"
 import { faCircle } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import React, { useEffect, useState } from "react"
+import { useWeb3Context } from "web3-react"
 import colors from "../theme/foundations/colors"
+import Icon from "./Icon"
 
 const Footer = ({ ...rest }: BoxProps) => {
-  const [timeSinceUpdate, setTimeSinceUpdate] = useState(10)
-  const [label, setLabel] = useState("")
+  const active = useWeb3Context().active
+  const [label, setLabel] = useState("Disconnected")
+  const [iconColor, setIconColor] = useState("Disconnected")
 
   useEffect(() => {
-    setLabel(`${timeSinceUpdate} seconds since last update`) // seconds, minutes, hours?
-  }, [timeSinceUpdate])
+    setLabel(active ? "Live" : "Disconnected")
+    setIconColor(active ? colors.green.main : colors.gray.cement)
+  }, [active])
 
   return (
     <Flex {...footerStyles} {...rest}>
@@ -20,9 +24,8 @@ const Footer = ({ ...rest }: BoxProps) => {
         <Text color="gray.500">SOURCE dApp</Text>
       </HStack>
       <HStack>
-        <Text color="gray.500">({label})</Text>
-        <Text>Live</Text>
-        <FontAwesomeIcon icon={faCircle} color={colors.green.main} />
+        <Text>{label}</Text>
+        <Icon icon={faCircle} color={iconColor} boxSize="24px" />
       </HStack>
     </Flex>
   )

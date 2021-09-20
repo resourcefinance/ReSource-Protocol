@@ -12,7 +12,7 @@ import { useGetMyWalletAddress } from "../../services/web3/utils/useGetMyWalletA
 import colors from "../../theme/foundations/colors"
 import { getAbbreviatedAddress } from "../../utils/stringFormat"
 import { refetchContractsAtom } from "../../utils/useRefetchData"
-import { GlyphLabel } from "../glyph/MuGlyphLabel"
+import { GlyphLabel } from "../glyph/SourceGlyphLabel"
 import WalletInfoModal from "./WalletInfoModal"
 
 const WalletInfo = ({ ...rest }: BoxProps) => {
@@ -35,12 +35,12 @@ const WalletInfo = ({ ...rest }: BoxProps) => {
         </Tooltip>
         {walletAddress && (
           <>
-            <Center {...walletPillContainerStyles} onClick={walletInfoModal.onOpen}>
-              <FontAwesomeIcon icon={faCircle} color={colors.green.main} />
-              <Text as="span" lineHeight="2" mx={".5em"}>
+            <HStack {...walletPillContainerStyles} onClick={walletInfoModal.onOpen} px={3}>
+              <FontAwesomeIcon size="xs" icon={faCircle} color={colors.green.main} />
+              <Text as="span" lineHeight="2">
                 {getAbbreviatedAddress(walletAddress)}
               </Text>
-            </Center>
+            </HStack>
             <WalletInfoModal
               isOpen={walletInfoModal.isOpen}
               onClose={walletInfoModal.onClose}
@@ -83,9 +83,11 @@ const pillContainerStyles: BoxProps = {
 }
 
 const walletPillContainerStyles: BoxProps = {
+  cursor: "pointer",
   bgColor: "gray.cultured",
+  _hover: { shadow: "xs" },
   borderRadius: "2xl",
-  border: "1px solid gray.cultured",
+  border: `1px solid ${colors.gray.cultured}`,
   py: 1,
   px: 2,
   marginLeft: "1em !important",

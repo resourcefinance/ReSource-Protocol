@@ -4,7 +4,6 @@ import muThick from "../../assets/glyphs/mu-thick.svg"
 import mu from "../../assets/glyphs/mu.svg"
 import rusdGradientPurple from "../../assets/glyphs/rusd-gradient-purple.svg"
 import rusdGradient from "../../assets/glyphs/rusd-gradient.svg"
-import rusdSolid from "../../assets/glyphs/rusd-solid.svg"
 
 interface MuGlyphProps extends ImageProps {
   thick?: boolean

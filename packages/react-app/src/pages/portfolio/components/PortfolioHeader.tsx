@@ -2,7 +2,7 @@ import { Box, StackProps } from "@chakra-ui/layout"
 import { BoxProps, Flex, Heading, HStack } from "@chakra-ui/react"
 import { formatEther } from "@ethersproject/units"
 import React from "react"
-import { GlyphLabel } from "../../../components/glyph/MuGlyphLabel"
+import { GlyphLabel } from "../../../components/glyph/SourceGlyphLabel"
 import { headerHeight } from "../../../components/Header"
 import {
   CreditLineFieldsFragment,
@@ -21,7 +21,7 @@ export const PortfolioHeader = () => {
   return (
     <Flex {...containerStyles}>
       <Heading size="subtitle">My Portfolio</Heading>
-      <HStack justify="flex-end" align="center">
+      <HStack justify="flex-end" align="center" spacing={5}>
         <OutstandingRewards {...outstandingRewardsStyles} value={rewards} />
         <ClaimRewardsButton creditLines={creditLines} />
       </HStack>
@@ -51,7 +51,7 @@ const containerStyles: StackProps = {
   justify: "space-between",
   alignItems: "center",
   borderBottom: "solid 1px",
-  borderColor: "gray.300",
+  borderColor: "blue.main",
   bgColor: "white !important",
   height: "60px",
   position: "fixed",

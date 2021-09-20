@@ -1,7 +1,7 @@
 import { BalanceUpdate } from "../../../generated/RUSD/RUSD"
 import { CreditLine, Underwritee } from "../../../generated/schema"
 
-export function handleBalanceUpdate(event: BalanceUpdate): void {
+export function handleRUSDBalanceUpdate(event: BalanceUpdate): void {
   let recipient = Underwritee.load(event.params.recipient.toHex())
   let sender = Underwritee.load(event.params.sender.toHex())
   if (recipient) {

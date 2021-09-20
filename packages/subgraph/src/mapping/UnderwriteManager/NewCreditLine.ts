@@ -8,6 +8,7 @@ export function handleNewCreditLine(event: NewCreditLine): void {
     underwriter = new Underwriter(event.params.creditLine.underwriter.toHex())
     underwriter.totalCollateral = new BigInt(0)
     underwriter.totalRewards = new BigInt(0)
+    underwriter.balance = new BigInt(0)
   }
   let underwritee = Underwritee.load(event.params.creditLine.underwritee.toHex())
   if (!underwritee) {

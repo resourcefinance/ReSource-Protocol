@@ -49,5 +49,25 @@ dataSources:
           file: ./abis/RUSD.json
       eventHandlers:
         - event: BalanceUpdate(address,address,uint256,uint256,uint256,uint256)
-          handler: handleBalanceUpdate
+          handler: handleRUSDBalanceUpdate
       file: ./src/mapping/RUSD/index.ts
+  - kind: ethereum/contract
+    name: ReSourceToken
+    network: "{{network}}"
+    source:
+      address: "{{ResourceTokenAddress}}"
+      abi: ReSourceToken
+      startBlock: {{ResourceTokenStartBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - CreditLine
+      abis:
+        - name: ReSourceToken
+          file: ./abis/ReSourceToken.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleSourceBalanceUpdate
+      file: ./src/mapping/SOURCE/index.ts

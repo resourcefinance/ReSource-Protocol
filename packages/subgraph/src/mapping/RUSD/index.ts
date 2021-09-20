@@ -1,1 +1,1 @@
-export { handleBalanceUpdate } from "./BalanceUpdate"
+export { handleRUSDBalanceUpdate } from "./RUSDBalanceUpdate"

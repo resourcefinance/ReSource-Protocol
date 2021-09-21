@@ -13,7 +13,6 @@ fragment BusinessFields on Business {
   createdAt
   email
   ownerId
-  kmsTaxId
   wallet {
     id
     isActive

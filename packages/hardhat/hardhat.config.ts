@@ -98,7 +98,6 @@ const config: HardhatUserConfig = {
   namedAccounts: {
     deployer: {
       default: 0,
-      devAccount: 1,
     },
     relaySigner: "0xe105fb303e5ffee9e27726267e2db11c37260865",
   },

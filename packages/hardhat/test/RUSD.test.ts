@@ -54,6 +54,7 @@ describe("RUSD Tests", function() {
     networkRegistry = (await upgrades.deployProxy(networkRegistryFactory, [
       [memberA.address, memberB.address, bulkMemberA.address, bulkMemberB.address],
       [operatorA.address],
+      deployer.address,
     ])) as NetworkRegistry
 
     const reSourceTokenFactory = await ethers.getContractFactory("ReSourceToken")
@@ -78,7 +79,7 @@ describe("RUSD Tests", function() {
       },
     )) as RUSD
 
-    underwriteManager.addNetwork(rUSD.address)
+    await underwriteManager.addNetwork(rUSD.address)
 
     const registryAddress = await rUSD.registry()
     const restrictionState = await rUSD.restrictionState()
@@ -216,27 +217,27 @@ describe("RUSD Tests", function() {
     expect(state).to.equal(1)
   })
 
-  // it("Updates RUSD to NONE restriction state by nonOwner", async function() {
-  //   this.timeout(21000)
-  //   sleep(20000)
-  //   await expect(rUSD.connect(memberA).removeRestrictions()).to.emit(rUSD, "RestrictionUpdated")
-  //   const state = await rUSD.restrictionState()
-  //   expect(state).to.equal(2)
-  // })
+  it("Updates RUSD to NONE restriction state by nonOwner", async function() {
+    this.timeout(21000)
+    sleep(20000)
+    await expect(rUSD.connect(memberA).removeRestrictions()).to.emit(rUSD, "RestrictionUpdated")
+    const state = await rUSD.restrictionState()
+    expect(state).to.equal(2)
+  })
 
-  // it("RUSD in NONE restriction state", async function() {
-  //   await expect(
-  //     rUSD.setCreditLimit(nonMemberB.address, ethers.utils.parseUnits("1000.0", "mwei")),
-  //   ).to.emit(rUSD, "CreditLimitUpdate")
+  it("RUSD in NONE restriction state", async function() {
+    await expect(
+      rUSD.setCreditLimit(nonMemberB.address, ethers.utils.parseUnits("1000.0", "mwei")),
+    ).to.emit(rUSD, "CreditLimitUpdate")
 
-  //   await expect(
-  //     rUSD
-  //       .connect(nonMemberB)
-  //       .transfer(nonMemberC.address, ethers.utils.parseUnits("300.0", "mwei")),
-  //   ).to.emit(rUSD, "Transfer")
+    await expect(
+      rUSD
+        .connect(nonMemberB)
+        .transfer(nonMemberC.address, ethers.utils.parseUnits("300.0", "mwei")),
+    ).to.emit(rUSD, "Transfer")
 
-  //   await expect(
-  //     rUSD.connect(memberB).transfer(nonMemberC.address, ethers.utils.parseUnits("300.0", "mwei")),
-  //   ).to.emit(rUSD, "Transfer")
-  // })
+    await expect(
+      rUSD.connect(memberB).transfer(nonMemberC.address, ethers.utils.parseUnits("300.0", "mwei")),
+    ).to.emit(rUSD, "Transfer")
+  })
 })

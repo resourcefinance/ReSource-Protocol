@@ -8,12 +8,14 @@ export type { IERC20MetadataUpgradeable } from "./IERC20MetadataUpgradeable";
 export type { IERC20Upgradeable } from "./IERC20Upgradeable";
 export type { IERC20 } from "./IERC20";
 export type { CIP36 } from "./CIP36";
+export type { IiKeyWalletDeployer } from "./IiKeyWalletDeployer";
+export type { IKeyMultiSig } from "./IKeyMultiSig";
+export type { IKeyWalletDeployer } from "./IKeyWalletDeployer";
 export type { MultiSigWallet } from "./MultiSigWallet";
 export type { NetworkRegistry } from "./NetworkRegistry";
 export type { ReSourceToken } from "./ReSourceToken";
 export type { RUSD } from "./RUSD";
 export type { UnderwriteManager } from "./UnderwriteManager";
-export type { WalletRegistry } from "./WalletRegistry";
 
 export { OwnableUpgradeable__factory } from "./factories/OwnableUpgradeable__factory";
 export { ERC20Upgradeable__factory } from "./factories/ERC20Upgradeable__factory";
@@ -22,9 +24,11 @@ export { IERC20MetadataUpgradeable__factory } from "./factories/IERC20MetadataUp
 export { IERC20Upgradeable__factory } from "./factories/IERC20Upgradeable__factory";
 export { IERC20__factory } from "./factories/IERC20__factory";
 export { CIP36__factory } from "./factories/CIP36__factory";
+export { IiKeyWalletDeployer__factory } from "./factories/IiKeyWalletDeployer__factory";
+export { IKeyMultiSig__factory } from "./factories/IKeyMultiSig__factory";
+export { IKeyWalletDeployer__factory } from "./factories/IKeyWalletDeployer__factory";
 export { MultiSigWallet__factory } from "./factories/MultiSigWallet__factory";
 export { NetworkRegistry__factory } from "./factories/NetworkRegistry__factory";
 export { ReSourceToken__factory } from "./factories/ReSourceToken__factory";
 export { RUSD__factory } from "./factories/RUSD__factory";
 export { UnderwriteManager__factory } from "./factories/UnderwriteManager__factory";
-export { WalletRegistry__factory } from "./factories/WalletRegistry__factory";

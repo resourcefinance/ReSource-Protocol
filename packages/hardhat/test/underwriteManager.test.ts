@@ -40,6 +40,7 @@ describe("UnderwriteManager Tests", function() {
     networkRegistry = (await upgrades.deployProxy(networkRegistryFactory, [
       [memberA.address, memberB.address, memberC.address],
       [operatorA.address],
+      deployer.address,
     ])) as NetworkRegistry
 
     const reSourceTokenFactory = await ethers.getContractFactory("ReSourceToken")
@@ -58,7 +59,7 @@ describe("UnderwriteManager Tests", function() {
 
     rUSD = (await upgrades.deployProxy(
       rUSDFactory,
-      [networkRegistry.address, 7, underwriteManager.address],
+      [networkRegistry.address, 7, underwriteManager.address, deployer.address],
       {
         initializer: "initializeRUSD",
       },

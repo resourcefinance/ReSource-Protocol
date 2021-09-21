@@ -1,4 +1,4 @@
-import { upgrades, ethers } from "hardhat"
+import { upgrades, ethers, getNamedAccounts } from "hardhat"
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/dist/src/signers"
 import { expect } from "chai"
 import chai from "chai"
@@ -32,10 +32,11 @@ describe("Network Registry Tests", function() {
 
   it("Successfully deploys a NetworkRegistry", async function() {
     const networkRegistryFactory = await ethers.getContractFactory("NetworkRegistry")
-
+    getNamedAccounts()
     networkRegistry = (await upgrades.deployProxy(networkRegistryFactory, [
       [memberA.address, memberB.address],
       [operatorA.address],
+      deployer.address,
     ])) as NetworkRegistry
 
     expect(networkRegistry.address).to.properAddress
@@ -50,11 +51,11 @@ describe("Network Registry Tests", function() {
   })
 
   it("Unsuccessfully add memberC by random wallet", async () => {
-    await expect(networkRegistry.connect(random).addMember(memberC.address)).to.be.reverted
+    await expect(networkRegistry.connect(random).addMembers([memberC.address])).to.be.reverted
   })
 
   it("Successfully add memberC by operatorA", async () => {
-    await expect(await networkRegistry.connect(operatorA).addMember(memberC.address)).to.emit(
+    await expect(await networkRegistry.connect(operatorA).addMembers([memberC.address])).to.emit(
       networkRegistry,
       "MemberAddition",
     )
@@ -101,12 +102,12 @@ describe("Network Registry Tests", function() {
   })
 
   it("Unsuccessfully add memberD by operatorB", async () => {
-    await expect(networkRegistry.connect(operatorB).addMember(memberD.address)).to.be.reverted
+    await expect(networkRegistry.connect(operatorB).addMembers([memberD.address])).to.be.reverted
     await expect(await networkRegistry.isMember(memberD.address)).to.be.false
   })
 
   it("Successfully add memberD by operatorA", async () => {
-    await expect(await networkRegistry.connect(operatorA).addMember(memberD.address)).to.emit(
+    await expect(await networkRegistry.connect(operatorA).addMembers([memberD.address])).to.emit(
       networkRegistry,
       "MemberAddition",
     )

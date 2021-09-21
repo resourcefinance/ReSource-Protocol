@@ -36,6 +36,7 @@ interface UnderwriteManagerInterface extends ethers.utils.Interface {
     "extendCreditLine(address,uint256)": FunctionFragment;
     "initialize(address)": FunctionFragment;
     "isActive()": FunctionFragment;
+    "isNetwork(address)": FunctionFragment;
     "owner()": FunctionFragment;
     "removeNetwork(address)": FunctionFragment;
     "renewCreditLine(address)": FunctionFragment;
@@ -96,6 +97,7 @@ interface UnderwriteManagerInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(functionFragment: "initialize", values: [string]): string;
   encodeFunctionData(functionFragment: "isActive", values?: undefined): string;
+  encodeFunctionData(functionFragment: "isNetwork", values: [string]): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "removeNetwork",
@@ -179,6 +181,7 @@ interface UnderwriteManagerInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "isActive", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "isNetwork", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "removeNetwork",
@@ -332,6 +335,8 @@ export class UnderwriteManager extends BaseContract {
 
     isActive(overrides?: CallOverrides): Promise<[boolean]>;
 
+    isNetwork(_address: string, overrides?: CallOverrides): Promise<[boolean]>;
+
     owner(overrides?: CallOverrides): Promise<[string]>;
 
     removeNetwork(
@@ -438,6 +443,8 @@ export class UnderwriteManager extends BaseContract {
 
   isActive(overrides?: CallOverrides): Promise<boolean>;
 
+  isNetwork(_address: string, overrides?: CallOverrides): Promise<boolean>;
+
   owner(overrides?: CallOverrides): Promise<string>;
 
   removeNetwork(
@@ -543,6 +550,8 @@ export class UnderwriteManager extends BaseContract {
     ): Promise<void>;
 
     isActive(overrides?: CallOverrides): Promise<boolean>;
+
+    isNetwork(_address: string, overrides?: CallOverrides): Promise<boolean>;
 
     owner(overrides?: CallOverrides): Promise<string>;
 
@@ -862,6 +871,8 @@ export class UnderwriteManager extends BaseContract {
 
     isActive(overrides?: CallOverrides): Promise<BigNumber>;
 
+    isNetwork(_address: string, overrides?: CallOverrides): Promise<BigNumber>;
+
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
     removeNetwork(
@@ -967,6 +978,11 @@ export class UnderwriteManager extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     isActive(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    isNetwork(
+      _address: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 

@@ -4,6 +4,7 @@ import "./CIP36.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
+
 contract UnderwriteManager is OwnableUpgradeable {
     /*
      *  Constants
@@ -186,6 +187,9 @@ contract UnderwriteManager is OwnableUpgradeable {
             return;
         }
         CreditLine storage creditLine = creditLines[underwriter][underwritee];
+        if (creditLine.collateral == 0) {
+            return;
+        }
         tryUpdateCreditLine(underwritee, underwriter);
         uint256 reward = calculateReward(txAmount);
         creditLine.reward += reward;
@@ -251,5 +255,14 @@ contract UnderwriteManager is OwnableUpgradeable {
         if ((block.timestamp - creditLines[underwriter][underwritee].issueDate) > CREDIT_RENEWAL + 1 days) {
             creditLines[underwriter][underwritee].issueDate = block.timestamp;
         }
+    }
+
+    /*
+     * Web3 call functions
+     */
+    /// @dev Returns list of networks.
+    /// @return List of networks.
+    function isNetwork(address _address) external view returns (bool) {
+        return networks[_address];
     }
 }

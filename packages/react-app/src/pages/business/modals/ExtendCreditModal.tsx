@@ -42,11 +42,11 @@ const validation = yup.object({
   collateral: yup
     .number()
     .required("collateral value is required")
-    .min(0),
+    .moreThan(0),
   credit: yup
     .number()
     .required("credit line is required")
-    .min(0),
+    .moreThan(0),
 })
 
 const ExtendCreditModal = ({ isOpen, onClose, business }: ExtendCreditModalProps) => {

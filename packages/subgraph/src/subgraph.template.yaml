@@ -22,7 +22,7 @@ dataSources:
       eventHandlers:
         - event: NewCreditLine((address,address,(uint256,address,uint256,uint256),uint256))
           handler: handleNewCreditLine
-        - event: ExtendCreditLine((address,address,(uint256,address,uint256,uint256),uint256))
+        - event: ExtendCreditLine((address,address,(uint256,address,uint256,uint256),uint256),uint256)
           handler: handleExtendCreditLine
         - event: CreditLineReward((address,address,(uint256,address,uint256,uint256)))
           handler: handleCreditLineReward

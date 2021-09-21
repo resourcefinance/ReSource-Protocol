@@ -218,7 +218,7 @@ interface UnderwriteManagerInterface extends ethers.utils.Interface {
     "CreditLineReward(tuple)": EventFragment;
     "CreditLineRewardClaimed(address,address[],uint256[],uint256)": EventFragment;
     "CreditLineWithdrawal(tuple)": EventFragment;
-    "ExtendCreditLine(tuple)": EventFragment;
+    "ExtendCreditLine(tuple,uint256)": EventFragment;
     "NewCreditLine(tuple)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
   };
@@ -707,7 +707,8 @@ export class UnderwriteManager extends BaseContract {
     >;
 
     ExtendCreditLine(
-      creditLine?: null
+      creditLine?: null,
+      additionalCollateral?: null
     ): TypedEventFilter<
       [
         [
@@ -730,7 +731,8 @@ export class UnderwriteManager extends BaseContract {
             reward: BigNumber;
           };
           creditLimit: BigNumber;
-        }
+        },
+        BigNumber
       ],
       {
         creditLine: [
@@ -754,6 +756,7 @@ export class UnderwriteManager extends BaseContract {
           };
           creditLimit: BigNumber;
         };
+        additionalCollateral: BigNumber;
       }
     >;
 

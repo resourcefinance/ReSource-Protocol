@@ -51,7 +51,10 @@ contract UnderwriteManager is OwnableUpgradeable {
      *  Events
      */
     event NewCreditLine(CreditLineLimitEvent creditLine);
-    event ExtendCreditLine(CreditLineLimitEvent creditLine);
+    event ExtendCreditLine(
+        CreditLineLimitEvent creditLine, 
+        uint256 additionalCollateral
+    );
     event CreditLineReward(CreditLineEvent creditLine);
     event CreditLineRewardClaimed(
         address underwriter,
@@ -145,7 +148,7 @@ contract UnderwriteManager is OwnableUpgradeable {
                 0
             ),
             creditLimit
-        ));
+        ), collateralAmount);
     }
 
     function withdraw(address underwritee) external validCreditRenewal(msg.sender, underwritee) notNull(underwritee) {

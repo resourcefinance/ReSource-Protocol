@@ -15,8 +15,6 @@ export function handleExtendCreditLine(event: ExtendCreditLine): void {
   creditLine.outstandingReward = event.params.creditLine.data.reward
   creditLine.save()
   let underwriter = Underwriter.load(event.params.creditLine.underwriter.toHex())
-  underwriter.totalCollateral = underwriter.totalCollateral.plus(
-    event.params.creditLine.data.collateral,
-  )
+  underwriter.totalCollateral = underwriter.totalCollateral.plus(event.params.additionalCollateral)
   underwriter.save()
 }

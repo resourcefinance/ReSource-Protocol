@@ -2,6 +2,7 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import "./iKeyWallet/IiKeyWalletDeployer.sol";
 
 /// @title NetworkRegistry - Allows Network Members to be added and removed by Network Operators.
 /// @author Bridger Zoske - <bridger@resourcenetwork.co>
@@ -13,6 +14,7 @@ contract NetworkRegistry is OwnableUpgradeable  {
     event MemberRemoval(address indexed member);
     event OperatorAddition(address indexed operator);
     event OperatorRemoval(address indexed operator);
+    event WalletDeployed(address newMember);
 
     /*
      *  Storage
@@ -21,6 +23,7 @@ contract NetworkRegistry is OwnableUpgradeable  {
     mapping(address => bool) public isOperator;
     address[] public operators;
     address[] public members;
+    address walletDeployer;
 
     /*
      *  Modifiers
@@ -61,7 +64,7 @@ contract NetworkRegistry is OwnableUpgradeable  {
     /// @dev Contract initialzer sets initial members and initial operators.
     /// @param _members List of initial members.
     /// @param _operators List of initial operators.
-    function initialize(address[] memory _members, address[] memory _operators) external virtual initializer {
+    function initialize(address[] memory _members, address[] memory _operators, address _walletDeployer) external virtual initializer {
         __Ownable_init();
         for (uint256 i = 0; i < _members.length; i++) {
             require(!isMember[_members[i]] && _members[i] != address(0));
@@ -74,6 +77,7 @@ contract NetworkRegistry is OwnableUpgradeable  {
         members = _members;
         operators = _operators;
         operators.push(owner());
+        walletDeployer = _walletDeployer;
         isOperator[owner()] = true;
     }
 
@@ -126,6 +130,18 @@ contract NetworkRegistry is OwnableUpgradeable  {
             }
         operators.pop();
         emit OperatorRemoval(operator);
+    }
+
+    function deployNewWallet(
+        address[] memory _clients,
+        address[] memory _guardians, 
+        address _coSigner,
+        uint256 _required) public onlyOperator(msg.sender) {
+        address newWallet = IiKeyWalletDeployer(walletDeployer).deployWallet(_clients, _guardians, _coSigner, _required);
+        OwnableUpgradeable(newWallet).transferOwnership(owner());
+        isMember[newWallet] = true;
+        members.push(newWallet);
+        emit WalletDeployed(newWallet);
     }
 
     /*

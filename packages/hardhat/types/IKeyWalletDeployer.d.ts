@@ -19,42 +19,24 @@ import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 import { TypedEventFilter, TypedEvent, TypedListener } from "./commons";
 
-interface WalletRegistryInterface extends ethers.utils.Interface {
+interface IKeyWalletDeployerInterface extends ethers.utils.Interface {
   functions: {
-    "createWallet(address[],uint256)": FunctionFragment;
-    "initialize(address[],address)": FunctionFragment;
-    "isRegistered(address)": FunctionFragment;
-    "operator()": FunctionFragment;
+    "deployWallet(address[],address[],address,uint256)": FunctionFragment;
+    "initialize()": FunctionFragment;
     "owner()": FunctionFragment;
-    "registerWallets(address[])": FunctionFragment;
-    "removeWallet(address)": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
-    "wallets(uint256)": FunctionFragment;
   };
 
   encodeFunctionData(
-    functionFragment: "createWallet",
-    values: [string[], BigNumberish]
+    functionFragment: "deployWallet",
+    values: [string[], string[], string, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "initialize",
-    values: [string[], string]
+    values?: undefined
   ): string;
-  encodeFunctionData(
-    functionFragment: "isRegistered",
-    values: [string]
-  ): string;
-  encodeFunctionData(functionFragment: "operator", values?: undefined): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "registerWallets",
-    values: [string[]]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "removeWallet",
-    values: [string]
-  ): string;
   encodeFunctionData(
     functionFragment: "renounceOwnership",
     values?: undefined
@@ -63,30 +45,13 @@ interface WalletRegistryInterface extends ethers.utils.Interface {
     functionFragment: "transferOwnership",
     values: [string]
   ): string;
-  encodeFunctionData(
-    functionFragment: "wallets",
-    values: [BigNumberish]
-  ): string;
 
   decodeFunctionResult(
-    functionFragment: "createWallet",
+    functionFragment: "deployWallet",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "isRegistered",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "operator", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "registerWallets",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "removeWallet",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(
     functionFragment: "renounceOwnership",
     data: BytesLike
@@ -95,22 +60,17 @@ interface WalletRegistryInterface extends ethers.utils.Interface {
     functionFragment: "transferOwnership",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "wallets", data: BytesLike): Result;
 
   events: {
     "OwnershipTransferred(address,address)": EventFragment;
-    "WalletAddition(address[])": EventFragment;
-    "WalletCreation(address)": EventFragment;
-    "WalletRemoval(address)": EventFragment;
+    "WalletDeployed(address)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "WalletAddition"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "WalletCreation"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "WalletRemoval"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "WalletDeployed"): EventFragment;
 }
 
-export class WalletRegistry extends BaseContract {
+export class IKeyWalletDeployer extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
@@ -151,36 +111,22 @@ export class WalletRegistry extends BaseContract {
     toBlock?: string | number | undefined
   ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
 
-  interface: WalletRegistryInterface;
+  interface: IKeyWalletDeployerInterface;
 
   functions: {
-    createWallet(
-      _owners: string[],
+    deployWallet(
+      _clients: string[],
+      _guardians: string[],
+      _coSigner: string,
       _required: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     initialize(
-      _wallets: string[],
-      operatorAddress: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
-
-    isRegistered(arg0: string, overrides?: CallOverrides): Promise<[boolean]>;
-
-    operator(overrides?: CallOverrides): Promise<[string]>;
 
     owner(overrides?: CallOverrides): Promise<[string]>;
-
-    registerWallets(
-      _wallets: string[],
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    removeWallet(
-      wallet: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
 
     renounceOwnership(
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -190,37 +136,21 @@ export class WalletRegistry extends BaseContract {
       newOwner: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
-
-    wallets(arg0: BigNumberish, overrides?: CallOverrides): Promise<[string]>;
   };
 
-  createWallet(
-    _owners: string[],
+  deployWallet(
+    _clients: string[],
+    _guardians: string[],
+    _coSigner: string,
     _required: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   initialize(
-    _wallets: string[],
-    operatorAddress: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
-
-  isRegistered(arg0: string, overrides?: CallOverrides): Promise<boolean>;
-
-  operator(overrides?: CallOverrides): Promise<string>;
 
   owner(overrides?: CallOverrides): Promise<string>;
-
-  registerWallets(
-    _wallets: string[],
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  removeWallet(
-    wallet: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
 
   renounceOwnership(
     overrides?: Overrides & { from?: string | Promise<string> }
@@ -231,33 +161,18 @@ export class WalletRegistry extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  wallets(arg0: BigNumberish, overrides?: CallOverrides): Promise<string>;
-
   callStatic: {
-    createWallet(
-      _owners: string[],
+    deployWallet(
+      _clients: string[],
+      _guardians: string[],
+      _coSigner: string,
       _required: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<void>;
+    ): Promise<string>;
 
-    initialize(
-      _wallets: string[],
-      operatorAddress: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    isRegistered(arg0: string, overrides?: CallOverrides): Promise<boolean>;
-
-    operator(overrides?: CallOverrides): Promise<string>;
+    initialize(overrides?: CallOverrides): Promise<void>;
 
     owner(overrides?: CallOverrides): Promise<string>;
-
-    registerWallets(
-      _wallets: string[],
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    removeWallet(wallet: string, overrides?: CallOverrides): Promise<void>;
 
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
 
@@ -265,8 +180,6 @@ export class WalletRegistry extends BaseContract {
       newOwner: string,
       overrides?: CallOverrides
     ): Promise<void>;
-
-    wallets(arg0: BigNumberish, overrides?: CallOverrides): Promise<string>;
   };
 
   filters: {
@@ -278,48 +191,26 @@ export class WalletRegistry extends BaseContract {
       { previousOwner: string; newOwner: string }
     >;
 
-    WalletAddition(
-      wallet?: string[] | null
-    ): TypedEventFilter<[string[]], { wallet: string[] }>;
-
-    WalletCreation(
-      wallet?: null
-    ): TypedEventFilter<[string], { wallet: string }>;
-
-    WalletRemoval(
-      wallet?: string | null
-    ): TypedEventFilter<[string], { wallet: string }>;
+    WalletDeployed(
+      multiSig?: null
+    ): TypedEventFilter<[string], { multiSig: string }>;
   };
 
   estimateGas: {
-    createWallet(
-      _owners: string[],
+    deployWallet(
+      _clients: string[],
+      _guardians: string[],
+      _coSigner: string,
       _required: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     initialize(
-      _wallets: string[],
-      operatorAddress: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
-
-    isRegistered(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
-
-    operator(overrides?: CallOverrides): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
-    registerWallets(
-      _wallets: string[],
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    removeWallet(
-      wallet: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
     renounceOwnership(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
@@ -328,41 +219,22 @@ export class WalletRegistry extends BaseContract {
       newOwner: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
-
-    wallets(arg0: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    createWallet(
-      _owners: string[],
+    deployWallet(
+      _clients: string[],
+      _guardians: string[],
+      _coSigner: string,
       _required: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     initialize(
-      _wallets: string[],
-      operatorAddress: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
-
-    isRegistered(
-      arg0: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    operator(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    registerWallets(
-      _wallets: string[],
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    removeWallet(
-      wallet: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
 
     renounceOwnership(
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -371,11 +243,6 @@ export class WalletRegistry extends BaseContract {
     transferOwnership(
       newOwner: string,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    wallets(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
   };
 }

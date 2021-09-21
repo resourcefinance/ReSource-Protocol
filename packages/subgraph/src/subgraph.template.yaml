@@ -55,9 +55,9 @@ dataSources:
     name: ReSourceToken
     network: "{{network}}"
     source:
-      address: "{{ResourceTokenAddress}}"
+      address: "{{ReSourceTokenAddress}}"
       abi: ReSourceToken
-      startBlock: {{ResourceTokenStartBlock}}
+      startBlock: {{ReSourceTokenStartBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4

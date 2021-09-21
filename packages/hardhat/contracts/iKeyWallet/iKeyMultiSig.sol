@@ -3,10 +3,9 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 
-
-/// @title Multisignature wallet - Allows multiple parties to agree on transactions before execution.
-/// @author Stefan George - <stefan.george@consensys.net>
-contract MultiSigWallet is OwnableUpgradeable {
+/// @title Identikey compatible Multisignature wallet
+/// @author Bridger Zoske - <bridger@resourcenetwork.co>
+contract iKeyMultiSig is OwnableUpgradeable {
     /*
      *  Events
      */
@@ -16,8 +15,10 @@ contract MultiSigWallet is OwnableUpgradeable {
     event Execution(uint256 indexed transactionId);
     event ExecutionFailure(uint256 indexed transactionId);
     event Deposit(address indexed sender, uint256 value);
-    event OwnerAddition(address indexed owner);
-    event OwnerRemoval(address indexed owner);
+    event ClientAddition(address indexed client);
+    event ClientRemoval(address indexed client);
+    event GuardianAddition(address indexed guardian);
+    event GuardianRemoval(address indexed guardian);
     event RequirementChange(uint256 required);
 
     /*
@@ -30,7 +31,9 @@ contract MultiSigWallet is OwnableUpgradeable {
      */
     mapping(uint256 => Transaction) public transactions;
     mapping(uint256 => mapping(address => bool)) public confirmations;
-    mapping(address => bool) public isOwner;
+    mapping(address => bool) public clients;
+    mapping(address => bool) public guardians;
+    address public coSigner;
     address[] public owners;
     uint256 public required;
     uint256 public transactionCount;
@@ -47,18 +50,44 @@ contract MultiSigWallet is OwnableUpgradeable {
     /*
      *  Modifiers
      */
+
+    modifier isOwner(address owner) {
+        require(clients[owner] || guardians[owner] || owner == coSigner);
+        _;
+    }
+    
     modifier onlyWallet() {
         require(msg.sender == address(this));
         _;
     }
 
-    modifier ownerDoesNotExist(address owner) {
-        require(!isOwner[owner]);
+    modifier isNotClient(address client) {
+        require(!clients[client]);
         _;
     }
 
-    modifier ownerExists(address owner) {
-        require(isOwner[owner]);
+    modifier isNotGuardian(address guardian) {
+        require(!guardians[guardian]);
+        _;
+    }
+
+    modifier isClient(address client) {
+        require(clients[client]);
+        _;
+    }
+
+    modifier isCoSigner(address _coSigner) {
+        require(_coSigner == coSigner);
+        _;
+    }
+
+    modifier isNotCoSigner(address _coSigner) {
+        require(_coSigner != coSigner);
+        _;
+    }
+    
+    modifier isGuardian(address guardian) {
+        require(guardians[guardian]);
         _;
     }
 
@@ -101,36 +130,77 @@ contract MultiSigWallet is OwnableUpgradeable {
      * Public functions
      */
     /// @dev Contract initializer sets initial owners and required number of confirmations.
-    /// @param _owners List of initial owners.
+    /// @param _clients List of initial clients.
+    /// @param _guardians List of initial guardians.
+    /// @param _coSigner the coSigner of the wallet. This wallet is immutable.
     /// @param _required Number of required confirmations.
-    function initialize(address[] memory _owners, uint256 _required) external virtual initializer validRequirement(_owners.length, _required) {
+    function initialize(
+        address[] memory _clients,
+        address[] memory _guardians, 
+        address _coSigner,
+        uint256 _required) 
+        external virtual initializer validRequirement(_clients.length + _guardians.length + 1, _required) {
         __Ownable_init();
-        for (uint256 i = 0; i < _owners.length; i++) {
-            require(!isOwner[_owners[i]] && _owners[i] != address(0));
-            isOwner[_owners[i]] = true;
+        for (uint256 i = 0; i < _clients.length; i++) {
+            require(!clients[_clients[i]] && _clients[i] != address(0));
+            clients[_clients[i]] = true;
+            owners.push(_clients[i]);
         }
-        owners = _owners;
+        for (uint256 i = 0; i < _guardians.length; i++) {
+            require(!guardians[_guardians[i]] && _guardians[i] != address(0));
+            guardians[_guardians[i]] = true;
+            owners.push(_guardians[i + _clients.length - 1]);
+        }
+        coSigner = _coSigner;
+        owners.push(_coSigner);
         required = _required;
     }
 
-    /// @dev Allows to add a new owner. Transaction has to be sent by wallet.
-    /// @param owner Address of new owner.
-    function addOwner(address owner)
+    /// @dev Allows to add a new client. Transaction has to be sent by wallet.
+    /// @param client Address of new client.
+    function addClient(address client)
         external
         onlyWallet
-        ownerDoesNotExist(owner)
-        notNull(owner)
+        isNotClient(client)
+        notNull(client)
         validRequirement(owners.length + 1, required)
     {
-        isOwner[owner] = true;
-        owners.push(owner);
-        emit OwnerAddition(owner);
+        clients[client] = true;
+        owners.push(client);
+        emit ClientAddition(client);
     }
 
-    /// @dev Allows to remove an owner. Transaction has to be sent by wallet.
-    /// @param owner Address of owner.
-    function removeOwner(address owner) external onlyWallet ownerExists(owner) {
-        isOwner[owner] = false;
+    /// @dev Allows to add a new guardian. Transaction has to be sent by wallet.
+    /// @param guardian Address of new guardian.
+    function addGuardian(address guardian)
+        external
+        onlyWallet
+        isNotGuardian(guardian)
+        notNull(guardian)
+        validRequirement(owners.length + 1, required)
+    {
+        guardians[guardian] = true;
+        owners.push(guardian);
+        emit GuardianAddition(guardian);
+    }
+
+    /// @dev Allows to remove a client. Transaction has to be sent by wallet.
+    /// @param client Address of client.
+    function removeClient(address client) external onlyWallet isClient(client) {
+        clients[client] = false;
+        removeOwner(client);
+        emit ClientRemoval(client);
+    }
+
+    /// @dev Allows to remove a guardian. Transaction has to be sent by wallet.
+    /// @param guardian Address of guardian.
+    function removeGuardian(address guardian) external onlyWallet isGuardian(guardian) {
+        guardians[guardian] = false;
+        removeOwner(guardian);
+        emit GuardianRemoval(guardian);
+    }
+
+    function removeOwner(address owner) internal {
         for (uint256 i = 0; i < owners.length - 1; i++)
             if (owners[i] == owner) {
                 owners[i] = owners[owners.length - 1];
@@ -138,27 +208,46 @@ contract MultiSigWallet is OwnableUpgradeable {
             }
         owners.pop();
         if (required > owners.length) changeRequirement(owners.length);
-        emit OwnerRemoval(owner);
     }
 
-    /// @dev Allows to replace an owner with a new owner. Transaction has to be sent by wallet.
-    /// @param owner Address of owner to be replaced.
-    /// @param newOwner Address of new owner.
-    function replaceOwner(address owner, address newOwner)
+    /// @dev Allows to replace an client with a new client. Transaction has to be sent by wallet.
+    /// @param client Address of client to be replaced.
+    /// @param newClient Address of new client.
+    function replaceClient(address client, address newClient)
         external
         onlyWallet
-        ownerExists(owner)
-        ownerDoesNotExist(newOwner)
+        isClient(client)
+        isNotClient(newClient)
     {
         for (uint256 i = 0; i < owners.length; i++)
-            if (owners[i] == owner) {
-                owners[i] = newOwner;
+            if (owners[i] == client) {
+                owners[i] = newClient;
                 break;
             }
-        isOwner[owner] = false;
-        isOwner[newOwner] = true;
-        emit OwnerRemoval(owner);
-        emit OwnerAddition(newOwner);
+        clients[client] = false;
+        clients[newClient] = true;
+        emit ClientRemoval(client);
+        emit ClientAddition(newClient);
+    }
+
+    /// @dev Allows to replace an guardian with a new guardian. Transaction has to be sent by wallet.
+    /// @param guardian Address of guardian to be replaced.
+    /// @param newGuardian Address of new guardian.
+    function replaceGuardian(address guardian, address newGuardian)
+        external
+        onlyWallet
+        isGuardian(guardian)
+        isNotGuardian(newGuardian)
+    {
+        for (uint256 i = 0; i < owners.length; i++)
+            if (owners[i] == guardian) {
+                owners[i] = newGuardian;
+                break;
+            }
+        guardians[guardian] = false;
+        guardians[newGuardian] = true;
+        emit GuardianRemoval(guardian);
+        emit GuardianAddition(newGuardian);
     }
 
     /// @dev Allows to change the number of required confirmations. Transaction has to be sent by wallet.
@@ -166,6 +255,17 @@ contract MultiSigWallet is OwnableUpgradeable {
     function changeRequirement(uint256 _required) public onlyWallet validRequirement(owners.length, _required) {
         required = _required;
         emit RequirementChange(_required);
+    }
+
+    /// @dev Allows to change the coSigner owner. Transaction has to be sent by coSigner address.
+    /// @param newCoSigner the address of the new coSigner.
+    function replaceCoSigner(address newCoSigner) public isCoSigner(msg.sender) isNotCoSigner(newCoSigner) {
+        for (uint256 i = 0; i < owners.length; i++)
+            if (owners[i] == newCoSigner) {
+                owners[i] = newCoSigner;
+                break;
+            }
+        coSigner = newCoSigner;
     }
 
     /**
@@ -312,7 +412,7 @@ contract MultiSigWallet is OwnableUpgradeable {
     /// @param transactionId Transaction ID.
     function confirmTransaction(uint256 transactionId, address signer)
         internal
-        ownerExists(signer)
+        isOwner(signer)
         transactionExists(transactionId)
         notConfirmed(transactionId, signer)
     {
@@ -340,7 +440,7 @@ contract MultiSigWallet is OwnableUpgradeable {
     /// @param transactionId Transaction ID.
     function revokeConfirmation(uint256 transactionId, address signer)
         internal
-        ownerExists(signer)
+        isOwner(signer)
         confirmed(transactionId, signer)
         notExecuted(transactionId)
     {
@@ -367,7 +467,7 @@ contract MultiSigWallet is OwnableUpgradeable {
     /// @param transactionId Transaction ID.
     function executeTransaction(uint256 transactionId, address signer)
         internal
-        ownerExists(signer)
+        isOwner(signer)
         confirmed(transactionId, signer)
         notExecuted(transactionId)
     {
@@ -395,9 +495,7 @@ contract MultiSigWallet is OwnableUpgradeable {
             let x := mload(0x40) // "Allocate" memory for output (0x40 is where "free memory" pointer is stored by convention)
             let d := add(data, 32) // First 32 bytes are the padded length of data, so exclude that
             result := call(
-                gas(), // 34710 is the value that solidity is currently emitting
-                // It includes callGas (700) + callVeryLow (3, to pay for SUB) + callValueTransferGas (9000) +
-                // callNewAccountGas (25000, in case the destination address does not exist and needs creating)
+                gas(),
                 destination,
                 value,
                 d,
@@ -492,21 +590,21 @@ contract MultiSigWallet is OwnableUpgradeable {
     /// @param pending Include pending transactions.
     /// @param executed Include executed transactions.
     /// @return _transactionIds Returns array of transaction IDs.
-    function getTransactionIds(
-        uint256 from,
-        uint256 to,
-        bool pending,
-        bool executed
-    ) external view returns (uint256[] memory _transactionIds) {
-        uint256[] memory transactionIdsTemp = new uint256[](transactionCount);
-        uint256 count = 0;
-        uint256 i;
-        for (i = 0; i < transactionCount; i++)
-            if ((pending && !transactions[i].executed) || (executed && transactions[i].executed)) {
-                transactionIdsTemp[count] = i;
-                count += 1;
-            }
-        _transactionIds = new uint256[](to - from);
-        for (i = from; i < to; i++) _transactionIds[i - from] = transactionIdsTemp[i];
-    }
+    // function getTransactionIds(
+    //     uint256 from,
+    //     uint256 to,
+    //     bool pending,
+    //     bool executed
+    // ) external view returns (uint256[] memory _transactionIds) {
+    //     uint256[] memory transactionIdsTemp = new uint256[](transactionCount);
+    //     uint256 count = 0;
+    //     uint256 i;
+    //     for (i = 0; i < transactionCount; i++)
+    //         if ((pending && !transactions[i].executed) || (executed && transactions[i].executed)) {
+    //             transactionIdsTemp[count] = i;
+    //             count += 1;
+    //         }
+    //     _transactionIds = new uint256[](to - from);
+    //     for (i = from; i < to; i++) _transactionIds[i - from] = transactionIdsTemp[i];
+    // }
 }

@@ -3,7 +3,7 @@ import { Contract, ContractFactory, ethers } from "ethers"
 import { HardhatRuntimeEnvironment } from "hardhat/types"
 import { retry } from "ts-retry"
 
-const formatDeploymentReceipt = (deployTransaction) => {
+export const formatDeploymentReceipt = (deployTransaction) => {
   return {
     from: deployTransaction.from,
     transactionHash: deployTransaction.hash,

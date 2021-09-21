@@ -23,9 +23,10 @@ interface NetworkRegistryInterface extends ethers.utils.Interface {
   functions: {
     "addMembers(address[])": FunctionFragment;
     "addOperator(address)": FunctionFragment;
+    "deployNewWallet(address[],address[],address,uint256)": FunctionFragment;
     "getMembers()": FunctionFragment;
     "getOperators()": FunctionFragment;
-    "initialize(address[],address[])": FunctionFragment;
+    "initialize(address[],address[],address)": FunctionFragment;
     "isMember(address)": FunctionFragment;
     "isOperator(address)": FunctionFragment;
     "members(uint256)": FunctionFragment;
@@ -43,6 +44,10 @@ interface NetworkRegistryInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(functionFragment: "addOperator", values: [string]): string;
   encodeFunctionData(
+    functionFragment: "deployNewWallet",
+    values: [string[], string[], string, BigNumberish]
+  ): string;
+  encodeFunctionData(
     functionFragment: "getMembers",
     values?: undefined
   ): string;
@@ -52,7 +57,7 @@ interface NetworkRegistryInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "initialize",
-    values: [string[], string[]]
+    values: [string[], string[], string]
   ): string;
   encodeFunctionData(functionFragment: "isMember", values: [string]): string;
   encodeFunctionData(functionFragment: "isOperator", values: [string]): string;
@@ -85,6 +90,10 @@ interface NetworkRegistryInterface extends ethers.utils.Interface {
   decodeFunctionResult(functionFragment: "addMembers", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "addOperator",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "deployNewWallet",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "getMembers", data: BytesLike): Result;
@@ -121,6 +130,7 @@ interface NetworkRegistryInterface extends ethers.utils.Interface {
     "OperatorAddition(address)": EventFragment;
     "OperatorRemoval(address)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
+    "WalletDeployed(address)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "MemberAddition"): EventFragment;
@@ -128,6 +138,7 @@ interface NetworkRegistryInterface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: "OperatorAddition"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OperatorRemoval"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "WalletDeployed"): EventFragment;
 }
 
 export class NetworkRegistry extends BaseContract {
@@ -184,6 +195,14 @@ export class NetworkRegistry extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    deployNewWallet(
+      _clients: string[],
+      _guardians: string[],
+      _coSigner: string,
+      _required: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     getMembers(overrides?: CallOverrides): Promise<[string[]]>;
 
     getOperators(overrides?: CallOverrides): Promise<[string[]]>;
@@ -191,6 +210,7 @@ export class NetworkRegistry extends BaseContract {
     initialize(
       _members: string[],
       _operators: string[],
+      _walletDeployer: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -234,6 +254,14 @@ export class NetworkRegistry extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  deployNewWallet(
+    _clients: string[],
+    _guardians: string[],
+    _coSigner: string,
+    _required: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   getMembers(overrides?: CallOverrides): Promise<string[]>;
 
   getOperators(overrides?: CallOverrides): Promise<string[]>;
@@ -241,6 +269,7 @@ export class NetworkRegistry extends BaseContract {
   initialize(
     _members: string[],
     _operators: string[],
+    _walletDeployer: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -278,6 +307,14 @@ export class NetworkRegistry extends BaseContract {
 
     addOperator(operator: string, overrides?: CallOverrides): Promise<void>;
 
+    deployNewWallet(
+      _clients: string[],
+      _guardians: string[],
+      _coSigner: string,
+      _required: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     getMembers(overrides?: CallOverrides): Promise<string[]>;
 
     getOperators(overrides?: CallOverrides): Promise<string[]>;
@@ -285,6 +322,7 @@ export class NetworkRegistry extends BaseContract {
     initialize(
       _members: string[],
       _operators: string[],
+      _walletDeployer: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -334,6 +372,10 @@ export class NetworkRegistry extends BaseContract {
       [string, string],
       { previousOwner: string; newOwner: string }
     >;
+
+    WalletDeployed(
+      newMember?: null
+    ): TypedEventFilter<[string], { newMember: string }>;
   };
 
   estimateGas: {
@@ -347,6 +389,14 @@ export class NetworkRegistry extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    deployNewWallet(
+      _clients: string[],
+      _guardians: string[],
+      _coSigner: string,
+      _required: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     getMembers(overrides?: CallOverrides): Promise<BigNumber>;
 
     getOperators(overrides?: CallOverrides): Promise<BigNumber>;
@@ -354,6 +404,7 @@ export class NetworkRegistry extends BaseContract {
     initialize(
       _members: string[],
       _operators: string[],
+      _walletDeployer: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -401,6 +452,14 @@ export class NetworkRegistry extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
+    deployNewWallet(
+      _clients: string[],
+      _guardians: string[],
+      _coSigner: string,
+      _required: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
     getMembers(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     getOperators(overrides?: CallOverrides): Promise<PopulatedTransaction>;
@@ -408,6 +467,7 @@ export class NetworkRegistry extends BaseContract {
     initialize(
       _members: string[],
       _operators: string[],
+      _walletDeployer: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 

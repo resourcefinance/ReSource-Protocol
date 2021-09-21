@@ -5,13 +5,6 @@ import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts/utils/math/Math.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC20/extensions/ERC20BurnableUpgradeable.sol";
 
-library ExtraMath {
-    function toUInt128(uint256 _a) internal pure returns (uint128) {
-        require(_a < 2**128 - 1, "uin128 overflow");
-        return uint128(_a);
-    }
-}
-
 contract CIP36 is OwnableUpgradeable, ERC20BurnableUpgradeable {
     using ExtraMath for *;
 
@@ -94,5 +87,12 @@ contract CIP36 is OwnableUpgradeable, ERC20BurnableUpgradeable {
         }
         _members[_to].creditBalance = (_memberTo.creditBalance - _repay).toUInt128();
         _burn(_to, _repay);
+    }
+}
+
+library ExtraMath {
+    function toUInt128(uint256 _a) internal pure returns (uint128) {
+        require(_a < 2**128 - 1, "uin128 overflow");
+        return uint128(_a);
     }
 }

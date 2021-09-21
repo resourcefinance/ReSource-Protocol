@@ -1,1 +1,1 @@
-export { handleSOURCEBalanceUpdate } from "./SOURCEBalanceUpdate"
+export { handleSourceBalanceUpdate } from "./SourceBalanceUpdate"

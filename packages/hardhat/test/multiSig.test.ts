@@ -1,4 +1,4 @@
-import { ethers, upgrades } from "hardhat"
+import { ethers, upgrades, getNamedAccounts } from "hardhat"
 import { expect } from "chai"
 import { MultiSigWallet } from "../types/MultiSigWallet"
 import chai from "chai"
@@ -15,7 +15,6 @@ describe("MultiSig Tests", function() {
   let ownerC: SignerWithAddress
   let ownerD: SignerWithAddress
   let multiSigWallet: MultiSigWallet
-  let walletRegistry: WalletRegistry
 
   before(async function() {
     const accounts = await ethers.getSigners()
@@ -27,30 +26,13 @@ describe("MultiSig Tests", function() {
   })
 
   it("Successfully deploys a walletRegistry and a multiSig wallet contract with ownerA and ownerB", async function() {
-    const walletRegistryFactory = await ethers.getContractFactory("WalletRegistry")
+    const walletFactory = await ethers.getContractFactory("MultiSigWallet")
+    const { relaySigner } = await getNamedAccounts()
 
-    walletRegistry = (await upgrades.deployProxy(walletRegistryFactory, [[]])) as WalletRegistry
-
-    expect(walletRegistry.address).to.properAddress
-
-    const creationResult = await (
-      await walletRegistry.createWallet([ownerA.address, ownerB.address], 2)
-    ).wait()
-
-    const multiSigWalletAddress = creationResult.events?.find(
-      (e: any) => e.eventSignature == "WalletCreation(address)",
-    )?.args?.wallet
-
-    expect(multiSigWalletAddress).to.properAddress
-
-    multiSigWallet = new ethers.Contract(
-      multiSigWalletAddress,
-      MultiSigWallet__factory.createInterface(),
-      deployer,
-    ) as MultiSigWallet
-
-    console.log(await multiSigWallet.owner())
-    console.log(walletRegistry.address)
+    multiSigWallet = (await upgrades.deployProxy(walletFactory, [
+      [ownerA.address, ownerB.address],
+      2,
+    ])) as MultiSigWallet
 
     const owners = await multiSigWallet.getOwners()
     expect(owners).to.contain(ownerA.address)
@@ -106,9 +88,12 @@ describe("MultiSig Tests", function() {
     const ownerBSig = ethers.utils.joinSignature(await ownerB.signMessage(ownerBHashToSign))
 
     // 3. confirmTransactionByRelay using ownerB wallet
-
     await expect(
-      multiSigWallet.confirmTransactionByRelay(transactionId, ownerBSig, ownerB.address),
+      multiSigWallet.confirmTransactionByRelay(
+        transactionId,
+        ownerBSig,
+        ownerB.address.toLowerCase(),
+      ),
     ).to.emit(multiSigWallet, "Execution")
 
     const owners = await multiSigWallet.getOwners()

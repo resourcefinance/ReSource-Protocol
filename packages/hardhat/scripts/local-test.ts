@@ -54,7 +54,7 @@ async function test() {
     const curMembers = await networkRegistry.getMembers()
     const member = ethers.Wallet.createRandom()
     if (!curMembers.includes(member.address))
-      await (await networkRegistry.connect(deployer).addMember(member.address)).wait()
+      await (await networkRegistry.connect(deployer).addMembers([member.address])).wait()
 
     const underwriter = ethers.Wallet.createRandom().connect(ethers.provider)
     const tx = {

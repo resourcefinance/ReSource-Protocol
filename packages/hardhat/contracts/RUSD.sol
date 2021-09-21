@@ -4,6 +4,7 @@ pragma solidity ^0.8.0;
 import "./CIP36.sol";
 import "./NetworkRegistry.sol";
 import "./UnderwriteManager.sol";
+import "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
 contract RUSD is CIP36 {
@@ -55,13 +56,13 @@ contract RUSD is CIP36 {
     function initializeRUSD(
         address registryAddress,
         uint256 _expiration,
-        address underwriteManagerAddress,
+        address _underwriteManager,
         address operatorAddress
     ) external virtual initializer {
-        registry = NetworkRegistry(registryAddress);
-        underwriteManager = UnderwriteManager(underwriteManagerAddress);
-        operator = operatorAddress;
         CIP36.initialize("rUSD", "rUSD");
+        registry = NetworkRegistry(registryAddress);
+        underwriteManager = UnderwriteManager(_underwriteManager);
+        operator = operatorAddress;
         restrictionState = Restriction.REGISTERED;
         restrictionRenewal = block.timestamp;
         expirationSeconds = _expiration;

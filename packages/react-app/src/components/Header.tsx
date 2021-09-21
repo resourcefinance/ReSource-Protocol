@@ -6,6 +6,7 @@ import { useHistory, useLocation } from "react-router-dom"
 import { useWeb3Context } from "web3-react"
 import Button from "./Button"
 import { RusdGlyphGradient } from "./glyph/MuGlyph"
+import AddressInfo from "./wallet/AddressInfo"
 import WalletInfo from "./wallet/WalletInfo"
 
 export const Header = () => {
@@ -43,7 +44,12 @@ export const Header = () => {
             Portfolio
           </Button>
         </Center>
-        {context.library && <WalletInfo />}
+        {context.library && (
+          <>
+            <WalletInfo />
+            <AddressInfo />
+          </>
+        )}
       </HStack>
     </Flex>
   )

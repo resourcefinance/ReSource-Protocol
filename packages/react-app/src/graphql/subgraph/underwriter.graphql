@@ -1,6 +1,8 @@
-query getTotalCollateral($id: ID!) {
+query getUnderwriterWalletInfo($id: ID!) {
   underwriter(id: $id) {
     totalCollateral
+    totalRewards
+    balance
   }
 }
 

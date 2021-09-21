@@ -1,4 +1,4 @@
-import { RefetchQueriesInclude, useApolloClient } from "@apollo/client"
+import { RefetchQueriesInclude, useApolloClient, WatchQueryFetchPolicy } from "@apollo/client"
 import { atom, useSetRecoilState } from "recoil"
 import { delay } from "./delay"
 
@@ -23,6 +23,11 @@ export const useRefetchData = () => {
     ])
   }
 }
+
+export const refetchQueriesAtom = atom({
+  key: "refetchQueriesAtom",
+  default: {} as Record<string, WatchQueryFetchPolicy>,
+})
 
 export const useRefetchQueries = () => {
   const client = useApolloClient()

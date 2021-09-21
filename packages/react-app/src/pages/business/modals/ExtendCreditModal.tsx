@@ -16,9 +16,8 @@ import * as yup from "yup"
 import Icon from "../../../components/Icon"
 import { Business } from "../../../generated/resource-network/graphql"
 import {
-  GetCreditLinesDocument,
-  GetTotalCollateralDocument,
   GetUnderwriteeDocument,
+  GetUnderwriterWalletInfoDocument,
   useGetUnderwriteeQuery,
 } from "../../../generated/subgraph/graphql"
 import { parseRPCError } from "../../../services/errors/rpcErrors"
@@ -26,7 +25,7 @@ import { useUnderwriteManagerContract } from "../../../services/web3/contracts"
 import { parseEther } from "../../../services/web3/utils/etherUtils"
 import { waitForTxEvent } from "../../../services/web3/utils/waitForTxEvent"
 import { ModalProps } from "../../../utils/types"
-import { useRefetchData } from "../../../utils/useRefetchData"
+import { useRefetchQueries } from "../../../utils/useRefetchData"
 import { useTxToast } from "../../../utils/useTxToast"
 import ApproveMuButton from "./components/ApproveMuButton"
 import { BusinessHeader } from "./components/BusinessHeader"
@@ -56,7 +55,7 @@ const ExtendCreditModal = ({ isOpen, onClose, business }: ExtendCreditModalProps
   const { extendCreditLine } = useUnderwriteManagerContract()
   const underwritee = business.wallet?.multiSigAddress?.toLowerCase()
   const [isApproved] = useIsApprovedState()
-  const refetchData = useRefetchData()
+  const refetch = useRefetchQueries()
   const toast = useTxToast()
 
   const formik = useFormik({
@@ -70,15 +69,7 @@ const ExtendCreditModal = ({ isOpen, onClose, business }: ExtendCreditModalProps
         const tx = await extendCreditLine({ collateralAmount, underwritee: underwritee! })
         const confirmed = await waitForTxEvent(tx, "ExtendCreditLine")
         if (confirmed) {
-          await refetchData({
-            queryNames: [
-              GetUnderwriteeDocument,
-              GetTotalCollateralDocument,
-              GetCreditLinesDocument,
-            ],
-            contractNames: ["balanceOf"],
-            options: { delay: 2000 },
-          })
+          await refetch([GetUnderwriteeDocument, GetUnderwriterWalletInfoDocument], { delay: 2000 })
           toast({ description: "Credit line extended", status: "success" })
           onClose()
         }

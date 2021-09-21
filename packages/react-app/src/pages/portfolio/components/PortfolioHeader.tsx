@@ -10,7 +10,10 @@ import {
 } from "../../../generated/subgraph/graphql"
 import { useGetMyWalletAddress } from "../../../services/web3/utils/useGetMyWalletAddress"
 import colors from "../../../theme/foundations/colors"
+import { useManagedCountUp } from "../../../utils/useManagedCountUp"
 import ClaimRewardsButton from "./ClaimRewardsButton"
+
+const REWARDS_REF = "REWARDS_REF"
 
 export const PortfolioHeader = () => {
   const address = useGetMyWalletAddress()
@@ -31,9 +34,11 @@ export const PortfolioHeader = () => {
 
 type Props = BoxProps & { value: number }
 const OutstandingRewards = ({ value, ...rest }: Props) => {
+  useManagedCountUp({ ref: REWARDS_REF, end: value / 1e18, ether: true })
+
   return (
     <Box {...outstandingRewardsStyles}>
-      <GlyphLabel color={colors.blue.main} value={formatEther(value)} />
+      <GlyphLabel id={REWARDS_REF} color={colors.blue.main} />
     </Box>
   )
 }

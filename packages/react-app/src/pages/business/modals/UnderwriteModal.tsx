@@ -12,13 +12,14 @@ import {
 import { faLink } from "@fortawesome/free-solid-svg-icons"
 import { FormikProvider, useFormik } from "formik"
 import React, { useState } from "react"
+import { useSetRecoilState } from "recoil"
 import * as yup from "yup"
 import Icon from "../../../components/Icon"
 import { CONTRACTS } from "../../../constants"
 import { Business } from "../../../generated/resource-network/graphql"
 import {
   GetCreditLinesDocument,
-  GetTotalCollateralDocument,
+  GetUnderwriterWalletInfoDocument,
   GetUnderwriteeDocument,
 } from "../../../generated/subgraph/graphql"
 import { parseRPCError } from "../../../services/errors/rpcErrors"
@@ -26,7 +27,11 @@ import { useUnderwriteManagerContract } from "../../../services/web3/contracts"
 import { parseEther } from "../../../services/web3/utils/etherUtils"
 import { waitForTxEvent } from "../../../services/web3/utils/waitForTxEvent"
 import { ModalProps } from "../../../utils/types"
-import { useRefetchData } from "../../../utils/useRefetchData"
+import {
+  refetchQueriesAtom,
+  useRefetchData,
+  useRefetchQueries,
+} from "../../../utils/useRefetchData"
 import { useTxToast } from "../../../utils/useTxToast"
 import ApproveMuButton from "./components/ApproveMuButton"
 import { BusinessHeader } from "./components/BusinessHeader"
@@ -47,11 +52,12 @@ const validation = yup.object({
 })
 
 const UnderwriteModal = ({ isOpen, onClose, business }: UnderwriteModalProps) => {
+  const setFetchPolicy = useSetRecoilState(refetchQueriesAtom)
   const { underwrite } = useUnderwriteManagerContract()
   const underwritee = business.wallet?.multiSigAddress
   const [isLoading, setIsLoading] = useState(false)
   const [isApproved] = useIsApprovedState()
-  const refetchData = useRefetchData()
+  const refetch = useRefetchQueries()
   const toast = useTxToast()
 
   const formik = useFormik({
@@ -68,16 +74,8 @@ const UnderwriteModal = ({ isOpen, onClose, business }: UnderwriteModalProps) =>
         })
         const confirmed = await waitForTxEvent(tx, "NewCreditLine")
         if (confirmed) {
-          console.log("UnderwriteModal.tsx -- confirmed")
-          await refetchData({
-            queryNames: [
-              GetTotalCollateralDocument,
-              GetUnderwriteeDocument,
-              GetCreditLinesDocument,
-            ],
-            contractNames: ["balanceOf"],
-            options: { delay: 2000 },
-          })
+          await refetch([GetUnderwriterWalletInfoDocument, GetUnderwriteeDocument], { delay: 2000 })
+          setFetchPolicy({ GetCreditLinesDocument: "cache-and-network" })
           toast({ description: "Business underwritten", status: "success" })
           onClose()
         }

@@ -1,5 +1,7 @@
 import { Box, BoxProps } from "@chakra-ui/layout"
+import { prepareDataForValidation } from "formik"
 import React, { useCallback } from "react"
+import { useRecoilState } from "recoil"
 import { footerHeight } from "../../../components/Footer"
 import {
   Business,
@@ -10,6 +12,7 @@ import {
   useGetCreditLinesQuery,
 } from "../../../generated/subgraph/graphql"
 import { useGetMyWalletAddress } from "../../../services/web3/utils/useGetMyWalletAddress"
+import { refetchQueriesAtom } from "../../../utils/useRefetchData"
 import BusinessNamesDrawer from "../components/BusinessNamesDrawer"
 import CreditLinesTable from "../components/table/CreditLinesTable"
 
@@ -39,9 +42,14 @@ const useGetData = () => {
 }
 
 const useGetCreditLines = (underwriterAddress?: string) => {
+  const [{ GetCreditLinesDocument }, setFetchPolicy] = useRecoilState(refetchQueriesAtom)
   const query = useGetCreditLinesQuery({
     variables: { where: { underwriter: underwriterAddress } },
+    fetchPolicy: GetCreditLinesDocument ?? "cache-first", // todo: only make network call after credit line updated / added
     skip: !underwriterAddress,
+    onCompleted: () => {
+      setFetchPolicy((prev) => ({ ...prev, GetCreditLinesDocument: "cache-first" }))
+    },
   })
 
   return {

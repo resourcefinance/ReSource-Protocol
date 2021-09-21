@@ -213,7 +213,7 @@ interface UnderwriteManagerInterface extends ethers.utils.Interface {
 
   events: {
     "CreditLineReward(tuple)": EventFragment;
-    "CreditLineRewardClaimed(tuple[])": EventFragment;
+    "CreditLineRewardClaimed(address,address[],uint256[],uint256)": EventFragment;
     "CreditLineWithdrawal(tuple)": EventFragment;
     "ExtendCreditLine(tuple)": EventFragment;
     "NewCreditLine(tuple)": EventFragment;
@@ -632,49 +632,17 @@ export class UnderwriteManager extends BaseContract {
     >;
 
     CreditLineRewardClaimed(
-      creditLines?: null
+      underwriter?: null,
+      underwritees?: null,
+      rewards?: null,
+      totalClaimed?: null
     ): TypedEventFilter<
-      [
-        ([
-          string,
-          string,
-          [BigNumber, string, BigNumber, BigNumber] & {
-            collateral: BigNumber;
-            networkToken: string;
-            issueDate: BigNumber;
-            reward: BigNumber;
-          }
-        ] & {
-          underwriter: string;
-          underwritee: string;
-          data: [BigNumber, string, BigNumber, BigNumber] & {
-            collateral: BigNumber;
-            networkToken: string;
-            issueDate: BigNumber;
-            reward: BigNumber;
-          };
-        })[]
-      ],
+      [string, string[], BigNumber[], BigNumber],
       {
-        creditLines: ([
-          string,
-          string,
-          [BigNumber, string, BigNumber, BigNumber] & {
-            collateral: BigNumber;
-            networkToken: string;
-            issueDate: BigNumber;
-            reward: BigNumber;
-          }
-        ] & {
-          underwriter: string;
-          underwritee: string;
-          data: [BigNumber, string, BigNumber, BigNumber] & {
-            collateral: BigNumber;
-            networkToken: string;
-            issueDate: BigNumber;
-            reward: BigNumber;
-          };
-        })[];
+        underwriter: string;
+        underwritees: string[];
+        rewards: BigNumber[];
+        totalClaimed: BigNumber;
       }
     >;
 

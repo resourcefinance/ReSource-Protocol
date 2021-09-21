@@ -55,9 +55,9 @@ dataSources:
     name: ReSourceToken
     network: "{{network}}"
     source:
-      address: "{{ResourceTokenAddress}}"
+      address: "{{ReSourceTokenAddress}}"
       abi: ReSourceToken
-      startBlock: {{ResourceTokenStartBlock}}
+      startBlock: {{ReSourceTokenStartBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -70,4 +70,4 @@ dataSources:
       eventHandlers:
         - event: Transfer(indexed address,indexed address,uint256)
           handler: handleSourceBalanceUpdate
-      file: ./src/mapping/SOURCE/index.ts
+      file: ./src/mapping/ReSourceToken/index.ts

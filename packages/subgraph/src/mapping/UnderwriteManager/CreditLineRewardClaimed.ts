@@ -3,7 +3,6 @@ import { CreditLine, Underwriter } from "../../../generated/schema"
 import { CreditLineRewardClaimed } from "../../../generated/UnderwriteManager/UnderwriteManager"
 
 export function handleCreditLineRewardClaimed(event: CreditLineRewardClaimed): void {
-  log.info("called CreditLineRewardClaimed handler", [])
   let underwritees = event.params.underwritees
   let underwriterAddress = event.params.underwriter
   for (var i = 0; i < underwritees.length; i++) {

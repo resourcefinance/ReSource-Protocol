@@ -98,7 +98,13 @@ async function issueCreditLine() {
     await (await signer.sendTransaction(tx)).wait()
 
     tx = {
-      to: "0xe105fb303e5ffee9e27726267e2db11c37260865",
+      to: "0xe105fb303e5ffee9e27726267e2db11c37260865", // relayer
+      value: ethers.utils.parseEther("1"),
+    }
+    await (await signer.sendTransaction(tx)).wait()
+
+    tx = {
+      to: "0xE31b212Adcf7A617fcB2E8B608c09E6D596d8425", // guardian
       value: ethers.utils.parseEther("1"),
     }
     await (await signer.sendTransaction(tx)).wait()

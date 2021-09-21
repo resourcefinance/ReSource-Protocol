@@ -7,9 +7,9 @@ import { Business } from "../../../../generated/resource-network/graphql"
 import { CreditLineFieldsFragment } from "../../../../generated/subgraph/graphql"
 import { formatEther, formatMwei } from "../../../../services/web3/utils/etherUtils"
 import { textStyles } from "../../../../theme/textStyles"
-import { getArrayOfEmptyObjects } from "../../mocks/tableData"
-import { tableDrawerWidth, tableHeaderHeight, tableRowHeight } from "./constants"
+import { tableDrawerWidth, tableHeaderHeight, tableRowHeight, tableStripeColor } from "./utils"
 import { tableSchema } from "./tableSchema"
+import { useBackfillRows } from "./utils"
 
 type CreditLineTableData = CreditLineFieldsFragment & { business: Business }
 
@@ -24,7 +24,7 @@ const CreditLinesTable = ({ creditLines, ...rest }: Props) => {
   return (
     <Box overflowX="auto" ml={tableDrawerWidth} {...rest}>
       {/* apply the table props */}
-      <Table w="full" minW="1100px" variant="striped" {...getTableProps()}>
+      <Table w="full" minW="1100px" {...getTableProps()}>
         <Thead h={tableHeaderHeight}>
           {// Loop over the header rows
           headerGroups.map((headerGroup) => (
@@ -79,9 +79,8 @@ const CreditLinesTable = ({ creditLines, ...rest }: Props) => {
 }
 
 const useGetTableInstance = (creditLines: CreditLineTableData[]) => {
-  const data = React.useMemo(() => {
-    return [...creditLines.map(dataFormatter), ...backfill(creditLines)]
-  }, [creditLines]) as any
+  const extraRows = useBackfillRows(creditLines)
+  const data = React.useMemo(() => [...creditLines.map(dataFormatter), ...extraRows], [extraRows])
   const columns = React.useMemo(() => tableSchema, [])
 
   return useTable({ columns, data })
@@ -99,20 +98,18 @@ const dataFormatter = (creditLine: CreditLineTableData) => {
   }
 }
 
-// this function returns a bunch of "empty" credit lines so that table is filled with
-// rows that maintain alternating background colors
-function backfill(creditLines: CreditLineTableData[]) {
-  return getArrayOfEmptyObjects(29)
-}
-
 const defaultCellProps: TableCellProps = {
   py: "inherit",
   px: "4px",
   isNumeric: true,
+  borderBottom: 0,
 }
 
 const defaultRowProps: TableRowProps = {
   h: tableRowHeight,
+  _odd: {
+    bg: tableStripeColor,
+  },
 }
 
 const defaultColumnHeaderProps: TableColumnHeaderProps = {

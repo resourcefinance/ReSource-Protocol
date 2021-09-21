@@ -25,6 +25,7 @@ const ConnectWalletModal = ({ isOpen, onClose }) => {
   }
 
   useEffect(() => {
+    console.log("ConnectWalletModal.tsx --  context.error", context.error)
     if (context.error?.message.includes("Unsupported Network")) {
       setErrorMessage("Please change your network to Celo")
     } else if (context.error?.message.includes("Unable to set any valid connector")) {

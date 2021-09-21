@@ -92,7 +92,7 @@ const ExtendCreditModal = ({ isOpen, onClose, business }: ExtendCreditModalProps
 
   return (
     <FormikProvider value={formik}>
-      <Modal size="lg" isOpen={isOpen} onClose={onClose} isCentered>
+      <Modal size="xl" isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>

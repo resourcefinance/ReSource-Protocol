@@ -3,14 +3,20 @@ import { Avatar, Flex, HStack } from "@chakra-ui/react"
 import React from "react"
 import { Business } from "../../../generated/resource-network/graphql"
 import colors from "../../../theme/foundations/colors"
-import { getArrayOfEmptyObjects } from "../mocks/tableData"
-import { tableDrawerWidth, tableHeaderHeight, tableRowHeight } from "./table/constants"
+import {
+  tableDrawerWidth,
+  tableHeaderHeight,
+  tableRowHeight,
+  tableStripeColor,
+  useBackfillRows,
+} from "./table/utils"
 
 interface Props extends BoxProps {
   businesses: Business[]
 }
 
 const BusinessNamesDrawer = ({ businesses, ...rest }: Props) => {
+  const height = document.body.scrollHeight
   return (
     <>
       <Box
@@ -18,14 +24,14 @@ const BusinessNamesDrawer = ({ businesses, ...rest }: Props) => {
         {...rest}
         pos="absolute"
         bgColor="white"
-        h="100%"
+        h={height}
         borderRight={`1px solid ${colors.blue.main}`}
       >
         <Flex h={tableHeaderHeight} align="center" px={4}>
           <Text color="gray.700">business</Text>
         </Flex>
-        {[...businesses, ...backfill(businesses)].map((business, index) => {
-          const bgColor = index % 2 === 0 ? "gray.100" : "white"
+        {[...businesses, ...useBackfillRows(businesses)].map((business, index) => {
+          const bgColor = index % 2 === 0 ? tableStripeColor : "white"
           return (
             <HStack
               px={4}
@@ -43,7 +49,7 @@ const BusinessNamesDrawer = ({ businesses, ...rest }: Props) => {
       </Box>
       <Box
         w="5px"
-        h="100%"
+        h={height}
         left={tableDrawerWidth}
         pos="absolute"
         opacity={0.3}
@@ -52,12 +58,6 @@ const BusinessNamesDrawer = ({ businesses, ...rest }: Props) => {
       ></Box>
     </>
   )
-}
-
-// this function returns a bunch of "empty" businesses so that the drawer is filled with
-// rows that maintain alternating background colors
-function backfill(businesses: Business[]) {
-  return getArrayOfEmptyObjects(29) as Business[]
 }
 
 export default BusinessNamesDrawer

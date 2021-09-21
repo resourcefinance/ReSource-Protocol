@@ -18,20 +18,15 @@ import Icon from "../../../components/Icon"
 import { CONTRACTS } from "../../../constants"
 import { Business } from "../../../generated/resource-network/graphql"
 import {
-  GetCreditLinesDocument,
-  GetUnderwriterWalletInfoDocument,
   GetUnderwriteeDocument,
+  GetUnderwriterWalletInfoDocument,
 } from "../../../generated/subgraph/graphql"
 import { parseRPCError } from "../../../services/errors/rpcErrors"
 import { useUnderwriteManagerContract } from "../../../services/web3/contracts"
 import { parseEther } from "../../../services/web3/utils/etherUtils"
 import { waitForTxEvent } from "../../../services/web3/utils/waitForTxEvent"
 import { ModalProps } from "../../../utils/types"
-import {
-  refetchQueriesAtom,
-  useRefetchData,
-  useRefetchQueries,
-} from "../../../utils/useRefetchData"
+import { refetchQueriesAtom, useRefetchQueries } from "../../../utils/useRefetchData"
 import { useTxToast } from "../../../utils/useTxToast"
 import ApproveMuButton from "./components/ApproveMuButton"
 import { BusinessHeader } from "./components/BusinessHeader"
@@ -98,7 +93,7 @@ const UnderwriteModal = ({ isOpen, onClose, business }: UnderwriteModalProps) =>
 
   return (
     <FormikProvider value={formik}>
-      <Modal size="lg" isOpen={isOpen} onClose={onClose} isCentered>
+      <Modal size="xl" isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>

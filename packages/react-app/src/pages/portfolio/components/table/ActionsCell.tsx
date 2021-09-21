@@ -5,7 +5,6 @@ import { Tooltip } from "@chakra-ui/tooltip"
 import React from "react"
 import { Business } from "../../../../generated/resource-network/graphql"
 import ExtendCreditModal from "../../../business/modals/ExtendCreditModal"
-import { mockBusiness } from "../../mocks/tableData"
 
 interface Props extends BoxProps {
   value: Business

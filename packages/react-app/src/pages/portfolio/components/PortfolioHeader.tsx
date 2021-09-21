@@ -1,6 +1,5 @@
 import { Box, StackProps } from "@chakra-ui/layout"
 import { BoxProps, Flex, Heading, HStack } from "@chakra-ui/react"
-import { formatEther } from "@ethersproject/units"
 import React from "react"
 import { GlyphLabel } from "../../../components/glyph/SourceGlyphLabel"
 import { headerHeight } from "../../../components/Header"
@@ -34,7 +33,7 @@ export const PortfolioHeader = () => {
 
 type Props = BoxProps & { value: number }
 const OutstandingRewards = ({ value, ...rest }: Props) => {
-  useManagedCountUp({ ref: REWARDS_REF, end: value / 1e18, ether: true })
+  useManagedCountUp({ ref: REWARDS_REF, end: value / 1e18 })
 
   return (
     <Box {...outstandingRewardsStyles}>
@@ -42,6 +41,8 @@ const OutstandingRewards = ({ value, ...rest }: Props) => {
     </Box>
   )
 }
+
+export const portfolioHeaderHeight = 59
 
 const outstandingRewardsStyles: BoxProps = {
   border: `1px solid ${colors.blue.main}`,
@@ -58,7 +59,7 @@ const containerStyles: StackProps = {
   borderBottom: "solid 1px",
   borderColor: "blue.main",
   bgColor: "white !important",
-  height: "60px",
+  height: portfolioHeaderHeight,
   position: "fixed",
   w: "100vw",
   top: headerHeight,

@@ -1,5 +1,4 @@
 import { Box, BoxProps } from "@chakra-ui/layout"
-import { prepareDataForValidation } from "formik"
 import React, { useCallback } from "react"
 import { useRecoilState } from "recoil"
 import { footerHeight } from "../../../components/Footer"
@@ -15,14 +14,16 @@ import { useGetMyWalletAddress } from "../../../services/web3/utils/useGetMyWall
 import { refetchQueriesAtom } from "../../../utils/useRefetchData"
 import BusinessNamesDrawer from "../components/BusinessNamesDrawer"
 import CreditLinesTable from "../components/table/CreditLinesTable"
+import { useShouldScroll } from "../components/table/utils"
 
 const PortfolioPage = () => {
   const { data, loading, called } = useGetData()
+  const shouldScroll = useShouldScroll(data)
 
   if (loading) return null
 
   return (
-    <Box {...containerStyles}>
+    <Box id="tableContainer" {...containerStyles} overflow={shouldScroll ? "auto" : "hidden"}>
       <BusinessNamesDrawer businesses={data.map((d) => d.business)} />
       <CreditLinesTable creditLines={data} />
     </Box>
@@ -45,7 +46,7 @@ const useGetCreditLines = (underwriterAddress?: string) => {
   const [{ GetCreditLinesDocument }, setFetchPolicy] = useRecoilState(refetchQueriesAtom)
   const query = useGetCreditLinesQuery({
     variables: { where: { underwriter: underwriterAddress } },
-    fetchPolicy: GetCreditLinesDocument ?? "cache-first", // todo: only make network call after credit line updated / added
+    fetchPolicy: GetCreditLinesDocument ?? "cache-first",
     skip: !underwriterAddress,
     onCompleted: () => {
       setFetchPolicy((prev) => ({ ...prev, GetCreditLinesDocument: "cache-first" }))

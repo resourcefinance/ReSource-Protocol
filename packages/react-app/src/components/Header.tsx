@@ -55,7 +55,7 @@ export const Header = () => {
   )
 }
 
-export const headerHeight = "52px"
+export const headerHeight = 51
 
 const containerStyles: StackProps = {
   px: { base: 4, md: 6 },

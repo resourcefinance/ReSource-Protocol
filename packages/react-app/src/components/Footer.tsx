@@ -31,7 +31,7 @@ const Footer = ({ ...rest }: BoxProps) => {
   )
 }
 
-export const footerHeight = "40px"
+export const footerHeight = 41
 
 const footerStyles: BoxProps = {
   px: { base: 4, md: 6 },

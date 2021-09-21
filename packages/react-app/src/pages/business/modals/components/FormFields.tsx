@@ -63,7 +63,7 @@ export const CollateralField = ({ formik, extendCredit, ...rest }: Props) => {
   return (
     <Box {...containerStyles} {...rest}>
       <HStack justify="space-between">
-        <Box noOfLines={1} minW="280px">
+        <Box noOfLines={1} minW="350px">
           <Text as="span" color="gray.700">
             SOURCE to stake
           </Text>

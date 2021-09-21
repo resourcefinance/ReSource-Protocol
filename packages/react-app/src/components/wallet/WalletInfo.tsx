@@ -13,8 +13,8 @@ const COLLATERAL_REF = "COLLATERAL_REF"
 const WalletInfo = ({ ...rest }: BoxProps) => {
   const { balance, totalCollateral } = useGetWalletValues()
 
-  useManagedCountUp({ ref: BALANCE_REF, end: balance / 1e18, ether: true })
-  useManagedCountUp({ ref: COLLATERAL_REF, end: totalCollateral / 1e18, ether: true })
+  useManagedCountUp({ ref: BALANCE_REF, end: balance / 1e18 })
+  useManagedCountUp({ ref: COLLATERAL_REF, end: totalCollateral / 1e18 })
 
   return (
     <Box {...rest}>

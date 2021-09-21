@@ -29,6 +29,9 @@ export const BusinessHeader = () => {
     </Flex>
   )
 }
+
+export const businessHeaderHeight = 59
+
 const containerStyles: StackProps = {
   px: { base: 4, md: 6 },
   py: { base: 2, md: 3 },
@@ -37,7 +40,7 @@ const containerStyles: StackProps = {
   borderBottom: "solid 1px",
   borderColor: "gray.300",
   bgColor: "white !important",
-  height: "60px",
+  height: businessHeaderHeight,
   position: "fixed",
   w: "100vw",
   top: headerHeight,

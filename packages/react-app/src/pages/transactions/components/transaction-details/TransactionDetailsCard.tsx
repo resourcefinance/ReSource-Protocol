@@ -3,7 +3,6 @@ import { Avatar } from "@chakra-ui/react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import React from "react"
 import { Link } from "react-router-dom"
-import { GlyphColor } from "../../../../components/glyph/RusdGlyph"
 import { Business, Transaction } from "../../../../generated/resource-network/graphql"
 import { localizedDayJs } from "../../../../utils/dayjs"
 import { transactionTypeIconMap } from "../transaction-table/foundations"
@@ -44,12 +43,7 @@ const TransactionDetailsCard = ({ transaction, myWalletId, ...rest }: Props) => 
           <Text {...label} variant="body">
             {labelMap[type].direction}
           </Text>
-          <Amount
-            variant="credit"
-            value={amount}
-            size="md"
-            color={labelMap[type].color as GlyphColor}
-          />
+          <Amount variant="credit" value={amount} size="md" color={labelMap[type].color} />
         </LineItem>
       </Block>
       <Block>

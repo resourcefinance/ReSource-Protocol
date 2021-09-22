@@ -1,72 +1,47 @@
-import { Box, BoxProps, Text, TextProps } from "@chakra-ui/react"
+import { chakra, Text, TextProps } from "@chakra-ui/react"
 import React from "react"
-import { gradients } from "../../theme/foundations/colors"
-import Glyph, { GlyphColor } from "./RusdGlyph"
-
-const formatOptions = { minimumFractionDigits: 2, maximumFractionDigits: 2 }
+import colors from "../../theme/foundations/colors"
+import { RusdGlyphGradient, RusdGlyphSolid } from "./RusdGlyph"
+import { walletValueToString } from "./SourceGlyphLabel"
 
 type GlyphLabelVariant = "credit" | "balance" | "price" | "gradient"
 
 export interface GlyphLabelProps extends TextProps {
-  size?: "sm" | "md" | "lg"
   value?: number | null | string
-  loading?: boolean
-  color?: GlyphColor
   badStanding?: boolean
   variant?: GlyphLabelVariant
-  iconPosition?: "left" | "right" | "none"
 }
 
 const GlyphLabel = (props: GlyphLabelProps) => {
-  const {
-    value,
-    badStanding,
-    variant,
-    loading,
-    color: propColor,
-    size = "md",
-    iconPosition = "right",
-    lineHeight,
-    ...textProps
-  } = props
-
-  const numberValue = typeof value === "string" ? parseFloat(value) : value ?? 0
-  if (isNaN(numberValue)) throw new Error("could not parse Glyph value")
-
-  const glyphColor = propColor || getColor({ value: numberValue, badStanding, variant })
-  const textColor = glyphColor === "gray" ? "black.main" : `${glyphColor}.main`
-  const formattedValue = loading ? "----" : walletValueToString(numberValue)
+  const { id, value, badStanding, variant, ...rest } = props
 
   return (
-    <Box h="full" whiteSpace="nowrap" {...textProps}>
-      {iconPosition === "left" && <Glyph size={size} bgColor={glyphColor} />}
-      <Text
-        as="span"
-        variant="number"
-        data-testid="glyph-label"
-        color={props.textColor || textColor}
-        {...(variant === "gradient" ? gradientStyles : {})}
-        lineHeight={lineHeight || "inherit"}
-      >
-        {formattedValue}
-      </Text>
-      {iconPosition === "right" && (
-        <>
-          {variant === "gradient" ? (
-            <Glyph size={size} bgColor="purple" />
-          ) : (
-            <Glyph size={size} bgColor={glyphColor} />
-          )}
-        </>
-      )}
-    </Box>
+    <chakra.span {...rest} whiteSpace="nowrap">
+      <Label id={id} value={value} badStanding={badStanding} {...rest} />
+      <Glyph {...rest} ml={1} />
+    </chakra.span>
   )
 }
 
-const gradientStyles: BoxProps = {
-  bg: gradients.primary,
-  bgClip: "text",
-  color: "inherit",
+const Glyph = (props: GlyphLabelProps) => {
+  return props.color !== colors.purple.main ? (
+    <RusdGlyphSolid boxSize="12px" display="initial" {...(props as any)} />
+  ) : (
+    <RusdGlyphGradient purple boxSize="12px" display="initial" {...(props as any)} />
+  )
+}
+
+const Label = (props: GlyphLabelProps) => {
+  const { value, id } = props
+  const numberValue = typeof value === "string" ? parseFloat(value) : value ?? 0
+  if (isNaN(numberValue)) throw new Error("could not parse Glyph value")
+  const formattedValue = walletValueToString(numberValue)
+
+  return (
+    <Text id={id} as="span" variant="number" {...props}>
+      {formattedValue}
+    </Text>
+  )
 }
 
 const getColor = (props: { value: number; badStanding?: boolean; variant?: GlyphLabelVariant }) => {
@@ -77,14 +52,6 @@ const getColor = (props: { value: number; badStanding?: boolean; variant?: Glyph
   if (value <= 0) return "black"
   if (value > 0) return "green"
   return "black"
-}
-
-type OptionsType = { decimals: number }
-export const walletValueToString = (val: number, options?: OptionsType) => {
-  return val.toLocaleString(undefined, {
-    minimumFractionDigits: options?.decimals ?? 2,
-    maximumFractionDigits: options?.decimals ?? 2,
-  })
 }
 
 export default GlyphLabel

@@ -58,8 +58,8 @@ const ConnectWalletModal = ({ isOpen, onClose }) => {
 }
 
 const ComingSoonConnectors = () => (
-  <VStack align="stretch">
-    <Text color="gray.900" px={2} pt={4} pb={2}>
+  <VStack align="stretch" spacing={3}>
+    <Text color="gray.900" px={2} pt={4}>
       Coming soon...
     </Text>
     <HStack

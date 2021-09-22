@@ -70,7 +70,7 @@ export const LineItem = ({ children, ...rest }: StackProps) => {
 }
 
 export const Amount = ({ value, ...rest }: GlyphLabelProps) => {
-  return <GlyphLabel size="sm" value={value} variant="price" iconPosition="right" {...rest} />
+  return <GlyphLabel value={value} {...rest} />
 }
 
 type StatusItemProps = { transaction: Transaction }
@@ -102,7 +102,7 @@ export const TransactionIdLineItem = ({ transaction }: { transaction: Transactio
         <Link
           color="blue.main"
           target="_blank"
-          href={config.BLOCKCHAIN.EXPLORER + transaction.txHash}
+          href={config.BLOCKCHAIN.EXPLORER + `/tx/${transaction.txHash}`}
         >
           <HStack align="center">
             <Text variant="caption" noOfLines={1}>

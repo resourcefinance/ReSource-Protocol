@@ -5,7 +5,7 @@ import React from "react"
 import { useHistory, useLocation } from "react-router-dom"
 import { useWeb3Context } from "web3-react"
 import Button from "./Button"
-import { RusdGlyphGradient } from "./glyph/MuGlyph"
+import { RusdGlyphGradient } from "./glyph/RusdGlyph"
 import AddressInfo from "./wallet/AddressInfo"
 import WalletInfo from "./wallet/WalletInfo"
 

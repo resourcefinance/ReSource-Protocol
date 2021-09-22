@@ -1,7 +1,6 @@
 import { BoxProps, HStack, Text } from "@chakra-ui/layout"
 import { Flex } from "@chakra-ui/react"
 import { faCircle } from "@fortawesome/free-solid-svg-icons"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import React, { useEffect, useState } from "react"
 import { useWeb3Context } from "web3-react"
 import colors from "../theme/foundations/colors"

@@ -14,7 +14,7 @@ const AmountCell = ({ row, cell }: AmountCellProps) => {
 
   return (
     <HStack {...baseCellStyles}>
-      <GlyphLabel color={color} right={0} size="sm" value={amount} />
+      <GlyphLabel color={color} value={amount} />
     </HStack>
   )
 }

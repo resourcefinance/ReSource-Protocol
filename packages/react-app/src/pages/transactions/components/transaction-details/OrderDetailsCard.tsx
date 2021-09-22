@@ -3,7 +3,6 @@ import { Avatar } from "@chakra-ui/react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import React from "react"
 import { Link } from "react-router-dom"
-import { GlyphColor } from "../../../../components/glyph/RusdGlyph"
 import {
   Business,
   Listing,
@@ -72,12 +71,7 @@ const OrderDetailsCard = ({ transaction, myWalletId, ...rest }: Props) => {
           <Text {...label} variant="body">
             {labelMap[type].direction}
           </Text>
-          <Amount
-            variant="credit"
-            value={amount}
-            size="md"
-            color={labelMap[type].color as GlyphColor}
-          />
+          <Amount variant="credit" value={amount} size="md" color={labelMap[type].color} />
         </LineItem>
       </Block>
       <Block>

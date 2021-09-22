@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react"
 import muLogo from "../../../../assets/glyphs/mu.svg"
 import Button from "../../../../components/Button"
 import FormikField from "../../../../components/FormikField"
-import { GradientGlyphPurple } from "../../../../components/glyph/RusdGlyph"
+import { RusdGlyphGradient } from "../../../../components/glyph/RusdGlyph"
 import { useReSourceTokenContract } from "../../../../services/web3/contracts"
 import { formatEther } from "../../../../services/web3/utils/etherUtils"
 import colors, { gradients } from "../../../../theme/foundations/colors"
@@ -41,7 +41,7 @@ export const CreditField = ({ formik, extendCredit, ...rest }: Props) => {
               MIN
             </Button>
           )}
-          <GradientGlyphPurple boxSize="36px" />
+          <RusdGlyphGradient purple boxSize="36px" />
         </HStack>
       </HStack>
     </Box>

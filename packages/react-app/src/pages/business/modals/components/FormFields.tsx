@@ -6,7 +6,7 @@ import muLogo from "../../../../assets/glyphs/mu.svg"
 import Button from "../../../../components/Button"
 import FormikField from "../../../../components/FormikField"
 import { GradientGlyphPurple } from "../../../../components/glyph/RusdGlyph"
-import { useMututalityTokenContract } from "../../../../services/web3/contracts"
+import { useReSourceTokenContract } from "../../../../services/web3/contracts"
 import { formatEther } from "../../../../services/web3/utils/etherUtils"
 import colors, { gradients } from "../../../../theme/foundations/colors"
 import { body, caption, title } from "../../../../theme/textStyles"
@@ -50,7 +50,7 @@ export const CreditField = ({ formik, extendCredit, ...rest }: Props) => {
 
 export const CollateralField = ({ formik, extendCredit, ...rest }: Props) => {
   const [balance, setBalance] = useState<BigNumberish>(0)
-  const { balanceOf } = useMututalityTokenContract()
+  const { balanceOf } = useReSourceTokenContract()
 
   useEffect(() => {
     balanceOf().then((bal) => setBalance(bal))

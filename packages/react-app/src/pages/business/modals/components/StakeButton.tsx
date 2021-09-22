@@ -3,7 +3,7 @@ import { faCheckCircle } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { ethers } from "ethers"
 import React, { useEffect, useState } from "react"
-import { useMututalityTokenContract } from "../../../../services/web3/contracts"
+import { useReSourceTokenContract } from "../../../../services/web3/contracts"
 import { parseEther } from "../../../../services/web3/utils/etherUtils"
 
 export interface StakeMuButtonProps extends ButtonProps {
@@ -14,7 +14,7 @@ const StakeButton = (props: StakeMuButtonProps) => {
   const [error, setError] = useState(false)
   const [insufficientBalance, setInsufficientBalance] = useState(true)
   const [availableCollateral, setAvailableCollateral] = useState(ethers.BigNumber.from(0))
-  const { balanceOf } = useMututalityTokenContract()
+  const { balanceOf } = useReSourceTokenContract()
 
   useEffect(() => {
     balanceOf().then(setAvailableCollateral)

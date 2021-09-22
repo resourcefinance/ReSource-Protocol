@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import React, { useState } from "react"
 import config from "../../../../config"
 import { parseRPCError } from "../../../../services/errors/rpcErrors"
-import { useMututalityTokenContract } from "../../../../services/web3/contracts"
+import { useReSourceTokenContract } from "../../../../services/web3/contracts"
 import { waitForTxEvent } from "../../../../services/web3/utils/waitForTxEvent"
 import { useTxToast } from "../../../../utils/useTxToast"
 import { useIsApprovedState, useRevertApproval } from "../utils"
@@ -15,7 +15,7 @@ const ApproveMuButton = (props: ButtonProps) => {
   const [isLoading, setIsLoading] = useState(false)
   const [isApproved, setIsApproved] = useIsApprovedState()
   const toast = useTxToast()
-  const { approve } = useMututalityTokenContract()
+  const { approve } = useReSourceTokenContract()
   const revertApproval = useRevertApproval()
 
   const handleApprove = async () => {

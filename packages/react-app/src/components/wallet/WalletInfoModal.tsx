@@ -35,7 +35,7 @@ const WalletInfoModal = ({ isOpen, onClose, address }: WalletInfoModalProps) => 
   }
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} motionPreset="slideInRight">
+    <Modal isOpen={isOpen} onClose={onClose} motionPreset="slideInRight" isCentered>
       <ModalOverlay />
       <ModalContent m="1em">
         <ModalHeader>Wallet Connected</ModalHeader>

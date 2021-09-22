@@ -25,17 +25,15 @@ const ClaimRewardsButton = ({ creditLines, ...rest }: ClaimRewardsButtonProps) =
   const handleClaimRewards = async () => {
     try {
       setIsLoading(true)
-      if (underwritees.length > 0) {
-        const tx = await claimReward({ underwritees })
-        const confirmed = await waitForTxEvent(tx, "CreditLineRewardClaimed")
-        if (confirmed) {
-          await refetch({
-            queryNames: "active",
-            contractNames: ["balanceOf"],
-            options: { delay: 2000 },
-          })
-          toast({ description: "Rewards claimed!", status: "success" })
-        }
+      const tx = await claimReward({ underwritees })
+      const confirmed = await waitForTxEvent(tx, "CreditLineRewardClaimed")
+      if (confirmed) {
+        await refetch({
+          queryNames: "active",
+          contractNames: ["balanceOf"],
+          options: { delay: 2000 },
+        })
+        toast({ description: "Rewards claimed!", status: "success" })
       }
     } catch (error) {
       toast({ status: "error", description: parseRPCError(error) })

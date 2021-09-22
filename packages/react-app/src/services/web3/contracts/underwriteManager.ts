@@ -1,8 +1,8 @@
 import { BigNumberish, ethers } from "ethers"
 import { useEffect, useState } from "react"
-import { UnderwriteManager, UnderwriteManager__factory } from "../../../../contracts"
-import { CONTRACTS } from "../../constants"
-import { useGetEthersProviderAndSigner } from "../../utils/useGetEthersProviderAndSigner"
+import { UnderwriteManager, UnderwriteManager__factory } from "../../../contracts"
+import { CONTRACTS } from "../constants"
+import { useGetEthersProviderAndSigner } from "../utils/useGetEthersProviderAndSigner"
 
 interface UnderwriteProps {
   networkTokenAddress: string

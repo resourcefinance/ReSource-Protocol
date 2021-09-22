@@ -1,6 +1,6 @@
 import { useEffect } from "react"
 import { atom, DefaultValue, selector, useRecoilState } from "recoil"
-import { useMututalityTokenContract } from "../../../services/web3/contracts"
+import { useReSourceTokenContract } from "../../../services/web3/contracts"
 
 export const underwriteModalAtom = atom({
   key: "underwriteModalAtom",
@@ -21,7 +21,7 @@ export const isApprovedSelector = selector({
 // only used for developement convenience
 export const useRevertApproval = () => {
   const [, setIsApproved] = useIsApprovedState()
-  const { approve } = useMututalityTokenContract()
+  const { approve } = useReSourceTokenContract()
   return async () =>
     (await approve("0x00"))
       .wait()
@@ -31,7 +31,7 @@ export const useRevertApproval = () => {
 
 export const useIsApprovedState = (): any => {
   const [isApproved, setIsApproved] = useRecoilState(isApprovedSelector)
-  const { allowance } = useMututalityTokenContract()
+  const { allowance } = useReSourceTokenContract()
 
   // check for approval on load
   useEffect(() => {

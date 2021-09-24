@@ -8,12 +8,11 @@ import { CIP36 } from "../types/CIP36"
 
 async function main(): Promise<void> {
   const connectionInfo = config.networks["celo-alfajores"] as HttpNetworkConfig
-  console.log(connectionInfo)
   const provider = new CeloProvider(connectionInfo.url)
   await provider.ready
 
-  const multiSigAddress = "0x7fB7a463A9817C88aF7F223242968Ce882A0D7fD"
-  const RUSDAddress = "0x38997d2F993b94667F63517774888B5b404DbdBc"
+  const multiSigAddress = "0xc7c5dF1EfEBe4d0b41F7b2aD07a8d806C0C72682"
+  const RUSDAddress = "0xc4C60acf7EaaBe2B147DfFA128189D8Cc0FD4B3c"
 
   const multiSigContract = new ethers.Contract(
     multiSigAddress,

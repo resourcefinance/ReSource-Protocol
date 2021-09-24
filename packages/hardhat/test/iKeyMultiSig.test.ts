@@ -46,6 +46,21 @@ describe("MultiSig Tests", function() {
 
     await (await walletDeployer.transferOwnership(networkRegistry.address)).wait()
 
+    const claimedTx = await (
+      await networkRegistry.deployNewWallet(
+        [ethers.Wallet.createRandom().address, ethers.Wallet.createRandom().address],
+        [ethers.Wallet.createRandom().address],
+        coSigner.address,
+        2,
+      )
+    ).wait()
+
+    const claimedMultiSigAddress = claimedTx.events?.find(
+      (e: any) => e.eventSignature == "WalletDeployed(address)",
+    )?.args?.newMember
+
+    expect(claimedMultiSigAddress).to.properAddress
+
     const deployTx = await (
       await networkRegistry.deployNewWallet([client.address], [], coSigner.address, 2)
     ).wait()

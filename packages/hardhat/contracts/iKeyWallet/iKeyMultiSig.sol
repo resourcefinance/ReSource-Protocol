@@ -149,7 +149,7 @@ contract iKeyMultiSig is OwnableUpgradeable {
         for (uint256 i = 0; i < _guardians.length; i++) {
             require(!guardians[_guardians[i]] && _guardians[i] != address(0));
             guardians[_guardians[i]] = true;
-            owners.push(_guardians[i + _clients.length - 1]);
+            owners.push(_guardians[i]);
         }
         coSigner = _coSigner;
         owners.push(_coSigner);

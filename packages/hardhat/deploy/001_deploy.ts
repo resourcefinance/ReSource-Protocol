@@ -24,7 +24,11 @@ const func: DeployFunction = async function(hardhat: HardhatRuntimeEnvironment) 
     hardhat,
     networkRegistryAbi,
   )
-  await (await walletDeployer.transferOwnership(networkRegistry.address)).wait()
+  try {
+    await (await walletDeployer.transferOwnership(networkRegistry.address)).wait()
+  } catch (e) {
+    console.log(e)
+  }
 
   // reSourceToken deploy
   const reSourceTokenAbi = (await hardhat.artifacts.readArtifact("ReSourceToken")).abi

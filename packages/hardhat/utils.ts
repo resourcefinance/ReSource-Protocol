@@ -25,8 +25,6 @@ export const deployProxyAndSave = async (
 ): Promise<Contract> => {
   const contractFactory = await hardhat.ethers.getContractFactory(name)
 
-  const contractAbi = (await hardhat.artifacts.readArtifact(name)).abi
-
   let contract
   await retry(
     async () => {

@@ -15,13 +15,13 @@ import React, { useState } from "react"
 import { useSetRecoilState } from "recoil"
 import * as yup from "yup"
 import Icon from "../../../components/Icon"
-import { CONTRACTS } from "../../../constants"
 import { Business } from "../../../generated/resource-network/graphql"
 import {
   GetUnderwriteeDocument,
   GetUnderwriterWalletInfoDocument,
 } from "../../../generated/subgraph/graphql"
 import { parseRPCError } from "../../../services/errors/rpcErrors"
+import { CONTRACTS } from "../../../services/web3/constants"
 import { useUnderwriteManagerContract } from "../../../services/web3/contracts"
 import { parseEther } from "../../../services/web3/utils/etherUtils"
 import { waitForTxEvent } from "../../../services/web3/utils/waitForTxEvent"

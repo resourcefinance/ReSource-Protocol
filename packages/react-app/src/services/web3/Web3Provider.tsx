@@ -1,5 +1,5 @@
 import Provider, { Connectors } from "web3-react"
-import { NETWORKS } from "./constants"
+import { NETWORKS } from "../../constants"
 
 const { InjectedConnector } = Connectors
 

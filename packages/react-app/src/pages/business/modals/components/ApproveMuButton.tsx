@@ -2,21 +2,17 @@ import { Button, ButtonProps } from "@chakra-ui/react"
 import { faCheckCircle, faThumbsUp } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import React, { useState } from "react"
-import config from "../../../../config"
 import { parseRPCError } from "../../../../services/errors/rpcErrors"
 import { useReSourceTokenContract } from "../../../../services/web3/contracts"
 import { waitForTxEvent } from "../../../../services/web3/utils/waitForTxEvent"
 import { useTxToast } from "../../../../utils/useTxToast"
-import { useIsApprovedState, useRevertApproval } from "../utils"
-
-const isDev = config.NODE_ENV === "development" // temporary... or convenience for testing in future?
+import { useIsApprovedState } from "../utils"
 
 const ApproveMuButton = (props: ButtonProps) => {
   const [isLoading, setIsLoading] = useState(false)
   const [isApproved, setIsApproved] = useIsApprovedState()
-  const toast = useTxToast()
   const { approve } = useReSourceTokenContract()
-  const revertApproval = useRevertApproval()
+  const toast = useTxToast()
 
   const handleApprove = async () => {
     try {
@@ -39,9 +35,9 @@ const ApproveMuButton = (props: ButtonProps) => {
       colorScheme="blue"
       variant="secondary"
       isLoading={isLoading}
-      isDisabled={isApproved && !isDev}
+      isDisabled={isApproved}
       leftIcon={<FontAwesomeIcon icon={isApproved ? faCheckCircle : faThumbsUp} />}
-      onClick={async () => (isApproved && isDev ? revertApproval() : handleApprove())}
+      onClick={handleApprove}
       {...props}
     >
       {isApproved ? "Revert Approval" : "Approve"}

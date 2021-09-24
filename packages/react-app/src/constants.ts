@@ -1,6 +1,3 @@
-import { readFileSync } from "fs"
-import * as config from "./contracts/artifacts.json"
-
 export const NETWORKS = {
   localhost: {
     chainId: 31337,
@@ -23,18 +20,4 @@ export const SUBGRAPH_URLS = {
   localhost: "http://localhost:8000/subgraphs/name/mu-dapp",
   testnet: "",
   mainet: "",
-}
-
-export const CONTRACTS = {
-  UnderwriteManager: config.UnderwriteManager,
-  ReSourceToken: config.ReSourceToken,
-  RUSDToken: config.RUSD,
-}
-
-export const NETWORK = (chainId: Number) => {
-  for (const n in NETWORKS) {
-    if ((NETWORKS as any)[n].chainId === chainId) {
-      return (NETWORKS as any)[n]
-    }
-  }
 }

@@ -1,4 +1,3 @@
-import { copySync } from "fs-extra"
 const fs = require("fs")
 const chalk = require("chalk")
 const fse = require("fs-extra")
@@ -7,8 +6,6 @@ const graphDir = "./../subgraph"
 const deploymentsDir = "./deployments"
 const typesDir = "./types"
 const publishDir = "./../react-app/src/contracts"
-
-//TODO: store the deployed contracts into a single file with the contract address and blockNumber
 
 function publishContract(contractName: string, networkName: string) {
   try {
@@ -69,8 +66,8 @@ function publishContract(contractName: string, networkName: string) {
 
 async function main() {
   const directories = fs.readdirSync(deploymentsDir)
-
   directories.forEach(function(directory) {
+    if (!fs.existsSync(`${deploymentsDir}/${directory}`)) return
     const files = fs.readdirSync(`${deploymentsDir}/${directory}`)
     files.forEach(function(file) {
       if (file.indexOf(".json") >= 0 && file.indexOf(".dbg") === -1) {

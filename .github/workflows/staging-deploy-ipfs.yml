@@ -56,8 +56,12 @@ jobs:
           echo "ENV RECORD_NAME=$RECORD_NAME" >> ${GITHUB_WORKSPACE}/Dockerfile
 
           cat ${GITHUB_WORKSPACE}/Dockerfile
-          docker build --build-arg CLOUDFLARE_TOKEN=$TOKEN --build-arg CLOUDFLARE_ZONE_ID=$ZONE_ID -t cloudflare-dns .
-          docker run cloudflare-dns
+          echo $(cat ${GITHUB_WORKSPACE}/Dockerfile)
+          echo $(cat ./Dockerfile)
+          echo $(cd ./.github/workflows && cat Dockerfile )
+
+          # docker build --build-arg CLOUDFLARE_TOKEN=$TOKEN --build-arg CLOUDFLARE_ZONE_ID=$ZONE_ID -t cloudflare-dns .
+          # docker run cloudflare-dns
 
       - name: Cat Dockerfile for debug
         id: cat

@@ -20,13 +20,11 @@ jobs:
         run: |
           export SKIP_POSTINSTALL=1 
           yarn install
-          cd ./packages/hardhat && yarn install 
-          cd ./packages/react-app && yarn install
-
-      - name: Publish contracts
-        run: |
           cd ./packages/hardhat
+          yarn install 
           yarn hardhat run scripts/publish.ts
+          cd ../react-app 
+          yarn install
 
       - name: Build app
         run: |

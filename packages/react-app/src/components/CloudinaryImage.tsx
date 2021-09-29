@@ -21,7 +21,7 @@ const CoudinaryImage = (props: CloudinaryImageProps) => {
   const optimizedSrc = props.src
     ? optimizeImage(props.src, { quality, placeholder })
     : getRandomDefaultImage()
-  return <Image minHeight={minH} {...rest} src={optimizedSrc}></Image>
+  return <Image minHeight={minH} {...rest} src={optimizedSrc} fallbackSrc={placeholder1}></Image>
 }
 
 type OptimizationOptions = {

@@ -43,7 +43,7 @@ yarn run-graph-node
 yarn clean-graph-node
 ```
 
-> build and doploy the subgraph
+> build and deploy the subgraph
 
 ```bash
 yarn graph-prepare

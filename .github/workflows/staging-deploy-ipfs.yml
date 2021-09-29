@@ -58,3 +58,13 @@ jobs:
           cat ${GITHUB_WORKSPACE}/Dockerfile
           docker build --build-arg CLOUDFLARE_TOKEN=$TOKEN --build-arg CLOUDFLARE_ZONE_ID=$ZONE_ID -t cloudflare-dns .
           docker run cloudflare-dns
+
+      - name: Cat Dockerfile for debug
+        id: cat
+        uses: pCYSl5EDgo/cat@master
+        with:
+          path: ${GITHUB_WORKSPACE}/Dockerfile
+
+      - run: echo $TEXT
+        env:
+          TEXT: ${{ steps.cat.outputs.text }}

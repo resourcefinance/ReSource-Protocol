@@ -4,12 +4,11 @@ on:
   push:
     branches:
       - production
-      - staging
 
 jobs:
   bucket_push:
     runs-on: ubuntu-latest
-    name: push textile bucket
+    name: Deploy to IPFS & Crust
     steps:
       - uses: actions/checkout@v1
       - name: Use Node.js ${{ matrix.node-version }}

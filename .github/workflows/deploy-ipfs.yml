@@ -21,8 +21,11 @@ jobs:
         run: SKIP_POSTINSTALL=1 yarn
 
       - name: Build app
-        run: CI=false yarn codegen && yarn build
-
+        run: |
+          cd ./packages/react-app/
+          export CI=false 
+          yarn codegen
+          yarn build
       - name: upload
         id: upload
         uses: ReSource-Network/ipfs-action@v1.8.1

@@ -1,11 +1,11 @@
 overwrite: true
 schema:
-  - "http://localhost:8000/subgraphs/name/mu-dapp"
+  - "https://api.thegraph.com/subgraphs/name/resource-network/resource_testnet"
 documents:
   - "src/graphql/subgraph/*.graphql"
 generates:
   src/generated/subgraph/graphql.tsx:
-    schema: http://localhost:8000/subgraphs/name/mu-dapp
+    schema: https://api.thegraph.com/subgraphs/name/resource-network/resource_testnet
     config:
       defaultBaseOptions: {context: {clientName: "subgraph"}}
       withHooks: true

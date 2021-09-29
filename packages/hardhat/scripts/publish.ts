@@ -1,3 +1,5 @@
+import { network } from "hardhat"
+
 const fs = require("fs")
 const chalk = require("chalk")
 const fse = require("fs-extra")
@@ -65,16 +67,13 @@ function publishContract(contractName: string, networkName: string) {
 }
 
 async function main() {
-  const directories = fs.readdirSync(deploymentsDir)
-  directories.forEach(function(directory) {
-    if (!fs.existsSync(`${deploymentsDir}/${directory}`)) return
-    const files = fs.readdirSync(`${deploymentsDir}/${directory}`)
-    files.forEach(function(file) {
-      if (file.indexOf(".json") >= 0 && file.indexOf(".dbg") === -1) {
-        const contractName = file.replace(".json", "")
-        publishContract(contractName, directory)
-      }
-    })
+  if (!fs.existsSync(`${deploymentsDir}/${network.name}`)) return
+  const files = fs.readdirSync(`${deploymentsDir}/${network.name}`)
+  files.forEach(function(file) {
+    if (file.indexOf(".json") >= 0 && file.indexOf(".dbg") === -1) {
+      const contractName = file.replace(".json", "")
+      publishContract(contractName, network.name)
+    }
   })
   fse.copySync(typesDir, publishDir)
   console.log("✅  Published contracts to the subgraph package.")

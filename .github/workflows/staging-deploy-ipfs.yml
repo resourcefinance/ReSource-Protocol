@@ -17,7 +17,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Install Packages
-        run: SKIP_POSTINSTALL=1 yarn
+        run: SKIP_POSTINSTALL=1 cd ./packages/react-app && yarn
 
       - name: Build app
         run: |

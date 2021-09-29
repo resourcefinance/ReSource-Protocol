@@ -51,17 +51,8 @@ jobs:
           RECORD_DOMAIN: "resource.finance"
           RECORD_NAME: "_dnslink.app"
         run: |
-          echo "ENV CID=$CID" >> ${GITHUB_WORKSPACE}/Dockerfile
-          echo "ENV RECORD_DOMAIN=$RECORD_DOMAIN" >> ${GITHUB_WORKSPACE}/Dockerfile
-          echo "ENV RECORD_NAME=$RECORD_NAME" >> ${GITHUB_WORKSPACE}/Dockerfile
-
-          cat ${GITHUB_WORKSPACE}/Dockerfile
-          echo $(cat ${GITHUB_WORKSPACE}/Dockerfile)
-          echo $(cat ./Dockerfile)
-          echo $(cd ./.github/workflows && cat Dockerfile )
-
-          # docker build --build-arg CLOUDFLARE_TOKEN=$TOKEN --build-arg CLOUDFLARE_ZONE_ID=$ZONE_ID -t cloudflare-dns .
-          # docker run cloudflare-dns
+          echo $CID
+          echo ${{ steps.upload.outputs.hash }}
 
       - name: Cat Dockerfile for debug
         id: cat

@@ -3,7 +3,7 @@ import { faMapPin } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import React from "react"
 import { Link } from "react-router-dom"
-import defaultImage from "../../../assets/images/defaultImage.svg"
+import defaultImage from "../../../assets/images/placeholder-1.jpg"
 import CloudinaryImage from "../../../components/CloudinaryImage"
 import { Business } from "../../../generated/resource-network/graphql"
 

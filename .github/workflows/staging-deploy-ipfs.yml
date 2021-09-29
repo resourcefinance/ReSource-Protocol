@@ -19,9 +19,9 @@ jobs:
       - name: Install Packages
         run: |
           export SKIP_POSTINSTALL=1 
-          yarn install --frozen-lockfile
-          cd ./packages/hardhat && yarn install --frozen-lockfile
-          cd ./packages/react-app && yarn install --frozen-lockfile
+          yarn install
+          cd ./packages/hardhat && yarn install 
+          cd ./packages/react-app && yarn install
 
       - name: Publish contracts
         run: |

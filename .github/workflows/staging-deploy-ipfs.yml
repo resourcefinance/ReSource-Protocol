@@ -22,7 +22,6 @@ jobs:
           yarn install
           cd ./packages/hardhat
           yarn install 
-          yarn hardhat run scripts/publish.ts
           cd ../react-app 
           yarn install
 

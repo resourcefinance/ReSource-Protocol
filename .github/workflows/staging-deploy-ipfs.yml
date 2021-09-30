@@ -16,15 +16,47 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Install
+      - name: Cache Root Node Modules
+        id: cache-root
+        uses: actions/cache@v2
+        with:
+          path: ./node_modules
+          key: root-node-modules-${{ hashFiles('yarn.lock') }}
+
+      - name: Install Root Dependencies
+        if: steps.cache-root.outputs.cache-hit != 'true'
+        run: SKIP_POSTINSTALL=1 yarn install
+
+      - name: Cache Hardhat Node Modules
+        id: cache-hardhat
+        uses: actions/cache@v2
+        with:
+          path: ./node_modules/packages/hardhat/node_modules
+          key: hardhat-node-modules-${{ hashFiles('yarn.lock') }}
+
+      - name: Install Hardhat Dependencies
+        if: steps.cache-hardhat.outputs.cache-hit != 'true'
         run: |
-          export SKIP_POSTINSTALL=1 
-          yarn install
+          cd ./packages/hardhat/
+          SKIP_POSTINSTALL=1 yarn install
+
+      - name: Hardhat post-deploy
+        run: |
           cd ./packages/hardhat
-          yarn install 
           yarn postdeploy --network celo-alfajores
-          cd ../react-app 
-          yarn install
+
+      - name: Cache React Node Modules
+        id: cache-react
+        uses: actions/cache@v2
+        with:
+          path: ./node_modules/packages/react-app/node_modules
+          key: react-node-modules-${{ hashFiles('yarn.lock') }}
+
+      - name: Install React Dependencies
+        if: steps.cache-react.outputs.cache-hit != 'true'
+        run: |
+          cd ./packages/react-app/
+          SKIP_POSTINSTALL=1 yarn install
 
       - name: Build
         env:

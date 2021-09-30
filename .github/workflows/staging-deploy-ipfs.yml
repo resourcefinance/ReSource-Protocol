@@ -27,6 +27,11 @@ jobs:
           yarn install
 
       - name: Build app
+        env:
+          REACT_APP_NETWORK_NAME: celo-alfajores
+          REACT_APP_SUBGRAPH_URL: https://api.thegraph.com/subgraphs/name/resource-network/resource_testnet
+          REACT_APP_RESOURCE_URL: https://staging-api.resourcenetwork.co/graphql
+          REACT_APP_NETWORK_NAME: celo-alfajores
         run: |
           cd ./packages/react-app/
           export CI=false 

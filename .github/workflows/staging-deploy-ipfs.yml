@@ -53,6 +53,6 @@ jobs:
         with:
           CID: ${{ steps.upload.outputs.hash }}
           TOKEN: ${{secrets.CLOUDFLARE_TOKEN}}
-          ZONE_ID: ${{secrets.ZONE_ID}}
+          ZONE_ID: ${{secrets.CLOUDFLARE_ZONE_ID}}
           RECORD_DOMAIN: "resource.finance"
           RECORD_NAME: "_dnslink.staging"

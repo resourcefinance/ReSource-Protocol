@@ -16,36 +16,43 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Install Packages
-        run: SKIP_POSTINSTALL=1 yarn
+      - name: Install
+        run: |
+          export SKIP_POSTINSTALL=1 
+          yarn install
+          cd ./packages/hardhat
+          yarn install 
+          yarn postdeploy --network celo-alfajores
+          cd ../react-app 
+          yarn install
 
-      - name: Build app
+      - name: Build
+        env:
+          REACT_APP_SUBGRAPH_URL: https://api.thegraph.com/subgraphs/name/resource-network/resource_testnet
+          REACT_APP_RESOURCE_URL: https://staging-api.resourcenetwork.co/graphql
+          REACT_APP_NETWORK_NAME: celo-alfajores
         run: |
           cd ./packages/react-app/
           export CI=false 
           yarn codegen
           yarn build
-      - name: upload
+
+      - name: Upload to IPFS & pin via Pinata
         id: upload
         uses: ReSource-Network/ipfs-action@v1.8.1
         with:
           path: ./packages/react-app/build
-          pinataPinName: mu-dapp
+          pinataPinName: source-dapp
           service: pinata
           pinataKey: ${{ secrets.PINATA_KEY }}
           pinataSecret: ${{ secrets.PINATA_SECRET }}
 
       - name: Update DNSLink
-        env:
-          TOKEN: ${{ secrets.CLOUDFLARE_TOKEN }}
-          ZONE_ID: ${{ secrets.CLOUDFLARE_ZONE_ID }}
+        id: dnslink
+        uses: ReSource-Network/cloudlfare-dnslink-update@v1.21
+        with:
           CID: ${{ steps.upload.outputs.hash }}
+          TOKEN: ${{secrets.CLOUDFLARE_TOKEN}}
+          ZONE_ID: ${{secrets.CLOUDFLARE_ZONE_ID}}
           RECORD_DOMAIN: "resource.finance"
-          RECORD_NAME: "_dnslink.app"
-        run: |
-          echo "ENV CID=$CID" >> ${GITHUB_WORKSPACE}/Dockerfile
-          echo "ENV RECORD_DOMAIN=$RECORD_DOMAIN" >> ${GITHUB_WORKSPACE}/Dockerfile
-          echo "ENV RECORD_NAME=$RECORD_NAME" >> ${GITHUB_WORKSPACE}/Dockerfile
-
-          docker build --build-arg CLOUDFLARE_TOKEN=$TOKEN --build-arg CLOUDFLARE_ZONE_ID=$ZONE_ID -t cloudflare-dns .
-          docker run cloudflare-dns
+          RECORD_NAME: "_dnslink.staging"

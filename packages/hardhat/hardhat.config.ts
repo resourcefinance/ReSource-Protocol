@@ -20,8 +20,7 @@ import { HttpNetworkUserConfig } from "hardhat/types"
 
 import "./tasks/accounts"
 import "./tasks/clean"
-import { ReSourceToken } from "../react-app/src/contracts/ReSourceToken"
-import { ReSourceToken__factory } from "../react-app/src/contracts/factories/ReSourceToken__factory"
+import { ReSourceToken, ReSourceToken__factory } from "./types"
 
 const { isAddress, getAddress, formatUnits, parseUnits } = utils
 

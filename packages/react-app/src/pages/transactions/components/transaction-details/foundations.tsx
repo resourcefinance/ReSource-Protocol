@@ -102,7 +102,7 @@ export const TransactionIdLineItem = ({ transaction }: { transaction: Transactio
         <Link
           color="blue.main"
           target="_blank"
-          href={config.BLOCKCHAIN.EXPLORER + `/tx/${transaction.txHash}`}
+          href={config.NETWORK_EXPLORER_URL + `/tx/${transaction.txHash}`}
         >
           <HStack align="center">
             <Text variant="caption" noOfLines={1}>

@@ -28,6 +28,7 @@ export const config = {
   RESOURCE_NETWORK_URL: process.env.REACT_APP_RESOURCE_URL!,
   SUBGRAPH_URL: process.env.REACT_APP_SUBGRAPH_URL!,
   NETWORK_CHAIN_ID: getNetworkID(process.env.REACT_APP_NETWORK_NAME!),
+  NETWORK_NAME: process.env.REACT_APP_NETWORK_NAME!,
 }
 
 export default config

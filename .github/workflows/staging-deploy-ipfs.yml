@@ -54,6 +54,10 @@ jobs:
           RECORD_NAME: "_dnslink.staging"
           CLOUDFLARE_ZONE_ID: ${{ secrets.CLOUDFLARE_ZONE_ID }}
         id: dnslink
-        uses: ReSource-Network/cloudlfare-dnslink-update@v1.2
+        uses: ReSource-Network/cloudlfare-dnslink-update@v1.21
         with:
-          cid: ${{ steps.upload.outputs.hash }}
+          CID: ${{ steps.upload.outputs.hash }}
+          TOKEN: ${{secrets.TOKEN}}
+          ZONE_ID: ${{secrets.ZONE_ID}}
+          RECORD_DOMAIN: ${{secrets.RECORD_DOMAIN}}
+          RECORD_NAME: ${{secrets.RECORD_NAME}}

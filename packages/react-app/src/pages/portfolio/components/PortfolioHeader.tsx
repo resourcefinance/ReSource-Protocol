@@ -25,7 +25,7 @@ export const PortfolioHeader = () => {
       <Heading size="subtitle">My Portfolio</Heading>
       <HStack justify="flex-end" align="center" spacing={5}>
         <OutstandingRewards {...outstandingRewardsStyles} value={rewards} />
-        <ClaimRewardsButton creditLines={creditLines} />
+        <ClaimRewardsButton creditLines={creditLines} value={rewards} />
       </HStack>
     </Flex>
   )

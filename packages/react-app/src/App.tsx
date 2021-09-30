@@ -1,6 +1,6 @@
 import { useDisclosure } from "@chakra-ui/react"
 import React, { useEffect, useState } from "react"
-import { BrowserRouter } from "react-router-dom"
+import { HashRouter } from "react-router-dom"
 import { RecoilRoot } from "recoil"
 import { useWeb3Context } from "web3-react"
 import Footer from "./components/Footer"
@@ -22,9 +22,9 @@ function App() {
           <RecoilRoot>
             <Web3Provider>
               <ApolloProvider>
-                <BrowserRouter>
+                <HashRouter>
                   <AppLayout />
-                </BrowserRouter>
+                </HashRouter>
               </ApolloProvider>
             </Web3Provider>
           </RecoilRoot>

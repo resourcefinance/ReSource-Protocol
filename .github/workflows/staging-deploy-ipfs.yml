@@ -48,16 +48,11 @@ jobs:
           pinataSecret: ${{ secrets.PINATA_SECRET }}
 
       - name: Update DNSLink
-        env:
-          CLOUDFLARE_TOKEN: ${{ secrets.CLOUDFLARE_TOKEN }}
-          RECORD_DOMAIN: "resource.finance"
-          RECORD_NAME: "_dnslink.staging"
-          CLOUDFLARE_ZONE_ID: ${{ secrets.CLOUDFLARE_ZONE_ID }}
         id: dnslink
         uses: ReSource-Network/cloudlfare-dnslink-update@v1.21
         with:
           CID: ${{ steps.upload.outputs.hash }}
-          TOKEN: ${{secrets.TOKEN}}
+          TOKEN: ${{secrets.CLOUDFLARE_TOKEN}}
           ZONE_ID: ${{secrets.ZONE_ID}}
-          RECORD_DOMAIN: ${{secrets.RECORD_DOMAIN}}
-          RECORD_NAME: ${{secrets.RECORD_NAME}}
+          RECORD_DOMAIN: "resource.finance"
+          RECORD_NAME: "_dnslink.staging"

@@ -42,28 +42,10 @@ jobs:
         uses: ReSource-Network/ipfs-action@v1.8.1
         with:
           path: ./packages/react-app/build
-          pinataPinName: mu-dapp
+          pinataPinName: source-dapp
           service: pinata
           pinataKey: ${{ secrets.PINATA_KEY }}
           pinataSecret: ${{ secrets.PINATA_SECRET }}
 
-      - name: Update DNSLink
-        env:
-          TOKEN: ${{ secrets.CLOUDFLARE_TOKEN }}
-          ZONE_ID: ${{ secrets.CLOUDFLARE_ZONE_ID }}
-          CID: ${{ steps.upload.outputs.hash }}
-          RECORD_DOMAIN: "resource.finance"
-          RECORD_NAME: "_dnslink.app"
-        run: |
-          echo $CID
-          echo ${{ steps.upload.outputs.hash }}
-
-      - name: Cat Dockerfile for debug
-        id: cat
-        uses: pCYSl5EDgo/cat@master
-        with:
-          path: ${GITHUB_WORKSPACE}/Dockerfile
-
-      - run: echo $TEXT
-        env:
-          TEXT: ${{ steps.cat.outputs.text }}
+      - name: Cat IPFS Hash
+        run: echo ${{ steps.upload.outputs.hash }}

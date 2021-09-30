@@ -31,7 +31,7 @@ const ConnectWalletModal = ({ isOpen, onClose }) => {
     <Modal size="sm" closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose} isCentered>
       <ModalOverlay />
       <ModalContent m="1em">
-        <ModalHeader>Connect to a wallet</ModalHeader>
+        <ModalHeader>Connect your wallet</ModalHeader>
         <ModalBody>
           <VStack align="stretch">
             <Button
@@ -43,7 +43,7 @@ const ConnectWalletModal = ({ isOpen, onClose }) => {
             >
               {context.active ? getAbbreviatedAddress(context.account || "") : "Connect Wallet"}
             </Button>
-            <ComingSoonConnectors />
+            {/* <ComingSoonConnectors /> */}
           </VStack>
           <Text mt="2em">
             Connect to a wallet holding SOURCE tokens to access staking and underwriting

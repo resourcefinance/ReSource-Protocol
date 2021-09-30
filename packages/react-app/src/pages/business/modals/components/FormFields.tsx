@@ -15,11 +15,13 @@ import { MIN_CREDIT_LINE } from "../utils"
 interface Props extends BoxProps {
   formik: any
   extendCredit?: boolean
+  minimumCreditLine?: number
 }
 
-export const CreditField = ({ formik, extendCredit, ...rest }: Props) => {
+export const CreditField = ({ formik, extendCredit, minimumCreditLine, ...rest }: Props) => {
   const label = `Credit to ${extendCredit ? "extend" : "assign"} & underwrite`
-  const setMin = () => formik.setValues({ ...formik.values, credit: MIN_CREDIT_LINE })
+  if (!minimumCreditLine) minimumCreditLine = MIN_CREDIT_LINE
+  const setMin = () => formik.setValues({ ...formik.values, credit: minimumCreditLine })
 
   useEffect(() => {
     formik.setFieldValue("collateral", formik.values.credit)
@@ -29,7 +31,7 @@ export const CreditField = ({ formik, extendCredit, ...rest }: Props) => {
     <Box {...containerStyles} {...rest}>
       <HStack justify="space-between">
         <Text color="gray.700">{label}</Text>
-        {!extendCredit && <Text color="gray.500">min = {MIN_CREDIT_LINE.toFixed(2)}</Text>}
+        {!extendCredit && <Text color="gray.500">min = {minimumCreditLine.toFixed(2)}</Text>}
       </HStack>
       <HStack align="center" justify="space-between">
         <FormikField formik={formik} formikKey="credit" hideErrorMessage>

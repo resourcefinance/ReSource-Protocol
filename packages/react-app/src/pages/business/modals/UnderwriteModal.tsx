@@ -33,18 +33,11 @@ import { BusinessHeader } from "./components/BusinessHeader"
 import { CollateralField, CreditField } from "./components/FormFields"
 import StakeButton from "./components/StakeButton"
 import { MIN_CREDIT_LINE, useIsApprovedState } from "./utils"
+import { ethers } from "ethers"
 
 interface UnderwriteModalProps extends ModalProps {
   business: Business
 }
-
-const validation = yup.object({
-  collateral: yup.number().required("collateral value is required"),
-  credit: yup
-    .number()
-    .min(MIN_CREDIT_LINE)
-    .required("credit line is required"),
-})
 
 const UnderwriteModal = ({ isOpen, onClose, business }: UnderwriteModalProps) => {
   const setFetchPolicy = useSetRecoilState(refetchQueriesAtom)
@@ -54,6 +47,19 @@ const UnderwriteModal = ({ isOpen, onClose, business }: UnderwriteModalProps) =>
   const [isApproved] = useIsApprovedState()
   const refetch = useRefetchQueries()
   const toast = useTxToast()
+
+  const minimum =
+    Number(business.wallet?.creditLimit) !== 0
+      ? Number(business.wallet?.creditLimit)
+      : MIN_CREDIT_LINE
+
+  const validation = yup.object({
+    collateral: yup.number().required("collateral value is required"),
+    credit: yup
+      .number()
+      .min(minimum)
+      .required("credit line is required"),
+  })
 
   const formik = useFormik({
     validateOnChange: true,
@@ -103,7 +109,7 @@ const UnderwriteModal = ({ isOpen, onClose, business }: UnderwriteModalProps) =>
           <ModalBody>
             <VStack align="stretch" spacing={5}>
               <BusinessHeader business={business} />
-              <CreditField formik={formik} />
+              <CreditField formik={formik} minimumCreditLine={minimum} />
               <Icon icon={faLink} alignSelf="center" />
               <CollateralField formik={formik} />
             </VStack>

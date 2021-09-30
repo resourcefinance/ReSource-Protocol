@@ -20,6 +20,8 @@ import { HttpNetworkUserConfig } from "hardhat/types"
 
 import "./tasks/accounts"
 import "./tasks/clean"
+import { ReSourceToken } from "../react-app/src/contracts/ReSourceToken"
+import { ReSourceToken__factory } from "../react-app/src/contracts/factories/ReSourceToken__factory"
 
 const { isAddress, getAddress, formatUnits, parseUnits } = utils
 
@@ -353,4 +355,33 @@ task("send", "Send ETH")
     debug(JSON.stringify(txRequest, null, 2))
 
     return send(fromSigner, txRequest)
+  })
+
+task("sendSource", "Send SOURCE")
+  .addParam("to", "Address to send SOURCE to ")
+  .addParam("amount", "Amount of Source to send to to address")
+  .setAction(async (taskArgs, { ethers, network }) => {
+    const deploymentPath = `./deployments/${network.name}/ReSourceToken.json`
+    const ReSourceTokenDeployment = fs.readFileSync(deploymentPath).toString()
+    const ReSourceTokenAddress = JSON.parse(ReSourceTokenDeployment)["address"]
+
+    if (!ReSourceTokenAddress) throw new Error("token not deployed on this network")
+
+    const to = await addr(ethers, taskArgs.to)
+    const amount = ethers.utils.parseEther(taskArgs.amount)
+    debug(`Normalized to address: ${to}`)
+    const signer = (await ethers.getSigners())[0]
+
+    const tokenContract = new ethers.Contract(
+      ReSourceTokenAddress,
+      ReSourceToken__factory.createInterface(),
+      signer,
+    ) as ReSourceToken
+
+    try {
+      await (await tokenContract.transfer(to, amount)).wait()
+      console.log("Funds transfered")
+    } catch (e) {
+      console.log(e)
+    }
   })

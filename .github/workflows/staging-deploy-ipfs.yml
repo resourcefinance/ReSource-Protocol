@@ -16,7 +16,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Install Packages
+      - name: Install
         run: |
           export SKIP_POSTINSTALL=1 
           yarn install
@@ -26,7 +26,7 @@ jobs:
           cd ../react-app 
           yarn install
 
-      - name: Build app
+      - name: Build
         env:
           REACT_APP_SUBGRAPH_URL: https://api.thegraph.com/subgraphs/name/resource-network/resource_testnet
           REACT_APP_RESOURCE_URL: https://staging-api.resourcenetwork.co/graphql
@@ -37,7 +37,7 @@ jobs:
           yarn codegen
           yarn build
 
-      - name: upload
+      - name: Upload to IPFS & pin via Pinata
         id: upload
         uses: ReSource-Network/ipfs-action@v1.8.1
         with:
@@ -47,5 +47,13 @@ jobs:
           pinataKey: ${{ secrets.PINATA_KEY }}
           pinataSecret: ${{ secrets.PINATA_SECRET }}
 
-      - name: Cat IPFS Hash
-        run: echo ${{ steps.upload.outputs.hash }}
+      - name: Update DNSLink
+        env:
+          CLOUDFLARE_TOKEN: ${{ secrets.CLOUDFLARE_TOKEN }}
+          RECORD_DOMAIN: "resource.finance"
+          RECORD_NAME: "_dnslink.staging"
+          CLOUDFLARE_ZONE_ID: ${{ secrets.CLOUDFLARE_ZONE_ID }}
+        id: dnslink
+        uses: ReSource-Network/cloudlfare-dnslink-update@v1.2
+        with:
+          cid: ${{ steps.upload.outputs.hash }}

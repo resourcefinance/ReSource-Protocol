@@ -40,7 +40,7 @@ const ApproveMuButton = (props: ButtonProps) => {
       onClick={handleApprove}
       {...props}
     >
-      {isApproved ? "Revert Approval" : "Approve"}
+      {isApproved ? "Approved" : "Approve"}
     </Button>
   )
 }

@@ -11,9 +11,10 @@ import { useTxToast } from "../../../utils/useTxToast"
 
 export interface ClaimRewardsButtonProps extends ButtonProps {
   creditLines: CreditLineFieldsFragment[]
+  value: number
 }
 
-const ClaimRewardsButton = ({ creditLines, ...rest }: ClaimRewardsButtonProps) => {
+const ClaimRewardsButton = ({ value, creditLines, ...rest }: ClaimRewardsButtonProps) => {
   const [isLoading, setIsLoading] = useState(false)
   const toast = useTxToast()
   const refetch = useRefetchData()
@@ -46,6 +47,7 @@ const ClaimRewardsButton = ({ creditLines, ...rest }: ClaimRewardsButtonProps) =
     <Button
       maxH="37px"
       isLoading={isLoading}
+      isDisabled={!(value > 0)}
       colorScheme="blue"
       leftIcon={<FontAwesomeIcon icon={faCoins} />}
       onClick={async () => await handleClaimRewards()}

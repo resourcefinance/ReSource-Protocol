@@ -11,7 +11,7 @@ async function main(): Promise<void> {
   const provider = new CeloProvider(connectionInfo.url)
   await provider.ready
 
-  const multiSigAddress = "0x4371aa2786e444992dcd2f226a990f292e14234e"
+  const multiSigAddress = "0x45a8414da26325fcbb88c1e0875f7767dd4bc57a"
   const RUSDAddress = "0xf254D120A2d53bD774e265257d126a5A47d1dE14"
 
   const multiSigContract = new ethers.Contract(

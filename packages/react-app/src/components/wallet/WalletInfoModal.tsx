@@ -102,6 +102,6 @@ const WalletInfoModal = ({ isOpen, onClose, address }: WalletInfoModalProps) => 
 }
 
 const getLinkToAccount = (address: string) =>
-  `${config.BLOCKCHAIN.EXPLORER}/address/${address}/transactions`
+  `${config.NETWORK_EXPLORER_URL}/address/${address}/transactions`
 
 export default WalletInfoModal

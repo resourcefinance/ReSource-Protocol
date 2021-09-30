@@ -1,14 +1,10 @@
 import Provider, { Connectors } from "web3-react"
-import { NETWORKS } from "../../constants"
+import config from "../../config"
 
 const { InjectedConnector } = Connectors
 
 const MetaMask = new InjectedConnector({
-  supportedNetworks: [
-    NETWORKS.celo.chainId,
-    NETWORKS["celo-alfajores"].chainId,
-    NETWORKS.localhost.chainId,
-  ],
+  supportedNetworks: [config.NETWORK_CHAIN_ID],
 })
 
 const connectors = { MetaMask }

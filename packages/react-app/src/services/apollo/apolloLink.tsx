@@ -1,10 +1,9 @@
 import { ApolloLink, HttpLink } from "@apollo/client"
 import { useState } from "react"
-// import { sentryErrorLink } from "../sentry"
-import { SUBGRAPH_URLS } from "../../constants"
+import { config } from "../../config"
 
-const networkEndpoint = "http://localhost/graphql"
-const subgraphEndpoint = SUBGRAPH_URLS.localhost
+const networkEndpoint = config.RESOURCE_NETWORK_URL
+const subgraphEndpoint = config.SUBGRAPH_URL
 const networkLink = new HttpLink({ uri: networkEndpoint })
 export const subgraphLink = new HttpLink({ uri: subgraphEndpoint })
 
@@ -15,7 +14,7 @@ const getApolloLink = (token?: string) =>
   })
 
 export const useGetNetworkLink = () => {
-  const [middlewareLink, setMiddlewareLink] = useState(getApolloLink())
+  const [middlewareLink] = useState(getApolloLink())
   const httpLinkAuth = middlewareLink.concat(networkLink)
-  return ApolloLink.from([/*sentryErrorLink*/ httpLinkAuth])
+  return ApolloLink.from([httpLinkAuth])
 }

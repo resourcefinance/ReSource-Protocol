@@ -1,7 +1,7 @@
 export const NETWORKS = {
   localhost: {
     chainId: 31337,
-    blockExplorer: "",
+    blockExplorer: "https://alfajores-forno.celo-testnet.org",
     rpcUrl: "http://" + window.location.hostname + ":8545",
   },
   "celo-alfajores": {
@@ -14,10 +14,4 @@ export const NETWORKS = {
     rpcUrl: `https://forno.celo.org`,
     blockExplorer: "https://explorer.celo.org",
   },
-}
-
-export const SUBGRAPH_URLS = {
-  localhost: "http://localhost:8000/subgraphs/name/mu-dapp",
-  testnet: "",
-  mainet: "",
 }

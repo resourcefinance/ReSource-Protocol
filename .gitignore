@@ -42,9 +42,5 @@ yarn-error.log*
 
 # Local Netlify folder
 .netlify
-mnemonic_cosigner.txt
-mnemonic_relayer.txt
-mnemonic_temp.txt
-.vscode/settings.json
-.vscode/settings.json
+
 .vscode/settings.json

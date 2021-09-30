@@ -17,6 +17,7 @@ fragment BusinessFields on Business {
     id
     isActive
     multiSigAddress
+    creditLimit
   }
   listings {
     id

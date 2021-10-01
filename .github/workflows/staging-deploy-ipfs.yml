@@ -27,11 +27,8 @@ jobs:
           path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
           key: ${{ runner.os }}-${{ hashFiles('*/*/yarn.lock') }}
 
-      - name: Install Dependencies
+      - name: Install dependencies
         if: steps.yarn-cache.outputs.cache-hit != 'true'
-        run: npm install
-
-      - name: Install
         run: |
           export SKIP_POSTINSTALL=1 
           yarn install

@@ -16,15 +16,32 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Install
+      - name: Cache Node Modules
+        id: yarn-cache
+        uses: actions/cache@v2
+        with:
+          path: "**/node_modules"
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+
+      - name: Install Root Dependencies
+        if: steps.yarn-cache.outputs.cache-hit != 'true'
+        run: SKIP_POSTINSTALL=1 yarn install
+
+      - name: Install Hardhat Dependencies
         run: |
-          export SKIP_POSTINSTALL=1 
-          yarn install
+          cd ./packages/hardhat/
+          SKIP_POSTINSTALL=1 yarn install
+
+      - name: Hardhat post-deploy
+        run: |
           cd ./packages/hardhat
-          yarn install 
           yarn postdeploy --network celo-alfajores
-          cd ../react-app 
-          yarn install
+
+      - name: Install React Dependencies
+        if: steps.yarn-cache.outputs.cache-hit != 'true'
+        run: |
+          cd ./packages/react-app/
+          SKIP_POSTINSTALL=1 yarn install
 
       - name: Build
         env:
@@ -55,4 +72,4 @@ jobs:
           TOKEN: ${{secrets.CLOUDFLARE_TOKEN}}
           ZONE_ID: ${{secrets.CLOUDFLARE_ZONE_ID}}
           RECORD_DOMAIN: "resource.finance"
-          RECORD_NAME: "_dnslink.staging"
+          RECORD_NAME: "_dnslink.app"

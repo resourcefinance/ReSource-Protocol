@@ -8,7 +8,7 @@ on:
 jobs:
   bucket_push:
     runs-on: ubuntu-latest
-    name: Deploy to IPFS & Crust
+    name: Deploy to IPFS & Pin
     steps:
       - uses: actions/checkout@v1
       - name: Use Node.js ${{ matrix.node-version }}
@@ -53,6 +53,7 @@ jobs:
           export CI=false 
           yarn codegen
           yarn build
+
       - name: Upload to IPFS & pin via Pinata
         id: upload
         uses: ReSource-Network/ipfs-action@v1.8.1

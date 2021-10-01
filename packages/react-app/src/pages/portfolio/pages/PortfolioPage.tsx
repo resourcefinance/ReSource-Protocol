@@ -64,7 +64,9 @@ const useGetCreditLines = (underwriterAddress?: string) => {
 const useGetBusinesses = (creditLines: CreditLineFieldsFragment[]) => {
   const underwritees = creditLines.map((creditLine) => creditLine.underwritee)
   const query = useFindBusinessesForPortfolioQuery({
-    variables: { where: { wallet: { multiSigAddress: { in: underwritees } } } },
+    variables: {
+      where: { wallet: { multiSigAddress: { in: underwritees } }, isDisabled: { equals: false } },
+    },
     skip: !underwritees.length,
   })
 

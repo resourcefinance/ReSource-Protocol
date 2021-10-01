@@ -52,7 +52,7 @@
     "compile": "hardhat compile",
     "typechain": "hardhat typechain",
     "deploy": "hardhat deploy",
-    "postdeploy": "hardhat run scripts/publish.ts",
+    "postdeploy": "yarn hardhat run scripts/publish.ts",
     "local-setup": "hardhat run scripts/local-setup.ts",
     "watch": "node scripts/watch.js",
     "accounts": "hardhat accounts",

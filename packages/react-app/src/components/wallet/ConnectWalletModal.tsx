@@ -54,7 +54,7 @@ const ConnectWalletModal = ({ isOpen, onClose }) => {
           </Text>
         </ModalBody>
         <ModalFooter>
-          <VStack alignItems="flex-end">
+          <HStack alignItems="center">
             <Text color="red.main">{errorMessage}</Text>
             {errorMessage.includes("network") && (
               <IconButton
@@ -67,11 +67,11 @@ const ConnectWalletModal = ({ isOpen, onClose }) => {
                 size="sm"
                 variant="ghost"
                 aria-label="info"
-                color="gray"
+                color="red.main"
                 icon={<FontAwesomeIcon icon={faInfoCircle} />}
               />
             )}
-          </VStack>
+          </HStack>
         </ModalFooter>
       </ModalContent>
     </Modal>

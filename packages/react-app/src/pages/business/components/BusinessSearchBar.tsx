@@ -1,5 +1,5 @@
 import { BoxProps } from "@chakra-ui/layout"
-import { Input, InputGroup, VStack, Text, InputLeftElement } from "@chakra-ui/react"
+import { Input, InputGroup, InputLeftElement } from "@chakra-ui/react"
 import { faAt } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import React, { useRef } from "react"
@@ -17,15 +17,12 @@ const BusinessSearchBar = ({ onSearch, ...rest }: Props) => {
   }
 
   return (
-    <>
-      <InputGroup>
-        <InputLeftElement zIndex={1} pointerEvents="none">
-          <FontAwesomeIcon icon={faAt} />
-        </InputLeftElement>
-        <Input ref={inputRef} onKeyPress={handleKeyPressed} placeholder={`Search businesses`} />
-      </InputGroup>
-      <Text>business handle must be exact</Text>
-    </>
+    <InputGroup>
+      <InputLeftElement zIndex={1} pointerEvents="none">
+        <FontAwesomeIcon icon={faAt} />
+      </InputLeftElement>
+      <Input ref={inputRef} onKeyPress={handleKeyPressed} placeholder={`Search businesses`} />
+    </InputGroup>
   )
 }
 

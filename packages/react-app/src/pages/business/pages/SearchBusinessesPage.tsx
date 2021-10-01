@@ -20,7 +20,7 @@ const SearchBusinessesPage = () => {
   return (
     <Container>
       <Center h="100vh">
-        <VStack justify="center" mb="450px" alignItems="flex-end" h="450px" w="400px">
+        <VStack justify="space-between" h="450px" w="400px">
           <BusinessSearchBar onSearch={handleSearch} />
           {!loading && business && <BusinessCard business={business} />}
           {loading && (

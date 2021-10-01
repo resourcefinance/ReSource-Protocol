@@ -13,6 +13,9 @@ fragment BusinessFields on Business {
   createdAt
   email
   ownerId
+  owner {
+    email
+  }
   wallet {
     id
     isActive

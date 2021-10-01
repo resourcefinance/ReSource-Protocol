@@ -30,15 +30,19 @@ const { isAddress, getAddress, formatUnits, parseUnits } = utils
 const defaultNetwork = "localhost"
 
 function mnemonic() {
-  try {
-    return fs
-      .readFileSync("./mnemonic.txt")
-      .toString()
-      .trim()
-  } catch (e) {
-    console.log(e)
+  const path = "./mnemonic.txt"
+  if (fs.existsSync(path)) {
+    try {
+      return fs
+        .readFileSync("./mnemonic.txt")
+        .toString()
+        .trim()
+    } catch (e) {
+      console.log("Mnemonic: ", e)
+    }
+  } else {
+    return ""
   }
-  return ""
 }
 
 enum chainIds {

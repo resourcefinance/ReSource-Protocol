@@ -1,6 +1,7 @@
 import { Box, BoxProps, Text } from "@chakra-ui/layout"
 import { Avatar, Flex, HStack } from "@chakra-ui/react"
 import React from "react"
+import { useHistory } from "react-router"
 import { Business } from "../../../generated/resource-network/graphql"
 import colors from "../../../theme/foundations/colors"
 import {
@@ -16,6 +17,7 @@ interface Props extends BoxProps {
 }
 
 const BusinessNamesDrawer = ({ businesses, ...rest }: Props) => {
+  const history = useHistory()
   const height = document.body.scrollHeight
   return (
     <>
@@ -40,6 +42,8 @@ const BusinessNamesDrawer = ({ businesses, ...rest }: Props) => {
               align="center"
               bgColor={bgColor}
               h={tableRowHeight}
+              cursor={business?.id ? "pointer" : "initial"}
+              onClick={() => business?.id && history.push(`/businesses/${business.handle}/summary`)}
             >
               {business.name && <Avatar boxSize="22px" src={business.logoUrl ?? ""} />}
               <Text>{business.name}</Text>

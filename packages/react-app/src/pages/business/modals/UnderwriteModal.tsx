@@ -53,12 +53,12 @@ const UnderwriteModal = ({ isOpen, onClose, business }: UnderwriteModalProps) =>
       ? Number(business.wallet?.creditLimit)
       : MIN_CREDIT_LINE
 
-  const validation = yup.object({
-    collateral: yup.number().required("collateral value is required"),
+  const validation = yup.object().shape({
+    collateral: yup.number().required("Collateral value is required"),
     credit: yup
       .number()
       .min(minimum)
-      .required("credit line is required"),
+      .required("Credit line is required"),
   })
 
   const formik = useFormik({

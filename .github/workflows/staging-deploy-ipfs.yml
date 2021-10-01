@@ -16,23 +16,18 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "::set-output name=dir::$(yarn cache dir)"
-
       - name: Cache Node Modules
         id: yarn-cache
         uses: actions/cache@v2
         with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-${{ hashFiles('*/*/yarn.lock') }}
+          path: "**/node_modules"
+          key: ${{ runner.os }}-modules-${{ hashFiles("**/yarn.lock") }}
 
       - name: Install Root Dependencies
         if: steps.yarn-cache.outputs.cache-hit != 'true'
         run: SKIP_POSTINSTALL=1 yarn install
 
       - name: Install Hardhat Dependencies
-        if: steps.yarn-cache.outputs.cache-hit != 'true'
         run: |
           cd ./packages/hardhat/
           SKIP_POSTINSTALL=1 yarn install

@@ -27,16 +27,26 @@ jobs:
           path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
           key: ${{ runner.os }}-${{ hashFiles('*/*/yarn.lock') }}
 
-      - name: Install dependencies
+      - name: Install Root Dependencies
+        if: steps.yarn-cache.outputs.cache-hit != 'true'
+        run: SKIP_POSTINSTALL=1 yarn install
+
+      - name: Install Hardhat Dependencies
         if: steps.yarn-cache.outputs.cache-hit != 'true'
         run: |
-          export SKIP_POSTINSTALL=1 
-          yarn install
+          cd ./packages/hardhat/
+          SKIP_POSTINSTALL=1 yarn install
+
+      - name: Hardhat post-deploy
+        run: |
           cd ./packages/hardhat
-          yarn install 
           yarn postdeploy --network celo-alfajores
-          cd ../react-app 
-          yarn install
+
+      - name: Install React Dependencies
+        if: steps.yarn-cache.outputs.cache-hit != 'true'
+        run: |
+          cd ./packages/react-app/
+          SKIP_POSTINSTALL=1 yarn install
 
       - name: Build
         env:
@@ -48,7 +58,6 @@ jobs:
           export CI=false 
           yarn codegen
           yarn build
-
       - name: Upload to IPFS & pin via Pinata
         id: upload
         uses: ReSource-Network/ipfs-action@v1.8.1

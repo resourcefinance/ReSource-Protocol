@@ -64,12 +64,6 @@ jobs:
           pinataKey: ${{ secrets.PINATA_KEY }}
           pinataSecret: ${{ secrets.PINATA_SECRET }}
 
-      - name: Pin to Crust Network
-        uses: crustio/ipfs-crust-action@v2.0.3
-        with:
-          cid: ${{ steps.upload.outputs.hash }}
-          seeds: ${{ secrets.CRUST_SEEDS }}
-
       - name: Update DNSLink
         id: dnslink
         uses: ReSource-Network/cloudlfare-dnslink-update@v1.21

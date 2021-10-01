@@ -25,7 +25,7 @@ const BusinessSummaryPage = () => {
       <HStack align="flex-start" spacing="32px">
         <VStack {...columnProps}>
           <Text px={3}>Contacts</Text>
-          <SolidCard label="email" value={business.email} />
+          <SolidCard label="email" value={business.owner?.email} />
           <SolidCard label="phone" value={business.phoneNumber} />
           <SolidCard label="date joined" value={localizedDayJs(business.createdAt).format("LL")} />
           <SolidCard label="ambassador" value={business.ambassador?.handle} />

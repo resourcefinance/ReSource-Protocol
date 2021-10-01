@@ -107,6 +107,7 @@ contract UnderwriteManager is OwnableUpgradeable {
         uint256 collateralAmount,
         address underwritee
     ) newCreditLine(underwritee) notNull(networkToken) notNull(underwritee) external {
+        require(isActive == true, "Manager is inactive");
         CreditLine storage creditLine = creditLines[msg.sender][underwritee];
         require(creditLine.collateral == 0, "Credit line already underwritten");
         require(collateralAmount >= MINIMUM_COLLATERAL, "Insufficient collateral");
@@ -132,6 +133,7 @@ contract UnderwriteManager is OwnableUpgradeable {
     }
 
     function extendCreditLine(address underwritee, uint256 collateralAmount) external ownedCreditLine(msg.sender, underwritee) {
+        require(isActive == true, "Manager is inactive");
         CreditLine storage creditLine = creditLines[msg.sender][underwritee];
         require(creditLine.collateral >= MINIMUM_COLLATERAL, "Credit line not underwritten");
         collateralToken.transferFrom(msg.sender, address(this), collateralAmount);

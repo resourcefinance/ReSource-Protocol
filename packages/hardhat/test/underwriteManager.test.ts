@@ -203,5 +203,8 @@ describe("UnderwriteManager Tests", function() {
     )
   })
 
+  // TODO: test total rewards calculation
+  // test claim rewards with insufficient pool
+
   // TODO: test withdraw
 })

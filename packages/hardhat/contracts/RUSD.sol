@@ -77,12 +77,8 @@ contract RUSD is CIP36 {
         uint256 _amount
     ) internal override {
         _verifyNetworkRegistry(_from, _to, _amount);
-        uint256 creditBefore = creditBalanceOf(_from)
         super._transfer(_from, _to, _amount);
-        uint256 creditAfter = creditBalanceOf(_from)
-        if (creditBefore != creditAfter) {
-            underwriteManager.updateReward(_from, creditBefore - creditAfter);
-        }
+        underwriteManager.updateReward(_from, _amount);
         emit BalanceUpdate(
             _from,
             _to, 

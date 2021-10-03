@@ -7,5 +7,7 @@ contract ReSourceToken is ERC20Upgradeable {
         __ERC20_init("ReSource", "SOURCE");
         _mint(msg.sender, initialSupply);
     }
+
+    
     //TODO: lock down transfer function to underwriterManager contract for a certain time line
 }

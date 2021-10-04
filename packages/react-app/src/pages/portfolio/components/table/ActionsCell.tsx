@@ -31,7 +31,7 @@ export const ActionsCell = ({ value, ...rest }: Props) => {
             Withdraw
           </Button>
         </Tooltip>
-        <Button size="xs" colorScheme="blue" onClick={disclosure.onOpen}>
+        <Button size="xs" colorScheme="blue" p={3} onClick={disclosure.onOpen}>
           Extend credit
         </Button>
       </HStack>

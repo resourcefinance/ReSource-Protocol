@@ -59,7 +59,7 @@ jobs:
         uses: ReSource-Network/ipfs-action@v1.8.1
         with:
           path: ./packages/react-app/build
-          pinataPinName: source-dapp
+          pinataPinName: production-source-dapp
           service: pinata
           pinataKey: ${{ secrets.PINATA_KEY }}
           pinataSecret: ${{ secrets.PINATA_SECRET }}

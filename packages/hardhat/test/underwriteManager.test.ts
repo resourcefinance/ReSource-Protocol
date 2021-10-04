@@ -65,9 +65,17 @@ describe("UnderwriteManager Tests", function() {
       },
     )) as RUSD
 
+    await (
+      await reSourceToken.transfer(underwriteManager.address, ethers.utils.parseEther("10000"))
+    ).wait()
+
     const registryAddress = await rUSD.registry()
     const restrictionState = await rUSD.restrictionState()
+    const underwriteManagerBalance = ethers.utils.formatEther(
+      await reSourceToken.balanceOf(underwriteManager.address),
+    )
 
+    expect(underwriteManagerBalance).to.equal("10000.0")
     expect(restrictionState).to.equal(0)
     expect(rUSD.address).to.properAddress
     expect(registryAddress).to.properAddress
@@ -202,6 +210,9 @@ describe("UnderwriteManager Tests", function() {
       "15000.0",
     )
   })
+
+  // TODO: test total rewards calculation
+  // test claim rewards with insufficient pool
 
   // TODO: test withdraw
 })

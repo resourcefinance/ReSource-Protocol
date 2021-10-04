@@ -5,6 +5,7 @@ import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 
+
 contract UnderwriteManager is OwnableUpgradeable {
     /*
      *  Constants
@@ -26,6 +27,7 @@ contract UnderwriteManager is OwnableUpgradeable {
     mapping(address => bool) private networks;
     mapping(address => address) public underwriters;
     bool public isActive;
+    uint256 public totalCollateral;
 
     struct CreditLine {
         uint256 collateral;
@@ -99,6 +101,11 @@ contract UnderwriteManager is OwnableUpgradeable {
         _;
     }
 
+    modifier active() {
+        require(isActive == true, "Manager is inactive");
+        _;
+    }
+
     /*
      * Public functions
      */
@@ -106,7 +113,7 @@ contract UnderwriteManager is OwnableUpgradeable {
         address networkToken,
         uint256 collateralAmount,
         address underwritee
-    ) newCreditLine(underwritee) notNull(networkToken) notNull(underwritee) external {
+    ) newCreditLine(underwritee) active notNull(networkToken) notNull(underwritee) external {
         CreditLine storage creditLine = creditLines[msg.sender][underwritee];
         require(creditLine.collateral == 0, "Credit line already underwritten");
         require(collateralAmount >= MINIMUM_COLLATERAL, "Insufficient collateral");
@@ -128,16 +135,18 @@ contract UnderwriteManager is OwnableUpgradeable {
             creditLimit
         ));
         CIP36(networkToken).setCreditLimit(underwritee, creditLimit); 
+        totalCollateral += collateralAmount;
         underwriters[underwritee] = msg.sender;
     }
 
-    function extendCreditLine(address underwritee, uint256 collateralAmount) external ownedCreditLine(msg.sender, underwritee) {
+    function extendCreditLine(address underwritee, uint256 collateralAmount) external active ownedCreditLine(msg.sender, underwritee) {
         CreditLine storage creditLine = creditLines[msg.sender][underwritee];
         require(creditLine.collateral >= MINIMUM_COLLATERAL, "Credit line not underwritten");
         collateralToken.transferFrom(msg.sender, address(this), collateralAmount);
         creditLine.collateral += collateralAmount;
         uint256 creditLimit = calculateCredit(creditLine.collateral);
         CIP36(creditLine.networkToken).setCreditLimit(underwritee, creditLimit);
+        totalCollateral += collateralAmount;
         emit ExtendCreditLine(CreditLineLimitEvent(
             msg.sender, 
             underwritee, 
@@ -210,7 +219,6 @@ contract UnderwriteManager is OwnableUpgradeable {
 
     function claimRewards(address[] memory underwritees) external {
         uint256 totalReward = 0;
-        // CreditLineEvent[] memory updatedCreditLines = new CreditLineEvent[](underwritees.length);
         uint256[] memory rewards = new uint256[](underwritees.length);
         for (uint256 i = 0; i < underwritees.length; i++) {
             CreditLine storage creditLine = creditLines[msg.sender][underwritees[i]];
@@ -221,9 +229,9 @@ contract UnderwriteManager is OwnableUpgradeable {
             }
         }
         require(totalReward > 0, "No reward to claim");
+        require(collateralToken.balanceOf(address(this)) - totalReward > totalCollateral, "Insufficient funds in reward pool");
         collateralToken.transfer(msg.sender, totalReward);
         emit CreditLineRewardClaimed(msg.sender, underwritees, rewards, totalReward);
-        // emit CreditLineRewardClaimed(updatedCreditLines);
     }
 
     function toggleActive() external onlyOwner() {

@@ -6,10 +6,11 @@
     "prepare": "mustache config/config.json  src/subgraph.template.yaml > subgraph.yaml",
     "codegen": "graph codegen",
     "build": "graph build",
-    "deploy-testnet": "graph deploy resource-network/resource_testnet --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs --access-token e8572d4fb01a4e08834f0e59e708bfb1",
-    "create-local": "graph create --node http://localhost:8020/ mu-dapp",
-    "remove-local": "graph remove --node http://localhost:8020/ mu-dapp",
-    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 mu-dapp"
+    "deploy-testnet-staging": "graph deploy resource-network/resource_testnet --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs --access-token e8572d4fb01a4e08834f0e59e708bfb1",
+    "deploy-testnet-prod": "graph deploy resource-network/ReSource_testnet_prod --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs --access-token e8572d4fb01a4e08834f0e59e708bfb1",
+    "create-local": "graph create --node http://localhost:8020/ source-dapp",
+    "remove-local": "graph remove --node http://localhost:8020/ source-dapp",
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 source-dapp"
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "0.18.0",

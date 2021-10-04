@@ -38,6 +38,8 @@ export const deployProxyAndSave = async (
     abi,
     receipt: formatDeploymentReceipt(contract.deployTransaction),
   }
+  console.log(contract.deployTransaction)
+  console.log(contractDeployment.receipt)
 
   hardhat.deployments.save(name, contractDeployment)
 

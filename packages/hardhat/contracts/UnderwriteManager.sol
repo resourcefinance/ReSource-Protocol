@@ -167,13 +167,12 @@ contract UnderwriteManager is OwnableUpgradeable {
         uint256 creditBalance = CIP36(creditLine.networkToken).creditBalanceOf(underwritee);
         uint256 offsetBalance = creditBalance * MWEI;
         uint256 total = creditLine.collateral + creditLine.reward - offsetBalance;
-        // TODO: remove once balance can be repayed from underwriter collateral
-        // TODO: convert offsetBalance to rUSD and transfer to underwritee
         require( offsetBalance > 0, "Can't withdraw from active credit line");
         CIP36(creditLine.networkToken).setCreditLimit(underwritee, 0);
         collateralToken.transfer(msg.sender, total);
         creditLines[msg.sender][underwritee] = CreditLine(0, address(0), 0, 0);
         underwriters[underwritee] = address(0);
+        totalCollateral -= collateral;
         emit CreditLineWithdrawal(CreditLineLimitEvent(
             msg.sender, 
             underwritee, 

@@ -1,5 +1,5 @@
 {
-  "address": "0x7B4Cec2231B5075718Ec73AE485B251C7644cCBf",
+  "address": "0x77E3140c61Cc043Eb0627Da1bF173b08405e2784",
   "abi": [
     {
       "anonymous": false,
@@ -591,19 +591,6 @@
       "type": "function"
     },
     {
-      "inputs": [],
-      "name": "totalCollateral",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
       "inputs": [
         {
           "internalType": "address",
@@ -690,14 +677,14 @@
       "type": "function"
     }
   ],
-  "transactionHash": "0x811ed042ee70a41b784eae572e20249ee682cb0d50882946d602eb67c47c3e58",
+  "transactionHash": "0x116bc38433dc3dacbe91815bed37110faa904220ed497274398ac8d8af6b9968",
   "receipt": {
     "from": "0x8bb2af5d4877345aAc16c89d7147D4CC73D808AA",
     "transactionIndex": null,
     "gasUsed": "500000000",
     "blockHash": null,
-    "transactionHash": "0x811ed042ee70a41b784eae572e20249ee682cb0d50882946d602eb67c47c3e58",
+    "transactionHash": "0x116bc38433dc3dacbe91815bed37110faa904220ed497274398ac8d8af6b9968",
     "blockNumber": null,
-    "cumulativeGasUsed": "679801"
+    "cumulativeGasUsed": "679777"
   }
 }

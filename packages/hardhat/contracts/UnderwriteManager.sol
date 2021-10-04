@@ -5,6 +5,7 @@ import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 
+
 contract UnderwriteManager is OwnableUpgradeable {
     /*
      *  Constants
@@ -228,7 +229,7 @@ contract UnderwriteManager is OwnableUpgradeable {
             }
         }
         require(totalReward > 0, "No reward to claim");
-        require(collateralToken.balanceOf(this) - totalCollateral - totalReward > 0, "Insufficient funds in reward pool")
+        require(collateralToken.balanceOf(address(this)) - totalReward > totalCollateral, "Insufficient funds in reward pool");
         collateralToken.transfer(msg.sender, totalReward);
         emit CreditLineRewardClaimed(msg.sender, underwritees, rewards, totalReward);
     }

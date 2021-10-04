@@ -42,6 +42,7 @@ interface UnderwriteManagerInterface extends ethers.utils.Interface {
     "renewCreditLine(address)": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "toggleActive()": FunctionFragment;
+    "totalCollateral()": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
     "underwrite(address,uint256,address)": FunctionFragment;
     "underwriters(address)": FunctionFragment;
@@ -113,6 +114,10 @@ interface UnderwriteManagerInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "toggleActive",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "totalCollateral",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -197,6 +202,10 @@ interface UnderwriteManagerInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "toggleActive",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "totalCollateral",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -357,6 +366,8 @@ export class UnderwriteManager extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    totalCollateral(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     transferOwnership(
       newOwner: string,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -465,6 +476,8 @@ export class UnderwriteManager extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  totalCollateral(overrides?: CallOverrides): Promise<BigNumber>;
+
   transferOwnership(
     newOwner: string,
     overrides?: Overrides & { from?: string | Promise<string> }
@@ -568,6 +581,8 @@ export class UnderwriteManager extends BaseContract {
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
 
     toggleActive(overrides?: CallOverrides): Promise<void>;
+
+    totalCollateral(overrides?: CallOverrides): Promise<BigNumber>;
 
     transferOwnership(
       newOwner: string,
@@ -896,6 +911,8 @@ export class UnderwriteManager extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    totalCollateral(overrides?: CallOverrides): Promise<BigNumber>;
+
     transferOwnership(
       newOwner: string,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -1006,6 +1023,8 @@ export class UnderwriteManager extends BaseContract {
     toggleActive(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
+
+    totalCollateral(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     transferOwnership(
       newOwner: string,

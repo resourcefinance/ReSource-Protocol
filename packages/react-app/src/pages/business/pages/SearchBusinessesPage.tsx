@@ -3,19 +3,21 @@ import { Box, Center, Container, Spinner } from "@chakra-ui/react"
 import React from "react"
 import {
   Business,
-  useFindBusinessByHandleLazyQuery,
+  useFindFirstBusinessLazyQuery,
 } from "../../../generated/resource-network/graphql"
 import { BusinessCard } from "../components/BusinessCard"
 import BusinessSearchBar from "../components/BusinessSearchBar"
 import { NoSearchResults } from "../components/NoSearchResults"
 
 const SearchBusinessesPage = () => {
-  const [find, { data, called, loading }] = useFindBusinessByHandleLazyQuery({
+  const [find, { data, called, loading }] = useFindFirstBusinessLazyQuery({
     fetchPolicy: "network-only",
   })
-  const business = data?.findOneBusinessByHandle as Business
+  const business = data?.findFirstBusiness as Business
 
-  const handleSearch = (searchText: string) => find({ variables: { handle: searchText } })
+  const handleSearch = (text: string) => {
+    find({ variables: { where: { handle: { equals: text }, isDisabled: { equals: false } } } })
+  }
 
   return (
     <Container>

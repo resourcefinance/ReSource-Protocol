@@ -27,6 +27,12 @@ fragment BusinessFields on Business {
   }
 }
 
+query findFirstBusiness($where: BusinessWhereInput!) {
+  findFirstBusiness(where: $where) {
+    ...BusinessFields
+  }
+}
+
 query findBusinessByHandle($handle: String!) {
   findOneBusinessByHandle(handle: $handle) {
     ...BusinessFields

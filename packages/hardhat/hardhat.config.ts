@@ -76,11 +76,16 @@ const config: HardhatUserConfig = {
       tags: ["alfajores", "staging"],
     },
     celo: {
-      url: "https://forno.celo.org",
+      url: "http://127.0.0.1:1248",
       chainId: chainIds.mainnet,
       accounts: { mnemonic: mnemonic() },
       saveDeployments: true,
       tags: ["production", "mainnet"],
+    },
+    "frame-celo-alfajores": {
+      url: "http://127.0.0.1:1248",
+      chainId: 280455,
+      saveDeployments: true,
     },
   },
   solidity: {

@@ -3,19 +3,6 @@ import { Contract, ContractFactory, ethers } from "ethers"
 import { HardhatRuntimeEnvironment } from "hardhat/types"
 import { retry } from "ts-retry"
 
-export const formatDeploymentReceipt = (deployTransaction) => {
-  return {
-    from: deployTransaction.from,
-    transactionHash: deployTransaction.hash,
-    blockHash: deployTransaction.blockHash,
-    blockNumber: deployTransaction.blockNumber,
-    transactionIndex: deployTransaction.transactionIndex,
-    cumulativeGasUsed: deployTransaction.gasLimit,
-    gasUsed: deployTransaction.gasPrice,
-    confirmations: deployTransaction.confirmations,
-  }
-}
-
 export const deployProxyAndSave = async (
   name: string,
   args: any[],
@@ -24,6 +11,7 @@ export const deployProxyAndSave = async (
   initializer?: {},
 ): Promise<Contract> => {
   const contractFactory = await hardhat.ethers.getContractFactory(name)
+  contractFactory.signer
 
   let contract
   await retry(
@@ -36,10 +24,8 @@ export const deployProxyAndSave = async (
   const contractDeployment = {
     address: contract.address,
     abi,
-    receipt: formatDeploymentReceipt(contract.deployTransaction),
+    receipt: await contract.deployTransaction.wait(),
   }
-  console.log(contract.deployTransaction)
-  console.log(contractDeployment.receipt)
 
   hardhat.deployments.save(name, contractDeployment)
 

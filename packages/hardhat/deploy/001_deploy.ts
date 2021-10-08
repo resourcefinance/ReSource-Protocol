@@ -14,6 +14,7 @@ const func: DeployFunction = async function(hardhat: HardhatRuntimeEnvironment) 
     hardhat,
     walletDeployerAbi,
   )
+  console.log("WalletDeployer deployed")
 
   //deploy network registry and transfer networkRegistry ownership
   const networkRegistryAbi = (await hardhat.artifacts.readArtifact("NetworkRegistry")).abi
@@ -29,6 +30,7 @@ const func: DeployFunction = async function(hardhat: HardhatRuntimeEnvironment) 
   } catch (e) {
     console.log(e)
   }
+  console.log("NetworkRegistry deployed")
 
   // reSourceToken deploy
   const reSourceTokenAbi = (await hardhat.artifacts.readArtifact("ReSourceToken")).abi
@@ -41,6 +43,8 @@ const func: DeployFunction = async function(hardhat: HardhatRuntimeEnvironment) 
     reSourceTokenAbi,
   )
 
+  console.log("ReSourceToken deployed")
+
   // underwriteManager deploy
   const underwriteManagerAbi = (await hardhat.artifacts.readArtifact("UnderwriteManager")).abi
   const underwriteManagerArgs = [resourceToken.address]
@@ -51,6 +55,8 @@ const func: DeployFunction = async function(hardhat: HardhatRuntimeEnvironment) 
     underwriteManagerAbi,
   )) as UnderwriteManager
 
+  console.log("UnderwriteManager deployed")
+
   // rUSD deploy
   const rUSDAbi = (await hardhat.artifacts.readArtifact("RUSD")).abi
   const rUSDArgs = [networkRegistry.address, 20, underwriterManager.address, relaySigner]
@@ -59,6 +65,7 @@ const func: DeployFunction = async function(hardhat: HardhatRuntimeEnvironment) 
     initializer: "initializeRUSD",
   })
 
+  console.log("RUSD deployed")
   // add RUSD to underwriteManager networks
 
   await underwriterManager.addNetwork(RUSD.address)

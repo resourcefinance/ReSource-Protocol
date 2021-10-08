@@ -1,13 +1,13 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import "./ERC20SOUL.sol";
 
-contract ReSourceToken is ERC20Upgradeable {
-    function initialize(uint256 initialSupply) external virtual initializer {
-        __ERC20_init("ReSource", "SOURCE");
-        _mint(msg.sender, initialSupply);
+contract ReSourceToken is ERC20SOUL {
+    function initialize (
+        uint256 initialSupply,
+        address[] calldata _stakableContracts) external virtual initializer {
+        ERC20SOUL.initializeERC20SOUL("ReSource", "SOURCE", initialSupply, _stakableContracts);
     }
-
-    
-    //TODO: lock down transfer function to underwriterManager contract for a certain time line
 }

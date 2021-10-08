@@ -65,6 +65,7 @@ describe("UnderwriteManager Tests", function() {
       },
     )) as RUSD
 
+    // FILL REWARD POOL
     await (
       await reSourceToken.transfer(underwriteManager.address, ethers.utils.parseEther("10000"))
     ).wait()

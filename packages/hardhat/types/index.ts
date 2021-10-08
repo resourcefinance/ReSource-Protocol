@@ -8,6 +8,7 @@ export type { IERC20MetadataUpgradeable } from "./IERC20MetadataUpgradeable";
 export type { IERC20Upgradeable } from "./IERC20Upgradeable";
 export type { IERC20 } from "./IERC20";
 export type { CIP36 } from "./CIP36";
+export type { ERC20SOUL } from "./ERC20SOUL";
 export type { IiKeyWalletDeployer } from "./IiKeyWalletDeployer";
 export type { IKeyMultiSig } from "./IKeyMultiSig";
 export type { IKeyWalletDeployer } from "./IKeyWalletDeployer";
@@ -24,6 +25,7 @@ export { IERC20MetadataUpgradeable__factory } from "./factories/IERC20MetadataUp
 export { IERC20Upgradeable__factory } from "./factories/IERC20Upgradeable__factory";
 export { IERC20__factory } from "./factories/IERC20__factory";
 export { CIP36__factory } from "./factories/CIP36__factory";
+export { ERC20SOUL__factory } from "./factories/ERC20SOUL__factory";
 export { IiKeyWalletDeployer__factory } from "./factories/IiKeyWalletDeployer__factory";
 export { IKeyMultiSig__factory } from "./factories/IKeyMultiSig__factory";
 export { IKeyWalletDeployer__factory } from "./factories/IKeyWalletDeployer__factory";

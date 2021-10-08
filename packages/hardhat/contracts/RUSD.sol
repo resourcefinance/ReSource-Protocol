@@ -45,7 +45,7 @@ contract RUSD is CIP36 {
 
     Restriction public restrictionState;
     uint256 restrictionRenewal;
-    uint256 expirationSeconds;
+    uint256 restrictionExpiration;
 
 
     modifier onlyAuthorized() override {
@@ -55,17 +55,17 @@ contract RUSD is CIP36 {
 
     function initializeRUSD(
         address registryAddress,
-        uint256 _expiration,
-        address _underwriteManager,
+        uint256 expiration,
+        address underwriteManagerAddress,
         address operatorAddress
     ) external virtual initializer {
         CIP36.initialize("rUSD", "rUSD");
         registry = NetworkRegistry(registryAddress);
-        underwriteManager = UnderwriteManager(_underwriteManager);
+        underwriteManager = UnderwriteManager(underwriteManagerAddress);
         operator = operatorAddress;
         restrictionState = Restriction.REGISTERED;
         restrictionRenewal = block.timestamp;
-        expirationSeconds = _expiration;
+        restrictionExpiration = expiration;
     }
 
     /*
@@ -139,7 +139,7 @@ contract RUSD is CIP36 {
         if (restrictionState == Restriction.NONE) {
             revert("Already non restrictive");
         }
-        if ((block.timestamp - restrictionRenewal) < expirationSeconds) {
+        if ((block.timestamp - restrictionRenewal) < restrictionExpiration) {
             revert("Restriction state not expired...");
         }
         emit RestrictionUpdated(Restriction.NONE);

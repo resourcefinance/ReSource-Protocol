@@ -243,10 +243,10 @@ export class ERC20SOUL extends BaseContract {
     ): Promise<ContractTransaction>;
 
     initializeERC20SOUL(
-      name_: string,
-      symbol_: string,
+      name: string,
+      symbol: string,
       initialSupply: BigNumberish,
-      _stakableContracts: string[],
+      stakableContracts: string[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -301,7 +301,7 @@ export class ERC20SOUL extends BaseContract {
 
     updateStakableContract(
       _contract: string,
-      _isStakable: boolean,
+      isStakable: boolean,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
   };
@@ -335,10 +335,10 @@ export class ERC20SOUL extends BaseContract {
   ): Promise<ContractTransaction>;
 
   initializeERC20SOUL(
-    name_: string,
-    symbol_: string,
+    name: string,
+    symbol: string,
     initialSupply: BigNumberish,
-    _stakableContracts: string[],
+    stakableContracts: string[],
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -387,7 +387,7 @@ export class ERC20SOUL extends BaseContract {
 
   updateStakableContract(
     _contract: string,
-    _isStakable: boolean,
+    isStakable: boolean,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -421,10 +421,10 @@ export class ERC20SOUL extends BaseContract {
     ): Promise<boolean>;
 
     initializeERC20SOUL(
-      name_: string,
-      symbol_: string,
+      name: string,
+      symbol: string,
       initialSupply: BigNumberish,
-      _stakableContracts: string[],
+      stakableContracts: string[],
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -474,7 +474,7 @@ export class ERC20SOUL extends BaseContract {
 
     updateStakableContract(
       _contract: string,
-      _isStakable: boolean,
+      isStakable: boolean,
       overrides?: CallOverrides
     ): Promise<void>;
   };
@@ -578,10 +578,10 @@ export class ERC20SOUL extends BaseContract {
     ): Promise<BigNumber>;
 
     initializeERC20SOUL(
-      name_: string,
-      symbol_: string,
+      name: string,
+      symbol: string,
       initialSupply: BigNumberish,
-      _stakableContracts: string[],
+      stakableContracts: string[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -633,7 +633,7 @@ export class ERC20SOUL extends BaseContract {
 
     updateStakableContract(
       _contract: string,
-      _isStakable: boolean,
+      isStakable: boolean,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
   };
@@ -671,10 +671,10 @@ export class ERC20SOUL extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     initializeERC20SOUL(
-      name_: string,
-      symbol_: string,
+      name: string,
+      symbol: string,
       initialSupply: BigNumberish,
-      _stakableContracts: string[],
+      stakableContracts: string[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -729,7 +729,7 @@ export class ERC20SOUL extends BaseContract {
 
     updateStakableContract(
       _contract: string,
-      _isStakable: boolean,
+      isStakable: boolean,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
   };

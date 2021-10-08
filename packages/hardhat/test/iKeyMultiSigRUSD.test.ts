@@ -16,7 +16,7 @@ import {
 
 chai.use(solidity)
 
-describe("iKeyMultiSig Tests", function() {
+describe("iKeyMultiSig RUSD Tests", function() {
   let deployer: SignerWithAddress
   let client: SignerWithAddress
   let guardian: SignerWithAddress
@@ -83,6 +83,7 @@ describe("iKeyMultiSig Tests", function() {
 
     const reSourceToken = (await upgrades.deployProxy(reSourceTokenFactory, [
       ethers.utils.parseEther("10000000"),
+      [],
     ])) as ReSourceToken
 
     const underwriteManagerFactory = await ethers.getContractFactory("UnderwriteManager")

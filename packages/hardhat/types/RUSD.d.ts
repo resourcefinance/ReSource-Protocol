@@ -376,8 +376,8 @@ export class RUSD extends BaseContract {
 
     initializeRUSD(
       registryAddress: string,
-      _expiration: BigNumberish,
-      _underwriteManager: string,
+      expiration: BigNumberish,
+      underwriteManagerAddress: string,
       operatorAddress: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
@@ -508,8 +508,8 @@ export class RUSD extends BaseContract {
 
   initializeRUSD(
     registryAddress: string,
-    _expiration: BigNumberish,
-    _underwriteManager: string,
+    expiration: BigNumberish,
+    underwriteManagerAddress: string,
     operatorAddress: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
@@ -640,8 +640,8 @@ export class RUSD extends BaseContract {
 
     initializeRUSD(
       registryAddress: string,
-      _expiration: BigNumberish,
-      _underwriteManager: string,
+      expiration: BigNumberish,
+      underwriteManagerAddress: string,
       operatorAddress: string,
       overrides?: CallOverrides
     ): Promise<void>;
@@ -848,8 +848,8 @@ export class RUSD extends BaseContract {
 
     initializeRUSD(
       registryAddress: string,
-      _expiration: BigNumberish,
-      _underwriteManager: string,
+      expiration: BigNumberish,
+      underwriteManagerAddress: string,
       operatorAddress: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
@@ -987,8 +987,8 @@ export class RUSD extends BaseContract {
 
     initializeRUSD(
       registryAddress: string,
-      _expiration: BigNumberish,
-      _underwriteManager: string,
+      expiration: BigNumberish,
+      underwriteManagerAddress: string,
       operatorAddress: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;

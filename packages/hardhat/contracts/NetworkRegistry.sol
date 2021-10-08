@@ -133,11 +133,11 @@ contract NetworkRegistry is OwnableUpgradeable  {
     }
 
     function deployNewWallet(
-        address[] memory _clients,
-        address[] memory _guardians, 
-        address _coSigner,
-        uint256 _required) public onlyOperator(msg.sender) {
-        address newWallet = IiKeyWalletDeployer(walletDeployer).deployWallet(_clients, _guardians, _coSigner, _required);
+        address[] memory clients,
+        address[] memory guardians, 
+        address coSigner,
+        uint256 required) public onlyOperator(msg.sender) {
+        address newWallet = IiKeyWalletDeployer(walletDeployer).deployWallet(clients, guardians, coSigner, required);
         OwnableUpgradeable(newWallet).transferOwnership(owner());
         isMember[newWallet] = true;
         members.push(newWallet);

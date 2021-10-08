@@ -11,7 +11,7 @@ import { NetworkRegistry } from "../types/NetworkRegistry"
 import { IKeyMultiSig__factory } from "../types/factories/IKeyMultiSig__factory"
 chai.use(solidity)
 
-describe("MultiSig Tests", function() {
+describe("iKeyMultiSig Tests", function() {
   let deployer: SignerWithAddress
   let temp: SignerWithAddress
   let client: SignerWithAddress

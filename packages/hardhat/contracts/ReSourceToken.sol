@@ -7,7 +7,7 @@ import "./ERC20SOUL.sol";
 contract ReSourceToken is ERC20SOUL {
     function initialize (
         uint256 initialSupply,
-        address[] calldata _stakableContracts) external virtual initializer {
-        ERC20SOUL.initializeERC20SOUL("ReSource", "SOURCE", initialSupply, _stakableContracts);
+        address[] calldata stakableContracts) external virtual initializer {
+        ERC20SOUL.initializeERC20SOUL("ReSource", "SOURCE", initialSupply, stakableContracts);
     }
 }

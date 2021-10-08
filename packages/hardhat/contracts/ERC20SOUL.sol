@@ -52,17 +52,17 @@ contract ERC20SOUL is ERC20Upgradeable, OwnableUpgradeable {
      * Public functions
      */
     function initializeERC20SOUL(
-        string memory name_,
-        string memory symbol_,
+        string memory name,
+        string memory symbol,
         uint256 initialSupply,
-        address[] calldata _stakableContracts
+        address[] calldata stakableContracts
     ) public virtual initializer {
-        __ERC20_init(name_, symbol_);
+        __ERC20_init(name, symbol);
         __Ownable_init();
         _mint(msg.sender, initialSupply);
-        for (uint256 i = 0; i < _stakableContracts.length; i++) {
-            require(_stakableContracts[i] != address(0), "invalid stakable contract address");
-            isStakableContract[_stakableContracts[i]] = true;
+        for (uint256 i = 0; i < stakableContracts.length; i++) {
+            require(stakableContracts[i] != address(0), "invalid stakable contract address");
+            isStakableContract[stakableContracts[i]] = true;
         }
     }
 
@@ -79,8 +79,8 @@ contract ERC20SOUL is ERC20Upgradeable, OwnableUpgradeable {
         emit LockedTransfer(_lock, msg.sender, _to);
     }
 
-    function updateStakableContract(address _contract, bool _isStakable) onlyOwner() external {
-        isStakableContract[_contract] = _isStakable;
+    function updateStakableContract(address _contract, bool isStakable) onlyOwner() external {
+        isStakableContract[_contract] = isStakable;
     }
 
     /*

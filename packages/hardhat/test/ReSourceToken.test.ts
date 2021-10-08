@@ -1,9 +1,8 @@
-import { upgrades, ethers, network } from "hardhat"
+import { upgrades, ethers } from "hardhat"
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/dist/src/signers"
 import { expect } from "chai"
 import chai from "chai"
 import { solidity } from "ethereum-waffle"
-import { NetworkRegistry } from "../types/NetworkRegistry"
 import { ReSourceToken } from "../types/ReSourceToken"
 
 chai.use(solidity)

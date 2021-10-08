@@ -24,8 +24,10 @@ contract UnderwriteManager is OwnableUpgradeable {
 
     // underwriter => underwritee => credit line
     mapping(address => mapping(address => CreditLine)) public creditLines;
-    mapping(address => bool) private networks;
-    mapping(address => address) public underwriters;
+    // underwritee => underwriter
+    mapping(address => address) public underwritees;
+    mapping(address => bool) public networks;
+    mapping(address => bool) public underwriters;
     bool public isActive;
     uint256 public totalCollateral;
 
@@ -66,8 +68,8 @@ contract UnderwriteManager is OwnableUpgradeable {
     );
     event CreditLineWithdrawal(CreditLineLimitEvent creditLine);
 
-    function initialize(address _collateralTokenAddress) external virtual initializer {
-        collateralToken = IERC20(_collateralTokenAddress);
+    function initialize(address collateralTokenAddress) external virtual initializer {
+        collateralToken = IERC20(collateralTokenAddress);
         isActive = true;
         __Ownable_init();
     }
@@ -92,12 +94,17 @@ contract UnderwriteManager is OwnableUpgradeable {
     }
 
     modifier newCreditLine(address underwritee) {
-        require(underwriters[underwritee] == address(0), "Address already underwritten");
+        require(underwritees[underwritee] == address(0), "Address already underwritten");
         _;
     }
 
     modifier ownedCreditLine(address underwriter, address underwritee) {
-        require(underwriters[underwritee] == underwriter, "Credit line not owned");
+        require(underwritees[underwritee] == underwriter, "Credit line not owned");
+        _;
+    }
+
+    modifier onlyUnderwriter(address underwriter) {
+        require(underwriters[underwriter], "Caller is not an underwriter");
         _;
     }
 
@@ -113,7 +120,13 @@ contract UnderwriteManager is OwnableUpgradeable {
         address networkToken,
         uint256 collateralAmount,
         address underwritee
-    ) newCreditLine(underwritee) active notNull(networkToken) notNull(underwritee) external {
+    ) 
+    newCreditLine(underwritee) 
+    active 
+    notNull(networkToken) 
+    notNull(underwritee) 
+    onlyUnderwriter(msg.sender)
+    external {
         CreditLine storage creditLine = creditLines[msg.sender][underwritee];
         require(creditLine.collateral == 0, "Credit line already underwritten");
         require(collateralAmount >= MINIMUM_COLLATERAL, "Insufficient collateral");
@@ -136,10 +149,15 @@ contract UnderwriteManager is OwnableUpgradeable {
         ));
         CIP36(networkToken).setCreditLimit(underwritee, creditLimit); 
         totalCollateral += collateralAmount;
-        underwriters[underwritee] = msg.sender;
+        underwritees[underwritee] = msg.sender;
     }
 
-    function extendCreditLine(address underwritee, uint256 collateralAmount) external active ownedCreditLine(msg.sender, underwritee) {
+    function extendCreditLine(address underwritee, uint256 collateralAmount) 
+    active 
+    notNull(underwritee) 
+    ownedCreditLine(msg.sender, underwritee)
+    onlyUnderwriter(msg.sender)
+    external {
         CreditLine storage creditLine = creditLines[msg.sender][underwritee];
         require(creditLine.collateral >= MINIMUM_COLLATERAL, "Credit line not underwritten");
         collateralToken.transferFrom(msg.sender, address(this), collateralAmount);
@@ -171,7 +189,7 @@ contract UnderwriteManager is OwnableUpgradeable {
         CIP36(creditLine.networkToken).setCreditLimit(underwritee, 0);
         collateralToken.transfer(msg.sender, total);
         creditLines[msg.sender][underwritee] = CreditLine(0, address(0), 0, 0);
-        underwriters[underwritee] = address(0);
+        underwritees[underwritee] = address(0);
         totalCollateral -= collateral;
         emit CreditLineWithdrawal(CreditLineLimitEvent(
             msg.sender, 
@@ -188,12 +206,12 @@ contract UnderwriteManager is OwnableUpgradeable {
 
     function renewCreditLine(address underwritee) external validCreditRenewal(msg.sender, underwritee) {
         CreditLine storage creditLine = creditLines[msg.sender][underwritee];
-        require(underwriters[underwritee] == msg.sender, "Must be underwriter to renew credit line");
+        require(underwritees[underwritee] == msg.sender, "Must be underwriter to renew credit line");
         creditLine.issueDate = block.timestamp;
     }
 
     function updateReward(address underwritee, uint256 txAmount) external notNull(underwritee) onlyNetwork(msg.sender) {
-        address underwriter = underwriters[underwritee];
+        address underwriter = underwritees[underwritee];
         if (underwriter == address(0)) {
             return;
         }
@@ -237,6 +255,12 @@ contract UnderwriteManager is OwnableUpgradeable {
         isActive = !isActive;
     }
 
+    function updateUnderwriters(address[] memory _underwriters, bool[] memory isUnderwriter) external onlyOwner() {
+        for (uint256 i = 0; i < _underwriters.length; i++) {
+            underwriters[_underwriters[i]] = isUnderwriter[i];
+        }
+    }
+
     function addNetwork(address networkAddress) external onlyOwner() {
         networks[networkAddress] = true;
     }
@@ -265,14 +289,5 @@ contract UnderwriteManager is OwnableUpgradeable {
         if ((block.timestamp - creditLines[underwriter][underwritee].issueDate) > CREDIT_RENEWAL + 1 days) {
             creditLines[underwriter][underwritee].issueDate = block.timestamp;
         }
-    }
-
-    /*
-     * Web3 call functions
-     */
-    /// @dev Returns list of networks.
-    /// @return List of networks.
-    function isNetwork(address _address) external view returns (bool) {
-        return networks[_address];
     }
 }

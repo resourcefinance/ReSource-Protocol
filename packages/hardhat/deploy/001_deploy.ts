@@ -48,18 +48,20 @@ const func: DeployFunction = async function(hardhat: HardhatRuntimeEnvironment) 
   // underwriteManager deploy
   const underwriteManagerAbi = (await hardhat.artifacts.readArtifact("UnderwriteManager")).abi
   const underwriteManagerArgs = [resourceToken.address]
-  const underwriterManager = (await deployProxyAndSave(
+  const underwriteManager = (await deployProxyAndSave(
     "UnderwriteManager",
     underwriteManagerArgs,
     hardhat,
     underwriteManagerAbi,
   )) as UnderwriteManager
 
+  await (await resourceToken.updateStakableContract(underwriteManager.address, true)).wait()
+
   console.log("UnderwriteManager deployed")
 
   // rUSD deploy
   const rUSDAbi = (await hardhat.artifacts.readArtifact("RUSD")).abi
-  const rUSDArgs = [networkRegistry.address, 20, underwriterManager.address, relaySigner]
+  const rUSDArgs = [networkRegistry.address, 20, underwriteManager.address, relaySigner]
 
   const RUSD = await deployProxyAndSave("RUSD", rUSDArgs, hardhat, rUSDAbi, {
     initializer: "initializeRUSD",
@@ -68,6 +70,6 @@ const func: DeployFunction = async function(hardhat: HardhatRuntimeEnvironment) 
   console.log("RUSD deployed")
   // add RUSD to underwriteManager networks
 
-  await underwriterManager.addNetwork(RUSD.address)
+  await underwriteManager.addNetwork(RUSD.address)
 }
 export default func

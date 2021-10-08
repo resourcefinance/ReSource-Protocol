@@ -47,6 +47,7 @@ describe("UnderwriteManager Tests", function() {
 
     reSourceToken = (await upgrades.deployProxy(reSourceTokenFactory, [
       ethers.utils.parseEther("10000000"),
+      [],
     ])) as ReSourceToken
 
     const underwriteManagerFactory = await ethers.getContractFactory("UnderwriteManager")
@@ -54,6 +55,17 @@ describe("UnderwriteManager Tests", function() {
     underwriteManager = (await upgrades.deployProxy(underwriteManagerFactory, [
       reSourceToken.address,
     ])) as UnderwriteManager
+
+    // ADD UNDERWRITEMANAGER TO SOURCE STAKING CONTRACTS
+    await (await reSourceToken.updateStakableContract(underwriteManager.address, true)).wait()
+
+    // ADD UNDERWRITERS TO UNDERWRITEMANAGER
+    await (
+      await underwriteManager.updateUnderwriters(
+        [underwriterA.address, underwriterB.address],
+        [true, true],
+      )
+    ).wait()
 
     const rUSDFactory = await ethers.getContractFactory("RUSD")
 

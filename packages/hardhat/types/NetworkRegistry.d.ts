@@ -196,10 +196,10 @@ export class NetworkRegistry extends BaseContract {
     ): Promise<ContractTransaction>;
 
     deployNewWallet(
-      _clients: string[],
-      _guardians: string[],
-      _coSigner: string,
-      _required: BigNumberish,
+      clients: string[],
+      guardians: string[],
+      coSigner: string,
+      required: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -255,10 +255,10 @@ export class NetworkRegistry extends BaseContract {
   ): Promise<ContractTransaction>;
 
   deployNewWallet(
-    _clients: string[],
-    _guardians: string[],
-    _coSigner: string,
-    _required: BigNumberish,
+    clients: string[],
+    guardians: string[],
+    coSigner: string,
+    required: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -308,10 +308,10 @@ export class NetworkRegistry extends BaseContract {
     addOperator(operator: string, overrides?: CallOverrides): Promise<void>;
 
     deployNewWallet(
-      _clients: string[],
-      _guardians: string[],
-      _coSigner: string,
-      _required: BigNumberish,
+      clients: string[],
+      guardians: string[],
+      coSigner: string,
+      required: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -390,10 +390,10 @@ export class NetworkRegistry extends BaseContract {
     ): Promise<BigNumber>;
 
     deployNewWallet(
-      _clients: string[],
-      _guardians: string[],
-      _coSigner: string,
-      _required: BigNumberish,
+      clients: string[],
+      guardians: string[],
+      coSigner: string,
+      required: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -453,10 +453,10 @@ export class NetworkRegistry extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     deployNewWallet(
-      _clients: string[],
-      _guardians: string[],
-      _coSigner: string,
-      _required: BigNumberish,
+      clients: string[],
+      guardians: string[],
+      coSigner: string,
+      required: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 

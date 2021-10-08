@@ -36,7 +36,7 @@ interface UnderwriteManagerInterface extends ethers.utils.Interface {
     "extendCreditLine(address,uint256)": FunctionFragment;
     "initialize(address)": FunctionFragment;
     "isActive()": FunctionFragment;
-    "isNetwork(address)": FunctionFragment;
+    "networks(address)": FunctionFragment;
     "owner()": FunctionFragment;
     "removeNetwork(address)": FunctionFragment;
     "renewCreditLine(address)": FunctionFragment;
@@ -45,8 +45,10 @@ interface UnderwriteManagerInterface extends ethers.utils.Interface {
     "totalCollateral()": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
     "underwrite(address,uint256,address)": FunctionFragment;
+    "underwritees(address)": FunctionFragment;
     "underwriters(address)": FunctionFragment;
     "updateReward(address,uint256)": FunctionFragment;
+    "updateUnderwriters(address[],bool[])": FunctionFragment;
     "withdraw(address)": FunctionFragment;
   };
 
@@ -98,7 +100,7 @@ interface UnderwriteManagerInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(functionFragment: "initialize", values: [string]): string;
   encodeFunctionData(functionFragment: "isActive", values?: undefined): string;
-  encodeFunctionData(functionFragment: "isNetwork", values: [string]): string;
+  encodeFunctionData(functionFragment: "networks", values: [string]): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "removeNetwork",
@@ -129,12 +131,20 @@ interface UnderwriteManagerInterface extends ethers.utils.Interface {
     values: [string, BigNumberish, string]
   ): string;
   encodeFunctionData(
+    functionFragment: "underwritees",
+    values: [string]
+  ): string;
+  encodeFunctionData(
     functionFragment: "underwriters",
     values: [string]
   ): string;
   encodeFunctionData(
     functionFragment: "updateReward",
     values: [string, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "updateUnderwriters",
+    values: [string[], boolean[]]
   ): string;
   encodeFunctionData(functionFragment: "withdraw", values: [string]): string;
 
@@ -186,7 +196,7 @@ interface UnderwriteManagerInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "isActive", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "isNetwork", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "networks", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "removeNetwork",
@@ -214,11 +224,19 @@ interface UnderwriteManagerInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "underwrite", data: BytesLike): Result;
   decodeFunctionResult(
+    functionFragment: "underwritees",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "underwriters",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
     functionFragment: "updateReward",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "updateUnderwriters",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "withdraw", data: BytesLike): Result;
@@ -338,13 +356,13 @@ export class UnderwriteManager extends BaseContract {
     ): Promise<ContractTransaction>;
 
     initialize(
-      _collateralTokenAddress: string,
+      collateralTokenAddress: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     isActive(overrides?: CallOverrides): Promise<[boolean]>;
 
-    isNetwork(_address: string, overrides?: CallOverrides): Promise<[boolean]>;
+    networks(arg0: string, overrides?: CallOverrides): Promise<[boolean]>;
 
     owner(overrides?: CallOverrides): Promise<[string]>;
 
@@ -380,11 +398,19 @@ export class UnderwriteManager extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    underwriters(arg0: string, overrides?: CallOverrides): Promise<[string]>;
+    underwritees(arg0: string, overrides?: CallOverrides): Promise<[string]>;
+
+    underwriters(arg0: string, overrides?: CallOverrides): Promise<[boolean]>;
 
     updateReward(
       underwritee: string,
       txAmount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    updateUnderwriters(
+      _underwriters: string[],
+      isUnderwriter: boolean[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -448,13 +474,13 @@ export class UnderwriteManager extends BaseContract {
   ): Promise<ContractTransaction>;
 
   initialize(
-    _collateralTokenAddress: string,
+    collateralTokenAddress: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   isActive(overrides?: CallOverrides): Promise<boolean>;
 
-  isNetwork(_address: string, overrides?: CallOverrides): Promise<boolean>;
+  networks(arg0: string, overrides?: CallOverrides): Promise<boolean>;
 
   owner(overrides?: CallOverrides): Promise<string>;
 
@@ -490,11 +516,19 @@ export class UnderwriteManager extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  underwriters(arg0: string, overrides?: CallOverrides): Promise<string>;
+  underwritees(arg0: string, overrides?: CallOverrides): Promise<string>;
+
+  underwriters(arg0: string, overrides?: CallOverrides): Promise<boolean>;
 
   updateReward(
     underwritee: string,
     txAmount: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  updateUnderwriters(
+    _underwriters: string[],
+    isUnderwriter: boolean[],
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -558,13 +592,13 @@ export class UnderwriteManager extends BaseContract {
     ): Promise<void>;
 
     initialize(
-      _collateralTokenAddress: string,
+      collateralTokenAddress: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
     isActive(overrides?: CallOverrides): Promise<boolean>;
 
-    isNetwork(_address: string, overrides?: CallOverrides): Promise<boolean>;
+    networks(arg0: string, overrides?: CallOverrides): Promise<boolean>;
 
     owner(overrides?: CallOverrides): Promise<string>;
 
@@ -596,11 +630,19 @@ export class UnderwriteManager extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    underwriters(arg0: string, overrides?: CallOverrides): Promise<string>;
+    underwritees(arg0: string, overrides?: CallOverrides): Promise<string>;
+
+    underwriters(arg0: string, overrides?: CallOverrides): Promise<boolean>;
 
     updateReward(
       underwritee: string,
       txAmount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    updateUnderwriters(
+      _underwriters: string[],
+      isUnderwriter: boolean[],
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -883,13 +925,13 @@ export class UnderwriteManager extends BaseContract {
     ): Promise<BigNumber>;
 
     initialize(
-      _collateralTokenAddress: string,
+      collateralTokenAddress: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     isActive(overrides?: CallOverrides): Promise<BigNumber>;
 
-    isNetwork(_address: string, overrides?: CallOverrides): Promise<BigNumber>;
+    networks(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -925,11 +967,19 @@ export class UnderwriteManager extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    underwritees(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
+
     underwriters(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     updateReward(
       underwritee: string,
       txAmount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    updateUnderwriters(
+      _underwriters: string[],
+      isUnderwriter: boolean[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -993,14 +1043,14 @@ export class UnderwriteManager extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     initialize(
-      _collateralTokenAddress: string,
+      collateralTokenAddress: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     isActive(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    isNetwork(
-      _address: string,
+    networks(
+      arg0: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -1038,6 +1088,11 @@ export class UnderwriteManager extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
+    underwritees(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     underwriters(
       arg0: string,
       overrides?: CallOverrides
@@ -1046,6 +1101,12 @@ export class UnderwriteManager extends BaseContract {
     updateReward(
       underwritee: string,
       txAmount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    updateUnderwriters(
+      _underwriters: string[],
+      isUnderwriter: boolean[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 

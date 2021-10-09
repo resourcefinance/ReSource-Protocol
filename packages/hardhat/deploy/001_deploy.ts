@@ -1,7 +1,7 @@
 import { HardhatRuntimeEnvironment } from "hardhat/types"
 import { DeployFunction } from "hardhat-deploy/types"
-import { deployProxyAndSave } from "../utils"
 import { UnderwriteManager } from "../types"
+import { deployProxyAndSave } from "../utils/utils"
 
 const func: DeployFunction = async function(hardhat: HardhatRuntimeEnvironment) {
   const { deployer, relaySigner } = await hardhat.getNamedAccounts()
@@ -34,7 +34,7 @@ const func: DeployFunction = async function(hardhat: HardhatRuntimeEnvironment) 
 
   // reSourceToken deploy
   const reSourceTokenAbi = (await hardhat.artifacts.readArtifact("ReSourceToken")).abi
-  const reSourceTokenArgs = [hardhat.ethers.utils.parseEther("10000000")]
+  const reSourceTokenArgs = [hardhat.ethers.utils.parseEther("10000000"), []]
 
   const resourceToken = await deployProxyAndSave(
     "ReSourceToken",

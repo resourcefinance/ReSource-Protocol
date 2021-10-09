@@ -28,6 +28,7 @@ contract ERC20SOUL is ERC20Upgradeable, OwnableUpgradeable {
 
     struct Lock {
         uint256 amount;
+        uint256 staked;
         Schedule[] schedules;
     }
 
@@ -96,17 +97,33 @@ contract ERC20SOUL is ERC20Upgradeable, OwnableUpgradeable {
     }
 
     function _verifyLock(address _from, address _to, uint256 _amount) internal {
-        Lock storage lock = locks[_from];
-        if (lock.amount == 0 || isStakableContract[_to]) {
+        if (isStakableContract[_from]) {
+            Lock storage recipientLock = locks[_to];
+            if (recipientLock.amount != 0 && recipientLock.staked >= _amount) {
+                recipientLock.staked -= _amount;
+            } else {
+                recipientLock.staked = 0;
+            }
             return;
         }
+
+        Lock storage lock = locks[_from];
+        if (lock.amount == 0) {
+            return;
+        }
+        if (isStakableContract[_to]) {
+            lock.staked += _amount;
+            return;
+        }
+
         uint256 unlockedAmount = 0;
         for (uint256 i = 0; i < lock.schedules.length; i++) {
             if (block.timestamp >= lock.schedules[i].expiration) {
                 unlockedAmount += lock.schedules[i].amount;
             }
         }
-        require(unlockedAmount + balanceOf(_from) - lock.amount >= _amount, "Insufficient unlocked funds");
+
+        require(unlockedAmount + balanceOf(_from) + lock.staked - lock.amount >= _amount, "Insufficient unlocked funds");
         if (unlockedAmount == lock.amount) { 
             delete locks[_from];
         }

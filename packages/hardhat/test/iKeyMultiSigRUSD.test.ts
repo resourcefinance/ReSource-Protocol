@@ -3,7 +3,7 @@ import { expect } from "chai"
 import chai from "chai"
 import { solidity } from "ethereum-waffle"
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/dist/src/signers"
-import { tryWithGas } from "../utils/tryWithGas"
+import { tryWithGas } from "../utils/utils"
 import {
   IKeyMultiSig,
   IKeyMultiSig__factory,

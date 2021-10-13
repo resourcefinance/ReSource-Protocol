@@ -11,8 +11,10 @@ import {
   ModalOverlay,
   Text,
   VStack,
+  useDisclosure,
+  Button,
 } from "@chakra-ui/react"
-import { faInfoCircle } from "@fortawesome/free-solid-svg-icons"
+import { faBookOpen } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import React, { useEffect, useState } from "react"
 import { useWeb3Context } from "web3-react"
@@ -21,82 +23,89 @@ import ledger from "../../assets/web3/ledger.svg"
 import config from "../../config"
 import { useLoadReSourceTokenBalance } from "../../services/web3/utils/useLoadReSourceTokenBalance"
 import { getAbbreviatedAddress } from "../../utils/stringFormat"
-import Button from "../Button"
 
 const metaMaskIcon = "https://cdn.iconscout.com/icon/free/png-256/metamask-2728406-2261817.png"
 
 const ConnectWalletModal = ({ isOpen, onClose }) => {
+  const callToActionModal = useDisclosure()
   const context = useWeb3Context()
-  const errorMessage = useConnectorErrorMessage()
-  const [networkError, setNetworkError] = useState(false)
+  const [callToAction, setCallToAction] = useState(false)
+  const errorMessage = useConnectorErrorMessage(setCallToAction)
+
+  useEffect(() => {
+    if (callToAction) callToActionModal.onOpen()
+    else callToActionModal.onClose()
+  }, [callToAction])
 
   const connect = () => context.setFirstValidConnector(["MetaMask"])
 
   return (
-    <Modal size="sm" closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose} isCentered>
-      <ModalOverlay />
-      <ModalContent m="1em">
-        <ModalHeader>Connect your wallet</ModalHeader>
-        <ModalBody>
-          <VStack align="stretch">
-            <Button
-              size="lg"
-              onClick={connect}
-              colorScheme="blue"
-              justifyContent="space-between"
-              rightIcon={<Image width="2em" src={metaMaskIcon} />}
-            >
-              {context.active ? getAbbreviatedAddress(context.account || "") : "Connect Wallet"}
-            </Button>
-          </VStack>
-          <Text mt="2em">
-            Connect to a wallet holding SOURCE tokens to access staking and underwriting
-          </Text>
-        </ModalBody>
-        <ModalFooter>
-          <HStack alignItems="center">
-            <Text color="red.main">{errorMessage}</Text>
-            {errorMessage.includes("network") && (
-              <IconButton
-                as={"a"}
-                target={"_blank"}
-                rel="noopener noreferrer"
-                href={
-                  "https://docs.celo.org/getting-started/wallets/using-metamask-with-celo/manual-setup"
-                }
-                size="sm"
-                variant="ghost"
-                aria-label="info"
-                color="red.main"
-                icon={<FontAwesomeIcon icon={faInfoCircle} />}
-              />
-            )}
-          </HStack>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+    <>
+      <Modal size="sm" closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose} isCentered>
+        <ModalOverlay />
+        <ModalContent m="1em">
+          <ModalHeader>Connect your wallet</ModalHeader>
+          <ModalBody>
+            <VStack align="stretch">
+              <Button
+                size="lg"
+                onClick={connect}
+                colorScheme="blue"
+                justifyContent="space-between"
+                rightIcon={<Image width="2em" src={metaMaskIcon} />}
+              >
+                {context.active ? getAbbreviatedAddress(context.account || "") : "Connect Wallet"}
+              </Button>
+            </VStack>
+            <Text mt="2em">
+              Connect to a wallet holding SOURCE tokens to access staking and underwriting
+            </Text>
+          </ModalBody>
+          <ModalFooter>
+            <HStack alignItems="center">
+              <Text color="red.main">{errorMessage}</Text>
+            </HStack>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+      <CallToActionModal isOpen={callToActionModal.isOpen} onClose={callToActionModal.onOpen} />
+    </>
   )
 }
 
-const useConnectorErrorMessage = () => {
+const requestAddNetwork = async () => {
+  const _window = window as any
+  await _window.ethereum.request({
+    method: "wallet_addEthereumChain",
+
+    params: [
+      {
+        chainId: "0xaef3",
+        chainName: "Alfajores Testnet",
+        nativeCurrency: { name: "Alfajores Celo", symbol: "A-CELO", decimals: 18 },
+        rpcUrls: ["https://alfajores-forno.celo-testnet.org"],
+        blockExplorerUrls: ["https://alfajores-blockscout.celo-testnet.org/"],
+        iconUrls: ["future"],
+      },
+    ],
+  })
+}
+
+const useConnectorErrorMessage = (setCallToAction) => {
   const context = useWeb3Context()
   const [message, setMessage] = useState("")
   const sourceTokenBalance = useLoadReSourceTokenBalance()
 
   useEffect(() => {
+    setCallToAction(false)
     if (
       context.error?.message.includes("Unsupported Network") ||
       context.error?.message.includes("Unable to set any valid connector") ||
       context.error?.message.includes("Unsupported Network")
     ) {
-      setMessage(
-        `Please change your network to ${config.NETWORK_NAME.replace("-", " ")
-          .split(" ")
-          .map((word) => word[0].toUpperCase() + word.substring(1))
-          .join(" ")}`,
-      )
+      requestAddNetwork()
     } else if (context.account && sourceTokenBalance?.eq(0)) {
-      setMessage("Wallet does not have required SOURCE tokens.")
+      setCallToAction(true)
     } else if (context.error?.message.includes("Ethereum account locked.")) {
       window.location.reload()
     } else {
@@ -107,3 +116,43 @@ const useConnectorErrorMessage = () => {
   return message
 }
 export default ConnectWalletModal
+
+export const CallToActionModal = ({ isOpen, onClose }) => {
+  const context = useWeb3Context()
+
+  const changeWallet = () => {
+    context.unsetConnector()
+  }
+
+  return (
+    <Modal size="sm" closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose} isCentered>
+      <ModalOverlay />
+      <ModalContent m="1em">
+        <ModalHeader>You must be a SOURCE holder to underwrite</ModalHeader>
+        <ModalBody pb="2em">
+          <VStack align="stretch">
+            <Button
+              size="lg"
+              onClick={changeWallet}
+              colorScheme="blue"
+              justifyContent="space-between"
+              rightIcon={<Image width="2em" src={metaMaskIcon} />}
+            >
+              Change Wallet
+            </Button>
+            <Button
+              as={"a"}
+              href={"https://resource.finance/"}
+              target={"_blank"}
+              size="lg"
+              colorScheme="blue"
+              leftIcon={<FontAwesomeIcon icon={faBookOpen} />}
+            >
+              Learn More
+            </Button>
+          </VStack>
+        </ModalBody>
+      </ModalContent>
+    </Modal>
+  )
+}

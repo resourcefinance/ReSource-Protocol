@@ -13,7 +13,7 @@ const SomethingWentWrongPage = () => {
           mt={2}
           colorScheme="primary"
           leftIcon={<Icon icon={faChevronCircleLeft} color="inherit" />}
-          onClick={() => (window.location.href = "/businesses")}
+          onClick={() => (window.location.href = "/")}
         >
           Take me back
         </Button>

@@ -13,14 +13,14 @@ export const useLoadReSourceTokenBalance = () => {
         const provider = new ethers.providers.Web3Provider(context.library.provider)
         const signer = provider.getSigner()
         const contract = getReSourceTokenContract(provider)
-        const address = await signer.getAddress()
+        const address = context.account
         const balance = await contract.connect(signer).balanceOf(address)
         setSourceBalance(balance)
       }
     }
 
     loadBalance()
-  }, [context.account])
+  }, [context])
 
   return sourceBalance
 }

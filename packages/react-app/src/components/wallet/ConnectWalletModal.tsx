@@ -33,9 +33,9 @@ const ConnectWalletModal = ({ isOpen, onClose }) => {
   const errorMessage = useConnectorErrorMessage(setCallToAction)
 
   useEffect(() => {
-    if (callToAction) callToActionModal.onOpen()
+    if (callToAction && isOpen && context.active) callToActionModal.onOpen()
     else callToActionModal.onClose()
-  }, [callToAction])
+  }, [callToAction, isOpen])
 
   const connect = () => context.setFirstValidConnector(["MetaMask"])
 
@@ -91,10 +91,23 @@ const requestAddNetwork = async () => {
   })
 }
 
+const requestChangeAccount = async () => {
+  const _window = window as any
+  await _window.ethereum.request({
+    method: "wallet_requestPermissions",
+    params: [
+      {
+        eth_accounts: {},
+      },
+    ],
+  })
+}
+
 const useConnectorErrorMessage = (setCallToAction) => {
   const context = useWeb3Context()
   const [message, setMessage] = useState("")
   const sourceTokenBalance = useLoadReSourceTokenBalance()
+  console.log(sourceTokenBalance)
 
   useEffect(() => {
     setCallToAction(false)
@@ -104,7 +117,8 @@ const useConnectorErrorMessage = (setCallToAction) => {
       context.error?.message.includes("Unsupported Network")
     ) {
       requestAddNetwork()
-    } else if (context.account && sourceTokenBalance?.eq(0)) {
+    } else if (context.account && sourceTokenBalance && sourceTokenBalance?.eq(0)) {
+      console.log(sourceTokenBalance)
       setCallToAction(true)
     } else if (context.error?.message.includes("Ethereum account locked.")) {
       window.location.reload()
@@ -122,6 +136,7 @@ export const CallToActionModal = ({ isOpen, onClose }) => {
 
   const changeWallet = () => {
     context.unsetConnector()
+    requestChangeAccount()
   }
 
   return (
@@ -135,6 +150,7 @@ export const CallToActionModal = ({ isOpen, onClose }) => {
               size="lg"
               onClick={changeWallet}
               colorScheme="blue"
+              variant="outline"
               justifyContent="space-between"
               rightIcon={<Image width="2em" src={metaMaskIcon} />}
             >
@@ -146,7 +162,8 @@ export const CallToActionModal = ({ isOpen, onClose }) => {
               target={"_blank"}
               size="lg"
               colorScheme="blue"
-              leftIcon={<FontAwesomeIcon icon={faBookOpen} />}
+              justifyContent="space-between"
+              rightIcon={<FontAwesomeIcon icon={faBookOpen} />}
             >
               Learn More
             </Button>

@@ -97,7 +97,7 @@ interface ERC20SOULInterface extends ethers.utils.Interface {
     values: [
       string,
       {
-        amount: BigNumberish;
+        totalAmount: BigNumberish;
         staked: BigNumberish;
         schedules: { amount: BigNumberish; expiration: BigNumberish }[];
       }
@@ -260,7 +260,7 @@ export class ERC20SOUL extends BaseContract {
       arg0: string,
       overrides?: CallOverrides
     ): Promise<
-      [BigNumber, BigNumber] & { amount: BigNumber; staked: BigNumber }
+      [BigNumber, BigNumber] & { totalAmount: BigNumber; staked: BigNumber }
     >;
 
     name(overrides?: CallOverrides): Promise<[string]>;
@@ -296,7 +296,7 @@ export class ERC20SOUL extends BaseContract {
     transferWithLock(
       _to: string,
       _lock: {
-        amount: BigNumberish;
+        totalAmount: BigNumberish;
         staked: BigNumberish;
         schedules: { amount: BigNumberish; expiration: BigNumberish }[];
       },
@@ -351,7 +351,9 @@ export class ERC20SOUL extends BaseContract {
   locks(
     arg0: string,
     overrides?: CallOverrides
-  ): Promise<[BigNumber, BigNumber] & { amount: BigNumber; staked: BigNumber }>;
+  ): Promise<
+    [BigNumber, BigNumber] & { totalAmount: BigNumber; staked: BigNumber }
+  >;
 
   name(overrides?: CallOverrides): Promise<string>;
 
@@ -386,7 +388,7 @@ export class ERC20SOUL extends BaseContract {
   transferWithLock(
     _to: string,
     _lock: {
-      amount: BigNumberish;
+      totalAmount: BigNumberish;
       staked: BigNumberish;
       schedules: { amount: BigNumberish; expiration: BigNumberish }[];
     },
@@ -445,7 +447,7 @@ export class ERC20SOUL extends BaseContract {
       arg0: string,
       overrides?: CallOverrides
     ): Promise<
-      [BigNumber, BigNumber] & { amount: BigNumber; staked: BigNumber }
+      [BigNumber, BigNumber] & { totalAmount: BigNumber; staked: BigNumber }
     >;
 
     name(overrides?: CallOverrides): Promise<string>;
@@ -479,7 +481,7 @@ export class ERC20SOUL extends BaseContract {
     transferWithLock(
       _to: string,
       _lock: {
-        amount: BigNumberish;
+        totalAmount: BigNumberish;
         staked: BigNumberish;
         schedules: { amount: BigNumberish; expiration: BigNumberish }[];
       },
@@ -517,7 +519,7 @@ export class ERC20SOUL extends BaseContract {
             expiration: BigNumber;
           })[]
         ] & {
-          amount: BigNumber;
+          totalAmount: BigNumber;
           staked: BigNumber;
           schedules: ([BigNumber, BigNumber] & {
             amount: BigNumber;
@@ -536,7 +538,7 @@ export class ERC20SOUL extends BaseContract {
             expiration: BigNumber;
           })[]
         ] & {
-          amount: BigNumber;
+          totalAmount: BigNumber;
           staked: BigNumber;
           schedules: ([BigNumber, BigNumber] & {
             amount: BigNumber;
@@ -643,7 +645,7 @@ export class ERC20SOUL extends BaseContract {
     transferWithLock(
       _to: string,
       _lock: {
-        amount: BigNumberish;
+        totalAmount: BigNumberish;
         staked: BigNumberish;
         schedules: { amount: BigNumberish; expiration: BigNumberish }[];
       },
@@ -740,7 +742,7 @@ export class ERC20SOUL extends BaseContract {
     transferWithLock(
       _to: string,
       _lock: {
-        amount: BigNumberish;
+        totalAmount: BigNumberish;
         staked: BigNumberish;
         schedules: { amount: BigNumberish; expiration: BigNumberish }[];
       },

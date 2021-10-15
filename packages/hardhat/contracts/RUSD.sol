@@ -39,8 +39,8 @@ contract RUSD is CIP36 {
     /*
      *  Storage
      */
-    NetworkRegistry public registry;
-    UnderwriteManager public underwriteManager;
+    NetworkRegistry public registry; // TODO: use interface
+    UnderwriteManager public underwriteManager; // TODO: use interface
     address public operator;
 
     Restriction public restrictionState;
@@ -76,12 +76,12 @@ contract RUSD is CIP36 {
         address _to,
         uint256 _amount
     ) internal override {
-        _verifyNetworkRegistry(_from, _to, _amount);
+        _verifyContractState(_from, _to, _amount);
         super._transfer(_from, _to, _amount);
-        underwriteManager.updateReward(_from, _amount);
+        underwriteManager.tryUpdateReward(_from, _amount);
         emit BalanceUpdate(
             _from,
-            _to, 
+            _to,
             balanceOf(_from), 
             super.creditBalanceOf(_from),
             balanceOf(_to),
@@ -100,7 +100,11 @@ contract RUSD is CIP36 {
         super.setCreditLimit(_member, _limit);
     }
 
-    function _verifyNetworkRegistry(
+    function updateOperator(address newOperator) external onlyOwner() {
+        operator = newOperator;
+    }
+
+    function _verifyContractState(
         address _from,
         address _to,
         uint256 _amount
@@ -111,16 +115,14 @@ contract RUSD is CIP36 {
         if (restrictionState == Restriction.REGISTERED) {
             require(registry.isMember(_from), "Sender is not network member");
             require(registry.isMember(_to), "Recipient is not network member");
-        }
-        // if in positive restriction state, recipient is not in the registry and the sender's balance is negative
-        if (restrictionState == Restriction.POSITIVE && !registry.isMember(_to)) {
+        } else if (!registry.isMember(_to)) {
             uint256 _balanceFrom = super.balanceOf(_from);
             require(_balanceFrom - _amount >= 0, "Insufficient balance for non network member");
         }
     }
 
     function restrictRegistered() external onlyOwner() {
-        if (restrictionState == Restriction.REGISTERED || restrictionState == Restriction.NONE) {
+        if (restrictionState != Restriction.POSITIVE) {
             return;
         }
         emit RestrictionUpdated(Restriction.REGISTERED);
@@ -128,14 +130,14 @@ contract RUSD is CIP36 {
     }
 
     function restrictPositiveBalance() external onlyOwner() {
-        if (restrictionState == Restriction.POSITIVE || restrictionState == Restriction.NONE) {
+        if (restrictionState != Restriction.REGISTERED) {
             return;
         }
         emit RestrictionUpdated(Restriction.POSITIVE);
         restrictionState = Restriction.POSITIVE;
     }
 
-    function removeRestrictions() external {
+    function freedomFunction() external {
         if (restrictionState == Restriction.NONE) {
             revert("Already non restrictive");
         }

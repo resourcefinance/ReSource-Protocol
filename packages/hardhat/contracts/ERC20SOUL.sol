@@ -27,7 +27,7 @@ contract ERC20SOUL is ERC20Upgradeable, OwnableUpgradeable {
     mapping(address => Lock) public locks;
 
     struct Lock {
-        uint256 amount;
+        uint256 totalAmount;
         uint256 staked;
         Schedule[] schedules;
     }
@@ -45,7 +45,7 @@ contract ERC20SOUL is ERC20Upgradeable, OwnableUpgradeable {
         for (uint256 i = 0; i < _lock.schedules.length; i++) {
             totalLocked += _lock.schedules[i].amount;
         }
-        require(totalLocked == _lock.amount, "Invalid Lock");
+        require(totalLocked == _lock.totalAmount, "Invalid Lock");
         _;
     }
 
@@ -71,9 +71,9 @@ contract ERC20SOUL is ERC20Upgradeable, OwnableUpgradeable {
         address _to,
         Lock calldata _lock
     ) validLock(_lock) external {
-        super._transfer(msg.sender, _to, _lock.amount);
+        super._transfer(msg.sender, _to, _lock.totalAmount);
         Lock storage lock = locks[_to];
-        lock.amount += _lock.amount;
+        lock.totalAmount += _lock.totalAmount;
         for (uint256 i = 0; i < _lock.schedules.length; i++) {
             lock.schedules.push(Schedule(_lock.schedules[i].amount, _lock.schedules[i].expiration + block.timestamp));
         }
@@ -92,14 +92,16 @@ contract ERC20SOUL is ERC20Upgradeable, OwnableUpgradeable {
         address _to,
         uint256 _amount
     ) internal override {
-        _verifyLock(_from, _to, _amount);
+        _verifyUnlockedTokens(_from, _to, _amount);
         super._transfer(_from, _to, _amount);
     }
 
-    function _verifyLock(address _from, address _to, uint256 _amount) internal {
+    // EXTRACT SIDE EFFECTS
+    function _verifyUnlockedTokens(address _from, address _to, uint256 _amount) internal {
         if (isStakableContract[_from]) {
             Lock storage recipientLock = locks[_to];
-            if (recipientLock.amount != 0 && recipientLock.staked >= _amount) {
+            if (recipientLock.totalAmount != 0 && recipientLock.staked >= _amount) {
+                // MAKE SURE THIS WON'T OVERLAOD
                 recipientLock.staked -= _amount;
             } else {
                 recipientLock.staked = 0;
@@ -108,7 +110,7 @@ contract ERC20SOUL is ERC20Upgradeable, OwnableUpgradeable {
         }
 
         Lock storage lock = locks[_from];
-        if (lock.amount == 0) {
+        if (lock.totalAmount == 0) {
             return;
         }
         if (isStakableContract[_to]) {
@@ -116,15 +118,15 @@ contract ERC20SOUL is ERC20Upgradeable, OwnableUpgradeable {
             return;
         }
 
-        uint256 unlockedAmount = 0;
+        uint256 unlockedAmount;
         for (uint256 i = 0; i < lock.schedules.length; i++) {
             if (block.timestamp >= lock.schedules[i].expiration) {
                 unlockedAmount += lock.schedules[i].amount;
             }
         }
 
-        require(unlockedAmount + balanceOf(_from) + lock.staked - lock.amount >= _amount, "Insufficient unlocked funds");
-        if (unlockedAmount == lock.amount) { 
+        require(unlockedAmount + balanceOf(_from) + lock.staked - lock.totalAmount >= _amount, "Insufficient unlocked funds");
+        if (unlockedAmount == lock.totalAmount) { 
             delete locks[_from];
         }
     }

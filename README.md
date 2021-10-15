@@ -4,12 +4,6 @@
 
 # 🏄‍♂️ Quick Start
 
-> foreman start the local chain and graph node
-
-```bash
-foreman start
-```
-
 > start all processes
 
 ```bash

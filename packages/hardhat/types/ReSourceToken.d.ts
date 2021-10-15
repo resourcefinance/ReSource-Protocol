@@ -102,7 +102,7 @@ interface ReSourceTokenInterface extends ethers.utils.Interface {
     values: [
       string,
       {
-        amount: BigNumberish;
+        totalAmount: BigNumberish;
         staked: BigNumberish;
         schedules: { amount: BigNumberish; expiration: BigNumberish }[];
       }
@@ -272,7 +272,7 @@ export class ReSourceToken extends BaseContract {
       arg0: string,
       overrides?: CallOverrides
     ): Promise<
-      [BigNumber, BigNumber] & { amount: BigNumber; staked: BigNumber }
+      [BigNumber, BigNumber] & { totalAmount: BigNumber; staked: BigNumber }
     >;
 
     name(overrides?: CallOverrides): Promise<[string]>;
@@ -308,7 +308,7 @@ export class ReSourceToken extends BaseContract {
     transferWithLock(
       _to: string,
       _lock: {
-        amount: BigNumberish;
+        totalAmount: BigNumberish;
         staked: BigNumberish;
         schedules: { amount: BigNumberish; expiration: BigNumberish }[];
       },
@@ -369,7 +369,9 @@ export class ReSourceToken extends BaseContract {
   locks(
     arg0: string,
     overrides?: CallOverrides
-  ): Promise<[BigNumber, BigNumber] & { amount: BigNumber; staked: BigNumber }>;
+  ): Promise<
+    [BigNumber, BigNumber] & { totalAmount: BigNumber; staked: BigNumber }
+  >;
 
   name(overrides?: CallOverrides): Promise<string>;
 
@@ -404,7 +406,7 @@ export class ReSourceToken extends BaseContract {
   transferWithLock(
     _to: string,
     _lock: {
-      amount: BigNumberish;
+      totalAmount: BigNumberish;
       staked: BigNumberish;
       schedules: { amount: BigNumberish; expiration: BigNumberish }[];
     },
@@ -469,7 +471,7 @@ export class ReSourceToken extends BaseContract {
       arg0: string,
       overrides?: CallOverrides
     ): Promise<
-      [BigNumber, BigNumber] & { amount: BigNumber; staked: BigNumber }
+      [BigNumber, BigNumber] & { totalAmount: BigNumber; staked: BigNumber }
     >;
 
     name(overrides?: CallOverrides): Promise<string>;
@@ -503,7 +505,7 @@ export class ReSourceToken extends BaseContract {
     transferWithLock(
       _to: string,
       _lock: {
-        amount: BigNumberish;
+        totalAmount: BigNumberish;
         staked: BigNumberish;
         schedules: { amount: BigNumberish; expiration: BigNumberish }[];
       },
@@ -541,7 +543,7 @@ export class ReSourceToken extends BaseContract {
             expiration: BigNumber;
           })[]
         ] & {
-          amount: BigNumber;
+          totalAmount: BigNumber;
           staked: BigNumber;
           schedules: ([BigNumber, BigNumber] & {
             amount: BigNumber;
@@ -560,7 +562,7 @@ export class ReSourceToken extends BaseContract {
             expiration: BigNumber;
           })[]
         ] & {
-          amount: BigNumber;
+          totalAmount: BigNumber;
           staked: BigNumber;
           schedules: ([BigNumber, BigNumber] & {
             amount: BigNumber;
@@ -673,7 +675,7 @@ export class ReSourceToken extends BaseContract {
     transferWithLock(
       _to: string,
       _lock: {
-        amount: BigNumberish;
+        totalAmount: BigNumberish;
         staked: BigNumberish;
         schedules: { amount: BigNumberish; expiration: BigNumberish }[];
       },
@@ -776,7 +778,7 @@ export class ReSourceToken extends BaseContract {
     transferWithLock(
       _to: string,
       _lock: {
-        amount: BigNumberish;
+        totalAmount: BigNumberish;
         staked: BigNumberish;
         schedules: { amount: BigNumberish; expiration: BigNumberish }[];
       },

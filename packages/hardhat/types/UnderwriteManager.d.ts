@@ -24,32 +24,33 @@ interface UnderwriteManagerInterface extends ethers.utils.Interface {
     "CREDIT_RENEWAL()": FunctionFragment;
     "LEVERAGE_DENOMINATOR()": FunctionFragment;
     "MINIMUM_COLLATERAL()": FunctionFragment;
-    "MU_PRICE_DENOMINATOR_USD()": FunctionFragment;
     "MWEI()": FunctionFragment;
     "REWARD_PERCENT()": FunctionFragment;
+    "SOURCE_PRICE_DENOMINATOR_USD()": FunctionFragment;
+    "UNDERWRITER_RENEWAL_OFFSET()": FunctionFragment;
+    "activate()": FunctionFragment;
     "addNetwork(address)": FunctionFragment;
     "calculateCollateral(uint256)": FunctionFragment;
     "calculateCredit(uint256)": FunctionFragment;
     "claimRewards(address[])": FunctionFragment;
     "collateralToken()": FunctionFragment;
-    "creditLines(address,address)": FunctionFragment;
+    "creditLines(address)": FunctionFragment;
+    "deactivate()": FunctionFragment;
     "extendCreditLine(address,uint256)": FunctionFragment;
     "initialize(address)": FunctionFragment;
     "isActive()": FunctionFragment;
-    "networks(address)": FunctionFragment;
+    "networkContracts(address)": FunctionFragment;
     "owner()": FunctionFragment;
     "removeNetwork(address)": FunctionFragment;
     "renewCreditLine(address)": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
-    "toggleActive()": FunctionFragment;
     "totalCollateral()": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
-    "underwrite(address,uint256,address)": FunctionFragment;
-    "underwritees(address)": FunctionFragment;
+    "tryUpdateReward(address,uint256)": FunctionFragment;
+    "underwriteCreditLine(address,uint256,address)": FunctionFragment;
     "underwriters(address)": FunctionFragment;
-    "updateReward(address,uint256)": FunctionFragment;
     "updateUnderwriters(address[],bool[])": FunctionFragment;
-    "withdraw(address)": FunctionFragment;
+    "withdrawCreditLine(address)": FunctionFragment;
   };
 
   encodeFunctionData(
@@ -64,15 +65,20 @@ interface UnderwriteManagerInterface extends ethers.utils.Interface {
     functionFragment: "MINIMUM_COLLATERAL",
     values?: undefined
   ): string;
-  encodeFunctionData(
-    functionFragment: "MU_PRICE_DENOMINATOR_USD",
-    values?: undefined
-  ): string;
   encodeFunctionData(functionFragment: "MWEI", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "REWARD_PERCENT",
     values?: undefined
   ): string;
+  encodeFunctionData(
+    functionFragment: "SOURCE_PRICE_DENOMINATOR_USD",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "UNDERWRITER_RENEWAL_OFFSET",
+    values?: undefined
+  ): string;
+  encodeFunctionData(functionFragment: "activate", values?: undefined): string;
   encodeFunctionData(functionFragment: "addNetwork", values: [string]): string;
   encodeFunctionData(
     functionFragment: "calculateCollateral",
@@ -90,9 +96,10 @@ interface UnderwriteManagerInterface extends ethers.utils.Interface {
     functionFragment: "collateralToken",
     values?: undefined
   ): string;
+  encodeFunctionData(functionFragment: "creditLines", values: [string]): string;
   encodeFunctionData(
-    functionFragment: "creditLines",
-    values: [string, string]
+    functionFragment: "deactivate",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "extendCreditLine",
@@ -100,7 +107,10 @@ interface UnderwriteManagerInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(functionFragment: "initialize", values: [string]): string;
   encodeFunctionData(functionFragment: "isActive", values?: undefined): string;
-  encodeFunctionData(functionFragment: "networks", values: [string]): string;
+  encodeFunctionData(
+    functionFragment: "networkContracts",
+    values: [string]
+  ): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "removeNetwork",
@@ -115,10 +125,6 @@ interface UnderwriteManagerInterface extends ethers.utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "toggleActive",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
     functionFragment: "totalCollateral",
     values?: undefined
   ): string;
@@ -127,26 +133,25 @@ interface UnderwriteManagerInterface extends ethers.utils.Interface {
     values: [string]
   ): string;
   encodeFunctionData(
-    functionFragment: "underwrite",
-    values: [string, BigNumberish, string]
+    functionFragment: "tryUpdateReward",
+    values: [string, BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: "underwritees",
-    values: [string]
+    functionFragment: "underwriteCreditLine",
+    values: [string, BigNumberish, string]
   ): string;
   encodeFunctionData(
     functionFragment: "underwriters",
     values: [string]
   ): string;
   encodeFunctionData(
-    functionFragment: "updateReward",
-    values: [string, BigNumberish]
-  ): string;
-  encodeFunctionData(
     functionFragment: "updateUnderwriters",
     values: [string[], boolean[]]
   ): string;
-  encodeFunctionData(functionFragment: "withdraw", values: [string]): string;
+  encodeFunctionData(
+    functionFragment: "withdrawCreditLine",
+    values: [string]
+  ): string;
 
   decodeFunctionResult(
     functionFragment: "CREDIT_RENEWAL",
@@ -160,15 +165,20 @@ interface UnderwriteManagerInterface extends ethers.utils.Interface {
     functionFragment: "MINIMUM_COLLATERAL",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(
-    functionFragment: "MU_PRICE_DENOMINATOR_USD",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "MWEI", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "REWARD_PERCENT",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "SOURCE_PRICE_DENOMINATOR_USD",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "UNDERWRITER_RENEWAL_OFFSET",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "activate", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "addNetwork", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "calculateCollateral",
@@ -190,13 +200,17 @@ interface UnderwriteManagerInterface extends ethers.utils.Interface {
     functionFragment: "creditLines",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "deactivate", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "extendCreditLine",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "isActive", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "networks", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "networkContracts",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "removeNetwork",
@@ -211,10 +225,6 @@ interface UnderwriteManagerInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "toggleActive",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "totalCollateral",
     data: BytesLike
   ): Result;
@@ -222,9 +232,12 @@ interface UnderwriteManagerInterface extends ethers.utils.Interface {
     functionFragment: "transferOwnership",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "underwrite", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "underwritees",
+    functionFragment: "tryUpdateReward",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "underwriteCreditLine",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -232,14 +245,13 @@ interface UnderwriteManagerInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "updateReward",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "updateUnderwriters",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "withdraw", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "withdrawCreditLine",
+    data: BytesLike
+  ): Result;
 
   events: {
     "CreditLineReward(tuple)": EventFragment;
@@ -308,11 +320,19 @@ export class UnderwriteManager extends BaseContract {
 
     MINIMUM_COLLATERAL(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    MU_PRICE_DENOMINATOR_USD(overrides?: CallOverrides): Promise<[BigNumber]>;
-
     MWEI(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     REWARD_PERCENT(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    SOURCE_PRICE_DENOMINATOR_USD(
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    UNDERWRITER_RENEWAL_OFFSET(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    activate(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
 
     addNetwork(
       networkAddress: string,
@@ -330,7 +350,7 @@ export class UnderwriteManager extends BaseContract {
     ): Promise<[BigNumber]>;
 
     claimRewards(
-      underwritees: string[],
+      counterparties: string[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -338,10 +358,10 @@ export class UnderwriteManager extends BaseContract {
 
     creditLines(
       arg0: string,
-      arg1: string,
       overrides?: CallOverrides
     ): Promise<
-      [BigNumber, string, BigNumber, BigNumber] & {
+      [string, BigNumber, string, BigNumber, BigNumber] & {
+        underwriter: string;
         collateral: BigNumber;
         networkToken: string;
         issueDate: BigNumber;
@@ -349,8 +369,12 @@ export class UnderwriteManager extends BaseContract {
       }
     >;
 
+    deactivate(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     extendCreditLine(
-      underwritee: string,
+      counterparty: string,
       collateralAmount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
@@ -362,7 +386,10 @@ export class UnderwriteManager extends BaseContract {
 
     isActive(overrides?: CallOverrides): Promise<[boolean]>;
 
-    networks(arg0: string, overrides?: CallOverrides): Promise<[boolean]>;
+    networkContracts(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
 
     owner(overrides?: CallOverrides): Promise<[string]>;
 
@@ -372,15 +399,11 @@ export class UnderwriteManager extends BaseContract {
     ): Promise<ContractTransaction>;
 
     renewCreditLine(
-      underwritee: string,
+      counterparty: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     renounceOwnership(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    toggleActive(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -391,22 +414,20 @@ export class UnderwriteManager extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    underwrite(
-      networkToken: string,
-      collateralAmount: BigNumberish,
-      underwritee: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    underwritees(arg0: string, overrides?: CallOverrides): Promise<[string]>;
-
-    underwriters(arg0: string, overrides?: CallOverrides): Promise<[boolean]>;
-
-    updateReward(
-      underwritee: string,
+    tryUpdateReward(
+      counterparty: string,
       txAmount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
+
+    underwriteCreditLine(
+      networkToken: string,
+      collateralAmount: BigNumberish,
+      counterparty: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    underwriters(arg0: string, overrides?: CallOverrides): Promise<[boolean]>;
 
     updateUnderwriters(
       _underwriters: string[],
@@ -414,8 +435,8 @@ export class UnderwriteManager extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    withdraw(
-      underwritee: string,
+    withdrawCreditLine(
+      counterparty: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
   };
@@ -426,11 +447,17 @@ export class UnderwriteManager extends BaseContract {
 
   MINIMUM_COLLATERAL(overrides?: CallOverrides): Promise<BigNumber>;
 
-  MU_PRICE_DENOMINATOR_USD(overrides?: CallOverrides): Promise<BigNumber>;
-
   MWEI(overrides?: CallOverrides): Promise<BigNumber>;
 
   REWARD_PERCENT(overrides?: CallOverrides): Promise<BigNumber>;
+
+  SOURCE_PRICE_DENOMINATOR_USD(overrides?: CallOverrides): Promise<BigNumber>;
+
+  UNDERWRITER_RENEWAL_OFFSET(overrides?: CallOverrides): Promise<BigNumber>;
+
+  activate(
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
 
   addNetwork(
     networkAddress: string,
@@ -448,7 +475,7 @@ export class UnderwriteManager extends BaseContract {
   ): Promise<BigNumber>;
 
   claimRewards(
-    underwritees: string[],
+    counterparties: string[],
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -456,10 +483,10 @@ export class UnderwriteManager extends BaseContract {
 
   creditLines(
     arg0: string,
-    arg1: string,
     overrides?: CallOverrides
   ): Promise<
-    [BigNumber, string, BigNumber, BigNumber] & {
+    [string, BigNumber, string, BigNumber, BigNumber] & {
+      underwriter: string;
       collateral: BigNumber;
       networkToken: string;
       issueDate: BigNumber;
@@ -467,8 +494,12 @@ export class UnderwriteManager extends BaseContract {
     }
   >;
 
+  deactivate(
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   extendCreditLine(
-    underwritee: string,
+    counterparty: string,
     collateralAmount: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
@@ -480,7 +511,7 @@ export class UnderwriteManager extends BaseContract {
 
   isActive(overrides?: CallOverrides): Promise<boolean>;
 
-  networks(arg0: string, overrides?: CallOverrides): Promise<boolean>;
+  networkContracts(arg0: string, overrides?: CallOverrides): Promise<boolean>;
 
   owner(overrides?: CallOverrides): Promise<string>;
 
@@ -490,15 +521,11 @@ export class UnderwriteManager extends BaseContract {
   ): Promise<ContractTransaction>;
 
   renewCreditLine(
-    underwritee: string,
+    counterparty: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   renounceOwnership(
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  toggleActive(
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -509,22 +536,20 @@ export class UnderwriteManager extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  underwrite(
-    networkToken: string,
-    collateralAmount: BigNumberish,
-    underwritee: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  underwritees(arg0: string, overrides?: CallOverrides): Promise<string>;
-
-  underwriters(arg0: string, overrides?: CallOverrides): Promise<boolean>;
-
-  updateReward(
-    underwritee: string,
+  tryUpdateReward(
+    counterparty: string,
     txAmount: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
+
+  underwriteCreditLine(
+    networkToken: string,
+    collateralAmount: BigNumberish,
+    counterparty: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  underwriters(arg0: string, overrides?: CallOverrides): Promise<boolean>;
 
   updateUnderwriters(
     _underwriters: string[],
@@ -532,8 +557,8 @@ export class UnderwriteManager extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  withdraw(
-    underwritee: string,
+  withdrawCreditLine(
+    counterparty: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -544,11 +569,15 @@ export class UnderwriteManager extends BaseContract {
 
     MINIMUM_COLLATERAL(overrides?: CallOverrides): Promise<BigNumber>;
 
-    MU_PRICE_DENOMINATOR_USD(overrides?: CallOverrides): Promise<BigNumber>;
-
     MWEI(overrides?: CallOverrides): Promise<BigNumber>;
 
     REWARD_PERCENT(overrides?: CallOverrides): Promise<BigNumber>;
+
+    SOURCE_PRICE_DENOMINATOR_USD(overrides?: CallOverrides): Promise<BigNumber>;
+
+    UNDERWRITER_RENEWAL_OFFSET(overrides?: CallOverrides): Promise<BigNumber>;
+
+    activate(overrides?: CallOverrides): Promise<void>;
 
     addNetwork(
       networkAddress: string,
@@ -566,7 +595,7 @@ export class UnderwriteManager extends BaseContract {
     ): Promise<BigNumber>;
 
     claimRewards(
-      underwritees: string[],
+      counterparties: string[],
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -574,10 +603,10 @@ export class UnderwriteManager extends BaseContract {
 
     creditLines(
       arg0: string,
-      arg1: string,
       overrides?: CallOverrides
     ): Promise<
-      [BigNumber, string, BigNumber, BigNumber] & {
+      [string, BigNumber, string, BigNumber, BigNumber] & {
+        underwriter: string;
         collateral: BigNumber;
         networkToken: string;
         issueDate: BigNumber;
@@ -585,8 +614,10 @@ export class UnderwriteManager extends BaseContract {
       }
     >;
 
+    deactivate(overrides?: CallOverrides): Promise<void>;
+
     extendCreditLine(
-      underwritee: string,
+      counterparty: string,
       collateralAmount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
@@ -598,7 +629,7 @@ export class UnderwriteManager extends BaseContract {
 
     isActive(overrides?: CallOverrides): Promise<boolean>;
 
-    networks(arg0: string, overrides?: CallOverrides): Promise<boolean>;
+    networkContracts(arg0: string, overrides?: CallOverrides): Promise<boolean>;
 
     owner(overrides?: CallOverrides): Promise<string>;
 
@@ -608,13 +639,11 @@ export class UnderwriteManager extends BaseContract {
     ): Promise<void>;
 
     renewCreditLine(
-      underwritee: string,
+      counterparty: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
-
-    toggleActive(overrides?: CallOverrides): Promise<void>;
 
     totalCollateral(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -623,22 +652,20 @@ export class UnderwriteManager extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    underwrite(
-      networkToken: string,
-      collateralAmount: BigNumberish,
-      underwritee: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    underwritees(arg0: string, overrides?: CallOverrides): Promise<string>;
-
-    underwriters(arg0: string, overrides?: CallOverrides): Promise<boolean>;
-
-    updateReward(
-      underwritee: string,
+    tryUpdateReward(
+      counterparty: string,
       txAmount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    underwriteCreditLine(
+      networkToken: string,
+      collateralAmount: BigNumberish,
+      counterparty: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    underwriters(arg0: string, overrides?: CallOverrides): Promise<boolean>;
 
     updateUnderwriters(
       _underwriters: string[],
@@ -646,7 +673,10 @@ export class UnderwriteManager extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    withdraw(underwritee: string, overrides?: CallOverrides): Promise<void>;
+    withdrawCreditLine(
+      counterparty: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
   };
 
   filters: {
@@ -657,7 +687,8 @@ export class UnderwriteManager extends BaseContract {
         [
           string,
           string,
-          [BigNumber, string, BigNumber, BigNumber] & {
+          [string, BigNumber, string, BigNumber, BigNumber] & {
+            underwriter: string;
             collateral: BigNumber;
             networkToken: string;
             issueDate: BigNumber;
@@ -665,8 +696,9 @@ export class UnderwriteManager extends BaseContract {
           }
         ] & {
           underwriter: string;
-          underwritee: string;
-          data: [BigNumber, string, BigNumber, BigNumber] & {
+          counterparty: string;
+          data: [string, BigNumber, string, BigNumber, BigNumber] & {
+            underwriter: string;
             collateral: BigNumber;
             networkToken: string;
             issueDate: BigNumber;
@@ -678,7 +710,8 @@ export class UnderwriteManager extends BaseContract {
         creditLine: [
           string,
           string,
-          [BigNumber, string, BigNumber, BigNumber] & {
+          [string, BigNumber, string, BigNumber, BigNumber] & {
+            underwriter: string;
             collateral: BigNumber;
             networkToken: string;
             issueDate: BigNumber;
@@ -686,8 +719,9 @@ export class UnderwriteManager extends BaseContract {
           }
         ] & {
           underwriter: string;
-          underwritee: string;
-          data: [BigNumber, string, BigNumber, BigNumber] & {
+          counterparty: string;
+          data: [string, BigNumber, string, BigNumber, BigNumber] & {
+            underwriter: string;
             collateral: BigNumber;
             networkToken: string;
             issueDate: BigNumber;
@@ -699,14 +733,14 @@ export class UnderwriteManager extends BaseContract {
 
     CreditLineRewardClaimed(
       underwriter?: null,
-      underwritees?: null,
+      counterparties?: null,
       rewards?: null,
       totalClaimed?: null
     ): TypedEventFilter<
       [string, string[], BigNumber[], BigNumber],
       {
         underwriter: string;
-        underwritees: string[];
+        counterparties: string[];
         rewards: BigNumber[];
         totalClaimed: BigNumber;
       }
@@ -719,7 +753,8 @@ export class UnderwriteManager extends BaseContract {
         [
           string,
           string,
-          [BigNumber, string, BigNumber, BigNumber] & {
+          [string, BigNumber, string, BigNumber, BigNumber] & {
+            underwriter: string;
             collateral: BigNumber;
             networkToken: string;
             issueDate: BigNumber;
@@ -728,8 +763,9 @@ export class UnderwriteManager extends BaseContract {
           BigNumber
         ] & {
           underwriter: string;
-          underwritee: string;
-          data: [BigNumber, string, BigNumber, BigNumber] & {
+          counterparty: string;
+          data: [string, BigNumber, string, BigNumber, BigNumber] & {
+            underwriter: string;
             collateral: BigNumber;
             networkToken: string;
             issueDate: BigNumber;
@@ -742,7 +778,8 @@ export class UnderwriteManager extends BaseContract {
         creditLine: [
           string,
           string,
-          [BigNumber, string, BigNumber, BigNumber] & {
+          [string, BigNumber, string, BigNumber, BigNumber] & {
+            underwriter: string;
             collateral: BigNumber;
             networkToken: string;
             issueDate: BigNumber;
@@ -751,8 +788,9 @@ export class UnderwriteManager extends BaseContract {
           BigNumber
         ] & {
           underwriter: string;
-          underwritee: string;
-          data: [BigNumber, string, BigNumber, BigNumber] & {
+          counterparty: string;
+          data: [string, BigNumber, string, BigNumber, BigNumber] & {
+            underwriter: string;
             collateral: BigNumber;
             networkToken: string;
             issueDate: BigNumber;
@@ -771,7 +809,8 @@ export class UnderwriteManager extends BaseContract {
         [
           string,
           string,
-          [BigNumber, string, BigNumber, BigNumber] & {
+          [string, BigNumber, string, BigNumber, BigNumber] & {
+            underwriter: string;
             collateral: BigNumber;
             networkToken: string;
             issueDate: BigNumber;
@@ -780,8 +819,9 @@ export class UnderwriteManager extends BaseContract {
           BigNumber
         ] & {
           underwriter: string;
-          underwritee: string;
-          data: [BigNumber, string, BigNumber, BigNumber] & {
+          counterparty: string;
+          data: [string, BigNumber, string, BigNumber, BigNumber] & {
+            underwriter: string;
             collateral: BigNumber;
             networkToken: string;
             issueDate: BigNumber;
@@ -795,7 +835,8 @@ export class UnderwriteManager extends BaseContract {
         creditLine: [
           string,
           string,
-          [BigNumber, string, BigNumber, BigNumber] & {
+          [string, BigNumber, string, BigNumber, BigNumber] & {
+            underwriter: string;
             collateral: BigNumber;
             networkToken: string;
             issueDate: BigNumber;
@@ -804,8 +845,9 @@ export class UnderwriteManager extends BaseContract {
           BigNumber
         ] & {
           underwriter: string;
-          underwritee: string;
-          data: [BigNumber, string, BigNumber, BigNumber] & {
+          counterparty: string;
+          data: [string, BigNumber, string, BigNumber, BigNumber] & {
+            underwriter: string;
             collateral: BigNumber;
             networkToken: string;
             issueDate: BigNumber;
@@ -824,7 +866,8 @@ export class UnderwriteManager extends BaseContract {
         [
           string,
           string,
-          [BigNumber, string, BigNumber, BigNumber] & {
+          [string, BigNumber, string, BigNumber, BigNumber] & {
+            underwriter: string;
             collateral: BigNumber;
             networkToken: string;
             issueDate: BigNumber;
@@ -833,8 +876,9 @@ export class UnderwriteManager extends BaseContract {
           BigNumber
         ] & {
           underwriter: string;
-          underwritee: string;
-          data: [BigNumber, string, BigNumber, BigNumber] & {
+          counterparty: string;
+          data: [string, BigNumber, string, BigNumber, BigNumber] & {
+            underwriter: string;
             collateral: BigNumber;
             networkToken: string;
             issueDate: BigNumber;
@@ -847,7 +891,8 @@ export class UnderwriteManager extends BaseContract {
         creditLine: [
           string,
           string,
-          [BigNumber, string, BigNumber, BigNumber] & {
+          [string, BigNumber, string, BigNumber, BigNumber] & {
+            underwriter: string;
             collateral: BigNumber;
             networkToken: string;
             issueDate: BigNumber;
@@ -856,8 +901,9 @@ export class UnderwriteManager extends BaseContract {
           BigNumber
         ] & {
           underwriter: string;
-          underwritee: string;
-          data: [BigNumber, string, BigNumber, BigNumber] & {
+          counterparty: string;
+          data: [string, BigNumber, string, BigNumber, BigNumber] & {
+            underwriter: string;
             collateral: BigNumber;
             networkToken: string;
             issueDate: BigNumber;
@@ -884,11 +930,17 @@ export class UnderwriteManager extends BaseContract {
 
     MINIMUM_COLLATERAL(overrides?: CallOverrides): Promise<BigNumber>;
 
-    MU_PRICE_DENOMINATOR_USD(overrides?: CallOverrides): Promise<BigNumber>;
-
     MWEI(overrides?: CallOverrides): Promise<BigNumber>;
 
     REWARD_PERCENT(overrides?: CallOverrides): Promise<BigNumber>;
+
+    SOURCE_PRICE_DENOMINATOR_USD(overrides?: CallOverrides): Promise<BigNumber>;
+
+    UNDERWRITER_RENEWAL_OFFSET(overrides?: CallOverrides): Promise<BigNumber>;
+
+    activate(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
 
     addNetwork(
       networkAddress: string,
@@ -906,20 +958,20 @@ export class UnderwriteManager extends BaseContract {
     ): Promise<BigNumber>;
 
     claimRewards(
-      underwritees: string[],
+      counterparties: string[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     collateralToken(overrides?: CallOverrides): Promise<BigNumber>;
 
-    creditLines(
-      arg0: string,
-      arg1: string,
-      overrides?: CallOverrides
+    creditLines(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    deactivate(
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     extendCreditLine(
-      underwritee: string,
+      counterparty: string,
       collateralAmount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
@@ -931,7 +983,10 @@ export class UnderwriteManager extends BaseContract {
 
     isActive(overrides?: CallOverrides): Promise<BigNumber>;
 
-    networks(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
+    networkContracts(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -941,15 +996,11 @@ export class UnderwriteManager extends BaseContract {
     ): Promise<BigNumber>;
 
     renewCreditLine(
-      underwritee: string,
+      counterparty: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     renounceOwnership(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    toggleActive(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -960,22 +1011,20 @@ export class UnderwriteManager extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    underwrite(
-      networkToken: string,
-      collateralAmount: BigNumberish,
-      underwritee: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    underwritees(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
-
-    underwriters(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
-
-    updateReward(
-      underwritee: string,
+    tryUpdateReward(
+      counterparty: string,
       txAmount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
+
+    underwriteCreditLine(
+      networkToken: string,
+      collateralAmount: BigNumberish,
+      counterparty: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    underwriters(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     updateUnderwriters(
       _underwriters: string[],
@@ -983,8 +1032,8 @@ export class UnderwriteManager extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    withdraw(
-      underwritee: string,
+    withdrawCreditLine(
+      counterparty: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
   };
@@ -1000,13 +1049,21 @@ export class UnderwriteManager extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    MU_PRICE_DENOMINATOR_USD(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     MWEI(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     REWARD_PERCENT(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    SOURCE_PRICE_DENOMINATOR_USD(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    UNDERWRITER_RENEWAL_OFFSET(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    activate(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
 
     addNetwork(
       networkAddress: string,
@@ -1024,7 +1081,7 @@ export class UnderwriteManager extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     claimRewards(
-      underwritees: string[],
+      counterparties: string[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -1032,12 +1089,15 @@ export class UnderwriteManager extends BaseContract {
 
     creditLines(
       arg0: string,
-      arg1: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    deactivate(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
     extendCreditLine(
-      underwritee: string,
+      counterparty: string,
       collateralAmount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
@@ -1049,7 +1109,7 @@ export class UnderwriteManager extends BaseContract {
 
     isActive(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    networks(
+    networkContracts(
       arg0: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
@@ -1062,15 +1122,11 @@ export class UnderwriteManager extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     renewCreditLine(
-      underwritee: string,
+      counterparty: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     renounceOwnership(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    toggleActive(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -1081,27 +1137,22 @@ export class UnderwriteManager extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    underwrite(
-      networkToken: string,
-      collateralAmount: BigNumberish,
-      underwritee: string,
+    tryUpdateReward(
+      counterparty: string,
+      txAmount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    underwritees(
-      arg0: string,
-      overrides?: CallOverrides
+    underwriteCreditLine(
+      networkToken: string,
+      collateralAmount: BigNumberish,
+      counterparty: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     underwriters(
       arg0: string,
       overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    updateReward(
-      underwritee: string,
-      txAmount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     updateUnderwriters(
@@ -1110,8 +1161,8 @@ export class UnderwriteManager extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    withdraw(
-      underwritee: string,
+    withdrawCreditLine(
+      counterparty: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
   };

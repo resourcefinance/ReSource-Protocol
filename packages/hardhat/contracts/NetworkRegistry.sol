@@ -113,9 +113,11 @@ contract NetworkRegistry is OwnableUpgradeable  {
         emit OperatorRemoval(operator);
     }
 
-    /// TODO:
-    /// @dev 
-    /// @param
+    /// @dev Deploys a multisigwallet and adds it to members
+    /// @param clients client wallets of the multisig
+    /// @param guardians guardian wallets of the multisig
+    /// @param coSigner coSigner wallet of the multiSig
+    /// @param required required signatures of the multiSig 
     function deployWalletToRegistry(
         address[] memory clients,
         address[] memory guardians, 

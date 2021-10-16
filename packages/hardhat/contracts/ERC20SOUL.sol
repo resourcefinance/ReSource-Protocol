@@ -40,7 +40,7 @@ contract ERC20SOUL is ERC20Upgradeable, OwnableUpgradeable {
      *  Constants
      */
     uint256 public constant MINIMUM_LOCK_TIME = 60;
-    uint256 public constant MAXIMUM_LOCK_TIME = 5 years; 
+    uint256 public constant MAXIMUM_LOCK_TIME = 1825 days; 
     uint256 public constant MAXIMUM_SCHEDULES = 100;
 
     struct Lock {
@@ -65,7 +65,7 @@ contract ERC20SOUL is ERC20Upgradeable, OwnableUpgradeable {
             require(_lock.schedules[i].expirationBlock > block.timestamp + MINIMUM_LOCK_TIME, "Invalid Lock Schedule");
             require(_lock.schedules[i].expirationBlock < block.timestamp + MAXIMUM_LOCK_TIME, "Invalid Lock Schedule");
         }
-        require(totalLocked == _lock.amount, "Invalid Lock");
+        require(totalLocked == _lock.totalAmount, "Invalid Lock");
         _;
     }
 
@@ -116,7 +116,7 @@ contract ERC20SOUL is ERC20Upgradeable, OwnableUpgradeable {
         require(lock.schedules.length < MAXIMUM_SCHEDULES, "Maximum locks on address");
         lock.totalAmount += _lock.totalAmount;
         for (uint256 i = 0; i < _lock.schedules.length; i++) {
-            lock.schedules.push(Schedule(_lock.schedules[i].totalAmount, _lock.schedules[i].expirationBlock));
+            lock.schedules.push(Schedule(_lock.schedules[i].amount, _lock.schedules[i].expirationBlock));
         }
         emit LockedTransfer(_lock, msg.sender, _to);
     }
@@ -133,7 +133,7 @@ contract ERC20SOUL is ERC20Upgradeable, OwnableUpgradeable {
     /// @dev internal function to update the sender's lock if any
     /// @param _from transaction sender
     /// @param _to transaction recipient
-    /// @param _amount transaction amount
+    /// @param sendAmount transaction amount
     function updateSenderLock(address _from, address _to, uint256 sendAmount) internal {
         Lock storage senderLock = locks[_from];
 
@@ -160,7 +160,7 @@ contract ERC20SOUL is ERC20Upgradeable, OwnableUpgradeable {
         // total amount available to send accounting for amount currently staked
         uint256 availableAmount = amountToUnlock + balanceOf(_from) - senderLock.totalAmount + senderLock.amountStaked;
         require(availableAmount >= sendAmount, "Insufficient unlocked funds");
-        if (amountToUnlock == senderLock.amount) { 
+        if (amountToUnlock == senderLock.totalAmount) { 
             emit LockExpired( _from, locks[_from]);
             delete locks[_from];
         }
@@ -169,8 +169,8 @@ contract ERC20SOUL is ERC20Upgradeable, OwnableUpgradeable {
     /// @dev internal function to update the recipient's lock if transaction is from stakeable contract
     /// @param _from transaction sender
     /// @param _to transaction recipient
-    /// @param _amount transaction amount
-    function updateRecipientLock(address _from, address _to, uint256 sendAmount) internal {
+    /// @param sendAmount transaction amount
+    function updateRecipientLock(address _from, address _to, uint256 sendAmount) internal returns (bool) {
         if (!isStakableContract[_from]) {
             return false;
         }
@@ -182,8 +182,8 @@ contract ERC20SOUL is ERC20Upgradeable, OwnableUpgradeable {
         }
         
         recipientLock.amountStaked = 
-        recipientLock.amountStaked >= _amount ? 
-        recipientLock.amountStaked - _amount: 0;
+        recipientLock.amountStaked >= sendAmount ? 
+        recipientLock.amountStaked - sendAmount: 0;
         return true;
     }
 }

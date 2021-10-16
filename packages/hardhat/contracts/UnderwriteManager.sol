@@ -63,7 +63,7 @@ contract UnderwriteManager is OwnableUpgradeable {
     event CreditLineReward(CreditLineEvent creditLine);
     event CreditLineRewardClaimed(
         address underwriter,
-        address[] underwritees,
+        address[] counterparties,
         uint256[] rewards,
         uint256 totalClaimed
     );
@@ -141,6 +141,7 @@ contract UnderwriteManager is OwnableUpgradeable {
             msg.sender, 
             counterparty, 
             CreditLine(
+                msg.sender,
                 creditLine.collateral, 
                 creditLine.networkToken, 
                 creditLine.issueDate,
@@ -169,6 +170,7 @@ contract UnderwriteManager is OwnableUpgradeable {
             msg.sender, 
             counterparty, 
             CreditLine(
+                msg.sender,
                 creditLine.collateral, 
                 creditLine.networkToken, 
                 creditLine.issueDate,
@@ -192,12 +194,13 @@ contract UnderwriteManager is OwnableUpgradeable {
         require( offsetBalance > 0, "Can't withdraw from active credit line");
         CIP36(creditLine.networkToken).setCreditLimit(counterparty, 0);
         collateralToken.transfer(msg.sender, total);
-        creditLines[msg.sender][counterparty] = CreditLine(0, address(0), 0, 0);
+        delete creditLines[counterparty];
         totalCollateral -= collateral;
         emit CreditLineWithdrawal(CreditLineLimitEvent(
             msg.sender, 
             counterparty, 
             CreditLine(
+                msg.sender,
                 creditLine.collateral, 
                 creditLine.networkToken, 
                 creditLine.issueDate,
@@ -217,19 +220,19 @@ contract UnderwriteManager is OwnableUpgradeable {
     function tryUpdateReward(address counterparty, uint256 txAmount) external 
     notNull(counterparty) 
     onlyNetwork(msg.sender) {
-        address underwriter = creditLines[counterparty].underwriter;
-        notNull(underwriter);
         CreditLine storage creditLine = creditLines[counterparty];
         if (creditLine.collateral == 0) {
             return;
         }
-        tryRenewCreditLine(counterparty, underwriter);
+        address underwriter = creditLines[counterparty].underwriter;
+        tryRenewCreditLine(counterparty);
         uint256 reward = calculateReward(txAmount);
         creditLine.reward += reward;
         emit CreditLineReward(CreditLineEvent(
             underwriter, 
             counterparty, 
             CreditLine(
+                msg.sender,
                 creditLine.collateral, 
                 creditLine.networkToken, 
                 creditLine.issueDate,
@@ -243,7 +246,7 @@ contract UnderwriteManager is OwnableUpgradeable {
         uint256[] memory rewards = new uint256[](counterparties.length);
         for (uint256 i = 0; i < counterparties.length; i++) {
             CreditLine storage creditLine = creditLines[counterparties[i]];
-            ownedCreditLine(msg.sender, counterparties[i]);
+            require(creditLine.underwriter == msg.sender, "Credit line not owned");
             if (creditLine.reward == 0) {
                 continue;
             }
@@ -255,7 +258,7 @@ contract UnderwriteManager is OwnableUpgradeable {
         require(collateralToken.balanceOf(address(this)) - totalReward > totalCollateral, "Insufficient funds in reward pool");
         // use safe transfer from openzep
         collateralToken.transfer(msg.sender, totalReward);
-        emit CreditLineRewardClaimed(msg.sender, underwritees, rewards, totalReward);
+        emit CreditLineRewardClaimed(msg.sender, counterparties, rewards, totalReward);
     }
 
     function activate() external onlyOwner() {

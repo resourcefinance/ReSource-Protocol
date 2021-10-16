@@ -20,68 +20,76 @@ contract ERC20SOUL is ERC20Upgradeable, OwnableUpgradeable {
         address recipient
     );
 
+    event LockExpired(
+        address owner,
+        Lock lock
+    );
+
+    event LockScheduleExpired(
+        address owner,
+        Lock lock
+    );
+
     /*
      *  Storage
      */
     mapping (address => bool) public isStakableContract;
     mapping(address => Lock) public locks;
 
+    /*
+     *  Constants
+     */
+    uint256 public constant MINIMUM_LOCK_TIME = 60;
+    uint256 public constant MAXIMUM_LOCK_TIME = 5 years; 
+    uint256 public constant MAXIMUM_SCHEDULES = 100;
+
     struct Lock {
         uint256 totalAmount;
-        uint256 staked;
+        uint256 amountStaked;
         Schedule[] schedules;
     }
 
     struct Schedule {
         uint256 amount;
-        uint256 expiration;
+        uint256 expirationBlock;
     }
 
     /*
      *  Modifiers
      */
     modifier validLock(Lock calldata _lock) {
-        uint256 totalLocked = 0;
+        require(_lock.totalAmount > 0, "Invalid Lock amount");
+        uint256 totalLocked;
         for (uint256 i = 0; i < _lock.schedules.length; i++) {
             totalLocked += _lock.schedules[i].amount;
+            require(_lock.schedules[i].expirationBlock > block.timestamp + MINIMUM_LOCK_TIME, "Invalid Lock Schedule");
+            require(_lock.schedules[i].expirationBlock < block.timestamp + MAXIMUM_LOCK_TIME, "Invalid Lock Schedule");
         }
-        require(totalLocked == _lock.totalAmount, "Invalid Lock");
+        require(totalLocked == _lock.amount, "Invalid Lock");
         _;
     }
 
     /*
      * Public functions
      */
+    /// @dev Contract initialzer sets ERC20 token data and stakeable contracts
+    /// @param name Name of ERC20 token
+    /// @param symbol Symbol of ERC20 token
+    /// @param initialSupply Initial supply of ERC20 token
+    /// @param stakeableContracts List of valid staking contracts 
     function initializeERC20SOUL(
         string memory name,
         string memory symbol,
         uint256 initialSupply,
-        address[] calldata stakableContracts
+        address[] calldata stakeableContracts
     ) public virtual initializer {
         __ERC20_init(name, symbol);
         __Ownable_init();
         _mint(msg.sender, initialSupply);
-        for (uint256 i = 0; i < stakableContracts.length; i++) {
-            require(stakableContracts[i] != address(0), "invalid stakable contract address");
-            isStakableContract[stakableContracts[i]] = true;
+        for (uint256 i = 0; i < stakeableContracts.length; i++) {
+            require(stakeableContracts[i] != address(0), "invalid stakable contract address");
+            isStakableContract[stakeableContracts[i]] = true;
         }
-    }
-
-    function transferWithLock(
-        address _to,
-        Lock calldata _lock
-    ) validLock(_lock) external {
-        super._transfer(msg.sender, _to, _lock.totalAmount);
-        Lock storage lock = locks[_to];
-        lock.totalAmount += _lock.totalAmount;
-        for (uint256 i = 0; i < _lock.schedules.length; i++) {
-            lock.schedules.push(Schedule(_lock.schedules[i].amount, _lock.schedules[i].expiration + block.timestamp));
-        }
-        emit LockedTransfer(_lock, msg.sender, _to);
-    }
-
-    function updateStakableContract(address _contract, bool isStakable) onlyOwner() external {
-        isStakableContract[_contract] = isStakable;
     }
 
     /*
@@ -92,42 +100,90 @@ contract ERC20SOUL is ERC20Upgradeable, OwnableUpgradeable {
         address _to,
         uint256 _amount
     ) internal override {
-        _verifyUnlockedTokens(_from, _to, _amount);
+        _updateLock(_from, _to, _amount);
         super._transfer(_from, _to, _amount);
     }
 
-    // EXTRACT SIDE EFFECTS
-    function _verifyUnlockedTokens(address _from, address _to, uint256 _amount) internal {
-        if (isStakableContract[_from]) {
-            Lock storage recipientLock = locks[_to];
-            if (recipientLock.totalAmount != 0 && recipientLock.staked >= _amount) {
-                // MAKE SURE THIS WON'T OVERLAOD
-                recipientLock.staked -= _amount;
-            } else {
-                recipientLock.staked = 0;
-            }
-            return;
+    /// @dev Creates a valid recipient lock after transfering tokens
+    /// @param _to address to send tokens to
+    /// @param _lock valid lock data associated with transfer
+    function transferWithLock(
+        address _to,
+        Lock calldata _lock
+    ) validLock(_lock) external {
+        super._transfer(msg.sender, _to, _lock.totalAmount);
+        Lock storage lock = locks[_to];
+        require(lock.schedules.length < MAXIMUM_SCHEDULES, "Maximum locks on address");
+        lock.totalAmount += _lock.totalAmount;
+        for (uint256 i = 0; i < _lock.schedules.length; i++) {
+            lock.schedules.push(Schedule(_lock.schedules[i].totalAmount, _lock.schedules[i].expirationBlock));
         }
+        emit LockedTransfer(_lock, msg.sender, _to);
+    }
 
-        Lock storage lock = locks[_from];
-        if (lock.totalAmount == 0) {
+    /// @dev internal function to update relevant lock if any
+    /// @param _from transaction sender
+    /// @param _to transaction recipient
+    /// @param _amount transaction amount
+    function _updateLock(address _from, address _to, uint256 _amount) internal {
+        if (updateRecipientLock(_from, _to, _amount)) { return; }
+        updateSenderLock(_from, _to, _amount);
+    }
+
+    /// @dev internal function to update the sender's lock if any
+    /// @param _from transaction sender
+    /// @param _to transaction recipient
+    /// @param _amount transaction amount
+    function updateSenderLock(address _from, address _to, uint256 sendAmount) internal {
+        Lock storage senderLock = locks[_from];
+
+        // lock exists
+        if (senderLock.totalAmount == 0) {
             return;
         }
+        // staking tokens
         if (isStakableContract[_to]) {
-            lock.staked += _amount;
+            senderLock.amountStaked += sendAmount;
             return;
         }
 
-        uint256 unlockedAmount;
-        for (uint256 i = 0; i < lock.schedules.length; i++) {
-            if (block.timestamp >= lock.schedules[i].expiration) {
-                unlockedAmount += lock.schedules[i].amount;
+        uint256 amountToUnlock;
+        for (uint256 i = 0; i < senderLock.schedules.length; i++) {
+            if (block.timestamp >= senderLock.schedules[i].expirationBlock) {
+                amountToUnlock += senderLock.schedules[i].amount;
+                senderLock.schedules[i] = senderLock.schedules[senderLock.schedules.length-1];
+                senderLock.schedules.pop();
+                emit LockScheduleExpired(_from, locks[_from]);
             }
         }
 
-        require(unlockedAmount + balanceOf(_from) + lock.staked - lock.totalAmount >= _amount, "Insufficient unlocked funds");
-        if (unlockedAmount == lock.totalAmount) { 
+        // total amount available to send accounting for amount currently staked
+        uint256 availableAmount = amountToUnlock + balanceOf(_from) - senderLock.totalAmount + senderLock.amountStaked;
+        require(availableAmount >= sendAmount, "Insufficient unlocked funds");
+        if (amountToUnlock == senderLock.amount) { 
+            emit LockExpired( _from, locks[_from]);
             delete locks[_from];
         }
+    }
+
+    /// @dev internal function to update the recipient's lock if transaction is from stakeable contract
+    /// @param _from transaction sender
+    /// @param _to transaction recipient
+    /// @param _amount transaction amount
+    function updateRecipientLock(address _from, address _to, uint256 sendAmount) internal {
+        if (!isStakableContract[_from]) {
+            return false;
+        }
+
+        Lock storage recipientLock = locks[_to];
+        // lock does not exist
+        if (recipientLock.totalAmount == 0) {
+            return false;
+        }
+        
+        recipientLock.amountStaked = 
+        recipientLock.amountStaked >= _amount ? 
+        recipientLock.amountStaked - _amount: 0;
+        return true;
     }
 }

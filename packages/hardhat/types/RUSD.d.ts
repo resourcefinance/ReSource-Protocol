@@ -32,7 +32,7 @@ interface RUSDInterface extends ethers.utils.Interface {
     "creditLimitOf(address)": FunctionFragment;
     "decimals()": FunctionFragment;
     "decreaseAllowance(address,uint256)": FunctionFragment;
-    "freedomFunction()": FunctionFragment;
+    "freedom()": FunctionFragment;
     "increaseAllowance(address,uint256)": FunctionFragment;
     "initialize(string,string)": FunctionFragment;
     "initializeRUSD(address,uint256,address,address)": FunctionFragment;
@@ -90,10 +90,7 @@ interface RUSDInterface extends ethers.utils.Interface {
     functionFragment: "decreaseAllowance",
     values: [string, BigNumberish]
   ): string;
-  encodeFunctionData(
-    functionFragment: "freedomFunction",
-    values?: undefined
-  ): string;
+  encodeFunctionData(functionFragment: "freedom", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "increaseAllowance",
     values: [string, BigNumberish]
@@ -186,10 +183,7 @@ interface RUSDInterface extends ethers.utils.Interface {
     functionFragment: "decreaseAllowance",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(
-    functionFragment: "freedomFunction",
-    data: BytesLike
-  ): Result;
+  decodeFunctionResult(functionFragment: "freedom", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "increaseAllowance",
     data: BytesLike
@@ -371,7 +365,7 @@ export class RUSD extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    freedomFunction(
+    freedom(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -508,7 +502,7 @@ export class RUSD extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  freedomFunction(
+  freedom(
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -645,7 +639,7 @@ export class RUSD extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    freedomFunction(overrides?: CallOverrides): Promise<void>;
+    freedom(overrides?: CallOverrides): Promise<void>;
 
     increaseAllowance(
       spender: string,
@@ -858,7 +852,7 @@ export class RUSD extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    freedomFunction(
+    freedom(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -1002,7 +996,7 @@ export class RUSD extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    freedomFunction(
+    freedom(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 

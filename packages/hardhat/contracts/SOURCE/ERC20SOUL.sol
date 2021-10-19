@@ -3,7 +3,6 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 
-
 /// @title ERC20SOUL - An ERC20 extension that enables the transfer of
 /// tokens alongside locking periods that can be applied to subsets of
 /// the total transfer amount. This implementation also allows the owner
@@ -33,7 +32,7 @@ contract ERC20SOUL is ERC20Upgradeable, OwnableUpgradeable {
     /*
      *  Storage
      */
-    mapping (address => bool) public isStakableContract;
+    mapping (address => bool) public isStakeableContract;
     mapping(address => Lock) public locks;
 
     /*
@@ -62,8 +61,10 @@ contract ERC20SOUL is ERC20Upgradeable, OwnableUpgradeable {
         uint256 totalLocked;
         for (uint256 i = 0; i < _lock.schedules.length; i++) {
             totalLocked += _lock.schedules[i].amount;
-            require(_lock.schedules[i].expirationBlock > block.timestamp + MINIMUM_LOCK_TIME, "Invalid Lock Schedule");
-            require(_lock.schedules[i].expirationBlock < block.timestamp + MAXIMUM_LOCK_TIME, "Invalid Lock Schedule");
+            require(_lock.schedules[i].expirationBlock > 
+                block.timestamp + MINIMUM_LOCK_TIME, "Lock schedule does not meet minimum");
+            require(_lock.schedules[i].expirationBlock < 
+                block.timestamp + MAXIMUM_LOCK_TIME, "Lock schedule does not meet maximum");
         }
         require(totalLocked == _lock.totalAmount, "Invalid Lock");
         _;
@@ -87,8 +88,8 @@ contract ERC20SOUL is ERC20Upgradeable, OwnableUpgradeable {
         __Ownable_init();
         _mint(msg.sender, initialSupply);
         for (uint256 i = 0; i < stakeableContracts.length; i++) {
-            require(stakeableContracts[i] != address(0), "invalid stakable contract address");
-            isStakableContract[stakeableContracts[i]] = true;
+            require(stakeableContracts[i] != address(0), "invalid stakeable contract address");
+            isStakeableContract[stakeableContracts[i]] = true;
         }
     }
 
@@ -116,7 +117,8 @@ contract ERC20SOUL is ERC20Upgradeable, OwnableUpgradeable {
         require(lock.schedules.length < MAXIMUM_SCHEDULES, "Maximum locks on address");
         lock.totalAmount += _lock.totalAmount;
         for (uint256 i = 0; i < _lock.schedules.length; i++) {
-            lock.schedules.push(Schedule(_lock.schedules[i].amount, _lock.schedules[i].expirationBlock));
+            lock.schedules.push(Schedule(_lock.schedules[i].amount, 
+            _lock.schedules[i].expirationBlock));
         }
         emit LockedTransfer(_lock, msg.sender, _to);
     }
@@ -137,30 +139,35 @@ contract ERC20SOUL is ERC20Upgradeable, OwnableUpgradeable {
     function updateSenderLock(address _from, address _to, uint256 sendAmount) internal {
         Lock storage senderLock = locks[_from];
 
-        // lock exists
+        // no lock on sender
         if (senderLock.totalAmount == 0) {
             return;
         }
         // staking tokens
-        if (isStakableContract[_to]) {
+        if (isStakeableContract[_to]) {
             senderLock.amountStaked += sendAmount;
             return;
         }
 
         uint256 amountToUnlock;
-        for (uint256 i = 0; i < senderLock.schedules.length; i++) {
-            if (block.timestamp >= senderLock.schedules[i].expirationBlock) {
-                amountToUnlock += senderLock.schedules[i].amount;
-                senderLock.schedules[i] = senderLock.schedules[senderLock.schedules.length-1];
+        uint256 deleteOffset;
+        for (uint256 i = 0; i < senderLock.schedules.length + deleteOffset; i++) {
+            uint256 index = i - deleteOffset;
+            if (block.timestamp >= senderLock.schedules[index].expirationBlock) {
+                amountToUnlock += senderLock.schedules[index].amount;
+                senderLock.schedules[index] = senderLock.schedules[senderLock.schedules.length-1];
                 senderLock.schedules.pop();
+                deleteOffset++;
                 emit LockScheduleExpired(_from, locks[_from]);
             }
-        }
+            
 
-        // total amount available to send accounting for amount currently staked
-        uint256 availableAmount = amountToUnlock + balanceOf(_from) - senderLock.totalAmount + senderLock.amountStaked;
+        }
+        uint256 availableAmount = 
+            amountToUnlock + balanceOf(_from) + senderLock.amountStaked - senderLock.totalAmount;
+        senderLock.totalAmount -= amountToUnlock;
         require(availableAmount >= sendAmount, "Insufficient unlocked funds");
-        if (amountToUnlock == senderLock.totalAmount) { 
+        if (senderLock.totalAmount == 0) { 
             emit LockExpired( _from, locks[_from]);
             delete locks[_from];
         }
@@ -171,7 +178,7 @@ contract ERC20SOUL is ERC20Upgradeable, OwnableUpgradeable {
     /// @param _to transaction recipient
     /// @param sendAmount transaction amount
     function updateRecipientLock(address _from, address _to, uint256 sendAmount) internal returns (bool) {
-        if (!isStakableContract[_from]) {
+        if (!isStakeableContract[_from]) {
             return false;
         }
 
@@ -180,10 +187,23 @@ contract ERC20SOUL is ERC20Upgradeable, OwnableUpgradeable {
         if (recipientLock.totalAmount == 0) {
             return false;
         }
-        
         recipientLock.amountStaked = 
         recipientLock.amountStaked >= sendAmount ? 
         recipientLock.amountStaked - sendAmount: 0;
         return true;
+    }
+
+    /// @dev external function to add a stakeable contract
+    /// @param stakingContract address of the staking contract to be added
+    function addStakeableContract(address stakingContract) external onlyOwner() {
+        require(stakingContract != address(0), "Invalid staking address");
+        isStakeableContract[stakingContract] = true;
+    }
+
+    /// @dev external function to remove a stakeable contract
+    /// @param stakingContract address of the staking contract to be removed
+    function removeStakeableContract(address stakingContract) external onlyOwner() {
+        require(isStakeableContract[stakingContract], "Invalid staking address");
+        isStakeableContract[stakingContract] = false;
     }
 }

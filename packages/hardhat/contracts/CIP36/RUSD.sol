@@ -137,7 +137,7 @@ contract RUSD is CIP36 {
         restrictionState = Restriction.POSITIVE;
     }
 
-    function freedomFunction() external {
+    function freedom() external {
         if (restrictionState == Restriction.NONE) {
             revert("Already non restrictive");
         }

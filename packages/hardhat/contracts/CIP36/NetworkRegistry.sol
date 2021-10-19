@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
-import "./iKeyWallet/IiKeyWalletDeployer.sol";
+import "../iKeyWallet/IiKeyWalletDeployer.sol";
 
 /// @title NetworkRegistry - Allows Network Members to be added and removed by Network Operators.
 /// @author Bridger Zoske - <bridger@resourcenetwork.co>

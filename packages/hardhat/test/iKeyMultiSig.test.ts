@@ -3,9 +3,7 @@ import { expect } from "chai"
 import chai from "chai"
 import { solidity } from "ethereum-waffle"
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/dist/src/signers"
-import { MultiSigWallet__factory } from "../types"
 import { IKeyMultiSig } from "../types/IKeyMultiSig"
-import { IiKeyWalletDeployer__factory } from "../types/factories/IiKeyWalletDeployer__factory"
 import { IKeyWalletDeployer } from "../types/IKeyWalletDeployer"
 import { NetworkRegistry } from "../types/NetworkRegistry"
 import { IKeyMultiSig__factory } from "../types/factories/IKeyMultiSig__factory"
@@ -47,7 +45,7 @@ describe("iKeyMultiSig Tests", function() {
     await (await walletDeployer.transferOwnership(networkRegistry.address)).wait()
 
     const claimedTx = await (
-      await networkRegistry.deployNewWallet(
+      await networkRegistry.deployWalletToRegistry(
         [ethers.Wallet.createRandom().address, ethers.Wallet.createRandom().address],
         [ethers.Wallet.createRandom().address],
         coSigner.address,
@@ -62,7 +60,7 @@ describe("iKeyMultiSig Tests", function() {
     expect(claimedMultiSigAddress).to.properAddress
 
     const deployTx = await (
-      await networkRegistry.deployNewWallet([client.address], [], coSigner.address, 2)
+      await networkRegistry.deployWalletToRegistry([client.address], [], coSigner.address, 2)
     ).wait()
 
     const multiSigWalletAddress = deployTx.events?.find(

@@ -62,7 +62,7 @@ describe("RUSD Tests", function() {
       reSourceToken.address,
     ])) as UnderwriteManager
 
-    await (await reSourceToken.updateStakableContract(underwriteManager.address, true)).wait()
+    await (await reSourceToken.addStakeableContract(underwriteManager.address)).wait()
 
     const rUSDFactory = await ethers.getContractFactory("RUSD")
 
@@ -199,8 +199,8 @@ describe("RUSD Tests", function() {
   })
 
   it("Unsuccessfully update RUSD to NONE restriction state", async function() {
-    await expect(rUSD.connect(memberA).removeRestrictions()).to.be.reverted
-    await expect(rUSD.removeRestrictions()).to.be.reverted
+    await expect(rUSD.connect(memberA).freedom()).to.be.reverted
+    await expect(rUSD.freedom()).to.be.reverted
     const state = await rUSD.restrictionState()
     expect(state).to.equal(1)
   })
@@ -214,7 +214,7 @@ describe("RUSD Tests", function() {
 
   it("Updates RUSD to NONE restriction state by nonOwner", async function() {
     await ethers.provider.send("evm_increaseTime", [21000])
-    await expect(rUSD.connect(memberA).removeRestrictions()).to.emit(rUSD, "RestrictionUpdated")
+    await expect(rUSD.connect(memberA).freedom()).to.emit(rUSD, "RestrictionUpdated")
     const state = await rUSD.restrictionState()
     expect(state).to.equal(2)
   })

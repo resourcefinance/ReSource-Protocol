@@ -1,4 +1,4 @@
-import { upgrades, ethers } from "hardhat"
+import { upgrades, ethers, network } from "hardhat"
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/dist/src/signers"
 import { expect } from "chai"
 import chai from "chai"
@@ -35,7 +35,7 @@ describe("ReSourcetoken Tests", function() {
       [stakingContract.address],
     ])) as ReSourceToken
 
-    expect(await reSourceToken.isStakableContract(stakingContract.address)).to.equal(true)
+    expect(await reSourceToken.isStakeableContract(stakingContract.address)).to.equal(true)
     await (
       await reSourceToken.transfer(stakingContract.address, ethers.utils.parseEther("10000"))
     ).wait()
@@ -51,18 +51,20 @@ describe("ReSourcetoken Tests", function() {
   })
 
   it("Successfully transfers token to memberB with lock of 5 and 10 seconds", async () => {
+    const now = await (await ethers.provider.getBlock("latest")).timestamp
+
     await expect(
       reSourceToken.transferWithLock(memberB.address, {
-        amount: ethers.utils.parseEther("1000"),
-        staked: 0,
+        totalAmount: ethers.utils.parseEther("1000"),
+        amountStaked: 0,
         schedules: [
           {
             amount: ethers.utils.parseEther("300"),
-            expiration: 5000,
+            expirationBlock: now + 5000,
           },
           {
             amount: ethers.utils.parseEther("700"),
-            expiration: 10000,
+            expirationBlock: now + 10000,
           },
         ],
       }),
@@ -99,28 +101,31 @@ describe("ReSourcetoken Tests", function() {
     ).to.emit(reSourceToken, "Transfer")
 
     expect(
-      ethers.utils.formatEther(await (await reSourceToken.locks(memberB.address)).amount),
+      ethers.utils.formatEther(await (await reSourceToken.locks(memberB.address)).totalAmount),
     ).to.equal("0.0")
   })
 
   it("Successfully sends 2 locked transfers to memberC", async () => {
+    const now = await (await ethers.provider.getBlock("latest")).timestamp
+
     await expect(
       reSourceToken.transferWithLock(memberC.address, {
-        amount: ethers.utils.parseEther("1000"),
-        staked: 0,
+        totalAmount: ethers.utils.parseEther("1000"),
+        amountStaked: 0,
         schedules: [
           {
             amount: ethers.utils.parseEther("300"),
-            expiration: 5000,
+            expirationBlock: now + 5000,
           },
           {
             amount: ethers.utils.parseEther("700"),
-            expiration: 10000,
+            expirationBlock: now + 10000,
           },
         ],
       }),
     ).to.emit(reSourceToken, "LockedTransfer")
 
+    // 1k unlocked, 300 @ 5k seconds, 700 @ 10k seconds
     expect(ethers.utils.formatEther(await reSourceToken.balanceOf(memberC.address))).to.equal(
       "2000.0",
     )
@@ -137,24 +142,30 @@ describe("ReSourcetoken Tests", function() {
       reSourceToken.connect(memberC).transfer(memberD.address, ethers.utils.parseEther("1300.0")),
     ).to.emit(reSourceToken, "Transfer")
 
+    // 700 @ 5k seconds
+
+    const newNow = await (await ethers.provider.getBlock("latest")).timestamp
+
     await expect(
       reSourceToken.transferWithLock(memberC.address, {
-        amount: ethers.utils.parseEther("500"),
-        staked: 0,
+        totalAmount: ethers.utils.parseEther("500"),
+        amountStaked: 0,
         schedules: [
           {
             amount: ethers.utils.parseEther("500"),
-            expiration: 5000,
+            expirationBlock: newNow + 5000,
           },
         ],
       }),
     ).to.emit(reSourceToken, "LockedTransfer")
 
+    // 700 @ 5k seconds, 500 @ 5k seconds
+
     await expect(
       reSourceToken.connect(memberC).transfer(memberD.address, ethers.utils.parseEther("500.0")),
     ).to.be.reverted
 
-    await ethers.provider.send("evm_increaseTime", [5000])
+    await ethers.provider.send("evm_increaseTime", [5001])
 
     await expect(
       reSourceToken.connect(memberC).transfer(memberD.address, ethers.utils.parseEther("1201.0")),
@@ -165,19 +176,21 @@ describe("ReSourcetoken Tests", function() {
     ).to.emit(reSourceToken, "Transfer")
 
     expect(
-      ethers.utils.formatEther(await (await reSourceToken.locks(memberC.address)).amount),
+      ethers.utils.formatEther(await (await reSourceToken.locks(memberC.address)).totalAmount),
     ).to.equal("0.0")
   })
 
   it("Successfully sends a locked transfers to memberE", async () => {
+    const now = await (await ethers.provider.getBlock("latest")).timestamp
+
     await expect(
       reSourceToken.transferWithLock(memberE.address, {
-        amount: ethers.utils.parseEther("1000"),
-        staked: 0,
+        totalAmount: ethers.utils.parseEther("1000"),
+        amountStaked: 0,
         schedules: [
           {
             amount: ethers.utils.parseEther("1000"),
-            expiration: 5000,
+            expirationBlock: now + 5000,
           },
         ],
       }),
@@ -200,16 +213,16 @@ describe("ReSourcetoken Tests", function() {
     ).to.emit(reSourceToken, "Transfer")
 
     expect(
-      ethers.utils.formatEther(await (await reSourceToken.locks(memberE.address)).staked),
+      ethers.utils.formatEther(await (await reSourceToken.locks(memberE.address)).amountStaked),
     ).to.equal("1000.0")
 
-    // get another 200 unlocked tokens
+    // 200 unlocked tokens
     await expect(reSourceToken.transfer(memberE.address, ethers.utils.parseEther("200"))).to.emit(
       reSourceToken,
       "Transfer",
     )
 
-    // send the 200 unlocked
+    // send 200 unlocked
     await expect(
       reSourceToken.connect(memberE).transfer(memberD.address, ethers.utils.parseEther("200")),
     ).to.emit(reSourceToken, "Transfer")
@@ -222,7 +235,7 @@ describe("ReSourcetoken Tests", function() {
     ).to.emit(reSourceToken, "Transfer")
 
     expect(
-      ethers.utils.formatEther(await (await reSourceToken.locks(memberE.address)).staked),
+      ethers.utils.formatEther(await (await reSourceToken.locks(memberE.address)).amountStaked),
     ).to.equal("800.0")
 
     // fail to send the unstaked 200
@@ -238,7 +251,7 @@ describe("ReSourcetoken Tests", function() {
     ).to.emit(reSourceToken, "Transfer")
 
     expect(
-      ethers.utils.formatEther(await (await reSourceToken.locks(memberE.address)).staked),
+      ethers.utils.formatEther(await (await reSourceToken.locks(memberE.address)).amountStaked),
     ).to.equal("0.0")
 
     await ethers.provider.send("evm_increaseTime", [5001])
@@ -258,7 +271,7 @@ describe("ReSourcetoken Tests", function() {
     ).to.emit(reSourceToken, "Transfer")
 
     expect(
-      ethers.utils.formatEther(await (await reSourceToken.locks(memberE.address)).amount),
+      ethers.utils.formatEther(await (await reSourceToken.locks(memberE.address)).totalAmount),
     ).to.equal("0.0")
   })
 })

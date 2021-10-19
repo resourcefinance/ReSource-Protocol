@@ -3,33 +3,30 @@ pragma solidity ^0.8.0;
 import "./CIP36.sol"; // Create interface for CIP36
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-
+import "hardhat/console.sol";
 
 contract UnderwriteManager is OwnableUpgradeable {
     /*
      *  Constants
      */
-    uint256 public constant SOURCE_PRICE_DENOMINATOR_USD = 5;
     uint256 public constant MWEI = 1000000000000;
     
-    // TODO: add these to storage and include CRUD owner
-    uint256 public constant LEVERAGE_DENOMINATOR = 5;
-    uint256 public constant UNDERWRITER_RENEWAL_OFFSET = 1 days;
-    uint256 public constant REWARD_PERCENT = 2;
-    uint256 public constant CREDIT_RENEWAL = 180 days;
-    uint256 public constant MINIMUM_COLLATERAL = 600 ether;
-    mapping(address => bool) public networkContracts;
-
-
     /*
      *  Storage
      */
-    IERC20 public collateralToken;
-    
     bool public isActive;
+    IERC20 public collateralToken;
     uint256 public totalCollateral;
     mapping(address => CreditLine) public creditLines;
     mapping(address => bool) public underwriters;
+    mapping(address => bool) public networkContracts;
+    uint256 public collateralBasisPoints;
+    uint256 public creditLineRenewalOffset;
+    uint256 public rewardPercent;
+    uint256 public creditLineExpiration;
+    uint256 public minimumCollateral;
+    uint256 public collateralPriceCents;
+
 
     struct CreditLine {
         address underwriter;
@@ -72,6 +69,12 @@ contract UnderwriteManager is OwnableUpgradeable {
     function initialize(address collateralTokenAddress) external virtual initializer {
         collateralToken = IERC20(collateralTokenAddress);
         isActive = true;
+        collateralBasisPoints = 2000;
+        collateralPriceCents = 20;
+        rewardPercent = 2;
+        minimumCollateral = 600 ether;
+        creditLineRenewalOffset = 1 days;
+        creditLineExpiration = 180 days;
         __Ownable_init();
     }
 
@@ -90,7 +93,7 @@ contract UnderwriteManager is OwnableUpgradeable {
 
     modifier validCreditRenewal(address underwriter, address counterparty) {
         uint256 issueDate = creditLines[counterparty].issueDate;
-        require(block.timestamp - issueDate > CREDIT_RENEWAL, "Credit limit still active");
+        require(block.timestamp - issueDate > creditLineExpiration, "Credit line still active");
         _;
     }
 
@@ -129,13 +132,14 @@ contract UnderwriteManager is OwnableUpgradeable {
     onlyUnderwriter(msg.sender)
     external {
         CreditLine storage creditLine = creditLines[counterparty];
-        require(collateralAmount >= MINIMUM_COLLATERAL, "Insufficient collateral");
+        require(collateralAmount >= minimumCollateral, "Insufficient collateral");
         require(networkContracts[networkToken], "Invalid network token");
         // use safe transfer from openzep
         collateralToken.transferFrom(msg.sender, address(this), collateralAmount);
         creditLine.collateral = collateralAmount;
         creditLine.networkToken = networkToken;
         creditLine.issueDate = block.timestamp;
+        creditLine.underwriter = msg.sender;
         uint256 creditLimit = calculateCredit(collateralAmount);
         emit NewCreditLine(CreditLineLimitEvent(
             msg.sender, 
@@ -269,6 +273,32 @@ contract UnderwriteManager is OwnableUpgradeable {
         isActive = false;
     }
 
+    function updateCollateralBP(uint256 _collateralBasisPoints) external onlyOwner() {
+        collateralBasisPoints = _collateralBasisPoints;
+    }
+    
+    function updateCreditLineRenewalOffset(uint256 _creditLineRenewalOffset) external onlyOwner() {
+        creditLineRenewalOffset = _creditLineRenewalOffset;
+    }
+
+    function updateRewardPercent(uint256 _rewardPercent) external onlyOwner() {
+        rewardPercent = _rewardPercent;
+    }
+
+    function updateCreditLineExpiration(uint256 _creditLineExpiration) external onlyOwner() {
+        creditLineExpiration = _creditLineExpiration;
+    }
+
+    function updateMinimumCollateral(uint256 _minimumCollateral) external onlyOwner() {
+        minimumCollateral = _minimumCollateral;
+    }
+
+    function updateCollateralPriceCents(uint256 _collateralPriceCents) external onlyOwner() {
+        collateralPriceCents = _collateralPriceCents;
+    }
+
+
+
     function updateUnderwriters(address[] memory _underwriters, bool[] memory isUnderwriter) external onlyOwner() {
         require(_underwriters.length == isUnderwriter.length, "Invalid update value length");
         for (uint256 i = 0; i < _underwriters.length; i++) {
@@ -285,23 +315,23 @@ contract UnderwriteManager is OwnableUpgradeable {
     }
 
     // Returns calculation in mwei units
-    function calculateCredit(uint256 collateralAmount) public pure returns (uint256) {
-        return ((collateralAmount / MWEI) * (LEVERAGE_DENOMINATOR)) / SOURCE_PRICE_DENOMINATOR_USD;
+    function calculateCredit(uint256 collateralAmount) public view returns (uint256) {
+        return ((collateralAmount * collateralPriceCents * 100) / (collateralBasisPoints * MWEI));
     }
     // Returns calculation in ether units
-    function calculateCollateral(uint256 creditAmount) public pure returns (uint256) {
-        return ((creditAmount * MWEI) * (LEVERAGE_DENOMINATOR)) / SOURCE_PRICE_DENOMINATOR_USD;
+    function calculateCollateral(uint256 creditAmount) public view returns (uint256) {
+        return ((creditAmount * collateralPriceCents * 100 * MWEI) / (collateralBasisPoints));
     }
 
     /*
      * Private functions
      */
-    function calculateReward(uint256 txAmount) private pure returns (uint256) {
-        return (txAmount / 100) * REWARD_PERCENT * MWEI;
+    function calculateReward(uint256 txAmount) private view returns (uint256) {
+        return (txAmount / 100) * rewardPercent * MWEI;
     }
 
     function tryRenewCreditLine(address counterparty) private {
-        if ((block.timestamp - creditLines[counterparty].issueDate) > CREDIT_RENEWAL + UNDERWRITER_RENEWAL_OFFSET) {
+        if ((block.timestamp - creditLines[counterparty].issueDate) > creditLineExpiration + creditLineRenewalOffset) {
             creditLines[counterparty].issueDate = block.timestamp;
         }
     }

@@ -24,6 +24,7 @@ interface ERC20SOULInterface extends ethers.utils.Interface {
     "MAXIMUM_LOCK_TIME()": FunctionFragment;
     "MAXIMUM_SCHEDULES()": FunctionFragment;
     "MINIMUM_LOCK_TIME()": FunctionFragment;
+    "addStakeableContract(address)": FunctionFragment;
     "allowance(address,address)": FunctionFragment;
     "approve(address,uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
@@ -31,10 +32,11 @@ interface ERC20SOULInterface extends ethers.utils.Interface {
     "decreaseAllowance(address,uint256)": FunctionFragment;
     "increaseAllowance(address,uint256)": FunctionFragment;
     "initializeERC20SOUL(string,string,uint256,address[])": FunctionFragment;
-    "isStakableContract(address)": FunctionFragment;
+    "isStakeableContract(address)": FunctionFragment;
     "locks(address)": FunctionFragment;
     "name()": FunctionFragment;
     "owner()": FunctionFragment;
+    "removeStakeableContract(address)": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "symbol()": FunctionFragment;
     "totalSupply()": FunctionFragment;
@@ -55,6 +57,10 @@ interface ERC20SOULInterface extends ethers.utils.Interface {
   encodeFunctionData(
     functionFragment: "MINIMUM_LOCK_TIME",
     values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "addStakeableContract",
+    values: [string]
   ): string;
   encodeFunctionData(
     functionFragment: "allowance",
@@ -79,12 +85,16 @@ interface ERC20SOULInterface extends ethers.utils.Interface {
     values: [string, string, BigNumberish, string[]]
   ): string;
   encodeFunctionData(
-    functionFragment: "isStakableContract",
+    functionFragment: "isStakeableContract",
     values: [string]
   ): string;
   encodeFunctionData(functionFragment: "locks", values: [string]): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "removeStakeableContract",
+    values: [string]
+  ): string;
   encodeFunctionData(
     functionFragment: "renounceOwnership",
     values?: undefined
@@ -130,6 +140,10 @@ interface ERC20SOULInterface extends ethers.utils.Interface {
     functionFragment: "MINIMUM_LOCK_TIME",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "addStakeableContract",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "allowance", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
@@ -147,12 +161,16 @@ interface ERC20SOULInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "isStakableContract",
+    functionFragment: "isStakeableContract",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "locks", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "removeStakeableContract",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "renounceOwnership",
     data: BytesLike
@@ -243,6 +261,11 @@ export class ERC20SOUL extends BaseContract {
 
     MINIMUM_LOCK_TIME(overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    addStakeableContract(
+      stakingContract: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     allowance(
       owner: string,
       spender: string,
@@ -279,7 +302,7 @@ export class ERC20SOUL extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    isStakableContract(
+    isStakeableContract(
       arg0: string,
       overrides?: CallOverrides
     ): Promise<[boolean]>;
@@ -297,6 +320,11 @@ export class ERC20SOUL extends BaseContract {
     name(overrides?: CallOverrides): Promise<[string]>;
 
     owner(overrides?: CallOverrides): Promise<[string]>;
+
+    removeStakeableContract(
+      stakingContract: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
 
     renounceOwnership(
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -341,6 +369,11 @@ export class ERC20SOUL extends BaseContract {
 
   MINIMUM_LOCK_TIME(overrides?: CallOverrides): Promise<BigNumber>;
 
+  addStakeableContract(
+    stakingContract: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   allowance(
     owner: string,
     spender: string,
@@ -377,7 +410,10 @@ export class ERC20SOUL extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  isStakableContract(arg0: string, overrides?: CallOverrides): Promise<boolean>;
+  isStakeableContract(
+    arg0: string,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
 
   locks(
     arg0: string,
@@ -389,6 +425,11 @@ export class ERC20SOUL extends BaseContract {
   name(overrides?: CallOverrides): Promise<string>;
 
   owner(overrides?: CallOverrides): Promise<string>;
+
+  removeStakeableContract(
+    stakingContract: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
 
   renounceOwnership(
     overrides?: Overrides & { from?: string | Promise<string> }
@@ -433,6 +474,11 @@ export class ERC20SOUL extends BaseContract {
 
     MINIMUM_LOCK_TIME(overrides?: CallOverrides): Promise<BigNumber>;
 
+    addStakeableContract(
+      stakingContract: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     allowance(
       owner: string,
       spender: string,
@@ -469,7 +515,7 @@ export class ERC20SOUL extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    isStakableContract(
+    isStakeableContract(
       arg0: string,
       overrides?: CallOverrides
     ): Promise<boolean>;
@@ -487,6 +533,11 @@ export class ERC20SOUL extends BaseContract {
     name(overrides?: CallOverrides): Promise<string>;
 
     owner(overrides?: CallOverrides): Promise<string>;
+
+    removeStakeableContract(
+      stakingContract: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
 
@@ -687,6 +738,11 @@ export class ERC20SOUL extends BaseContract {
 
     MINIMUM_LOCK_TIME(overrides?: CallOverrides): Promise<BigNumber>;
 
+    addStakeableContract(
+      stakingContract: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     allowance(
       owner: string,
       spender: string,
@@ -723,7 +779,7 @@ export class ERC20SOUL extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    isStakableContract(
+    isStakeableContract(
       arg0: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
@@ -733,6 +789,11 @@ export class ERC20SOUL extends BaseContract {
     name(overrides?: CallOverrides): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<BigNumber>;
+
+    removeStakeableContract(
+      stakingContract: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
 
     renounceOwnership(
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -778,6 +839,11 @@ export class ERC20SOUL extends BaseContract {
 
     MINIMUM_LOCK_TIME(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    addStakeableContract(
+      stakingContract: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
     allowance(
       owner: string,
       spender: string,
@@ -817,7 +883,7 @@ export class ERC20SOUL extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    isStakableContract(
+    isStakeableContract(
       arg0: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
@@ -830,6 +896,11 @@ export class ERC20SOUL extends BaseContract {
     name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    removeStakeableContract(
+      stakingContract: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
 
     renounceOwnership(
       overrides?: Overrides & { from?: string | Promise<string> }

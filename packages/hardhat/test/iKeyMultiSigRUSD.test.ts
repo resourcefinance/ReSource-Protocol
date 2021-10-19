@@ -52,7 +52,7 @@ describe("iKeyMultiSig RUSD Tests", function() {
     await (await walletDeployer.transferOwnership(networkRegistry.address)).wait()
 
     const deployTx = await (
-      await networkRegistry.deployNewWallet(
+      await networkRegistry.deployWalletToRegistry(
         [client.address],
         [guardian.address],
         coSigner.address,

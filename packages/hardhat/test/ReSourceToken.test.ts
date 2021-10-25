@@ -81,6 +81,7 @@ describe("ReSourcetoken Tests", function() {
     expect(ethers.utils.formatEther(await reSourceToken.balanceOf(memberC.address))).to.equal("0.0")
 
     await ethers.provider.send("evm_increaseTime", [5001])
+    await ethers.provider.send("evm_mine", [])
 
     await expect(
       reSourceToken.connect(memberB).transfer(memberC.address, ethers.utils.parseEther("301.0")),
@@ -91,6 +92,7 @@ describe("ReSourcetoken Tests", function() {
     ).to.emit(reSourceToken, "Transfer")
 
     await ethers.provider.send("evm_increaseTime", [5000])
+    await ethers.provider.send("evm_mine", [])
 
     await expect(
       reSourceToken.connect(memberB).transfer(memberC.address, ethers.utils.parseEther("701.0")),
@@ -133,6 +135,7 @@ describe("ReSourcetoken Tests", function() {
     expect(ethers.utils.formatEther(await reSourceToken.balanceOf(memberD.address))).to.equal("0.0")
 
     await ethers.provider.send("evm_increaseTime", [5001])
+    await ethers.provider.send("evm_mine", [])
 
     await expect(
       reSourceToken.connect(memberC).transfer(memberD.address, ethers.utils.parseEther("1301.0")),
@@ -166,6 +169,7 @@ describe("ReSourcetoken Tests", function() {
     ).to.be.reverted
 
     await ethers.provider.send("evm_increaseTime", [5001])
+    await ethers.provider.send("evm_mine", [])
 
     await expect(
       reSourceToken.connect(memberC).transfer(memberD.address, ethers.utils.parseEther("1201.0")),
@@ -255,6 +259,7 @@ describe("ReSourcetoken Tests", function() {
     ).to.equal("0.0")
 
     await ethers.provider.send("evm_increaseTime", [5001])
+    await ethers.provider.send("evm_mine", [])
 
     await expect(
       reSourceToken.connect(memberE).transfer(memberD.address, ethers.utils.parseEther("200")),

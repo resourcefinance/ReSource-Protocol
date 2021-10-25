@@ -8,9 +8,15 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/math/Math.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
-/**
- * @title TokenVesting
- */
+/// @title TokenVesting - This contract enables the storage of
+/// tokens alongside a vesting schdule that release a subset
+/// of the total amount stored on a time schduel. This implementation 
+/// also allows the owner to revoke a given schedule's tokens
+/// in the case that a beneficiary does not meet the vesting 
+/// requirement. 
+/// Original repository can be found at:
+/// https://github.com/abdelhamidbakhta/token-vesting-contracts
+/// @author Abdelhamid Bakhta - abdelhamid.bakhta@gmail.com
 contract TokenVesting is Ownable, ReentrancyGuard{
     using SafeMath for uint256;
     using SafeERC20 for IERC20;

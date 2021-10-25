@@ -214,6 +214,8 @@ describe("RUSD Tests", function() {
 
   it("Updates RUSD to NONE restriction state by nonOwner", async function() {
     await ethers.provider.send("evm_increaseTime", [21000])
+    await ethers.provider.send("evm_mine", [])
+
     await expect(rUSD.connect(memberA).freedom()).to.emit(rUSD, "RestrictionUpdated")
     const state = await rUSD.restrictionState()
     expect(state).to.equal(2)

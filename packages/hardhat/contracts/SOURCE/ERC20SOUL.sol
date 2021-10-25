@@ -8,7 +8,7 @@ import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 /// the total transfer amount. This implementation also allows the owner
 /// to specify staking contract addresses that locked addresses can 
 /// interact with.
-/// @author Bridger Zoske - <bridger@resourcenetwork.co>
+/// @author Bridger Zoske - bridger@resourcenetwork.co
 contract ERC20SOUL is ERC20Upgradeable, OwnableUpgradeable {
     /*
      *  Events
@@ -38,9 +38,9 @@ contract ERC20SOUL is ERC20Upgradeable, OwnableUpgradeable {
     /*
      *  Constants
      */
-    uint256 public constant MINIMUM_LOCK_TIME = 60;
+    uint256 public constant MINIMUM_LOCK_TIME = 1 days;
     uint256 public constant MAXIMUM_LOCK_TIME = 1825 days; 
-    uint256 public constant MAXIMUM_SCHEDULES = 100;
+    uint256 public constant MAXIMUM_SCHEDULES = 260;
 
     struct Lock {
         uint256 totalAmount;

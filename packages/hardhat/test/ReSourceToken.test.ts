@@ -50,7 +50,7 @@ describe("ReSourcetoken Tests", function() {
     )
   })
 
-  it("Successfully transfers token to memberB with lock of 5 and 10 seconds", async () => {
+  it("Successfully transfers token to memberB with lock of 90000 and 100000 seconds", async () => {
     const now = await (await ethers.provider.getBlock("latest")).timestamp
 
     await expect(
@@ -60,11 +60,11 @@ describe("ReSourcetoken Tests", function() {
         schedules: [
           {
             amount: ethers.utils.parseEther("300"),
-            expirationBlock: now + 5000,
+            expirationBlock: now + 90000,
           },
           {
             amount: ethers.utils.parseEther("700"),
-            expirationBlock: now + 10000,
+            expirationBlock: now + 100000,
           },
         ],
       }),
@@ -80,7 +80,7 @@ describe("ReSourcetoken Tests", function() {
 
     expect(ethers.utils.formatEther(await reSourceToken.balanceOf(memberC.address))).to.equal("0.0")
 
-    await ethers.provider.send("evm_increaseTime", [5001])
+    await ethers.provider.send("evm_increaseTime", [90001])
     await ethers.provider.send("evm_mine", [])
 
     await expect(
@@ -91,7 +91,7 @@ describe("ReSourcetoken Tests", function() {
       reSourceToken.connect(memberB).transfer(memberC.address, ethers.utils.parseEther("300.0")),
     ).to.emit(reSourceToken, "Transfer")
 
-    await ethers.provider.send("evm_increaseTime", [5000])
+    await ethers.provider.send("evm_increaseTime", [100001])
     await ethers.provider.send("evm_mine", [])
 
     await expect(
@@ -117,11 +117,11 @@ describe("ReSourcetoken Tests", function() {
         schedules: [
           {
             amount: ethers.utils.parseEther("300"),
-            expirationBlock: now + 5000,
+            expirationBlock: now + 90000,
           },
           {
             amount: ethers.utils.parseEther("700"),
-            expirationBlock: now + 10000,
+            expirationBlock: now + 100000,
           },
         ],
       }),
@@ -134,7 +134,7 @@ describe("ReSourcetoken Tests", function() {
 
     expect(ethers.utils.formatEther(await reSourceToken.balanceOf(memberD.address))).to.equal("0.0")
 
-    await ethers.provider.send("evm_increaseTime", [5001])
+    await ethers.provider.send("evm_increaseTime", [90001])
     await ethers.provider.send("evm_mine", [])
 
     await expect(
@@ -156,7 +156,7 @@ describe("ReSourcetoken Tests", function() {
         schedules: [
           {
             amount: ethers.utils.parseEther("500"),
-            expirationBlock: newNow + 5000,
+            expirationBlock: newNow + 90000,
           },
         ],
       }),
@@ -168,7 +168,7 @@ describe("ReSourcetoken Tests", function() {
       reSourceToken.connect(memberC).transfer(memberD.address, ethers.utils.parseEther("500.0")),
     ).to.be.reverted
 
-    await ethers.provider.send("evm_increaseTime", [5001])
+    await ethers.provider.send("evm_increaseTime", [90001])
     await ethers.provider.send("evm_mine", [])
 
     await expect(
@@ -194,7 +194,7 @@ describe("ReSourcetoken Tests", function() {
         schedules: [
           {
             amount: ethers.utils.parseEther("1000"),
-            expirationBlock: now + 5000,
+            expirationBlock: now + 90000,
           },
         ],
       }),
@@ -258,7 +258,7 @@ describe("ReSourcetoken Tests", function() {
       ethers.utils.formatEther(await (await reSourceToken.locks(memberE.address)).amountStaked),
     ).to.equal("0.0")
 
-    await ethers.provider.send("evm_increaseTime", [5001])
+    await ethers.provider.send("evm_increaseTime", [90001])
     await ethers.provider.send("evm_mine", [])
 
     await expect(

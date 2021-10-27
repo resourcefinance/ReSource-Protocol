@@ -1,6 +1,4 @@
-# 🏗 Built using Scaffold-ETH
-
-> everything you need to build on Ethereum! 🚀
+![ReSource](https://uploads-ssl.webflow.com/6016a148b166393bb61de601/60942413b02410890b73c2b6_resource-logotype.svg)
 
 # 🏄‍♂️ Quick Start
 
@@ -61,14 +59,12 @@ yarn start
 
 🔏 smart contracts in `packages/hardhat/contracts`
 
-📝 React App frontend in `packages/source-dapp/src`
+📝 Source dApp frontend in `packages/source-dapp/src`
+
+📝 Vesting dApp frontend in `packages/vesting-dapp/src`
 
 💼 Deployment scripts in `packages/hardhat/deploy`
 
 📱 Local app can be found at http://localhost:3000
 
 📕 Go to our home page to learn more : https://www.resourcenetwork.co/
-
-```
-
-```

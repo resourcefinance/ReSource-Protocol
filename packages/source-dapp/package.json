@@ -1,5 +1,5 @@
 {
-  "name": "@mu-dapp/react-app",
+  "name": "@resource/source-dapp",
   "homepage": "./",
   "version": "0.1.0",
   "private": true,
@@ -49,8 +49,8 @@
   },
   "eslintConfig": {
     "extends": [
-      "react-app",
-      "react-app/jest"
+      "source-dapp",
+      "source-dapp/jest"
     ]
   },
   "browserslist": {

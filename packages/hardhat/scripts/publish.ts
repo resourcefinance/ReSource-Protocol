@@ -7,7 +7,7 @@ const fse = require("fs-extra")
 const graphDir = "./../subgraph"
 const deploymentsDir = "./deployments"
 const typesDir = "./types"
-const publishDir = "./../react-app/src/contracts"
+const publishDir = "./../source-dapp/src/contracts"
 
 function publishContract(contractName: string, networkName: string) {
   try {

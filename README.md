@@ -61,7 +61,7 @@ yarn start
 
 🔏 smart contracts in `packages/hardhat/contracts`
 
-📝 React App frontend in `packages/react-app/src`
+📝 React App frontend in `packages/source-dapp/src`
 
 💼 Deployment scripts in `packages/hardhat/deploy`
 

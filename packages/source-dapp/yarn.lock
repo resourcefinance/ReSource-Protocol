@@ -3849,9 +3849,9 @@
     "babel-plugin-jest-hoist" "^26.6.2"
     "babel-preset-current-node-syntax" "^1.0.0"
 
-"babel-preset-react-app@^10.0.0":
+"babel-preset-source-dapp@^10.0.0":
   "integrity" "sha512-itL2z8v16khpuKutx5IH8UdCdSTuzrOhRFTEdIhveZ2i1iBKDrVE0ATa4sFVy+02GLucZNVBWtoarXBy0Msdpg=="
-  "resolved" "https://registry.npmjs.org/babel-preset-react-app/-/babel-preset-react-app-10.0.0.tgz"
+  "resolved" "https://registry.npmjs.org/babel-preset-source-dapp/-/babel-preset-source-dapp-10.0.0.tgz"
   "version" "10.0.0"
   dependencies:
     "@babel/core" "7.12.3"
@@ -5724,9 +5724,9 @@
   optionalDependencies:
     "source-map" "~0.6.1"
 
-"eslint-config-react-app@^6.0.0":
+"eslint-config-source-dapp@^6.0.0":
   "integrity" "sha512-bpoAAC+YRfzq0dsTk+6v9aHm/uqnDwayNAXleMypGl6CpxI9oXXscVHo4fk3eJPIn+rsbtNetB4r/ZIidFIE8A=="
-  "resolved" "https://registry.npmjs.org/eslint-config-react-app/-/eslint-config-react-app-6.0.0.tgz"
+  "resolved" "https://registry.npmjs.org/eslint-config-source-dapp/-/eslint-config-source-dapp-6.0.0.tgz"
   "version" "6.0.0"
   dependencies:
     "confusing-browser-globals" "^1.0.10"
@@ -10477,9 +10477,9 @@
     "iconv-lite" "0.4.24"
     "unpipe" "1.0.0"
 
-"react-app-polyfill@^2.0.0":
+"source-dapp-polyfill@^2.0.0":
   "integrity" "sha512-0sF4ny9v/B7s6aoehwze9vJNWcmCemAUYBVasscVr92+UYiEqDXOxfKjXN685mDaMRNF3WdhHQs76oTODMocFA=="
-  "resolved" "https://registry.npmjs.org/react-app-polyfill/-/react-app-polyfill-2.0.0.tgz"
+  "resolved" "https://registry.npmjs.org/source-dapp-polyfill/-/source-dapp-polyfill-2.0.0.tgz"
   "version" "2.0.0"
   dependencies:
     "core-js" "^3.6.5"
@@ -10644,7 +10644,7 @@
     "babel-jest" "^26.6.0"
     "babel-loader" "8.1.0"
     "babel-plugin-named-asset-import" "^0.3.7"
-    "babel-preset-react-app" "^10.0.0"
+    "babel-preset-source-dapp" "^10.0.0"
     "bfj" "^7.0.2"
     "camelcase" "^6.1.0"
     "case-sensitive-paths-webpack-plugin" "2.3.0"
@@ -10652,7 +10652,7 @@
     "dotenv" "8.2.0"
     "dotenv-expand" "5.1.0"
     "eslint" "^7.11.0"
-    "eslint-config-react-app" "^6.0.0"
+    "eslint-config-source-dapp" "^6.0.0"
     "eslint-plugin-flowtype" "^5.2.0"
     "eslint-plugin-import" "^2.22.1"
     "eslint-plugin-jest" "^24.1.0"
@@ -10678,7 +10678,7 @@
     "postcss-preset-env" "6.7.0"
     "postcss-safe-parser" "5.0.2"
     "prompts" "2.4.0"
-    "react-app-polyfill" "^2.0.0"
+    "source-dapp-polyfill" "^2.0.0"
     "react-dev-utils" "^11.0.3"
     "react-refresh" "^0.8.3"
     "resolve" "1.18.1"

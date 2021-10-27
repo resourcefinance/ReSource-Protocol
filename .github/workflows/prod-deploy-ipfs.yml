@@ -1,4 +1,4 @@
-name: "Mu dApp - Deploy"
+name: "Source dApp - Deploy"
 
 on:
   push:
@@ -40,7 +40,7 @@ jobs:
       - name: Install React Dependencies
         if: steps.yarn-cache.outputs.cache-hit != 'true'
         run: |
-          cd ./packages/react-app/
+          cd ./packages/source-dapp/
           SKIP_POSTINSTALL=1 yarn install
 
       - name: Build
@@ -49,7 +49,7 @@ jobs:
           REACT_APP_RESOURCE_URL: https://api.resourcenetwork.co/graphql
           REACT_APP_NETWORK_NAME: celo-alfajores
         run: |
-          cd ./packages/react-app/
+          cd ./packages/source-dapp/
           export CI=false 
           yarn codegen
           yarn build
@@ -58,7 +58,7 @@ jobs:
         id: upload
         uses: ReSource-Network/ipfs-action@v1.8.1
         with:
-          path: ./packages/react-app/build
+          path: ./packages/source-dapp/build
           pinataPinName: production-source-dapp
           service: pinata
           pinataKey: ${{ secrets.PINATA_KEY }}

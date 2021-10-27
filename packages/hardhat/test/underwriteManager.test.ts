@@ -98,7 +98,7 @@ describe("UnderwriteManager Tests", function() {
     expect(underwriteManager.address).to.properAddress
   })
 
-  it("Send 100,000 mu to underwriterA", async function() {
+  it("Send 100,000 source to underwriterA", async function() {
     await expect(
       reSourceToken.transfer(underwriterA.address, ethers.utils.parseEther("100000")),
     ).to.emit(reSourceToken, "Transfer")
@@ -121,7 +121,7 @@ describe("UnderwriteManager Tests", function() {
     ).to.not.be.reverted
   })
 
-  it("Underwrite 10,000 mu from underwriterA for memberA", async function() {
+  it("Underwrite 10,000 source from underwriterA for memberA", async function() {
     await expect(
       underwriteManager
         .connect(underwriterA)
@@ -197,7 +197,7 @@ describe("UnderwriteManager Tests", function() {
     ).to.equal("90020.0")
   })
 
-  it("Extend an additional 5,000 mu from underwriterA for memberA", async function() {
+  it("Extend an additional 5,000 source from underwriterA for memberA", async function() {
     await expect(
       underwriteManager
         .connect(underwriterA)

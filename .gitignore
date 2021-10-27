@@ -9,8 +9,8 @@ packages/hardhat/*.txt
 packages/hardhat/artifacts*
 packages/hardhat/.openzeppelin/unknown-31337.json
 packages/hardhat/deployments/localhost
-packages/react-app/src/contracts/*
-!packages/react-app/src/contracts/external_contracts.js
+packages/source-dapp/src/contracts/*
+!packages/source-dapp/src/contracts/external_contracts.js
 packages/hardhat/cache*
 
 packages/**/data

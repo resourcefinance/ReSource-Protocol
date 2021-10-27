@@ -1,5 +1,5 @@
 {
-  "name": "@mu-dapp/hardhat",
+  "name": "@resource/hardhat",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",

@@ -2,9 +2,35 @@ import { HardhatRuntimeEnvironment } from "hardhat/types"
 import { DeployFunction } from "hardhat-deploy/types"
 import { UnderwriteManager } from "../types"
 import { deployProxyAndSave } from "../utils/utils"
+import { ReSourceToken } from "../types/ReSourceToken"
+import { deployments } from "hardhat"
 
 const func: DeployFunction = async function(hardhat: HardhatRuntimeEnvironment) {
   const { deployer, relaySigner } = await hardhat.getNamedAccounts()
+
+  // reSourceToken deploy
+  const reSourceTokenAbi = (await hardhat.artifacts.readArtifact("ReSourceToken")).abi
+  const reSourceTokenArgs = [hardhat.ethers.utils.parseEther("10000000"), []]
+
+  const resourceToken = (await deployProxyAndSave(
+    "ReSourceToken",
+    reSourceTokenArgs,
+    hardhat,
+    reSourceTokenAbi,
+  )) as ReSourceToken
+
+  console.log("ReSourceToken deployed")
+
+  // reSourceToken deploy
+  const tokenVestingAbi = (await hardhat.artifacts.readArtifact("TokenVesting")).abi
+  const tokenVestingArgs = [resourceToken.address]
+
+  const tokenVesting = deployments.deploy("TokenVesting", {
+    from: (await hardhat.ethers.getSigners())[0].address,
+    args: [resourceToken.address],
+  })
+
+  console.log("TokenVesting deployed")
 
   //deploy walletDeployer contract
   const walletDeployerAbi = (await hardhat.artifacts.readArtifact("IiKeyWalletDeployer")).abi
@@ -32,19 +58,6 @@ const func: DeployFunction = async function(hardhat: HardhatRuntimeEnvironment) 
   }
   console.log("NetworkRegistry deployed")
 
-  // reSourceToken deploy
-  const reSourceTokenAbi = (await hardhat.artifacts.readArtifact("ReSourceToken")).abi
-  const reSourceTokenArgs = [hardhat.ethers.utils.parseEther("10000000"), []]
-
-  const resourceToken = await deployProxyAndSave(
-    "ReSourceToken",
-    reSourceTokenArgs,
-    hardhat,
-    reSourceTokenAbi,
-  )
-
-  console.log("ReSourceToken deployed")
-
   // underwriteManager deploy
   const underwriteManagerAbi = (await hardhat.artifacts.readArtifact("UnderwriteManager")).abi
   const underwriteManagerArgs = [resourceToken.address]
@@ -55,7 +68,7 @@ const func: DeployFunction = async function(hardhat: HardhatRuntimeEnvironment) 
     underwriteManagerAbi,
   )) as UnderwriteManager
 
-  await (await resourceToken.updateStakableContract(underwriteManager.address, true)).wait()
+  await (await resourceToken.addStakeableContract(underwriteManager.address)).wait()
 
   console.log("UnderwriteManager deployed")
 

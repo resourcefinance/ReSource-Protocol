@@ -8,6 +8,11 @@
 yarn start-all
 ```
 
+# 🏗 Run Contract Tests
+```bash
+yarn test
+```
+
 # 🤓 Details
 
 > install and start the 👷‍ Hardhat chain:
@@ -56,6 +61,8 @@ yarn codegen
 ```bash
 yarn start
 ```
+
+
 
 🔏 smart contracts in `packages/hardhat/contracts`
 

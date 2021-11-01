@@ -1,16 +1,18 @@
 import { HardhatRuntimeEnvironment } from "hardhat/types"
 import { DeployFunction } from "hardhat-deploy/types"
-import { UnderwriteManager } from "../types"
 import { deployProxyAndSave } from "../utils/utils"
 import { ReSourceToken } from "../types/ReSourceToken"
-import { deployments } from "hardhat"
+import { deployments, ethers } from "hardhat"
+import { UnderwriteManager } from "../types/UnderwriteManager"
+import { TokenVesting__factory } from "../types"
+import { TokenVesting } from "../types/TokenVesting"
 
 const func: DeployFunction = async function(hardhat: HardhatRuntimeEnvironment) {
   const { deployer, relaySigner } = await hardhat.getNamedAccounts()
 
   // reSourceToken deploy
   const reSourceTokenAbi = (await hardhat.artifacts.readArtifact("ReSourceToken")).abi
-  const reSourceTokenArgs = [hardhat.ethers.utils.parseEther("10000000"), []]
+  const reSourceTokenArgs = [hardhat.ethers.utils.parseEther("100000000"), []]
 
   const resourceToken = (await deployProxyAndSave(
     "ReSourceToken",
@@ -22,10 +24,7 @@ const func: DeployFunction = async function(hardhat: HardhatRuntimeEnvironment) 
   console.log("ReSourceToken deployed")
 
   // reSourceToken deploy
-  const tokenVestingAbi = (await hardhat.artifacts.readArtifact("TokenVesting")).abi
-  const tokenVestingArgs = [resourceToken.address]
-
-  const tokenVesting = deployments.deploy("TokenVesting", {
+  await deployments.deploy("TokenVesting", {
     from: (await hardhat.ethers.getSigners())[0].address,
     args: [resourceToken.address],
   })

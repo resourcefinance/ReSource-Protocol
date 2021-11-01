@@ -1,48 +1,45 @@
-const env = process.env.NODE_ENV;
+const env = process.env.NODE_ENV
 
 // TODO fill parameters values
 const localHostConfig = {
-  tokenVestingContractAddress: "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
+  tokenVestingContractAddress: "0xa82fF9aFd8f496c3d6ac40E2a0F282E47488CFc9",
   explorerRootURL: "https://testnet.bscscan.com/",
   tokenVestingContractAbi: require("./assets/abi/TokenVesting.json"),
-  tokenVestingContractBytecode: require("./assets/bytecode/TokenVesting.json")
-    .bytecode,
+  tokenVestingContractBytecode: require("./assets/bytecode/TokenVesting.json").bytecode,
   erc20ContractAbi: require("./assets/abi/ERC20.json"),
-};
+}
 
 // TODO fill parameters values
 const bscTesnetConfig = {
   tokenVestingContractAddress: "TBA",
   explorerRootURL: "https://goerli.etherscan.io/",
   tokenVestingContractAbi: require("./assets/abi/TokenVesting.json"),
-  tokenVestingContractBytecode: require("./assets/bytecode/TokenVesting.json")
-    .bytecode,
+  tokenVestingContractBytecode: require("./assets/bytecode/TokenVesting.json").bytecode,
   erc20ContractAbi: require("./assets/abi/ERC20.json"),
-};
+}
 
 // TODO fill parameters values
 const mainnetConfig = {
   tokenVestingContractAddress: "TBA",
   explorerRootURL: "https://etherscan.io/",
   tokenVestingContractAbi: require("./assets/abi/TokenVesting.json"),
-  tokenVestingContractBytecode: require("./assets/bytecode/TokenVesting.json")
-    .bytecode,
+  tokenVestingContractBytecode: require("./assets/bytecode/TokenVesting.json").bytecode,
   erc20ContractAbi: require("./assets/abi/ERC20.json"),
-};
-const defaultConfig = mainnetConfig;
+}
+const defaultConfig = mainnetConfig
 
-export let globalConfig;
+export let globalConfig
 switch (env) {
   case "development":
-    globalConfig = localHostConfig;
-    break;
+    globalConfig = localHostConfig
+    break
   case "preproduction":
-    globalConfig = bscTesnetConfig;
-    break;
+    globalConfig = bscTesnetConfig
+    break
   case "production":
-    globalConfig = mainnetConfig;
-    break;
+    globalConfig = mainnetConfig
+    break
   case undefined:
-    globalConfig = defaultConfig;
-    break;
+    globalConfig = defaultConfig
+    break
 }

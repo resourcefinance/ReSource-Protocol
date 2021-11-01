@@ -74,7 +74,6 @@
                     v-model="form.startTime"
                     label="Start Time"
                     prepend-icon="mdi-clock-time-four-outline"
-                    readonly
                     v-bind="attrs"
                     v-on="on"
                   ></v-text-field>
@@ -108,10 +107,7 @@
                     v-on="on"
                   ></v-text-field>
                 </template>
-                <v-date-picker
-                  v-model="form.endDate"
-                  @input="endDateMenu = false"
-                ></v-date-picker>
+                <v-date-picker v-model="form.endDate" @input="endDateMenu = false"></v-date-picker>
               </v-menu>
             </v-col>
             <v-col cols="12" md="4">
@@ -131,7 +127,6 @@
                     v-model="form.endTime"
                     label="End Time"
                     prepend-icon="mdi-clock-time-four-outline"
-                    readonly
                     v-bind="attrs"
                     v-on="on"
                   ></v-text-field>
@@ -160,9 +155,7 @@
           </v-row>
           <v-row justify="center">
             <v-col cols="12" md="4">
-              <v-btn color="primary" @click="createVesting"
-                >Create Vesting</v-btn
-              >
+              <v-btn color="primary" @click="createVesting">Create Vesting</v-btn>
             </v-col>
           </v-row>
         </v-container>
@@ -172,8 +165,8 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
-const ethers = require("ethers");
+import { mapState } from "vuex"
+const ethers = require("ethers")
 export default {
   name: "CreateVesting",
   data: () => ({
@@ -206,42 +199,34 @@ export default {
     vestingIntervalItems: ["Second", "Day", "Week", "Month"],
     ethereumAddressRules: [
       (v) => !!v || "Ethereum address is required",
-      (v) =>
-        /^(0x)?[0-9a-fA-F]{40}$/.test(v) || "Ethereum address must be valid",
+      (v) => /^(0x)?[0-9a-fA-F]{40}$/.test(v) || "Ethereum address must be valid",
     ],
     tokenAmountRules: [(v) => v > 0 || "Token amount must be greater than 0"],
   }),
   methods: {
     createVesting() {
-      console.log(this.form);
-      const startTimeFull = new Date(
-        `${this.form.startDate}T${this.form.startTime}:00`
-      );
-      const endTimeFull = new Date(
-        `${this.form.endDate}T${this.form.endTime}:00`
-      );
-      const startTime = startTimeFull.getTime() / 1000;
-      const endTime = endTimeFull.getTime() / 1000;
-      let slicePeriodSeconds;
+      const startTimeFull = new Date(Date.parse(`${this.form.startDate} ${this.form.startTime}`))
+      const endTimeFull = new Date(Date.parse(`${this.form.endDate} ${this.form.endTime}`))
+      const startTime = startTimeFull.getTime() / 1000
+      const endTime = endTimeFull.getTime() / 1000
+      let slicePeriodSeconds
       switch (this.form.vestingInterval) {
         case "Second":
-          slicePeriodSeconds = 1;
-          break;
+          slicePeriodSeconds = 1
+          break
         case "Day":
-          slicePeriodSeconds = 60 * 60 * 24;
-          break;
+          slicePeriodSeconds = 60 * 60 * 24
+          break
         case "Week":
-          slicePeriodSeconds = 60 * 60 * 24 * 7;
-          break;
+          slicePeriodSeconds = 60 * 60 * 24 * 7
+          break
         case "Month":
-          slicePeriodSeconds = 60 * 60 * 24 * 30;
-          break;
+          slicePeriodSeconds = 60 * 60 * 24 * 30
+          break
       }
-      const duration = endTime - startTime;
-      const amount = ethers.utils
-        .parseUnits(this.form.tokens, "ether")
-        .toString();
-      this.startLoading();
+      const duration = endTime - startTime
+      const amount = ethers.utils.parseUnits(this.form.tokens, "ether").toString()
+      this.startLoading()
       this.tokenVesting.methods
         .createVestingSchedule(
           this.form.beneficiary,
@@ -250,59 +235,59 @@ export default {
           duration,
           slicePeriodSeconds,
           this.form.revocable,
-          amount
+          amount,
         )
         .send({ from: window.ethereum.selectedAddress })
         .on("receipt", this.onCreateVestingScheduleReceipt)
-        .on("error", this.onCreateVestingScheduleError);
+        .on("error", this.onCreateVestingScheduleError)
     },
     onCreateVestingScheduleReceipt(receipt) {
-      console.log("onCreateVestingScheduleReceipt: ", receipt);
-      this.stopLoading();
-      this.showSuccess("Vesting successfully created.");
+      console.log("onCreateVestingScheduleReceipt: ", receipt)
+      this.stopLoading()
+      this.showSuccess("Vesting successfully created.")
     },
     onCreateVestingScheduleError(error) {
-      console.error("onCreateVestingScheduleError: ", error);
-      this.stopLoading();
-      this.showError("Cannot create vesting, see logs for more.");
+      console.error("onCreateVestingScheduleError: ", error)
+      this.stopLoading()
+      this.showError("Cannot create vesting, see logs for more.")
     },
     initForm() {
-      this.form.beneficiary = "";
-      const nowTimeHourMinutes = new Date().toLocaleTimeString().substr(0, 5);
-      this.form.tokens = "1000";
-      this.form.startTime = nowTimeHourMinutes;
-      this.form.endTime = nowTimeHourMinutes;
+      this.form.beneficiary = ""
+      const nowTimeHourMinutes = new Date().toLocaleTimeString().substr(0, 5)
+      this.form.tokens = "1000"
+      this.form.startTime = nowTimeHourMinutes
+      this.form.endTime = nowTimeHourMinutes
     },
     startLoading() {
-      this.loading = true;
+      this.loading = true
     },
     stopLoading() {
-      this.loading = false;
+      this.loading = false
     },
     showSuccess(message) {
-      this.alerts.success.message = message;
-      this.alerts.success.show = true;
+      this.alerts.success.message = message
+      this.alerts.success.show = true
     },
     showError(message) {
-      this.alerts.error.message = message;
-      this.alerts.error.show = true;
+      this.alerts.error.message = message
+      this.alerts.error.show = true
     },
   },
   async mounted() {
     if (this.tokenVesting === null) {
-      this.stopLoading();
-      this.showError("Invalid contract address");
+      this.stopLoading()
+      this.showError("Invalid contract address")
     } else {
-      this.initForm();
+      this.initForm()
     }
   },
   computed: {
     symbolSuffix() {
-      return `$${this.erc20.symbol}`;
+      return `$${this.erc20.symbol}`
     },
     ...mapState(["web3", "tokenVesting", "erc20"]),
   },
-};
+}
 </script>
 
 <style scoped></style>

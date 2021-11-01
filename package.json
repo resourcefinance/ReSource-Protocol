@@ -20,7 +20,7 @@
     "node": "yarn workspace @resource/hardhat chain",
     "test": "yarn workspace @resource/hardhat test",
     "start": "yarn workspace @resource/source-dapp start",
-    "start-vesting": "yarn workspace @resource/vesting-dapp start",
+    "start-vesting": "yarn workspace @resource/vesting-dapp serve",
     "compile": "yarn workspace @resource/hardhat compile",
     "deploy": "yarn workspace @resource/hardhat deploy",
     "verify": "yarn workspace @resource/hardhat etherscan-verify",

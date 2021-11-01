@@ -20,7 +20,7 @@ export const tryWithGas = async (
       if (confirmation.events && confirmation.events.some((event) => event.event == "Execution"))
         confirmed = true
     } catch (e) {
-      if (tries >= 5 || (e.code !== "CALL_EXCEPTION" && e.code !== "UNPREDICTABLE_GAS_LIMIT")) {
+      if (tries >= 5) {
         throw e
       }
     }

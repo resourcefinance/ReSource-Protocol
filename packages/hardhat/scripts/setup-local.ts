@@ -115,6 +115,8 @@ async function issueCreditLine() {
     }
     await (await signer.sendTransaction(tx)).wait()
 
+    await (await underwriteManager.updateUnderwriters([underwriterWallet.address], [true])).wait()
+
     await (
       await reSourceToken
         .connect(underwriterWallet)

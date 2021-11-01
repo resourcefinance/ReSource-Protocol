@@ -1,7 +1,7 @@
 <template>
   <div>
-    <v-card elevation="2" :loading="loading">
-      <v-card-title>New Vesting Schedule</v-card-title>
+    <h2 class="mb-6">New Vesting Schedule</h2>
+    <v-card elevation="0" :loading="loading">
       <v-alert type="success" dismissible v-if="alerts.success.show">
         {{ alerts.success.message }}
       </v-alert>
@@ -9,156 +9,172 @@
         {{ alerts.error.message }}
       </v-alert>
       <v-form v-model="valid">
-        <v-container>
-          <v-row>
-            <v-col cols="12" md="4">
-              <v-text-field
-                v-model="form.beneficiary"
-                :rules="ethereumAddressRules"
-                label="Beneficiary"
-                required
-              ></v-text-field>
-            </v-col>
-            <v-col cols="12" md="4">
-              <v-text-field
-                v-model="form.tokens"
-                :rules="tokenAmountRules"
-                :suffix="symbolSuffix"
-                type="number"
-                label="Tokens"
-                required
-              ></v-text-field>
-            </v-col>
-          </v-row>
-
-          <v-row>
-            <v-col cols="12" md="4">
-              <v-menu
-                v-model="startDateMenu"
-                :close-on-content-click="false"
-                :nudge-right="40"
-                transition="scale-transition"
-                offset-y
-                min-width="auto"
-              >
-                <template v-slot:activator="{ on, attrs }">
-                  <v-text-field
-                    v-model="form.startDate"
-                    label="Start Date"
-                    prepend-icon="mdi-calendar"
-                    readonly
-                    v-bind="attrs"
-                    v-on="on"
-                  ></v-text-field>
-                </template>
-                <v-date-picker
+        <v-row>
+          <v-col cols="12" md="4">
+            <v-text-field
+              v-model="form.beneficiary"
+              :rules="ethereumAddressRules"
+              label="Beneficiary"
+              outlined
+              required
+            ></v-text-field>
+          </v-col>
+          <v-col cols="12" md="4">
+            <v-text-field
+              v-model="form.tokens"
+              :rules="tokenAmountRules"
+              :suffix="symbolSuffix"
+              type="number"
+              label="Tokens"
+              outlined
+              required
+            ></v-text-field>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col cols="12" md="4">
+            <v-text-field
+              v-model="form.cliff"
+              outlined
+              type="number"
+              label="Cliff vesting"
+              required
+            ></v-text-field>
+          </v-col>
+          <v-col cols="12" md="4">
+            <v-select
+              :items="vestingIntervalItems"
+              v-model="form.vestingInterval"
+              label="Vesting Interval"
+              prepend-inner-icon="mdi-camera-timer"
+              outlined
+            ></v-select>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col cols="12" md="4">
+            <v-menu
+              v-model="startDateMenu"
+              :close-on-content-click="false"
+              :nudge-right="40"
+              transition="scale-transition"
+              offset-y
+              min-width="auto"
+            >
+              <template v-slot:activator="{ on, attrs }">
+                <v-text-field
+                  outlined
                   v-model="form.startDate"
-                  @input="startDateMenu = false"
-                ></v-date-picker>
-              </v-menu>
-            </v-col>
-            <v-col cols="12" md="4">
-              <v-menu
-                ref="startTimeMenu"
-                v-model="startTimeMenu"
-                :close-on-content-click="false"
-                :nudge-right="40"
-                :return-value.sync="form.startTime"
-                transition="scale-transition"
-                offset-y
-                max-width="290px"
-                min-width="290px"
-              >
-                <template v-slot:activator="{ on, attrs }">
-                  <v-text-field
-                    v-model="form.startTime"
-                    label="Start Time"
-                    prepend-icon="mdi-clock-time-four-outline"
-                    v-bind="attrs"
-                    v-on="on"
-                  ></v-text-field>
-                </template>
-                <v-time-picker
-                  v-if="startTimeMenu"
+                  label="Start Date"
+                  prepend-inner-icon="mdi-calendar"
+                  readonly
+                  v-bind="attrs"
+                  v-on="on"
+                ></v-text-field>
+              </template>
+              <v-date-picker
+                v-model="form.startDate"
+                @input="startDateMenu = false"
+              ></v-date-picker>
+            </v-menu>
+          </v-col>
+          <v-col cols="12" md="4">
+            <!-- Fix start time -->
+            <v-menu
+              ref="startTimeMenu"
+              v-model="startTimeMenu"
+              :close-on-content-click="false"
+              :nudge-right="40"
+              :return-value.sync="form.startTime"
+              transition="scale-transition"
+              offset-y
+              max-width="290px"
+              min-width="290px"
+            >
+              <template v-slot:activator="{ on, attrs }">
+                <v-text-field
                   v-model="form.startTime"
-                  full-width
-                  @click:minute="$refs.startTimeMenu.save(form.startTime)"
-                ></v-time-picker>
-              </v-menu>
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col cols="12" md="4">
-              <v-menu
-                v-model="endDateMenu"
-                :close-on-content-click="false"
-                :nudge-right="40"
-                transition="scale-transition"
-                offset-y
-                min-width="auto"
-              >
-                <template v-slot:activator="{ on, attrs }">
-                  <v-text-field
-                    v-model="form.endDate"
-                    label="End Date"
-                    prepend-icon="mdi-calendar"
-                    readonly
-                    v-bind="attrs"
-                    v-on="on"
-                  ></v-text-field>
-                </template>
-                <v-date-picker v-model="form.endDate" @input="endDateMenu = false"></v-date-picker>
-              </v-menu>
-            </v-col>
-            <v-col cols="12" md="4">
-              <v-menu
-                ref="endTimeMenu"
-                v-model="endTimeMenu"
-                :close-on-content-click="false"
-                :nudge-right="40"
-                :return-value.sync="form.endTime"
-                transition="scale-transition"
-                offset-y
-                max-width="290px"
-                min-width="290px"
-              >
-                <template v-slot:activator="{ on, attrs }">
-                  <v-text-field
-                    v-model="form.endTime"
-                    label="End Time"
-                    prepend-icon="mdi-clock-time-four-outline"
-                    v-bind="attrs"
-                    v-on="on"
-                  ></v-text-field>
-                </template>
-                <v-time-picker
-                  v-if="endTimeMenu"
+                  outlined
+                  label="Start Time"
+                  prepend-inner-icon="mdi-clock-time-four-outline"
+                  v-bind="attrs"
+                  v-on="on"
+                ></v-text-field>
+              </template>
+              <v-time-picker
+                v-if="startTimeMenu"
+                v-model="form.startTime"
+                full-width
+                @click:minute="$refs.startTimeMenu.save(form.startTime)"
+              ></v-time-picker>
+            </v-menu>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col cols="12" md="4">
+            <v-menu
+              v-model="endDateMenu"
+              :close-on-content-click="false"
+              :nudge-right="40"
+              transition="scale-transition"
+              offset-y
+              min-width="auto"
+            >
+              <template v-slot:activator="{ on, attrs }">
+                <v-text-field
+                  v-model="form.endDate"
+                  label="End Date"
+                  prepend-inner-icon="mdi-calendar"
+                  outlined
+                  readonly
+                  v-bind="attrs"
+                  v-on="on"
+                ></v-text-field>
+              </template>
+              <v-date-picker v-model="form.endDate" @input="endDateMenu = false"></v-date-picker>
+            </v-menu>
+          </v-col>
+          <v-col cols="12" md="4">
+            <v-menu
+              ref="endTimeMenu"
+              v-model="endTimeMenu"
+              :close-on-content-click="false"
+              :nudge-right="40"
+              :return-value.sync="form.endTime"
+              transition="scale-transition"
+              offset-y
+              max-width="290px"
+              min-width="290px"
+            >
+              <template v-slot:activator="{ on, attrs }">
+                <v-text-field
                   v-model="form.endTime"
-                  full-width
-                  @click:minute="$refs.endTimeMenu.save(form.endTime)"
-                ></v-time-picker>
-              </v-menu>
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col cols="12" md="4">
-              <v-switch v-model="form.revocable" label="Revocable"></v-switch>
-            </v-col>
-            <v-col cols="12" md="4">
-              <v-select
-                :items="vestingIntervalItems"
-                v-model="form.vestingInterval"
-                label="Vesting Interval"
-                prepend-icon="mdi-camera-timer"
-              ></v-select>
-            </v-col>
-          </v-row>
-          <v-row justify="center">
-            <v-col cols="12" md="4">
-              <v-btn color="primary" @click="createVesting">Create Vesting</v-btn>
-            </v-col>
-          </v-row>
-        </v-container>
+                  label="End Time"
+                  outlined
+                  prepend-inner-icon="mdi-clock-time-four-outline"
+                  v-bind="attrs"
+                  v-on="on"
+                ></v-text-field>
+              </template>
+              <v-time-picker
+                v-if="endTimeMenu"
+                v-model="form.endTime"
+                full-width
+                @click:minute="$refs.endTimeMenu.save(form.endTime)"
+              ></v-time-picker>
+            </v-menu>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col cols="12" md="4">
+            <v-switch v-model="form.revocable" label="Revocable"></v-switch>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col cols="12" md="4">
+            <v-btn color="primary" @click="createVesting">Create Vesting</v-btn>
+          </v-col>
+        </v-row>
       </v-form>
     </v-card>
   </div>
@@ -191,6 +207,7 @@ export default {
       endTime: null,
       revocable: true,
       vestingInterval: "Month",
+      cliff: 0,
     },
     startDateMenu: false,
     startTimeMenu: false,
@@ -209,6 +226,7 @@ export default {
       const endTimeFull = new Date(Date.parse(`${this.form.endDate} ${this.form.endTime}`))
       const startTime = startTimeFull.getTime() / 1000
       const endTime = endTimeFull.getTime() / 1000
+      const cliff = this.form.cliff * 24 * 60 * 60
       let slicePeriodSeconds
       switch (this.form.vestingInterval) {
         case "Second":
@@ -231,7 +249,7 @@ export default {
         .createVestingSchedule(
           this.form.beneficiary,
           startTime,
-          0,
+          cliff,
           duration,
           slicePeriodSeconds,
           this.form.revocable,
@@ -253,7 +271,7 @@ export default {
     },
     initForm() {
       this.form.beneficiary = ""
-      const nowTimeHourMinutes = new Date().toLocaleTimeString().substr(0, 5)
+      const nowTimeHourMinutes = new Date().toLocaleTimeString().substr(0, 4)
       this.form.tokens = "1000"
       this.form.startTime = nowTimeHourMinutes
       this.form.endTime = nowTimeHourMinutes

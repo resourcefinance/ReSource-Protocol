@@ -1,7 +1,7 @@
 <template>
   <v-app id="inspire">
-    <v-navigation-drawer v-model="drawer" app>
-      <v-list dense nav>
+    <v-navigation-drawer v-model="drawer" app permanent clipped>
+      <v-list nav dense class="pt-5">
         <v-list-item link @click="navVestingList">
           <v-list-item-icon>
             <v-icon>mdi-eye-settings</v-icon>
@@ -11,11 +11,7 @@
             <v-list-item-title>Vesting Schedule List</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item
-          link
-          @click="navCreateVesting"
-          v-if="isConnectedWalletOwner"
-        >
+        <v-list-item link @click="navCreateVesting" v-if="isConnectedWalletOwner">
           <v-list-item-icon>
             <v-icon>mdi-briefcase-plus</v-icon>
           </v-list-item-icon>
@@ -36,27 +32,31 @@
       </v-list>
     </v-navigation-drawer>
 
-    <v-app-bar app>
-      <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
-
-      <v-toolbar-title>Token Vesting</v-toolbar-title>
+    <v-app-bar app clipped-left flat>
+      <!-- <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon> -->
+      <v-toolbar-title>
+        <div class="d-flex align-baseline">
+          <v-img :src="require('./assets/logo.svg')" />
+          <h5 class="ml-1 font-weight-regular">vesting</h5>
+        </div>
+      </v-toolbar-title>
     </v-app-bar>
 
     <v-main>
-      <v-container fluid>
+      <v-container fluid class="mx-10 mt-5">
         <router-view></router-view>
       </v-container>
     </v-main>
 
-    <v-footer app>
+    <v-footer app inset>
       <app-footer></app-footer>
     </v-footer>
   </v-app>
 </template>
 
 <script>
-import AppFooter from "./components/Footer";
-import { mapState } from "vuex";
+import AppFooter from "./components/Footer"
+import { mapState } from "vuex"
 export default {
   name: "App",
 
@@ -70,22 +70,22 @@ export default {
   }),
 
   mounted() {
-    this.isConnectedWalletOwner = this.isOwner;
+    this.isConnectedWalletOwner = this.isOwner
   },
 
   methods: {
     navCreateVesting() {
-      this.$router.push("/owner/vesting/new");
+      this.$router.push("/owner/vesting/new")
     },
     navVestingList() {
-      this.$router.push("/vesting");
+      this.$router.push("/vesting")
     },
     navAdmin() {
-      this.$router.push("/owner/admin");
+      this.$router.push("/owner/admin")
     },
   },
   computed: {
     ...mapState(["isOwner"]),
   },
-};
+}
 </script>

@@ -80,7 +80,6 @@ const config: HardhatUserConfig = {
     celo: {
       url: "http://127.0.0.1:1248",
       chainId: chainIds.mainnet,
-      accounts: { mnemonic: mnemonic() },
       saveDeployments: true,
       tags: ["production", "mainnet"],
     },

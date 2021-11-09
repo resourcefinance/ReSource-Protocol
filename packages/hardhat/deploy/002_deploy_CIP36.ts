@@ -5,8 +5,11 @@ import { ReSourceToken } from "../types/ReSourceToken"
 import { ethers } from "hardhat"
 import { UnderwriteManager } from "../types/UnderwriteManager"
 import { IKeyWalletDeployer } from "../types/IKeyWalletDeployer"
-import { IKeyWalletDeployer__factory } from "../../source-dapp/src/contracts/factories/IKeyWalletDeployer__factory"
-import { ReSourceToken__factory, UnderwriteManager__factory } from "../types"
+import {
+  ReSourceToken__factory,
+  UnderwriteManager__factory,
+  IKeyWalletDeployer__factory,
+} from "../types"
 
 const func: DeployFunction = async function(hardhat: HardhatRuntimeEnvironment) {
   const { relaySigner } = await hardhat.getNamedAccounts()

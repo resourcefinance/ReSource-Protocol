@@ -20,8 +20,14 @@ import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 contract TokenVesting is Ownable, ReentrancyGuard{
     using SafeMath for uint256;
     using SafeERC20 for IERC20;
-    struct VestingSchedule{
+
+    // optimize storage (seconds don't need to be so large) can fit into 4 slots
+    struct VestingSchedule {
         bool initialized;
+        // whether or not the vesting has been revoked
+        bool revoked;
+        // whether or not the vesting is revocable
+        bool  revocable;
         // beneficiary of tokens after they are released
         address  beneficiary;
         // cliff period in seconds
@@ -32,15 +38,13 @@ contract TokenVesting is Ownable, ReentrancyGuard{
         uint256  duration;
         // duration of a slice period for the vesting in seconds
         uint256 slicePeriodSeconds;
-        // whether or not the vesting is revocable
-        bool  revocable;
         // total amount of tokens to be released at the end of the vesting
         uint256 amountTotal;
         // amount of tokens released
         uint256  released;
-        // whether or not the vesting has been revoked
-        bool revoked;
     }
+
+
 
     // address of the ERC20 token
     IERC20 immutable private _token;

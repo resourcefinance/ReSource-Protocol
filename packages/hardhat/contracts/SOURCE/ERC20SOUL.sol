@@ -34,13 +34,9 @@ contract ERC20SOUL is ERC20Upgradeable, OwnableUpgradeable {
      */
     mapping (address => bool) public isStakeableContract;
     mapping(address => Lock) public locks;
-
-    /*
-     *  Constants
-     */
-    uint256 public constant MINIMUM_LOCK_TIME = 1 days;
-    uint256 public constant MAXIMUM_LOCK_TIME = 1825 days; 
-    uint256 public constant MAXIMUM_SCHEDULES = 260;
+    uint256 public minLockTime;
+    uint256 public maxLockTime;
+    uint256 public maxSchedules;
 
     struct Lock {
         uint256 totalAmount;
@@ -62,9 +58,9 @@ contract ERC20SOUL is ERC20Upgradeable, OwnableUpgradeable {
         for (uint256 i = 0; i < _lock.schedules.length; i++) {
             totalLocked += _lock.schedules[i].amount;
             require(_lock.schedules[i].expirationBlock > 
-                block.timestamp + MINIMUM_LOCK_TIME, "Lock schedule does not meet minimum");
+                block.timestamp + minLockTime, "Lock schedule does not meet minimum");
             require(_lock.schedules[i].expirationBlock < 
-                block.timestamp + MAXIMUM_LOCK_TIME, "Lock schedule does not meet maximum");
+                block.timestamp + maxLockTime, "Lock schedule does not meet maximum");
         }
         require(totalLocked == _lock.totalAmount, "Invalid Lock");
         _;
@@ -87,6 +83,9 @@ contract ERC20SOUL is ERC20Upgradeable, OwnableUpgradeable {
         __ERC20_init(name, symbol);
         __Ownable_init();
         _mint(msg.sender, initialSupply);
+        minLockTime = 1 days;
+        maxLockTime = 1825 days; 
+        maxSchedules = 260;
         for (uint256 i = 0; i < stakeableContracts.length; i++) {
             require(stakeableContracts[i] != address(0), "invalid stakeable contract address");
             isStakeableContract[stakeableContracts[i]] = true;
@@ -114,7 +113,7 @@ contract ERC20SOUL is ERC20Upgradeable, OwnableUpgradeable {
     ) validLock(_lock) external {
         super._transfer(msg.sender, _to, _lock.totalAmount);
         Lock storage lock = locks[_to];
-        require(lock.schedules.length < MAXIMUM_SCHEDULES, "Maximum locks on address");
+        require(lock.schedules.length < maxSchedules, "Maximum locks on address");
         lock.totalAmount += _lock.totalAmount;
         for (uint256 i = 0; i < _lock.schedules.length; i++) {
             lock.schedules.push(Schedule(_lock.schedules[i].amount, 
@@ -191,6 +190,23 @@ contract ERC20SOUL is ERC20Upgradeable, OwnableUpgradeable {
         recipientLock.amountStaked >= sendAmount ? 
         recipientLock.amountStaked - sendAmount: 0;
         return true;
+    }
+
+    /// @dev external function to update minimum lock time
+    /// @param _newMin new minimum locking time
+    function setMinLockTime(uint256 _newMin) external onlyOwner() {
+        minLockTime = _newMin;
+    }
+
+    /// @dev external function to update maximum lock time
+    /// @param _newMax new maximum locking time
+    function setMaxLockTime(uint256 _newMax) external onlyOwner() {
+        maxLockTime = _newMax;
+    }
+    /// @dev external function to update maximum number of schedules per lock
+    /// @param _newMax new maximum number of shedules per lock
+    function setMaxSchedules(uint256 _newMax) external onlyOwner() {
+        maxSchedules = _newMax;
     }
 
     /// @dev external function to add a stakeable contract

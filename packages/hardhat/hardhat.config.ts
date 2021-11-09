@@ -20,9 +20,6 @@ import { HttpNetworkUserConfig } from "hardhat/types"
 
 import "./tasks/accounts"
 import "./tasks/clean"
-import { ReSourceToken__factory, TokenVesting__factory } from "./types"
-import { ReSourceToken } from "./types/ReSourceToken"
-import { TokenVesting } from "./types/TokenVesting"
 
 const { isAddress, getAddress, formatUnits, parseUnits } = utils
 
@@ -367,148 +364,148 @@ task("send", "Send ETH")
     return send(fromSigner, txRequest)
   })
 
-task("sendSource", "Send SOURCE")
-  .addParam("to", "Address to send SOURCE to ")
-  .addParam("amount", "Amount of Source to send to to address")
-  .setAction(async (taskArgs, { ethers, network }) => {
-    const deploymentPath = `./deployments/${network.name}/ReSourceToken.json`
-    const ReSourceTokenDeployment = fs.readFileSync(deploymentPath).toString()
-    const ReSourceTokenAddress = JSON.parse(ReSourceTokenDeployment)["address"]
+// task("sendSource", "Send SOURCE")
+//   .addParam("to", "Address to send SOURCE to ")
+//   .addParam("amount", "Amount of Source to send to to address")
+//   .setAction(async (taskArgs, { ethers, network }) => {
+//     const deploymentPath = `./deployments/${network.name}/ReSourceToken.json`
+//     const ReSourceTokenDeployment = fs.readFileSync(deploymentPath).toString()
+//     const ReSourceTokenAddress = JSON.parse(ReSourceTokenDeployment)["address"]
 
-    if (!ReSourceTokenAddress) throw new Error("token not deployed on this network")
+//     if (!ReSourceTokenAddress) throw new Error("token not deployed on this network")
 
-    const to = await addr(ethers, taskArgs.to)
-    const amount = ethers.utils.parseEther(taskArgs.amount)
-    debug(`Normalized to address: ${to}`)
-    const signer = (await ethers.getSigners())[0]
+//     const to = await addr(ethers, taskArgs.to)
+//     const amount = ethers.utils.parseEther(taskArgs.amount)
+//     debug(`Normalized to address: ${to}`)
+//     const signer = (await ethers.getSigners())[0]
 
-    const tokenContract = new ethers.Contract(
-      ReSourceTokenAddress,
-      ReSourceToken__factory.createInterface(),
-      signer,
-    ) as ReSourceToken
+//     const tokenContract = new ethers.Contract(
+//       ReSourceTokenAddress,
+//       ReSourceToken__factory.createInterface(),
+//       signer,
+//     ) as ReSourceToken
 
-    try {
-      await (await tokenContract.transfer(to, amount)).wait()
-      console.log("Funds transfered")
-    } catch (e) {
-      console.log(e)
-    }
-  })
+//     try {
+//       await (await tokenContract.transfer(to, amount)).wait()
+//       console.log("Funds transfered")
+//     } catch (e) {
+//       console.log(e)
+//     }
+//   })
 
-task("createVestingSchedule", "Creates a vesting schedule for a given address")
-  .addParam("to", "Address to send SOURCE to ")
-  .addParam("amount", "Amount of Source to add to the schedule")
-  .addOptionalParam("start", "date of address to start in MM/DD/YYYY format")
-  .addParam("cliff", "cliff in seconds")
-  .addParam("duration", "for total schedule length in seconds")
-  .addParam("period", "period in months, days, or minutes")
-  .setAction(async (taskArgs, { ethers, network }) => {
-    try {
-      const deploymentPath = `./deployments/${network.name}`
-      const ReSourceTokenDeployment = fs
-        .readFileSync(deploymentPath + "/ReSourceToken.json")
-        .toString()
-      const TokenVestingDeployment = fs
-        .readFileSync(deploymentPath + "/TokenVesting.json")
-        .toString()
-      const TokenVestingAddress = JSON.parse(TokenVestingDeployment)["address"]
-      const ReSourceTokenAddress = JSON.parse(ReSourceTokenDeployment)["address"]
+// task("createVestingSchedule", "Creates a vesting schedule for a given address")
+//   .addParam("to", "Address to send SOURCE to ")
+//   .addParam("amount", "Amount of Source to add to the schedule")
+//   .addOptionalParam("start", "date of address to start in MM/DD/YYYY format")
+//   .addParam("cliff", "cliff in seconds")
+//   .addParam("duration", "for total schedule length in seconds")
+//   .addParam("period", "period in months, days, or minutes")
+//   .setAction(async (taskArgs, { ethers, network }) => {
+//     try {
+//       const deploymentPath = `./deployments/${network.name}`
+//       const ReSourceTokenDeployment = fs
+//         .readFileSync(deploymentPath + "/ReSourceToken.json")
+//         .toString()
+//       const TokenVestingDeployment = fs
+//         .readFileSync(deploymentPath + "/TokenVesting.json")
+//         .toString()
+//       const TokenVestingAddress = JSON.parse(TokenVestingDeployment)["address"]
+//       const ReSourceTokenAddress = JSON.parse(ReSourceTokenDeployment)["address"]
 
-      if (!ReSourceTokenAddress) throw new Error("ReSourceToken not deployed on this network")
-      if (!TokenVestingAddress) throw new Error("Vesting not deployed on this network")
+//       if (!ReSourceTokenAddress) throw new Error("ReSourceToken not deployed on this network")
+//       if (!TokenVestingAddress) throw new Error("Vesting not deployed on this network")
 
-      const beneficiary = await addr(ethers, taskArgs.to)
-      const amount = ethers.utils.parseEther(taskArgs.amount)
-      const cliff = taskArgs.cliff
-      const duration = taskArgs.duration
-      const slicePeriodSeconds = taskArgs.period
-      const currentBlock = await (await ethers.provider.getBlock("latest")).timestamp
-      let start = currentBlock
-      if (taskArgs.start) {
-        const startDeltaSeconds = parseInt(
-          (
-            (new Date().getTime() - new Date(Date.parse(taskArgs.start)).getTime()) /
-            1000
-          ).toString(),
-        )
-        start = currentBlock - startDeltaSeconds
-      }
+//       const beneficiary = await addr(ethers, taskArgs.to)
+//       const amount = ethers.utils.parseEther(taskArgs.amount)
+//       const cliff = taskArgs.cliff
+//       const duration = taskArgs.duration
+//       const slicePeriodSeconds = taskArgs.period
+//       const currentBlock = await (await ethers.provider.getBlock("latest")).timestamp
+//       let start = currentBlock
+//       if (taskArgs.start) {
+//         const startDeltaSeconds = parseInt(
+//           (
+//             (new Date().getTime() - new Date(Date.parse(taskArgs.start)).getTime()) /
+//             1000
+//           ).toString(),
+//         )
+//         start = currentBlock - startDeltaSeconds
+//       }
 
-      debug(`Normalized to address: ${beneficiary}`)
-      const signer = (await ethers.getSigners())[0]
+//       debug(`Normalized to address: ${beneficiary}`)
+//       const signer = (await ethers.getSigners())[0]
 
-      const tokenContract = new ethers.Contract(
-        ReSourceTokenAddress,
-        ReSourceToken__factory.createInterface(),
-        signer,
-      ) as ReSourceToken
+//       const tokenContract = new ethers.Contract(
+//         ReSourceTokenAddress,
+//         ReSourceToken__factory.createInterface(),
+//         signer,
+//       ) as ReSourceToken
 
-      const vestingContract = new ethers.Contract(
-        TokenVestingAddress,
-        TokenVesting__factory.createInterface(),
-        signer,
-      ) as TokenVesting
+//       const vestingContract = new ethers.Contract(
+//         TokenVestingAddress,
+//         TokenVesting__factory.createInterface(),
+//         signer,
+//       ) as TokenVesting
 
-      // transfer tokens to vesting contract
-      await (await tokenContract.transfer(TokenVestingAddress, amount)).wait()
+//       // transfer tokens to vesting contract
+//       await (await tokenContract.transfer(TokenVestingAddress, amount)).wait()
 
-      // create schedule
-      await (
-        await vestingContract.createVestingSchedule(
-          beneficiary,
-          start,
-          cliff,
-          duration,
-          slicePeriodSeconds,
-          true,
-          amount,
-        )
-      ).wait()
+//       // create schedule
+//       await (
+//         await vestingContract.createVestingSchedule(
+//           beneficiary,
+//           start,
+//           cliff,
+//           duration,
+//           slicePeriodSeconds,
+//           true,
+//           amount,
+//         )
+//       ).wait()
 
-      console.log("Vesting Schedule Created")
-    } catch (e) {
-      console.log(e)
-    }
-  })
+//       console.log("Vesting Schedule Created")
+//     } catch (e) {
+//       console.log(e)
+//     }
+//   })
 
-task("revokeVestingSchedule", "Revokes unvested tokens from a given schedule")
-  .addParam("beneficiary", "Address to send SOURCE to ")
-  .addParam("index", "Schedule index to revoke")
-  .setAction(async (taskArgs, { ethers, network }) => {
-    try {
-      const deploymentPath = `./deployments/${network.name}`
-      const TokenVestingDeployment = fs
-        .readFileSync(deploymentPath + "/TokenVesting.json")
-        .toString()
-      const TokenVestingAddress = JSON.parse(TokenVestingDeployment)["address"]
+// task("revokeVestingSchedule", "Revokes unvested tokens from a given schedule")
+//   .addParam("beneficiary", "Address to send SOURCE to ")
+//   .addParam("index", "Schedule index to revoke")
+//   .setAction(async (taskArgs, { ethers, network }) => {
+//     try {
+//       const deploymentPath = `./deployments/${network.name}`
+//       const TokenVestingDeployment = fs
+//         .readFileSync(deploymentPath + "/TokenVesting.json")
+//         .toString()
+//       const TokenVestingAddress = JSON.parse(TokenVestingDeployment)["address"]
 
-      if (!TokenVestingAddress) throw new Error("Vesting not deployed on this network")
+//       if (!TokenVestingAddress) throw new Error("Vesting not deployed on this network")
 
-      const beneficiary = await addr(ethers, taskArgs.beneficiary)
+//       const beneficiary = await addr(ethers, taskArgs.beneficiary)
 
-      debug(`Normalized to address: ${beneficiary}`)
-      const signer = (await ethers.getSigners())[0]
+//       debug(`Normalized to address: ${beneficiary}`)
+//       const signer = (await ethers.getSigners())[0]
 
-      const vestingContract = new ethers.Contract(
-        TokenVestingAddress,
-        TokenVesting__factory.createInterface(),
-        signer,
-      ) as TokenVesting
+//       const vestingContract = new ethers.Contract(
+//         TokenVestingAddress,
+//         TokenVesting__factory.createInterface(),
+//         signer,
+//       ) as TokenVesting
 
-      const id = await vestingContract.computeVestingScheduleIdForAddressAndIndex(
-        beneficiary,
-        taskArgs.index,
-      )
+//       const id = await vestingContract.computeVestingScheduleIdForAddressAndIndex(
+//         beneficiary,
+//         taskArgs.index,
+//       )
 
-      // revoke schedule
-      await (await vestingContract.revoke(id)).wait()
+//       // revoke schedule
+//       await (await vestingContract.revoke(id)).wait()
 
-      const withdrawableAmount = await vestingContract.getWithdrawableAmount()
-      await (await vestingContract.withdraw(withdrawableAmount)).wait()
+//       const withdrawableAmount = await vestingContract.getWithdrawableAmount()
+//       await (await vestingContract.withdraw(withdrawableAmount)).wait()
 
-      console.log("Vesting Schedule Revoked")
-    } catch (e) {
-      console.log(e)
-    }
-  })
+//       console.log("Vesting Schedule Revoked")
+//     } catch (e) {
+//       console.log(e)
+//     }
+//   })

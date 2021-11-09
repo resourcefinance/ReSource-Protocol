@@ -17,13 +17,10 @@ import {
 import { BytesLike } from "@ethersproject/bytes";
 import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
-import { TypedEventFilter, TypedEvent, TypedListener } from "./commons";
+import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
-interface ReSourceTokenInterface extends ethers.utils.Interface {
+interface SourceTokenInterface extends ethers.utils.Interface {
   functions: {
-    "MAXIMUM_LOCK_TIME()": FunctionFragment;
-    "MAXIMUM_SCHEDULES()": FunctionFragment;
-    "MINIMUM_LOCK_TIME()": FunctionFragment;
     "addStakeableContract(address)": FunctionFragment;
     "allowance(address,address)": FunctionFragment;
     "approve(address,uint256)": FunctionFragment;
@@ -35,30 +32,24 @@ interface ReSourceTokenInterface extends ethers.utils.Interface {
     "initializeERC20SOUL(string,string,uint256,address[])": FunctionFragment;
     "isStakeableContract(address)": FunctionFragment;
     "locks(address)": FunctionFragment;
+    "maxLockTime()": FunctionFragment;
+    "maxSchedules()": FunctionFragment;
+    "minLockTime()": FunctionFragment;
     "name()": FunctionFragment;
     "owner()": FunctionFragment;
     "removeStakeableContract(address)": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
+    "setMaxLockTime(uint256)": FunctionFragment;
+    "setMaxSchedules(uint256)": FunctionFragment;
+    "setMinLockTime(uint256)": FunctionFragment;
     "symbol()": FunctionFragment;
     "totalSupply()": FunctionFragment;
     "transfer(address,uint256)": FunctionFragment;
     "transferFrom(address,address,uint256)": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
-    "transferWithLock(address,tuple)": FunctionFragment;
+    "transferWithLock(address,(uint256,uint256,tuple[]))": FunctionFragment;
   };
 
-  encodeFunctionData(
-    functionFragment: "MAXIMUM_LOCK_TIME",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "MAXIMUM_SCHEDULES",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "MINIMUM_LOCK_TIME",
-    values?: undefined
-  ): string;
   encodeFunctionData(
     functionFragment: "addStakeableContract",
     values: [string]
@@ -94,6 +85,18 @@ interface ReSourceTokenInterface extends ethers.utils.Interface {
     values: [string]
   ): string;
   encodeFunctionData(functionFragment: "locks", values: [string]): string;
+  encodeFunctionData(
+    functionFragment: "maxLockTime",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "maxSchedules",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "minLockTime",
+    values?: undefined
+  ): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
@@ -103,6 +106,18 @@ interface ReSourceTokenInterface extends ethers.utils.Interface {
   encodeFunctionData(
     functionFragment: "renounceOwnership",
     values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "setMaxLockTime",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "setMaxSchedules",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "setMinLockTime",
+    values: [BigNumberish]
   ): string;
   encodeFunctionData(functionFragment: "symbol", values?: undefined): string;
   encodeFunctionData(
@@ -134,18 +149,6 @@ interface ReSourceTokenInterface extends ethers.utils.Interface {
   ): string;
 
   decodeFunctionResult(
-    functionFragment: "MAXIMUM_LOCK_TIME",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "MAXIMUM_SCHEDULES",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "MINIMUM_LOCK_TIME",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "addStakeableContract",
     data: BytesLike
   ): Result;
@@ -171,6 +174,18 @@ interface ReSourceTokenInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "locks", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "maxLockTime",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "maxSchedules",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "minLockTime",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(
@@ -179,6 +194,18 @@ interface ReSourceTokenInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "renounceOwnership",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "setMaxLockTime",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "setMaxSchedules",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "setMinLockTime",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "symbol", data: BytesLike): Result;
@@ -217,7 +244,139 @@ interface ReSourceTokenInterface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: "Transfer"): EventFragment;
 }
 
-export class ReSourceToken extends BaseContract {
+export type ApprovalEvent = TypedEvent<
+  [string, string, BigNumber] & {
+    owner: string;
+    spender: string;
+    value: BigNumber;
+  }
+>;
+
+export type LockExpiredEvent = TypedEvent<
+  [
+    string,
+    [
+      BigNumber,
+      BigNumber,
+      ([BigNumber, BigNumber] & {
+        amount: BigNumber;
+        expirationBlock: BigNumber;
+      })[]
+    ] & {
+      totalAmount: BigNumber;
+      amountStaked: BigNumber;
+      schedules: ([BigNumber, BigNumber] & {
+        amount: BigNumber;
+        expirationBlock: BigNumber;
+      })[];
+    }
+  ] & {
+    owner: string;
+    lock: [
+      BigNumber,
+      BigNumber,
+      ([BigNumber, BigNumber] & {
+        amount: BigNumber;
+        expirationBlock: BigNumber;
+      })[]
+    ] & {
+      totalAmount: BigNumber;
+      amountStaked: BigNumber;
+      schedules: ([BigNumber, BigNumber] & {
+        amount: BigNumber;
+        expirationBlock: BigNumber;
+      })[];
+    };
+  }
+>;
+
+export type LockScheduleExpiredEvent = TypedEvent<
+  [
+    string,
+    [
+      BigNumber,
+      BigNumber,
+      ([BigNumber, BigNumber] & {
+        amount: BigNumber;
+        expirationBlock: BigNumber;
+      })[]
+    ] & {
+      totalAmount: BigNumber;
+      amountStaked: BigNumber;
+      schedules: ([BigNumber, BigNumber] & {
+        amount: BigNumber;
+        expirationBlock: BigNumber;
+      })[];
+    }
+  ] & {
+    owner: string;
+    lock: [
+      BigNumber,
+      BigNumber,
+      ([BigNumber, BigNumber] & {
+        amount: BigNumber;
+        expirationBlock: BigNumber;
+      })[]
+    ] & {
+      totalAmount: BigNumber;
+      amountStaked: BigNumber;
+      schedules: ([BigNumber, BigNumber] & {
+        amount: BigNumber;
+        expirationBlock: BigNumber;
+      })[];
+    };
+  }
+>;
+
+export type LockedTransferEvent = TypedEvent<
+  [
+    [
+      BigNumber,
+      BigNumber,
+      ([BigNumber, BigNumber] & {
+        amount: BigNumber;
+        expirationBlock: BigNumber;
+      })[]
+    ] & {
+      totalAmount: BigNumber;
+      amountStaked: BigNumber;
+      schedules: ([BigNumber, BigNumber] & {
+        amount: BigNumber;
+        expirationBlock: BigNumber;
+      })[];
+    },
+    string,
+    string
+  ] & {
+    lock: [
+      BigNumber,
+      BigNumber,
+      ([BigNumber, BigNumber] & {
+        amount: BigNumber;
+        expirationBlock: BigNumber;
+      })[]
+    ] & {
+      totalAmount: BigNumber;
+      amountStaked: BigNumber;
+      schedules: ([BigNumber, BigNumber] & {
+        amount: BigNumber;
+        expirationBlock: BigNumber;
+      })[];
+    };
+    sender: string;
+    recipient: string;
+  }
+>;
+
+export type OwnershipTransferredEvent = TypedEvent<
+  [string, string] & { previousOwner: string; newOwner: string }
+>;
+
+export type TransferEvent = TypedEvent<
+  [string, string, BigNumber] & { from: string; to: string; value: BigNumber }
+>;
+
+export class SourceToken extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
@@ -258,15 +417,9 @@ export class ReSourceToken extends BaseContract {
     toBlock?: string | number | undefined
   ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
 
-  interface: ReSourceTokenInterface;
+  interface: SourceTokenInterface;
 
   functions: {
-    MAXIMUM_LOCK_TIME(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    MAXIMUM_SCHEDULES(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    MINIMUM_LOCK_TIME(overrides?: CallOverrides): Promise<[BigNumber]>;
-
     addStakeableContract(
       stakingContract: string,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -329,6 +482,12 @@ export class ReSourceToken extends BaseContract {
       }
     >;
 
+    maxLockTime(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    maxSchedules(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    minLockTime(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     name(overrides?: CallOverrides): Promise<[string]>;
 
     owner(overrides?: CallOverrides): Promise<[string]>;
@@ -339,6 +498,21 @@ export class ReSourceToken extends BaseContract {
     ): Promise<ContractTransaction>;
 
     renounceOwnership(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    setMaxLockTime(
+      _newMax: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    setMaxSchedules(
+      _newMax: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    setMinLockTime(
+      _newMin: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -374,12 +548,6 @@ export class ReSourceToken extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
   };
-
-  MAXIMUM_LOCK_TIME(overrides?: CallOverrides): Promise<BigNumber>;
-
-  MAXIMUM_SCHEDULES(overrides?: CallOverrides): Promise<BigNumber>;
-
-  MINIMUM_LOCK_TIME(overrides?: CallOverrides): Promise<BigNumber>;
 
   addStakeableContract(
     stakingContract: string,
@@ -440,6 +608,12 @@ export class ReSourceToken extends BaseContract {
     [BigNumber, BigNumber] & { totalAmount: BigNumber; amountStaked: BigNumber }
   >;
 
+  maxLockTime(overrides?: CallOverrides): Promise<BigNumber>;
+
+  maxSchedules(overrides?: CallOverrides): Promise<BigNumber>;
+
+  minLockTime(overrides?: CallOverrides): Promise<BigNumber>;
+
   name(overrides?: CallOverrides): Promise<string>;
 
   owner(overrides?: CallOverrides): Promise<string>;
@@ -450,6 +624,21 @@ export class ReSourceToken extends BaseContract {
   ): Promise<ContractTransaction>;
 
   renounceOwnership(
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  setMaxLockTime(
+    _newMax: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  setMaxSchedules(
+    _newMax: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  setMinLockTime(
+    _newMin: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -486,12 +675,6 @@ export class ReSourceToken extends BaseContract {
   ): Promise<ContractTransaction>;
 
   callStatic: {
-    MAXIMUM_LOCK_TIME(overrides?: CallOverrides): Promise<BigNumber>;
-
-    MAXIMUM_SCHEDULES(overrides?: CallOverrides): Promise<BigNumber>;
-
-    MINIMUM_LOCK_TIME(overrides?: CallOverrides): Promise<BigNumber>;
-
     addStakeableContract(
       stakingContract: string,
       overrides?: CallOverrides
@@ -554,6 +737,12 @@ export class ReSourceToken extends BaseContract {
       }
     >;
 
+    maxLockTime(overrides?: CallOverrides): Promise<BigNumber>;
+
+    maxSchedules(overrides?: CallOverrides): Promise<BigNumber>;
+
+    minLockTime(overrides?: CallOverrides): Promise<BigNumber>;
+
     name(overrides?: CallOverrides): Promise<string>;
 
     owner(overrides?: CallOverrides): Promise<string>;
@@ -564,6 +753,21 @@ export class ReSourceToken extends BaseContract {
     ): Promise<void>;
 
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
+
+    setMaxLockTime(
+      _newMax: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    setMaxSchedules(
+      _newMax: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    setMinLockTime(
+      _newMin: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     symbol(overrides?: CallOverrides): Promise<string>;
 
@@ -599,6 +803,15 @@ export class ReSourceToken extends BaseContract {
   };
 
   filters: {
+    "Approval(address,address,uint256)"(
+      owner?: string | null,
+      spender?: string | null,
+      value?: null
+    ): TypedEventFilter<
+      [string, string, BigNumber],
+      { owner: string; spender: string; value: BigNumber }
+    >;
+
     Approval(
       owner?: string | null,
       spender?: string | null,
@@ -608,7 +821,91 @@ export class ReSourceToken extends BaseContract {
       { owner: string; spender: string; value: BigNumber }
     >;
 
+    "LockExpired(address,tuple)"(
+      owner?: null,
+      lock?: null
+    ): TypedEventFilter<
+      [
+        string,
+        [
+          BigNumber,
+          BigNumber,
+          ([BigNumber, BigNumber] & {
+            amount: BigNumber;
+            expirationBlock: BigNumber;
+          })[]
+        ] & {
+          totalAmount: BigNumber;
+          amountStaked: BigNumber;
+          schedules: ([BigNumber, BigNumber] & {
+            amount: BigNumber;
+            expirationBlock: BigNumber;
+          })[];
+        }
+      ],
+      {
+        owner: string;
+        lock: [
+          BigNumber,
+          BigNumber,
+          ([BigNumber, BigNumber] & {
+            amount: BigNumber;
+            expirationBlock: BigNumber;
+          })[]
+        ] & {
+          totalAmount: BigNumber;
+          amountStaked: BigNumber;
+          schedules: ([BigNumber, BigNumber] & {
+            amount: BigNumber;
+            expirationBlock: BigNumber;
+          })[];
+        };
+      }
+    >;
+
     LockExpired(
+      owner?: null,
+      lock?: null
+    ): TypedEventFilter<
+      [
+        string,
+        [
+          BigNumber,
+          BigNumber,
+          ([BigNumber, BigNumber] & {
+            amount: BigNumber;
+            expirationBlock: BigNumber;
+          })[]
+        ] & {
+          totalAmount: BigNumber;
+          amountStaked: BigNumber;
+          schedules: ([BigNumber, BigNumber] & {
+            amount: BigNumber;
+            expirationBlock: BigNumber;
+          })[];
+        }
+      ],
+      {
+        owner: string;
+        lock: [
+          BigNumber,
+          BigNumber,
+          ([BigNumber, BigNumber] & {
+            amount: BigNumber;
+            expirationBlock: BigNumber;
+          })[]
+        ] & {
+          totalAmount: BigNumber;
+          amountStaked: BigNumber;
+          schedules: ([BigNumber, BigNumber] & {
+            amount: BigNumber;
+            expirationBlock: BigNumber;
+          })[];
+        };
+      }
+    >;
+
+    "LockScheduleExpired(address,tuple)"(
       owner?: null,
       lock?: null
     ): TypedEventFilter<
@@ -692,6 +989,51 @@ export class ReSourceToken extends BaseContract {
       }
     >;
 
+    "LockedTransfer(tuple,address,address)"(
+      lock?: null,
+      sender?: null,
+      recipient?: null
+    ): TypedEventFilter<
+      [
+        [
+          BigNumber,
+          BigNumber,
+          ([BigNumber, BigNumber] & {
+            amount: BigNumber;
+            expirationBlock: BigNumber;
+          })[]
+        ] & {
+          totalAmount: BigNumber;
+          amountStaked: BigNumber;
+          schedules: ([BigNumber, BigNumber] & {
+            amount: BigNumber;
+            expirationBlock: BigNumber;
+          })[];
+        },
+        string,
+        string
+      ],
+      {
+        lock: [
+          BigNumber,
+          BigNumber,
+          ([BigNumber, BigNumber] & {
+            amount: BigNumber;
+            expirationBlock: BigNumber;
+          })[]
+        ] & {
+          totalAmount: BigNumber;
+          amountStaked: BigNumber;
+          schedules: ([BigNumber, BigNumber] & {
+            amount: BigNumber;
+            expirationBlock: BigNumber;
+          })[];
+        };
+        sender: string;
+        recipient: string;
+      }
+    >;
+
     LockedTransfer(
       lock?: null,
       sender?: null,
@@ -737,12 +1079,29 @@ export class ReSourceToken extends BaseContract {
       }
     >;
 
+    "OwnershipTransferred(address,address)"(
+      previousOwner?: string | null,
+      newOwner?: string | null
+    ): TypedEventFilter<
+      [string, string],
+      { previousOwner: string; newOwner: string }
+    >;
+
     OwnershipTransferred(
       previousOwner?: string | null,
       newOwner?: string | null
     ): TypedEventFilter<
       [string, string],
       { previousOwner: string; newOwner: string }
+    >;
+
+    "Transfer(address,address,uint256)"(
+      from?: string | null,
+      to?: string | null,
+      value?: null
+    ): TypedEventFilter<
+      [string, string, BigNumber],
+      { from: string; to: string; value: BigNumber }
     >;
 
     Transfer(
@@ -756,12 +1115,6 @@ export class ReSourceToken extends BaseContract {
   };
 
   estimateGas: {
-    MAXIMUM_LOCK_TIME(overrides?: CallOverrides): Promise<BigNumber>;
-
-    MAXIMUM_SCHEDULES(overrides?: CallOverrides): Promise<BigNumber>;
-
-    MINIMUM_LOCK_TIME(overrides?: CallOverrides): Promise<BigNumber>;
-
     addStakeableContract(
       stakingContract: string,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -816,6 +1169,12 @@ export class ReSourceToken extends BaseContract {
 
     locks(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
+    maxLockTime(overrides?: CallOverrides): Promise<BigNumber>;
+
+    maxSchedules(overrides?: CallOverrides): Promise<BigNumber>;
+
+    minLockTime(overrides?: CallOverrides): Promise<BigNumber>;
+
     name(overrides?: CallOverrides): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<BigNumber>;
@@ -826,6 +1185,21 @@ export class ReSourceToken extends BaseContract {
     ): Promise<BigNumber>;
 
     renounceOwnership(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    setMaxLockTime(
+      _newMax: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    setMaxSchedules(
+      _newMax: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    setMinLockTime(
+      _newMin: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -863,12 +1237,6 @@ export class ReSourceToken extends BaseContract {
   };
 
   populateTransaction: {
-    MAXIMUM_LOCK_TIME(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    MAXIMUM_SCHEDULES(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    MINIMUM_LOCK_TIME(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     addStakeableContract(
       stakingContract: string,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -929,6 +1297,12 @@ export class ReSourceToken extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    maxLockTime(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    maxSchedules(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    minLockTime(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
@@ -939,6 +1313,21 @@ export class ReSourceToken extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     renounceOwnership(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    setMaxLockTime(
+      _newMax: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    setMaxSchedules(
+      _newMax: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    setMinLockTime(
+      _newMin: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 

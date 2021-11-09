@@ -7,20 +7,20 @@ const func: DeployFunction = async function(hardhat: HardhatRuntimeEnvironment) 
   const { relaySigner } = await hardhat.getNamedAccounts()
 
   // reSourceToken deploy
-  const reSourceTokenAbi = (await hardhat.artifacts.readArtifact("ReSourceToken")).abi
-  const reSourceTokenArgs = [hardhat.ethers.utils.parseEther("100000000"), []]
+  const sourceTokenAbi = (await hardhat.artifacts.readArtifact("SourceToken")).abi
+  const sourceTokenArgs = [hardhat.ethers.utils.parseEther("100000000"), []]
 
-  const reSourceTokenAddress = await deployProxyAndSave(
-    "ReSourceToken",
-    reSourceTokenArgs,
+  const sourceTokenAddress = await deployProxyAndSave(
+    "SourceToken",
+    sourceTokenArgs,
     hardhat,
-    reSourceTokenAbi,
+    sourceTokenAbi,
   )
 
   // hardhat-deploy takes care of saving deployment artifact
   const vesting = await deployments.deploy("TokenVesting", {
     from: (await hardhat.ethers.getSigners())[0].address,
-    args: [reSourceTokenAddress],
+    args: [sourceTokenAddress],
   })
   console.log(`🚀  TokenVesting ${!vesting.newlyDeployed ? "already" : ""} deployed`)
 }

@@ -110,10 +110,10 @@ contract ERC20SOUL is ERC20Upgradeable, OwnableUpgradeable {
     function transferWithLock(
         address _to,
         Lock calldata _lock
-    ) validLock(_lock) external {
+    ) validLock(_lock) external onlyOwner() {
         super._transfer(msg.sender, _to, _lock.totalAmount);
         Lock storage lock = locks[_to];
-        require(lock.schedules.length < maxSchedules, "Maximum locks on address");
+        require(lock.schedules.length + _lock.schedules.length < maxSchedules, "Maximum locks on address");
         lock.totalAmount += _lock.totalAmount;
         for (uint256 i = 0; i < _lock.schedules.length; i++) {
             lock.schedules.push(Schedule(_lock.schedules[i].amount, 
@@ -150,13 +150,15 @@ contract ERC20SOUL is ERC20Upgradeable, OwnableUpgradeable {
 
         uint256 amountToUnlock;
         uint256 deleteOffset;
-        for (uint256 i = 0; i < senderLock.schedules.length + deleteOffset; i++) {
+        uint256 totalSenderSchedules = senderLock.schedules.length;
+        for (uint256 i = 0; i < totalSenderSchedules + deleteOffset; i++) {
             uint256 index = i - deleteOffset;
             if (block.timestamp >= senderLock.schedules[index].expirationBlock) {
                 amountToUnlock += senderLock.schedules[index].amount;
-                senderLock.schedules[index] = senderLock.schedules[senderLock.schedules.length-1];
+                senderLock.schedules[index] = senderLock.schedules[totalSenderSchedules-1];
                 senderLock.schedules.pop();
                 deleteOffset++;
+                totalSenderSchedules--;
                 emit LockScheduleExpired(_from, locks[_from]);
             }
             

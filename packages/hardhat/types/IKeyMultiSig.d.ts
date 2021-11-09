@@ -17,7 +17,7 @@ import {
 import { BytesLike } from "@ethersproject/bytes";
 import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
-import { TypedEventFilter, TypedEvent, TypedListener } from "./commons";
+import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface IKeyMultiSigInterface extends ethers.utils.Interface {
   functions: {
@@ -311,6 +311,46 @@ interface IKeyMultiSigInterface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: "Revocation"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Submission"): EventFragment;
 }
+
+export type ClientAdditionEvent = TypedEvent<[string] & { client: string }>;
+
+export type ClientRemovalEvent = TypedEvent<[string] & { client: string }>;
+
+export type ConfirmationEvent = TypedEvent<
+  [string, BigNumber] & { sender: string; transactionId: BigNumber }
+>;
+
+export type DepositEvent = TypedEvent<
+  [string, BigNumber] & { sender: string; value: BigNumber }
+>;
+
+export type ExecutionEvent = TypedEvent<
+  [BigNumber] & { transactionId: BigNumber }
+>;
+
+export type ExecutionFailureEvent = TypedEvent<
+  [BigNumber] & { transactionId: BigNumber }
+>;
+
+export type GuardianAdditionEvent = TypedEvent<[string] & { guardian: string }>;
+
+export type GuardianRemovalEvent = TypedEvent<[string] & { guardian: string }>;
+
+export type OwnershipTransferredEvent = TypedEvent<
+  [string, string] & { previousOwner: string; newOwner: string }
+>;
+
+export type RequirementChangeEvent = TypedEvent<
+  [BigNumber] & { required: BigNumber }
+>;
+
+export type RevocationEvent = TypedEvent<
+  [string, BigNumber] & { sender: string; transactionId: BigNumber }
+>;
+
+export type SubmissionEvent = TypedEvent<
+  [BigNumber] & { transactionId: BigNumber }
+>;
 
 export class IKeyMultiSig extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -868,7 +908,15 @@ export class IKeyMultiSig extends BaseContract {
   };
 
   filters: {
+    "ClientAddition(address)"(
+      client?: string | null
+    ): TypedEventFilter<[string], { client: string }>;
+
     ClientAddition(
+      client?: string | null
+    ): TypedEventFilter<[string], { client: string }>;
+
+    "ClientRemoval(address)"(
       client?: string | null
     ): TypedEventFilter<[string], { client: string }>;
 
@@ -876,12 +924,28 @@ export class IKeyMultiSig extends BaseContract {
       client?: string | null
     ): TypedEventFilter<[string], { client: string }>;
 
+    "Confirmation(address,uint256)"(
+      sender?: string | null,
+      transactionId?: BigNumberish | null
+    ): TypedEventFilter<
+      [string, BigNumber],
+      { sender: string; transactionId: BigNumber }
+    >;
+
     Confirmation(
       sender?: string | null,
       transactionId?: BigNumberish | null
     ): TypedEventFilter<
       [string, BigNumber],
       { sender: string; transactionId: BigNumber }
+    >;
+
+    "Deposit(address,uint256)"(
+      sender?: string | null,
+      value?: null
+    ): TypedEventFilter<
+      [string, BigNumber],
+      { sender: string; value: BigNumber }
     >;
 
     Deposit(
@@ -892,7 +956,15 @@ export class IKeyMultiSig extends BaseContract {
       { sender: string; value: BigNumber }
     >;
 
+    "Execution(uint256)"(
+      transactionId?: BigNumberish | null
+    ): TypedEventFilter<[BigNumber], { transactionId: BigNumber }>;
+
     Execution(
+      transactionId?: BigNumberish | null
+    ): TypedEventFilter<[BigNumber], { transactionId: BigNumber }>;
+
+    "ExecutionFailure(uint256)"(
       transactionId?: BigNumberish | null
     ): TypedEventFilter<[BigNumber], { transactionId: BigNumber }>;
 
@@ -900,13 +972,29 @@ export class IKeyMultiSig extends BaseContract {
       transactionId?: BigNumberish | null
     ): TypedEventFilter<[BigNumber], { transactionId: BigNumber }>;
 
+    "GuardianAddition(address)"(
+      guardian?: string | null
+    ): TypedEventFilter<[string], { guardian: string }>;
+
     GuardianAddition(
+      guardian?: string | null
+    ): TypedEventFilter<[string], { guardian: string }>;
+
+    "GuardianRemoval(address)"(
       guardian?: string | null
     ): TypedEventFilter<[string], { guardian: string }>;
 
     GuardianRemoval(
       guardian?: string | null
     ): TypedEventFilter<[string], { guardian: string }>;
+
+    "OwnershipTransferred(address,address)"(
+      previousOwner?: string | null,
+      newOwner?: string | null
+    ): TypedEventFilter<
+      [string, string],
+      { previousOwner: string; newOwner: string }
+    >;
 
     OwnershipTransferred(
       previousOwner?: string | null,
@@ -916,9 +1004,21 @@ export class IKeyMultiSig extends BaseContract {
       { previousOwner: string; newOwner: string }
     >;
 
+    "RequirementChange(uint256)"(
+      required?: null
+    ): TypedEventFilter<[BigNumber], { required: BigNumber }>;
+
     RequirementChange(
       required?: null
     ): TypedEventFilter<[BigNumber], { required: BigNumber }>;
+
+    "Revocation(address,uint256)"(
+      sender?: string | null,
+      transactionId?: BigNumberish | null
+    ): TypedEventFilter<
+      [string, BigNumber],
+      { sender: string; transactionId: BigNumber }
+    >;
 
     Revocation(
       sender?: string | null,
@@ -927,6 +1027,10 @@ export class IKeyMultiSig extends BaseContract {
       [string, BigNumber],
       { sender: string; transactionId: BigNumber }
     >;
+
+    "Submission(uint256)"(
+      transactionId?: BigNumberish | null
+    ): TypedEventFilter<[BigNumber], { transactionId: BigNumber }>;
 
     Submission(
       transactionId?: BigNumberish | null

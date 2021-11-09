@@ -17,7 +17,7 @@ import {
 import { BytesLike } from "@ethersproject/bytes";
 import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
-import { TypedEventFilter, TypedEvent, TypedListener } from "./commons";
+import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface NetworkRegistryInterface extends ethers.utils.Interface {
   functions: {
@@ -113,6 +113,20 @@ interface NetworkRegistryInterface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "WalletDeployed"): EventFragment;
 }
+
+export type MemberAdditionEvent = TypedEvent<[string[]] & { member: string[] }>;
+
+export type MemberRemovalEvent = TypedEvent<[string] & { member: string }>;
+
+export type OperatorAdditionEvent = TypedEvent<[string] & { operator: string }>;
+
+export type OperatorRemovalEvent = TypedEvent<[string] & { operator: string }>;
+
+export type OwnershipTransferredEvent = TypedEvent<
+  [string, string] & { previousOwner: string; newOwner: string }
+>;
+
+export type WalletDeployedEvent = TypedEvent<[string] & { newMember: string }>;
 
 export class NetworkRegistry extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -298,21 +312,45 @@ export class NetworkRegistry extends BaseContract {
   };
 
   filters: {
+    "MemberAddition(address[])"(
+      member?: string[] | null
+    ): TypedEventFilter<[string[]], { member: string[] }>;
+
     MemberAddition(
       member?: string[] | null
     ): TypedEventFilter<[string[]], { member: string[] }>;
+
+    "MemberRemoval(address)"(
+      member?: string | null
+    ): TypedEventFilter<[string], { member: string }>;
 
     MemberRemoval(
       member?: string | null
     ): TypedEventFilter<[string], { member: string }>;
 
+    "OperatorAddition(address)"(
+      operator?: string | null
+    ): TypedEventFilter<[string], { operator: string }>;
+
     OperatorAddition(
+      operator?: string | null
+    ): TypedEventFilter<[string], { operator: string }>;
+
+    "OperatorRemoval(address)"(
       operator?: string | null
     ): TypedEventFilter<[string], { operator: string }>;
 
     OperatorRemoval(
       operator?: string | null
     ): TypedEventFilter<[string], { operator: string }>;
+
+    "OwnershipTransferred(address,address)"(
+      previousOwner?: string | null,
+      newOwner?: string | null
+    ): TypedEventFilter<
+      [string, string],
+      { previousOwner: string; newOwner: string }
+    >;
 
     OwnershipTransferred(
       previousOwner?: string | null,
@@ -321,6 +359,10 @@ export class NetworkRegistry extends BaseContract {
       [string, string],
       { previousOwner: string; newOwner: string }
     >;
+
+    "WalletDeployed(address)"(
+      newMember?: null
+    ): TypedEventFilter<[string], { newMember: string }>;
 
     WalletDeployed(
       newMember?: null

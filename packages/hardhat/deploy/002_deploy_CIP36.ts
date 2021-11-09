@@ -1,12 +1,12 @@
 import { HardhatRuntimeEnvironment } from "hardhat/types"
 import { DeployFunction } from "hardhat-deploy/types"
 import { deployProxyAndSave } from "../utils/utils"
-import { ReSourceToken } from "../types/ReSourceToken"
+import { SourceToken } from "../types/SourceToken"
 import { ethers } from "hardhat"
 import { UnderwriteManager } from "../types/UnderwriteManager"
 import { IKeyWalletDeployer } from "../types/IKeyWalletDeployer"
 import {
-  ReSourceToken__factory,
+  SourceToken__factory,
   UnderwriteManager__factory,
   IKeyWalletDeployer__factory,
 } from "../types"
@@ -14,9 +14,9 @@ import {
 const func: DeployFunction = async function(hardhat: HardhatRuntimeEnvironment) {
   const { relaySigner } = await hardhat.getNamedAccounts()
 
-  let reSourceTokenAddress = (await hardhat.deployments.getOrNull("ReSourceToken"))?.address
+  let sourceTokenAddress = (await hardhat.deployments.getOrNull("ReSourceToken"))?.address
 
-  if (!reSourceTokenAddress) throw Error("SOURCE not deployed")
+  if (!sourceTokenAddress) throw Error("SOURCE not deployed")
 
   //deploy walletDeployer contract
   const walletDeployerAbi = (await hardhat.artifacts.readArtifact("IiKeyWalletDeployer")).abi
@@ -52,7 +52,7 @@ const func: DeployFunction = async function(hardhat: HardhatRuntimeEnvironment) 
 
   // underwriteManager deploy
   const underwriteManagerAbi = (await hardhat.artifacts.readArtifact("UnderwriteManager")).abi
-  const underwriteManagerArgs = [reSourceTokenAddress]
+  const underwriteManagerArgs = [sourceTokenAddress]
   const underwriteManagerAddress = await deployProxyAndSave(
     "UnderwriteManager",
     underwriteManagerArgs,
@@ -61,10 +61,10 @@ const func: DeployFunction = async function(hardhat: HardhatRuntimeEnvironment) 
   )
 
   const resourceToken = new ethers.Contract(
-    reSourceTokenAddress,
-    ReSourceToken__factory.createInterface(),
+    sourceTokenAddress,
+    SourceToken__factory.createInterface(),
     (await hardhat.ethers.getSigners())[0],
-  ) as ReSourceToken
+  ) as SourceToken
 
   if (!(await resourceToken.isStakeableContract(underwriteManagerAddress)))
     await (await resourceToken.addStakeableContract(underwriteManagerAddress)).wait()

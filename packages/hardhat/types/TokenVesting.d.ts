@@ -17,7 +17,7 @@ import {
 import { BytesLike } from "@ethersproject/bytes";
 import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
-import { TypedEventFilter, TypedEvent, TypedListener } from "./commons";
+import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface TokenVestingInterface extends ethers.utils.Interface {
   functions: {
@@ -191,6 +191,14 @@ interface TokenVestingInterface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: "Revoked"): EventFragment;
 }
 
+export type OwnershipTransferredEvent = TypedEvent<
+  [string, string] & { previousOwner: string; newOwner: string }
+>;
+
+export type ReleasedEvent = TypedEvent<[BigNumber] & { amount: BigNumber }>;
+
+export type RevokedEvent = TypedEvent<[] & {}>;
+
 export class TokenVesting extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
@@ -269,26 +277,24 @@ export class TokenVesting extends BaseContract {
       [
         [
           boolean,
+          boolean,
           string,
           BigNumber,
           BigNumber,
           BigNumber,
           BigNumber,
-          boolean,
           BigNumber,
-          BigNumber,
-          boolean
+          BigNumber
         ] & {
-          initialized: boolean;
+          revocable: boolean;
+          revoked: boolean;
           beneficiary: string;
           cliff: BigNumber;
           start: BigNumber;
           duration: BigNumber;
           slicePeriodSeconds: BigNumber;
-          revocable: boolean;
           amountTotal: BigNumber;
           released: BigNumber;
-          revoked: boolean;
         }
       ]
     >;
@@ -307,26 +313,24 @@ export class TokenVesting extends BaseContract {
       [
         [
           boolean,
+          boolean,
           string,
           BigNumber,
           BigNumber,
           BigNumber,
           BigNumber,
-          boolean,
           BigNumber,
-          BigNumber,
-          boolean
+          BigNumber
         ] & {
-          initialized: boolean;
+          revocable: boolean;
+          revoked: boolean;
           beneficiary: string;
           cliff: BigNumber;
           start: BigNumber;
           duration: BigNumber;
           slicePeriodSeconds: BigNumber;
-          revocable: boolean;
           amountTotal: BigNumber;
           released: BigNumber;
-          revoked: boolean;
         }
       ]
     >;
@@ -339,26 +343,24 @@ export class TokenVesting extends BaseContract {
       [
         [
           boolean,
+          boolean,
           string,
           BigNumber,
           BigNumber,
           BigNumber,
           BigNumber,
-          boolean,
           BigNumber,
-          BigNumber,
-          boolean
+          BigNumber
         ] & {
-          initialized: boolean;
+          revocable: boolean;
+          revoked: boolean;
           beneficiary: string;
           cliff: BigNumber;
           start: BigNumber;
           duration: BigNumber;
           slicePeriodSeconds: BigNumber;
-          revocable: boolean;
           amountTotal: BigNumber;
           released: BigNumber;
-          revoked: boolean;
         }
       ]
     >;
@@ -437,26 +439,24 @@ export class TokenVesting extends BaseContract {
   ): Promise<
     [
       boolean,
+      boolean,
       string,
       BigNumber,
       BigNumber,
       BigNumber,
       BigNumber,
-      boolean,
       BigNumber,
-      BigNumber,
-      boolean
+      BigNumber
     ] & {
-      initialized: boolean;
+      revocable: boolean;
+      revoked: boolean;
       beneficiary: string;
       cliff: BigNumber;
       start: BigNumber;
       duration: BigNumber;
       slicePeriodSeconds: BigNumber;
-      revocable: boolean;
       amountTotal: BigNumber;
       released: BigNumber;
-      revoked: boolean;
     }
   >;
 
@@ -473,26 +473,24 @@ export class TokenVesting extends BaseContract {
   ): Promise<
     [
       boolean,
+      boolean,
       string,
       BigNumber,
       BigNumber,
       BigNumber,
       BigNumber,
-      boolean,
       BigNumber,
-      BigNumber,
-      boolean
+      BigNumber
     ] & {
-      initialized: boolean;
+      revocable: boolean;
+      revoked: boolean;
       beneficiary: string;
       cliff: BigNumber;
       start: BigNumber;
       duration: BigNumber;
       slicePeriodSeconds: BigNumber;
-      revocable: boolean;
       amountTotal: BigNumber;
       released: BigNumber;
-      revoked: boolean;
     }
   >;
 
@@ -503,26 +501,24 @@ export class TokenVesting extends BaseContract {
   ): Promise<
     [
       boolean,
+      boolean,
       string,
       BigNumber,
       BigNumber,
       BigNumber,
       BigNumber,
-      boolean,
       BigNumber,
-      BigNumber,
-      boolean
+      BigNumber
     ] & {
-      initialized: boolean;
+      revocable: boolean;
+      revoked: boolean;
       beneficiary: string;
       cliff: BigNumber;
       start: BigNumber;
       duration: BigNumber;
       slicePeriodSeconds: BigNumber;
-      revocable: boolean;
       amountTotal: BigNumber;
       released: BigNumber;
-      revoked: boolean;
     }
   >;
 
@@ -598,26 +594,24 @@ export class TokenVesting extends BaseContract {
     ): Promise<
       [
         boolean,
+        boolean,
         string,
         BigNumber,
         BigNumber,
         BigNumber,
         BigNumber,
-        boolean,
         BigNumber,
-        BigNumber,
-        boolean
+        BigNumber
       ] & {
-        initialized: boolean;
+        revocable: boolean;
+        revoked: boolean;
         beneficiary: string;
         cliff: BigNumber;
         start: BigNumber;
         duration: BigNumber;
         slicePeriodSeconds: BigNumber;
-        revocable: boolean;
         amountTotal: BigNumber;
         released: BigNumber;
-        revoked: boolean;
       }
     >;
 
@@ -634,26 +628,24 @@ export class TokenVesting extends BaseContract {
     ): Promise<
       [
         boolean,
+        boolean,
         string,
         BigNumber,
         BigNumber,
         BigNumber,
         BigNumber,
-        boolean,
         BigNumber,
-        BigNumber,
-        boolean
+        BigNumber
       ] & {
-        initialized: boolean;
+        revocable: boolean;
+        revoked: boolean;
         beneficiary: string;
         cliff: BigNumber;
         start: BigNumber;
         duration: BigNumber;
         slicePeriodSeconds: BigNumber;
-        revocable: boolean;
         amountTotal: BigNumber;
         released: BigNumber;
-        revoked: boolean;
       }
     >;
 
@@ -664,26 +656,24 @@ export class TokenVesting extends BaseContract {
     ): Promise<
       [
         boolean,
+        boolean,
         string,
         BigNumber,
         BigNumber,
         BigNumber,
         BigNumber,
-        boolean,
         BigNumber,
-        BigNumber,
-        boolean
+        BigNumber
       ] & {
-        initialized: boolean;
+        revocable: boolean;
+        revoked: boolean;
         beneficiary: string;
         cliff: BigNumber;
         start: BigNumber;
         duration: BigNumber;
         slicePeriodSeconds: BigNumber;
-        revocable: boolean;
         amountTotal: BigNumber;
         released: BigNumber;
-        revoked: boolean;
       }
     >;
 
@@ -724,6 +714,14 @@ export class TokenVesting extends BaseContract {
   };
 
   filters: {
+    "OwnershipTransferred(address,address)"(
+      previousOwner?: string | null,
+      newOwner?: string | null
+    ): TypedEventFilter<
+      [string, string],
+      { previousOwner: string; newOwner: string }
+    >;
+
     OwnershipTransferred(
       previousOwner?: string | null,
       newOwner?: string | null
@@ -732,9 +730,15 @@ export class TokenVesting extends BaseContract {
       { previousOwner: string; newOwner: string }
     >;
 
+    "Released(uint256)"(
+      amount?: null
+    ): TypedEventFilter<[BigNumber], { amount: BigNumber }>;
+
     Released(
       amount?: null
     ): TypedEventFilter<[BigNumber], { amount: BigNumber }>;
+
+    "Revoked()"(): TypedEventFilter<[], {}>;
 
     Revoked(): TypedEventFilter<[], {}>;
   };

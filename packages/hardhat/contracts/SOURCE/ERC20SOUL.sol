@@ -116,8 +116,11 @@ contract ERC20SOUL is ERC20Upgradeable, OwnableUpgradeable {
         require(lock.schedules.length + _lock.schedules.length < maxSchedules, "Maximum locks on address");
         lock.totalAmount += _lock.totalAmount;
         for (uint256 i = 0; i < _lock.schedules.length; i++) {
-            lock.schedules.push(Schedule(_lock.schedules[i].amount, 
-            _lock.schedules[i].expirationBlock));
+            lock.schedules.push(
+                Schedule(
+                    _lock.schedules[i].amount, 
+                _lock.schedules[i].expirationBlock
+            ));
         }
         emit LockedTransfer(_lock, msg.sender, _to);
     }

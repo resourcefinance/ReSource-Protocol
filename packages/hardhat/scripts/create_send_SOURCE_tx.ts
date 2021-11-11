@@ -2,16 +2,13 @@ import { config, deployments, ethers } from "hardhat"
 import { SourceToken, SourceToken__factory } from "../types"
 
 async function main(): Promise<void> {
-  const address = "0xCb7a2E21555e824032e2B336b18Bc8804B37C773"
+  const address = "0x8bb2af5d4877345aac16c89d7147d4cc73d808aa"
   const senderAddress = "0x4400b73aD6a62b3d0096FB2AF9743D3F513De2c0"
-  const amountStr = "1000000"
+  const amount = "500000"
 
   let sourceTokenAddress = (await deployments.getOrNull("SourceToken"))?.address
 
   if (!sourceTokenAddress) throw new Error("token not deployed on this network")
-
-  const amount = ethers.utils.parseEther(amountStr)
-  const signer = (await ethers.getSigners())[0]
 
   const tokenContract = new ethers.Contract(
     sourceTokenAddress,
@@ -23,22 +20,22 @@ async function main(): Promise<void> {
     const now = Date.parse(new Date().toString()) / 1000
     const day = 86405
     const tx = await tokenContract.populateTransaction.transferWithLock(address, {
-      totalAmount: ethers.utils.parseEther("1000"),
+      totalAmount: ethers.utils.parseEther(amount),
       amountStaked: 0,
       schedules: [
         {
-          amount: ethers.utils.parseEther("1000"),
+          amount: ethers.utils.parseEther(amount),
           expirationBlock: now + day * 7,
         },
       ],
     })
 
     await tokenContract.estimateGas.transferWithLock(address, {
-      totalAmount: ethers.utils.parseEther("1000"),
+      totalAmount: ethers.utils.parseEther(amount),
       amountStaked: 0,
       schedules: [
         {
-          amount: ethers.utils.parseEther("1000"),
+          amount: ethers.utils.parseEther(amount),
           expirationBlock: now + day * 7,
         },
       ],

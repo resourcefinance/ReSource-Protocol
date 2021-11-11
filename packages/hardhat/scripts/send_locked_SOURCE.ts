@@ -2,10 +2,11 @@ import { config, deployments, ethers } from "hardhat"
 import { SourceToken, SourceToken__factory } from "../types"
 
 async function main(): Promise<void> {
-  const address = "0x0bBE7BCF8cd7D0f7aeC93A9afa90eE9bE91D8015"
-  const amountStr = "1000000"
+  const address = "0x8bb2af5d4877345aAc16c89d7147D4CC73D808AA"
+  const amountStr = "500000"
 
   let sourceTokenAddress = (await deployments.getOrNull("SourceToken"))?.address
+  console.log(sourceTokenAddress)
 
   if (!sourceTokenAddress) throw new Error("token not deployed on this network")
 

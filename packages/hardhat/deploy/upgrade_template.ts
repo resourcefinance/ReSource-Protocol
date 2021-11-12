@@ -1,7 +1,7 @@
 // import { HardhatRuntimeEnvironment } from "hardhat/types"
 // import { DeployFunction } from "hardhat-deploy/types"
 // import { ethers } from "hardhat"
-// import { ReSourceTokenV2__factory } from "../../source-dapp/src/contracts/factories/ReSourceTokenV2__factory"
+
 // import { saveDeployment } from "../utils"
 
 // const func: DeployFunction = async function({

@@ -1,14 +1,16 @@
 import { ethers, getNamedAccounts } from "hardhat"
 import { UnderwriteManager } from "../types/UnderwriteManager"
-import { UnderwriteManager__factory } from "../../source-dapp/src/contracts/factories/UnderwriteManager__factory"
-import { ReSourceToken__factory } from "../../source-dapp/src/contracts/factories/ReSourceToken__factory"
-import { ReSourceToken } from "../../source-dapp/src/contracts/ReSourceToken"
 import { parseEther } from "ethers/lib/utils"
 import { readFileSync } from "fs"
-import { NetworkRegistry__factory } from "../../source-dapp/src/contracts/factories/NetworkRegistry__factory"
-import { NetworkRegistry } from "../../source-dapp/src/contracts/NetworkRegistry"
-import { RUSD__factory } from "../../source-dapp/src/contracts/factories/RUSD__factory"
-import { RUSD } from "../../source-dapp/src/contracts/RUSD"
+import {
+  NetworkRegistry,
+  NetworkRegistry__factory,
+  RUSD,
+  RUSD__factory,
+  SourceToken,
+  SourceToken__factory,
+  UnderwriteManager__factory,
+} from "../types"
 const fs = require("fs")
 
 const underwriteAbi = "./deployments/localhost/UnderwriteManager.json"
@@ -59,11 +61,11 @@ async function issueCreditLine() {
       deployer,
     ) as UnderwriteManager
 
-    const reSourceToken = ReSourceToken__factory.getContract(
+    const reSourceToken = SourceToken__factory.getContract(
       mutualityAddress,
-      ReSourceToken__factory.createInterface(),
+      SourceToken__factory.createInterface(),
       deployer,
-    ) as ReSourceToken
+    ) as SourceToken
 
     const networkRegistry = NetworkRegistry__factory.getContract(
       networkRegistryAddress,
@@ -77,9 +79,9 @@ async function issueCreditLine() {
       deployer,
     ) as RUSD
 
-    const curMembers = await networkRegistry.getMembers()
+    const curMembers = await networkRegistry
     for (var member of members) {
-      if (!curMembers.includes(member))
+      if (!(await networkRegistry.isMember(member)))
         await (await networkRegistry.connect(deployer).addMembers([member])).wait
     }
     for (var underwriter of underwriters)
@@ -124,7 +126,7 @@ async function issueCreditLine() {
     await (
       await underwriteManager
         .connect(underwriterWallet)
-        .underwrite(rUSDAddress, ethers.utils.parseEther("1000.0"), member1.address)
+        .underwriteCreditLine(rUSDAddress, ethers.utils.parseEther("1000.0"), member1.address)
     ).wait()
 
     await (

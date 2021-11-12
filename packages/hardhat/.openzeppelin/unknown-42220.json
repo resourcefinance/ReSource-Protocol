@@ -39,12 +39,189 @@
       "address": "0xf79a3881713BFA9Fe080Ef6f2D7579Fd595F4f76",
       "txHash": "0x6ae10e9f6720ea24b3e4d2c7625a2487bf6af95d1bce5b7d45eed762016ba153",
       "kind": "transparent"
+    },
+    {
+      "address": "0x74c0C58B99b68cF16A717279AC2d056A34ba2bFe",
+      "txHash": "0xcf426c7919cdafb2dfd71ea5230597c91fe149aa0773ef8032ee40ab89bc2697",
+      "kind": "transparent"
     }
   ],
   "impls": {
     "d5fe3aa6a7511b2d4db389e3b3abc049f5b249c1f49fa5ac407c88ed46164c8c": {
       "address": "0xE08442E0e894b1e56d8eF9E91806E2edEaDC91F4",
       "txHash": "0xa39629d5fa5665b0eeb6a7de1ca52d57bf707d80d611775c1f713eae1c6f6e51",
+      "layout": {
+        "storage": [
+          {
+            "contract": "Initializable",
+            "label": "_initialized",
+            "type": "t_bool",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:21"
+          },
+          {
+            "contract": "Initializable",
+            "label": "_initializing",
+            "type": "t_bool",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:26"
+          },
+          {
+            "contract": "ContextUpgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)50_storage",
+            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:30"
+          },
+          {
+            "contract": "ERC20Upgradeable",
+            "label": "_balances",
+            "type": "t_mapping(t_address,t_uint256)",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol:36"
+          },
+          {
+            "contract": "ERC20Upgradeable",
+            "label": "_allowances",
+            "type": "t_mapping(t_address,t_mapping(t_address,t_uint256))",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol:38"
+          },
+          {
+            "contract": "ERC20Upgradeable",
+            "label": "_totalSupply",
+            "type": "t_uint256",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol:40"
+          },
+          {
+            "contract": "ERC20Upgradeable",
+            "label": "_name",
+            "type": "t_string_storage",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol:42"
+          },
+          {
+            "contract": "ERC20Upgradeable",
+            "label": "_symbol",
+            "type": "t_string_storage",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol:43"
+          },
+          {
+            "contract": "ERC20Upgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)45_storage",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol:361"
+          },
+          {
+            "contract": "OwnableUpgradeable",
+            "label": "_owner",
+            "type": "t_address",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:21"
+          },
+          {
+            "contract": "OwnableUpgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)49_storage",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:77"
+          },
+          {
+            "contract": "ERC20SOUL",
+            "label": "isStakeableContract",
+            "type": "t_mapping(t_address,t_bool)",
+            "src": "contracts/SOURCE/ERC20SOUL.sol:35"
+          },
+          {
+            "contract": "ERC20SOUL",
+            "label": "locks",
+            "type": "t_mapping(t_address,t_struct(Lock)946_storage)",
+            "src": "contracts/SOURCE/ERC20SOUL.sol:36"
+          },
+          {
+            "contract": "ERC20SOUL",
+            "label": "minLockTime",
+            "type": "t_uint256",
+            "src": "contracts/SOURCE/ERC20SOUL.sol:37"
+          },
+          {
+            "contract": "ERC20SOUL",
+            "label": "maxLockTime",
+            "type": "t_uint256",
+            "src": "contracts/SOURCE/ERC20SOUL.sol:38"
+          },
+          {
+            "contract": "ERC20SOUL",
+            "label": "maxSchedules",
+            "type": "t_uint256",
+            "src": "contracts/SOURCE/ERC20SOUL.sol:39"
+          }
+        ],
+        "types": {
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)"
+          },
+          "t_address": {
+            "label": "address"
+          },
+          "t_bool": {
+            "label": "bool"
+          },
+          "t_mapping(t_address,t_struct(Lock)946_storage)": {
+            "label": "mapping(address => struct ERC20SOUL.Lock)"
+          },
+          "t_struct(Lock)946_storage": {
+            "label": "struct ERC20SOUL.Lock",
+            "members": [
+              {
+                "label": "totalAmount",
+                "type": "t_uint256"
+              },
+              {
+                "label": "amountStaked",
+                "type": "t_uint256"
+              },
+              {
+                "label": "schedules",
+                "type": "t_array(t_struct(Schedule)951_storage)dyn_storage"
+              }
+            ]
+          },
+          "t_uint256": {
+            "label": "uint256"
+          },
+          "t_array(t_struct(Schedule)951_storage)dyn_storage": {
+            "label": "struct ERC20SOUL.Schedule[]"
+          },
+          "t_struct(Schedule)951_storage": {
+            "label": "struct ERC20SOUL.Schedule",
+            "members": [
+              {
+                "label": "amount",
+                "type": "t_uint256"
+              },
+              {
+                "label": "expirationBlock",
+                "type": "t_uint256"
+              }
+            ]
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]"
+          },
+          "t_mapping(t_address,t_uint256)": {
+            "label": "mapping(address => uint256)"
+          },
+          "t_mapping(t_address,t_mapping(t_address,t_uint256))": {
+            "label": "mapping(address => mapping(address => uint256))"
+          },
+          "t_string_storage": {
+            "label": "string"
+          },
+          "t_array(t_uint256)45_storage": {
+            "label": "uint256[45]"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]"
+          }
+        }
+      }
+    },
+    "0b27f811537cd04aced05bd4bd6cca83ea69e229dd235916394391959e2c7154": {
+      "address": "0x22787274779415141f8b0d68213a735C4dF321c4",
+      "txHash": "0x61d2f1ec9c4d2f3ffc9ee0f785af8b2dcd8ceed89f58b66d8e1c1e80dc42009c",
       "layout": {
         "storage": [
           {

@@ -1,0 +1,853 @@
+{
+  "address": "0xf79a3881713BFA9Fe080Ef6f2D7579Fd595F4f76",
+  "abi": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "spender",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "value",
+          "type": "uint256"
+        }
+      ],
+      "name": "Approval",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        },
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "totalAmount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amountStaked",
+              "type": "uint256"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "uint256",
+                  "name": "amount",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "expirationBlock",
+                  "type": "uint256"
+                }
+              ],
+              "internalType": "struct ERC20SOUL.Schedule[]",
+              "name": "schedules",
+              "type": "tuple[]"
+            }
+          ],
+          "indexed": false,
+          "internalType": "struct ERC20SOUL.Lock",
+          "name": "lock",
+          "type": "tuple"
+        }
+      ],
+      "name": "LockExpired",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        },
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "totalAmount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amountStaked",
+              "type": "uint256"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "uint256",
+                  "name": "amount",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "expirationBlock",
+                  "type": "uint256"
+                }
+              ],
+              "internalType": "struct ERC20SOUL.Schedule[]",
+              "name": "schedules",
+              "type": "tuple[]"
+            }
+          ],
+          "indexed": false,
+          "internalType": "struct ERC20SOUL.Lock",
+          "name": "lock",
+          "type": "tuple"
+        }
+      ],
+      "name": "LockScheduleExpired",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "totalAmount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amountStaked",
+              "type": "uint256"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "uint256",
+                  "name": "amount",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "expirationBlock",
+                  "type": "uint256"
+                }
+              ],
+              "internalType": "struct ERC20SOUL.Schedule[]",
+              "name": "schedules",
+              "type": "tuple[]"
+            }
+          ],
+          "indexed": false,
+          "internalType": "struct ERC20SOUL.Lock",
+          "name": "lock",
+          "type": "tuple"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "sender",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "recipient",
+          "type": "address"
+        }
+      ],
+      "name": "LockedTransfer",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "previousOwner",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "OwnershipTransferred",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "from",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "value",
+          "type": "uint256"
+        }
+      ],
+      "name": "Transfer",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "stakingContract",
+          "type": "address"
+        }
+      ],
+      "name": "addStakeableContract",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "spender",
+          "type": "address"
+        }
+      ],
+      "name": "allowance",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "spender",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "approve",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "balanceOf",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "decimals",
+      "outputs": [
+        {
+          "internalType": "uint8",
+          "name": "",
+          "type": "uint8"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "spender",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "subtractedValue",
+          "type": "uint256"
+        }
+      ],
+      "name": "decreaseAllowance",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "spender",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "addedValue",
+          "type": "uint256"
+        }
+      ],
+      "name": "increaseAllowance",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "initialSupply",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address[]",
+          "name": "stakableContracts",
+          "type": "address[]"
+        }
+      ],
+      "name": "initialize",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "symbol",
+          "type": "string"
+        },
+        {
+          "internalType": "uint256",
+          "name": "initialSupply",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address[]",
+          "name": "stakeableContracts",
+          "type": "address[]"
+        }
+      ],
+      "name": "initializeERC20SOUL",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "isStakeableContract",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "locks",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "totalAmount",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amountStaked",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "maxLockTime",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "maxSchedules",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "minLockTime",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "name",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "owner",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "stakingContract",
+          "type": "address"
+        }
+      ],
+      "name": "removeStakeableContract",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "renounceOwnership",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_newMax",
+          "type": "uint256"
+        }
+      ],
+      "name": "setMaxLockTime",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_newMax",
+          "type": "uint256"
+        }
+      ],
+      "name": "setMaxSchedules",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_newMin",
+          "type": "uint256"
+        }
+      ],
+      "name": "setMinLockTime",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "symbol",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "totalSupply",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "recipient",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "transfer",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "sender",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "recipient",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "transferFrom",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "transferOwnership",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_to",
+          "type": "address"
+        },
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "totalAmount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amountStaked",
+              "type": "uint256"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "uint256",
+                  "name": "amount",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "expirationBlock",
+                  "type": "uint256"
+                }
+              ],
+              "internalType": "struct ERC20SOUL.Schedule[]",
+              "name": "schedules",
+              "type": "tuple[]"
+            }
+          ],
+          "internalType": "struct ERC20SOUL.Lock",
+          "name": "_lock",
+          "type": "tuple"
+        }
+      ],
+      "name": "transferWithLock",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "transactionHash": "0x6ae10e9f6720ea24b3e4d2c7625a2487bf6af95d1bce5b7d45eed762016ba153",
+  "receipt": {
+    "to": null,
+    "from": "0x8bb2af5d4877345aAc16c89d7147D4CC73D808AA",
+    "contractAddress": "0xf79a3881713BFA9Fe080Ef6f2D7579Fd595F4f76",
+    "transactionIndex": 1,
+    "gasUsed": "787177",
+    "logsBloom": "0x00000000000000000000000000000000400000000001000000800000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000008000002000001000000000000000004000000000000000000020008000000000000000800000000800000000000000010080000400000000000000004000000000000000000000000000000000000000000800000000000000000000000000000000000000000000000000000000000000000000000000022002000000000000000000000000000000400000000040000000021000000000000000000000000000000000000000001000000000000000000000000",
+    "blockHash": "0x3f454c2cbd70d56aeef64dfa97805793b09f3519a7b456f35496d6677090e202",
+    "transactionHash": "0x6ae10e9f6720ea24b3e4d2c7625a2487bf6af95d1bce5b7d45eed762016ba153",
+    "logs": [
+      {
+        "transactionIndex": 1,
+        "blockNumber": 9802314,
+        "transactionHash": "0x6ae10e9f6720ea24b3e4d2c7625a2487bf6af95d1bce5b7d45eed762016ba153",
+        "address": "0xf79a3881713BFA9Fe080Ef6f2D7579Fd595F4f76",
+        "topics": [
+          "0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b",
+          "0x000000000000000000000000e08442e0e894b1e56d8ef9e91806e2edeadc91f4"
+        ],
+        "data": "0x",
+        "logIndex": 8,
+        "blockHash": "0x3f454c2cbd70d56aeef64dfa97805793b09f3519a7b456f35496d6677090e202"
+      },
+      {
+        "transactionIndex": 1,
+        "blockNumber": 9802314,
+        "transactionHash": "0x6ae10e9f6720ea24b3e4d2c7625a2487bf6af95d1bce5b7d45eed762016ba153",
+        "address": "0xf79a3881713BFA9Fe080Ef6f2D7579Fd595F4f76",
+        "topics": [
+          "0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0",
+          "0x0000000000000000000000000000000000000000000000000000000000000000",
+          "0x0000000000000000000000008bb2af5d4877345aac16c89d7147d4cc73d808aa"
+        ],
+        "data": "0x",
+        "logIndex": 9,
+        "blockHash": "0x3f454c2cbd70d56aeef64dfa97805793b09f3519a7b456f35496d6677090e202"
+      },
+      {
+        "transactionIndex": 1,
+        "blockNumber": 9802314,
+        "transactionHash": "0x6ae10e9f6720ea24b3e4d2c7625a2487bf6af95d1bce5b7d45eed762016ba153",
+        "address": "0xf79a3881713BFA9Fe080Ef6f2D7579Fd595F4f76",
+        "topics": [
+          "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+          "0x0000000000000000000000000000000000000000000000000000000000000000",
+          "0x0000000000000000000000008bb2af5d4877345aac16c89d7147d4cc73d808aa"
+        ],
+        "data": "0x00000000000000000000000000000000000000000052b7d2dcc80cd2e4000000",
+        "logIndex": 10,
+        "blockHash": "0x3f454c2cbd70d56aeef64dfa97805793b09f3519a7b456f35496d6677090e202"
+      },
+      {
+        "transactionIndex": 1,
+        "blockNumber": 9802314,
+        "transactionHash": "0x6ae10e9f6720ea24b3e4d2c7625a2487bf6af95d1bce5b7d45eed762016ba153",
+        "address": "0xf79a3881713BFA9Fe080Ef6f2D7579Fd595F4f76",
+        "topics": [
+          "0x7e644d79422f17c01e4894b5f4f588d331ebfa28653d42ae832dc59e38c9798f"
+        ],
+        "data": "0x0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000c57f00b3202411af6457cc88372f6aa925f457b6",
+        "logIndex": 11,
+        "blockHash": "0x3f454c2cbd70d56aeef64dfa97805793b09f3519a7b456f35496d6677090e202"
+      }
+    ],
+    "events": [
+      {
+        "transactionIndex": 1,
+        "blockNumber": 9802314,
+        "transactionHash": "0x6ae10e9f6720ea24b3e4d2c7625a2487bf6af95d1bce5b7d45eed762016ba153",
+        "address": "0xf79a3881713BFA9Fe080Ef6f2D7579Fd595F4f76",
+        "topics": [
+          "0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b",
+          "0x000000000000000000000000e08442e0e894b1e56d8ef9e91806e2edeadc91f4"
+        ],
+        "data": "0x",
+        "logIndex": 8,
+        "blockHash": "0x3f454c2cbd70d56aeef64dfa97805793b09f3519a7b456f35496d6677090e202",
+        "args": [
+          "0xE08442E0e894b1e56d8eF9E91806E2edEaDC91F4"
+        ],
+        "event": "Upgraded",
+        "eventSignature": "Upgraded(address)"
+      },
+      {
+        "transactionIndex": 1,
+        "blockNumber": 9802314,
+        "transactionHash": "0x6ae10e9f6720ea24b3e4d2c7625a2487bf6af95d1bce5b7d45eed762016ba153",
+        "address": "0xf79a3881713BFA9Fe080Ef6f2D7579Fd595F4f76",
+        "topics": [
+          "0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0",
+          "0x0000000000000000000000000000000000000000000000000000000000000000",
+          "0x0000000000000000000000008bb2af5d4877345aac16c89d7147d4cc73d808aa"
+        ],
+        "data": "0x",
+        "logIndex": 9,
+        "blockHash": "0x3f454c2cbd70d56aeef64dfa97805793b09f3519a7b456f35496d6677090e202"
+      },
+      {
+        "transactionIndex": 1,
+        "blockNumber": 9802314,
+        "transactionHash": "0x6ae10e9f6720ea24b3e4d2c7625a2487bf6af95d1bce5b7d45eed762016ba153",
+        "address": "0xf79a3881713BFA9Fe080Ef6f2D7579Fd595F4f76",
+        "topics": [
+          "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+          "0x0000000000000000000000000000000000000000000000000000000000000000",
+          "0x0000000000000000000000008bb2af5d4877345aac16c89d7147d4cc73d808aa"
+        ],
+        "data": "0x00000000000000000000000000000000000000000052b7d2dcc80cd2e4000000",
+        "logIndex": 10,
+        "blockHash": "0x3f454c2cbd70d56aeef64dfa97805793b09f3519a7b456f35496d6677090e202"
+      },
+      {
+        "transactionIndex": 1,
+        "blockNumber": 9802314,
+        "transactionHash": "0x6ae10e9f6720ea24b3e4d2c7625a2487bf6af95d1bce5b7d45eed762016ba153",
+        "address": "0xf79a3881713BFA9Fe080Ef6f2D7579Fd595F4f76",
+        "topics": [
+          "0x7e644d79422f17c01e4894b5f4f588d331ebfa28653d42ae832dc59e38c9798f"
+        ],
+        "data": "0x0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000c57f00b3202411af6457cc88372f6aa925f457b6",
+        "logIndex": 11,
+        "blockHash": "0x3f454c2cbd70d56aeef64dfa97805793b09f3519a7b456f35496d6677090e202",
+        "args": [
+          "0x0000000000000000000000000000000000000000",
+          "0xC57F00B3202411aF6457cc88372f6aa925F457b6"
+        ],
+        "event": "AdminChanged",
+        "eventSignature": "AdminChanged(address,address)"
+      }
+    ],
+    "blockNumber": 9802314,
+    "cumulativeGasUsed": "1114445",
+    "status": 1,
+    "byzantium": true
+  }
+}

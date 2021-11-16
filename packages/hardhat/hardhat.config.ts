@@ -20,7 +20,8 @@ import { HttpNetworkUserConfig } from "hardhat/types"
 
 import "./tasks/accounts"
 import "./tasks/clean"
-import { ReSourceToken, ReSourceToken__factory } from "./types"
+import { SourceToken, SourceToken__factory } from "./types"
+// import { ReSourceToken, ReSourceToken__factory } from "./types"
 
 const { isAddress, getAddress, formatUnits, parseUnits } = utils
 
@@ -78,7 +79,6 @@ const config: HardhatUserConfig = {
     celo: {
       url: "http://127.0.0.1:1248",
       chainId: chainIds.mainnet,
-      accounts: { mnemonic: mnemonic() },
       saveDeployments: true,
       tags: ["production", "mainnet"],
     },
@@ -90,6 +90,7 @@ const config: HardhatUserConfig = {
   },
   solidity: {
     compilers: [
+      { version: "0.8.0" },
       { version: "0.8.7", settings: {} },
       {
         version: "0.5.13",
@@ -369,7 +370,7 @@ task("sendSource", "Send SOURCE")
   .addParam("to", "Address to send SOURCE to ")
   .addParam("amount", "Amount of Source to send to to address")
   .setAction(async (taskArgs, { ethers, network }) => {
-    const deploymentPath = `./deployments/${network.name}/ReSourceToken.json`
+    const deploymentPath = `./deployments/${network.name}/SourceToken.json`
     const ReSourceTokenDeployment = fs.readFileSync(deploymentPath).toString()
     const ReSourceTokenAddress = JSON.parse(ReSourceTokenDeployment)["address"]
 
@@ -382,9 +383,9 @@ task("sendSource", "Send SOURCE")
 
     const tokenContract = new ethers.Contract(
       ReSourceTokenAddress,
-      ReSourceToken__factory.createInterface(),
+      SourceToken__factory.createInterface(),
       signer,
-    ) as ReSourceToken
+    ) as SourceToken
 
     try {
       await (await tokenContract.transfer(to, amount)).wait()

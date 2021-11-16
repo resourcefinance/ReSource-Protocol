@@ -17,7 +17,7 @@ import {
 import { BytesLike } from "@ethersproject/bytes";
 import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
-import { TypedEventFilter, TypedEvent, TypedListener } from "./commons";
+import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface RUSDInterface extends ethers.utils.Interface {
   functions: {
@@ -32,6 +32,7 @@ interface RUSDInterface extends ethers.utils.Interface {
     "creditLimitOf(address)": FunctionFragment;
     "decimals()": FunctionFragment;
     "decreaseAllowance(address,uint256)": FunctionFragment;
+    "freedom()": FunctionFragment;
     "increaseAllowance(address,uint256)": FunctionFragment;
     "initialize(string,string)": FunctionFragment;
     "initializeRUSD(address,uint256,address,address)": FunctionFragment;
@@ -39,7 +40,6 @@ interface RUSDInterface extends ethers.utils.Interface {
     "operator()": FunctionFragment;
     "owner()": FunctionFragment;
     "registry()": FunctionFragment;
-    "removeRestrictions()": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "restrictPositiveBalance()": FunctionFragment;
     "restrictRegistered()": FunctionFragment;
@@ -51,6 +51,7 @@ interface RUSDInterface extends ethers.utils.Interface {
     "transferFrom(address,address,uint256)": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
     "underwriteManager()": FunctionFragment;
+    "updateOperator(address)": FunctionFragment;
     "updateRestrictionExpiration()": FunctionFragment;
   };
 
@@ -89,6 +90,7 @@ interface RUSDInterface extends ethers.utils.Interface {
     functionFragment: "decreaseAllowance",
     values: [string, BigNumberish]
   ): string;
+  encodeFunctionData(functionFragment: "freedom", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "increaseAllowance",
     values: [string, BigNumberish]
@@ -105,10 +107,6 @@ interface RUSDInterface extends ethers.utils.Interface {
   encodeFunctionData(functionFragment: "operator", values?: undefined): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(functionFragment: "registry", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "removeRestrictions",
-    values?: undefined
-  ): string;
   encodeFunctionData(
     functionFragment: "renounceOwnership",
     values?: undefined
@@ -151,6 +149,10 @@ interface RUSDInterface extends ethers.utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
+    functionFragment: "updateOperator",
+    values: [string]
+  ): string;
+  encodeFunctionData(
     functionFragment: "updateRestrictionExpiration",
     values?: undefined
   ): string;
@@ -181,6 +183,7 @@ interface RUSDInterface extends ethers.utils.Interface {
     functionFragment: "decreaseAllowance",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "freedom", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "increaseAllowance",
     data: BytesLike
@@ -194,10 +197,6 @@ interface RUSDInterface extends ethers.utils.Interface {
   decodeFunctionResult(functionFragment: "operator", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "registry", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "removeRestrictions",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(
     functionFragment: "renounceOwnership",
     data: BytesLike
@@ -237,6 +236,10 @@ interface RUSDInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "updateOperator",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "updateRestrictionExpiration",
     data: BytesLike
   ): Result;
@@ -263,6 +266,54 @@ interface RUSDInterface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: "RestrictionUpdated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Transfer"): EventFragment;
 }
+
+export type ApprovalEvent = TypedEvent<
+  [string, string, BigNumber] & {
+    owner: string;
+    spender: string;
+    value: BigNumber;
+  }
+>;
+
+export type BalanceUpdateEvent = TypedEvent<
+  [string, string, BigNumber, BigNumber, BigNumber, BigNumber] & {
+    sender: string;
+    recipient: string;
+    senderBalance: BigNumber;
+    senderCreditBalance: BigNumber;
+    recipientBalance: BigNumber;
+    recipientCreditBalance: BigNumber;
+  }
+>;
+
+export type BulkBalanceUpdateEvent = TypedEvent<
+  [string, string[], BigNumber, BigNumber, BigNumber[], BigNumber[]] & {
+    sender: string;
+    recipients: string[];
+    senderBalance: BigNumber;
+    senderCreditBalance: BigNumber;
+    recipientBalances: BigNumber[];
+    recipientCreditBalances: BigNumber[];
+  }
+>;
+
+export type CreditLimitUpdateEvent = TypedEvent<
+  [string, BigNumber] & { member: string; limit: BigNumber }
+>;
+
+export type OwnershipTransferredEvent = TypedEvent<
+  [string, string] & { previousOwner: string; newOwner: string }
+>;
+
+export type RestrictionExpirationUpdatedEvent = TypedEvent<
+  [BigNumber] & { restrictionRenewal: BigNumber }
+>;
+
+export type RestrictionUpdatedEvent = TypedEvent<[number] & { state: number }>;
+
+export type TransferEvent = TypedEvent<
+  [string, string, BigNumber] & { from: string; to: string; value: BigNumber }
+>;
 
 export class RUSD extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -362,6 +413,10 @@ export class RUSD extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    freedom(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     increaseAllowance(
       spender: string,
       addedValue: BigNumberish,
@@ -389,10 +444,6 @@ export class RUSD extends BaseContract {
     owner(overrides?: CallOverrides): Promise<[string]>;
 
     registry(overrides?: CallOverrides): Promise<[string]>;
-
-    removeRestrictions(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
 
     renounceOwnership(
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -437,6 +488,11 @@ export class RUSD extends BaseContract {
     ): Promise<ContractTransaction>;
 
     underwriteManager(overrides?: CallOverrides): Promise<[string]>;
+
+    updateOperator(
+      newOperator: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
 
     updateRestrictionExpiration(
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -494,6 +550,10 @@ export class RUSD extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  freedom(
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   increaseAllowance(
     spender: string,
     addedValue: BigNumberish,
@@ -521,10 +581,6 @@ export class RUSD extends BaseContract {
   owner(overrides?: CallOverrides): Promise<string>;
 
   registry(overrides?: CallOverrides): Promise<string>;
-
-  removeRestrictions(
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
 
   renounceOwnership(
     overrides?: Overrides & { from?: string | Promise<string> }
@@ -569,6 +625,11 @@ export class RUSD extends BaseContract {
   ): Promise<ContractTransaction>;
 
   underwriteManager(overrides?: CallOverrides): Promise<string>;
+
+  updateOperator(
+    newOperator: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
 
   updateRestrictionExpiration(
     overrides?: Overrides & { from?: string | Promise<string> }
@@ -626,6 +687,8 @@ export class RUSD extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
+    freedom(overrides?: CallOverrides): Promise<void>;
+
     increaseAllowance(
       spender: string,
       addedValue: BigNumberish,
@@ -653,8 +716,6 @@ export class RUSD extends BaseContract {
     owner(overrides?: CallOverrides): Promise<string>;
 
     registry(overrides?: CallOverrides): Promise<string>;
-
-    removeRestrictions(overrides?: CallOverrides): Promise<void>;
 
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
 
@@ -694,10 +755,24 @@ export class RUSD extends BaseContract {
 
     underwriteManager(overrides?: CallOverrides): Promise<string>;
 
+    updateOperator(
+      newOperator: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     updateRestrictionExpiration(overrides?: CallOverrides): Promise<void>;
   };
 
   filters: {
+    "Approval(address,address,uint256)"(
+      owner?: string | null,
+      spender?: string | null,
+      value?: null
+    ): TypedEventFilter<
+      [string, string, BigNumber],
+      { owner: string; spender: string; value: BigNumber }
+    >;
+
     Approval(
       owner?: string | null,
       spender?: string | null,
@@ -705,6 +780,25 @@ export class RUSD extends BaseContract {
     ): TypedEventFilter<
       [string, string, BigNumber],
       { owner: string; spender: string; value: BigNumber }
+    >;
+
+    "BalanceUpdate(address,address,uint256,uint256,uint256,uint256)"(
+      sender?: null,
+      recipient?: null,
+      senderBalance?: null,
+      senderCreditBalance?: null,
+      recipientBalance?: null,
+      recipientCreditBalance?: null
+    ): TypedEventFilter<
+      [string, string, BigNumber, BigNumber, BigNumber, BigNumber],
+      {
+        sender: string;
+        recipient: string;
+        senderBalance: BigNumber;
+        senderCreditBalance: BigNumber;
+        recipientBalance: BigNumber;
+        recipientCreditBalance: BigNumber;
+      }
     >;
 
     BalanceUpdate(
@@ -723,6 +817,25 @@ export class RUSD extends BaseContract {
         senderCreditBalance: BigNumber;
         recipientBalance: BigNumber;
         recipientCreditBalance: BigNumber;
+      }
+    >;
+
+    "BulkBalanceUpdate(address,address[],uint256,uint256,uint256[],uint256[])"(
+      sender?: null,
+      recipients?: null,
+      senderBalance?: null,
+      senderCreditBalance?: null,
+      recipientBalances?: null,
+      recipientCreditBalances?: null
+    ): TypedEventFilter<
+      [string, string[], BigNumber, BigNumber, BigNumber[], BigNumber[]],
+      {
+        sender: string;
+        recipients: string[];
+        senderBalance: BigNumber;
+        senderCreditBalance: BigNumber;
+        recipientBalances: BigNumber[];
+        recipientCreditBalances: BigNumber[];
       }
     >;
 
@@ -745,12 +858,28 @@ export class RUSD extends BaseContract {
       }
     >;
 
+    "CreditLimitUpdate(address,uint256)"(
+      member?: null,
+      limit?: null
+    ): TypedEventFilter<
+      [string, BigNumber],
+      { member: string; limit: BigNumber }
+    >;
+
     CreditLimitUpdate(
       member?: null,
       limit?: null
     ): TypedEventFilter<
       [string, BigNumber],
       { member: string; limit: BigNumber }
+    >;
+
+    "OwnershipTransferred(address,address)"(
+      previousOwner?: string | null,
+      newOwner?: string | null
+    ): TypedEventFilter<
+      [string, string],
+      { previousOwner: string; newOwner: string }
     >;
 
     OwnershipTransferred(
@@ -761,13 +890,30 @@ export class RUSD extends BaseContract {
       { previousOwner: string; newOwner: string }
     >;
 
+    "RestrictionExpirationUpdated(uint256)"(
+      restrictionRenewal?: null
+    ): TypedEventFilter<[BigNumber], { restrictionRenewal: BigNumber }>;
+
     RestrictionExpirationUpdated(
       restrictionRenewal?: null
     ): TypedEventFilter<[BigNumber], { restrictionRenewal: BigNumber }>;
 
+    "RestrictionUpdated(uint8)"(
+      state?: BigNumberish | null
+    ): TypedEventFilter<[number], { state: number }>;
+
     RestrictionUpdated(
       state?: BigNumberish | null
     ): TypedEventFilter<[number], { state: number }>;
+
+    "Transfer(address,address,uint256)"(
+      from?: string | null,
+      to?: string | null,
+      value?: null
+    ): TypedEventFilter<
+      [string, string, BigNumber],
+      { from: string; to: string; value: BigNumber }
+    >;
 
     Transfer(
       from?: string | null,
@@ -834,6 +980,10 @@ export class RUSD extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    freedom(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     increaseAllowance(
       spender: string,
       addedValue: BigNumberish,
@@ -861,10 +1011,6 @@ export class RUSD extends BaseContract {
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
     registry(overrides?: CallOverrides): Promise<BigNumber>;
-
-    removeRestrictions(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
 
     renounceOwnership(
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -909,6 +1055,11 @@ export class RUSD extends BaseContract {
     ): Promise<BigNumber>;
 
     underwriteManager(overrides?: CallOverrides): Promise<BigNumber>;
+
+    updateOperator(
+      newOperator: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
 
     updateRestrictionExpiration(
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -973,6 +1124,10 @@ export class RUSD extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
+    freedom(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
     increaseAllowance(
       spender: string,
       addedValue: BigNumberish,
@@ -1000,10 +1155,6 @@ export class RUSD extends BaseContract {
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     registry(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    removeRestrictions(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
 
     renounceOwnership(
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -1048,6 +1199,11 @@ export class RUSD extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     underwriteManager(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    updateOperator(
+      newOperator: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
 
     updateRestrictionExpiration(
       overrides?: Overrides & { from?: string | Promise<string> }

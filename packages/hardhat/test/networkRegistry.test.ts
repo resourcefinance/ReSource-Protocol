@@ -40,11 +40,6 @@ describe("Network Registry Tests", function() {
     ])) as NetworkRegistry
 
     expect(networkRegistry.address).to.properAddress
-    const members = await networkRegistry.getMembers()
-    const operators = await networkRegistry.getOperators()
-    expect(members).to.contain(memberA.address)
-    expect(members).to.contain(memberB.address)
-    expect(operators).to.contain(operatorA.address)
     await expect(await networkRegistry.isMember(memberA.address)).to.be.true
     await expect(await networkRegistry.isMember(memberB.address)).to.be.true
     await expect(await networkRegistry.isOperator(operatorA.address)).to.be.true
@@ -59,8 +54,6 @@ describe("Network Registry Tests", function() {
       networkRegistry,
       "MemberAddition",
     )
-    const members = await networkRegistry.getMembers()
-    expect(members).to.include(memberC.address)
     await expect(await networkRegistry.isMember(memberC.address)).to.be.true
     await expect(await networkRegistry.isMember(memberD.address)).to.be.false
   })
@@ -69,21 +62,16 @@ describe("Network Registry Tests", function() {
     await expect(networkRegistry.connect(random).addOperator(operatorB.address)).to.be.reverted
   })
 
-  it("Successfully add operatorB by operatorA", async () => {
-    await expect(await networkRegistry.connect(operatorA).addOperator(operatorB.address)).to.emit(
+  it("Successfully add operatorB", async () => {
+    await expect(await networkRegistry.addOperator(operatorB.address)).to.emit(
       networkRegistry,
       "OperatorAddition",
     )
-    const operators = await networkRegistry.getOperators()
-    expect(operators).to.contain(operatorB.address)
     await expect(await networkRegistry.isOperator(operatorB.address)).to.be.true
   })
 
   it("Unsuccessfully remove owner by operatorA", async () => {
     await expect(networkRegistry.connect(operatorA).removeOperator(deployer.address)).to.be.reverted
-    const operators = await networkRegistry.getOperators()
-    expect(operators).to.contain(operatorA.address)
-    expect(operators).to.contain(deployer.address)
     await expect(await networkRegistry.isOperator(operatorA.address)).to.be.true
     await expect(await networkRegistry.isOperator(deployer.address)).to.be.true
   })
@@ -93,9 +81,6 @@ describe("Network Registry Tests", function() {
       networkRegistry,
       "OperatorRemoval",
     )
-    const operators = await networkRegistry.getOperators()
-    expect(operators).to.contain(operatorA.address)
-    expect(operators).to.contain(deployer.address)
     await expect(await networkRegistry.isOperator(operatorA.address)).to.be.true
     await expect(await networkRegistry.isOperator(operatorB.address)).to.be.false
     await expect(await networkRegistry.isOperator(deployer.address)).to.be.true
@@ -111,10 +96,6 @@ describe("Network Registry Tests", function() {
       networkRegistry,
       "MemberAddition",
     )
-    const members = await networkRegistry.getMembers()
-    expect(members).to.include(memberD.address)
     await expect(await networkRegistry.isMember(memberD.address)).to.be.true
   })
-
-  // TODO: add test for ownable
 })

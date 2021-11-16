@@ -1,6 +1,7 @@
 import { ContractFunction, Contract, BigNumber, ethers } from "ethers"
 import { HardhatRuntimeEnvironment } from "hardhat/types"
 import { retry } from "ts-retry"
+import { Deployment } from "hardhat-deploy/dist/types"
 
 export const tryWithGas = async (
   func: ContractFunction,
@@ -20,7 +21,7 @@ export const tryWithGas = async (
       if (confirmation.events && confirmation.events.some((event) => event.event == "Execution"))
         confirmed = true
     } catch (e) {
-      if (tries >= 5 || (e.code !== "CALL_EXCEPTION" && e.code !== "UNPREDICTABLE_GAS_LIMIT")) {
+      if (tries >= 5) {
         throw e
       }
     }
@@ -34,11 +35,18 @@ export const deployProxyAndSave = async (
   hardhat: HardhatRuntimeEnvironment,
   abi,
   initializer?: {},
-): Promise<Contract> => {
+): Promise<string> => {
   const contractFactory = await hardhat.ethers.getContractFactory(name)
   contractFactory.signer
 
   let contract
+  let deployment = await hardhat.deployments.getOrNull(name)
+
+  if (deployment) {
+    console.log("🚀 ", name, " already deployed")
+    return deployment.address
+  }
+
   await retry(
     async () => {
       contract = await hardhat.upgrades.deployProxy(contractFactory, args, initializer)
@@ -54,5 +62,6 @@ export const deployProxyAndSave = async (
 
   hardhat.deployments.save(name, contractDeployment)
 
-  return contract
+  console.log("🚀 ", name, " deployed")
+  return contract.address
 }

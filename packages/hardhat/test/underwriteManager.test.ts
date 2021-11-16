@@ -57,7 +57,7 @@ describe("UnderwriteManager Tests", function() {
     ])) as UnderwriteManager
 
     // ADD UNDERWRITEMANAGER TO SOURCE STAKING CONTRACTS
-    await (await reSourceToken.updateStakableContract(underwriteManager.address, true)).wait()
+    await (await reSourceToken.addStakeableContract(underwriteManager.address)).wait()
 
     // ADD UNDERWRITERS TO UNDERWRITEMANAGER
     await (
@@ -77,6 +77,9 @@ describe("UnderwriteManager Tests", function() {
       },
     )) as RUSD
 
+    // ADD NETWORK TOKEN TO UNDERWRITEMANGER
+    await (await underwriteManager.addNetwork(rUSD.address)).wait()
+
     // FILL REWARD POOL
     await (
       await reSourceToken.transfer(underwriteManager.address, ethers.utils.parseEther("10000"))
@@ -95,7 +98,7 @@ describe("UnderwriteManager Tests", function() {
     expect(underwriteManager.address).to.properAddress
   })
 
-  it("Send 100,000 mu to underwriterA", async function() {
+  it("Send 100,000 source to underwriterA", async function() {
     await expect(
       reSourceToken.transfer(underwriterA.address, ethers.utils.parseEther("100000")),
     ).to.emit(reSourceToken, "Transfer")
@@ -118,17 +121,16 @@ describe("UnderwriteManager Tests", function() {
     ).to.not.be.reverted
   })
 
-  it("Underwrite 10,000 mu from underwriterA for memberA", async function() {
+  it("Underwrite 10,000 source from underwriterA for memberA", async function() {
     await expect(
       underwriteManager
         .connect(underwriterA)
-        .underwrite(rUSD.address, ethers.utils.parseEther("10000.0"), memberA.address),
+        .underwriteCreditLine(rUSD.address, ethers.utils.parseEther("10000.0"), memberA.address),
     ).to.emit(underwriteManager, "NewCreditLine")
 
     expect(
       ethers.utils.formatEther(
-        await (await underwriteManager.creditLines(underwriterA.address, memberA.address))
-          .collateral,
+        await (await underwriteManager.creditLines(memberA.address)).collateral,
       ),
     ).to.equal("10000.0")
 
@@ -145,7 +147,7 @@ describe("UnderwriteManager Tests", function() {
     await expect(
       underwriteManager
         .connect(underwriterA)
-        .underwrite(
+        .underwriteCreditLine(
           ethers.Wallet.createRandom().address,
           ethers.utils.parseEther("10000"),
           memberA.address,
@@ -174,9 +176,9 @@ describe("UnderwriteManager Tests", function() {
       rUSD.connect(memberA).transfer(memberB.address, ethers.utils.parseUnits("1000.0", "mwei")),
     ).to.emit(rUSD, "Transfer")
 
-    await expect(
-      (await underwriteManager.creditLines(underwriterA.address, memberA.address)).reward,
-    ).to.equal(ethers.utils.parseEther("20"))
+    await expect((await underwriteManager.creditLines(memberA.address)).reward).to.equal(
+      ethers.utils.parseEther("20"),
+    )
   })
 
   it("Successfully claims reward for underwriterA", async function() {
@@ -195,7 +197,7 @@ describe("UnderwriteManager Tests", function() {
     ).to.equal("90020.0")
   })
 
-  it("Extend an additional 5,000 mu from underwriterA for memberA", async function() {
+  it("Extend an additional 5,000 source from underwriterA for memberA", async function() {
     await expect(
       underwriteManager
         .connect(underwriterA)
@@ -210,8 +212,7 @@ describe("UnderwriteManager Tests", function() {
 
     expect(
       ethers.utils.formatEther(
-        await (await underwriteManager.creditLines(underwriterA.address, memberA.address))
-          .collateral,
+        await (await underwriteManager.creditLines(memberA.address)).collateral,
       ),
     ).to.equal("15000.0")
 

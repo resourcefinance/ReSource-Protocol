@@ -7,7 +7,6 @@ const fse = require("fs-extra")
 const graphDir = "./../subgraph"
 const deploymentsDir = "./deployments"
 const typesDir = "./types"
-const publishDir = "./../react-app/src/contracts"
 
 function publishContract(contractName: string, networkName: string) {
   try {
@@ -36,25 +35,6 @@ function publishContract(contractName: string, networkName: string) {
     }
     fs.writeFileSync(graphConfigPath, JSON.stringify(graphConfig, null, 2))
 
-    const clientConfigPath = `${publishDir}/artifacts.json`
-    let clientConfig
-    try {
-      if (fs.existsSync(clientConfigPath)) {
-        clientConfig = fs.readFileSync(clientConfigPath).toString()
-      } else {
-        clientConfig = "{}"
-      }
-    } catch (e) {
-      console.log(e)
-    }
-    clientConfig = JSON.parse(clientConfig)
-    clientConfig[contractName] = contract.address
-    folderPath = clientConfigPath.replace("/artifacts.json", "")
-    if (!fs.existsSync(folderPath)) {
-      fs.mkdirSync(folderPath)
-    }
-    fs.writeFileSync(clientConfigPath, JSON.stringify(clientConfig, null, 2))
-
     if (!fs.existsSync(`${graphDir}/abis`)) fs.mkdirSync(`${graphDir}/abis`)
     if (!contract.abi) console.log(contract.contractName)
     fs.writeFileSync(`${graphDir}/abis/${contractName}.json`, JSON.stringify(contract.abi, null, 2))
@@ -75,7 +55,6 @@ async function main() {
       publishContract(contractName, network.name)
     }
   })
-  fse.copySync(typesDir, publishDir)
   console.log("✅  Published contracts to the subgraph package.")
 }
 main()

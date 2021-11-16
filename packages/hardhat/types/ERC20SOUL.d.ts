@@ -21,7 +21,9 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface ERC20SOULInterface extends ethers.utils.Interface {
   functions: {
-    "addStakeableContract(address)": FunctionFragment;
+    "MAXIMUM_LOCK_TIME()": FunctionFragment;
+    "MAXIMUM_SCHEDULES()": FunctionFragment;
+    "MINIMUM_LOCK_TIME()": FunctionFragment;
     "allowance(address,address)": FunctionFragment;
     "approve(address,uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
@@ -29,18 +31,11 @@ interface ERC20SOULInterface extends ethers.utils.Interface {
     "decreaseAllowance(address,uint256)": FunctionFragment;
     "increaseAllowance(address,uint256)": FunctionFragment;
     "initializeERC20SOUL(string,string,uint256,address[])": FunctionFragment;
-    "isStakeableContract(address)": FunctionFragment;
+    "isStakableContract(address)": FunctionFragment;
     "locks(address)": FunctionFragment;
-    "maxLockTime()": FunctionFragment;
-    "maxSchedules()": FunctionFragment;
-    "minLockTime()": FunctionFragment;
     "name()": FunctionFragment;
     "owner()": FunctionFragment;
-    "removeStakeableContract(address)": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
-    "setMaxLockTime(uint256)": FunctionFragment;
-    "setMaxSchedules(uint256)": FunctionFragment;
-    "setMinLockTime(uint256)": FunctionFragment;
     "symbol()": FunctionFragment;
     "totalSupply()": FunctionFragment;
     "transfer(address,uint256)": FunctionFragment;
@@ -50,8 +45,16 @@ interface ERC20SOULInterface extends ethers.utils.Interface {
   };
 
   encodeFunctionData(
-    functionFragment: "addStakeableContract",
-    values: [string]
+    functionFragment: "MAXIMUM_LOCK_TIME",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "MAXIMUM_SCHEDULES",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "MINIMUM_LOCK_TIME",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "allowance",
@@ -76,43 +79,15 @@ interface ERC20SOULInterface extends ethers.utils.Interface {
     values: [string, string, BigNumberish, string[]]
   ): string;
   encodeFunctionData(
-    functionFragment: "isStakeableContract",
+    functionFragment: "isStakableContract",
     values: [string]
   ): string;
   encodeFunctionData(functionFragment: "locks", values: [string]): string;
-  encodeFunctionData(
-    functionFragment: "maxLockTime",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "maxSchedules",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "minLockTime",
-    values?: undefined
-  ): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "removeStakeableContract",
-    values: [string]
-  ): string;
-  encodeFunctionData(
     functionFragment: "renounceOwnership",
     values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "setMaxLockTime",
-    values: [BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "setMaxSchedules",
-    values: [BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "setMinLockTime",
-    values: [BigNumberish]
   ): string;
   encodeFunctionData(functionFragment: "symbol", values?: undefined): string;
   encodeFunctionData(
@@ -144,7 +119,15 @@ interface ERC20SOULInterface extends ethers.utils.Interface {
   ): string;
 
   decodeFunctionResult(
-    functionFragment: "addStakeableContract",
+    functionFragment: "MAXIMUM_LOCK_TIME",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "MAXIMUM_SCHEDULES",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "MINIMUM_LOCK_TIME",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "allowance", data: BytesLike): Result;
@@ -164,42 +147,14 @@ interface ERC20SOULInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "isStakeableContract",
+    functionFragment: "isStakableContract",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "locks", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "maxLockTime",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "maxSchedules",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "minLockTime",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "removeStakeableContract",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "renounceOwnership",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "setMaxLockTime",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "setMaxSchedules",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "setMinLockTime",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "symbol", data: BytesLike): Result;
@@ -414,10 +369,11 @@ export class ERC20SOUL extends BaseContract {
   interface: ERC20SOULInterface;
 
   functions: {
-    addStakeableContract(
-      stakingContract: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+    MAXIMUM_LOCK_TIME(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    MAXIMUM_SCHEDULES(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    MINIMUM_LOCK_TIME(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     allowance(
       owner: string,
@@ -455,7 +411,7 @@ export class ERC20SOUL extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    isStakeableContract(
+    isStakableContract(
       arg0: string,
       overrides?: CallOverrides
     ): Promise<[boolean]>;
@@ -470,37 +426,11 @@ export class ERC20SOUL extends BaseContract {
       }
     >;
 
-    maxLockTime(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    maxSchedules(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    minLockTime(overrides?: CallOverrides): Promise<[BigNumber]>;
-
     name(overrides?: CallOverrides): Promise<[string]>;
 
     owner(overrides?: CallOverrides): Promise<[string]>;
 
-    removeStakeableContract(
-      stakingContract: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
     renounceOwnership(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    setMaxLockTime(
-      _newMax: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    setMaxSchedules(
-      _newMax: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    setMinLockTime(
-      _newMin: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -537,10 +467,11 @@ export class ERC20SOUL extends BaseContract {
     ): Promise<ContractTransaction>;
   };
 
-  addStakeableContract(
-    stakingContract: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  MAXIMUM_LOCK_TIME(overrides?: CallOverrides): Promise<BigNumber>;
+
+  MAXIMUM_SCHEDULES(overrides?: CallOverrides): Promise<BigNumber>;
+
+  MINIMUM_LOCK_TIME(overrides?: CallOverrides): Promise<BigNumber>;
 
   allowance(
     owner: string,
@@ -578,10 +509,7 @@ export class ERC20SOUL extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  isStakeableContract(
-    arg0: string,
-    overrides?: CallOverrides
-  ): Promise<boolean>;
+  isStakableContract(arg0: string, overrides?: CallOverrides): Promise<boolean>;
 
   locks(
     arg0: string,
@@ -590,37 +518,11 @@ export class ERC20SOUL extends BaseContract {
     [BigNumber, BigNumber] & { totalAmount: BigNumber; amountStaked: BigNumber }
   >;
 
-  maxLockTime(overrides?: CallOverrides): Promise<BigNumber>;
-
-  maxSchedules(overrides?: CallOverrides): Promise<BigNumber>;
-
-  minLockTime(overrides?: CallOverrides): Promise<BigNumber>;
-
   name(overrides?: CallOverrides): Promise<string>;
 
   owner(overrides?: CallOverrides): Promise<string>;
 
-  removeStakeableContract(
-    stakingContract: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
   renounceOwnership(
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  setMaxLockTime(
-    _newMax: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  setMaxSchedules(
-    _newMax: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  setMinLockTime(
-    _newMin: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -657,10 +559,11 @@ export class ERC20SOUL extends BaseContract {
   ): Promise<ContractTransaction>;
 
   callStatic: {
-    addStakeableContract(
-      stakingContract: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    MAXIMUM_LOCK_TIME(overrides?: CallOverrides): Promise<BigNumber>;
+
+    MAXIMUM_SCHEDULES(overrides?: CallOverrides): Promise<BigNumber>;
+
+    MINIMUM_LOCK_TIME(overrides?: CallOverrides): Promise<BigNumber>;
 
     allowance(
       owner: string,
@@ -698,7 +601,7 @@ export class ERC20SOUL extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    isStakeableContract(
+    isStakableContract(
       arg0: string,
       overrides?: CallOverrides
     ): Promise<boolean>;
@@ -713,37 +616,11 @@ export class ERC20SOUL extends BaseContract {
       }
     >;
 
-    maxLockTime(overrides?: CallOverrides): Promise<BigNumber>;
-
-    maxSchedules(overrides?: CallOverrides): Promise<BigNumber>;
-
-    minLockTime(overrides?: CallOverrides): Promise<BigNumber>;
-
     name(overrides?: CallOverrides): Promise<string>;
 
     owner(overrides?: CallOverrides): Promise<string>;
 
-    removeStakeableContract(
-      stakingContract: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
-
-    setMaxLockTime(
-      _newMax: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    setMaxSchedules(
-      _newMax: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    setMinLockTime(
-      _newMin: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
 
     symbol(overrides?: CallOverrides): Promise<string>;
 
@@ -1091,10 +968,11 @@ export class ERC20SOUL extends BaseContract {
   };
 
   estimateGas: {
-    addStakeableContract(
-      stakingContract: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    MAXIMUM_LOCK_TIME(overrides?: CallOverrides): Promise<BigNumber>;
+
+    MAXIMUM_SCHEDULES(overrides?: CallOverrides): Promise<BigNumber>;
+
+    MINIMUM_LOCK_TIME(overrides?: CallOverrides): Promise<BigNumber>;
 
     allowance(
       owner: string,
@@ -1132,44 +1010,18 @@ export class ERC20SOUL extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    isStakeableContract(
+    isStakableContract(
       arg0: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     locks(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    maxLockTime(overrides?: CallOverrides): Promise<BigNumber>;
-
-    maxSchedules(overrides?: CallOverrides): Promise<BigNumber>;
-
-    minLockTime(overrides?: CallOverrides): Promise<BigNumber>;
-
     name(overrides?: CallOverrides): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
-    removeStakeableContract(
-      stakingContract: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
     renounceOwnership(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    setMaxLockTime(
-      _newMax: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    setMaxSchedules(
-      _newMax: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    setMinLockTime(
-      _newMin: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -1207,10 +1059,11 @@ export class ERC20SOUL extends BaseContract {
   };
 
   populateTransaction: {
-    addStakeableContract(
-      stakingContract: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
+    MAXIMUM_LOCK_TIME(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    MAXIMUM_SCHEDULES(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    MINIMUM_LOCK_TIME(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     allowance(
       owner: string,
@@ -1251,7 +1104,7 @@ export class ERC20SOUL extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    isStakeableContract(
+    isStakableContract(
       arg0: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
@@ -1261,37 +1114,11 @@ export class ERC20SOUL extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    maxLockTime(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    maxSchedules(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    minLockTime(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    removeStakeableContract(
-      stakingContract: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
     renounceOwnership(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    setMaxLockTime(
-      _newMax: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    setMaxSchedules(
-      _newMax: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    setMinLockTime(
-      _newMin: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 

@@ -2,15 +2,14 @@ import { config, deployments, ethers } from "hardhat"
 import { SourceToken, SourceToken__factory } from "../types"
 
 async function main(): Promise<void> {
-  const address = "0x8bb2af5d4877345aAc16c89d7147D4CC73D808AA"
-  const amountStr = "500000"
+  const address = "0xE6BFb75fD6a9f73926EF9a580FD2107762497F8e"
+  const amount = "1"
 
   let sourceTokenAddress = (await deployments.getOrNull("SourceToken"))?.address
   console.log(sourceTokenAddress)
 
   if (!sourceTokenAddress) throw new Error("token not deployed on this network")
 
-  const amount = ethers.utils.parseEther(amountStr)
   const signer = (await ethers.getSigners())[0]
 
   const tokenContract = new ethers.Contract(
@@ -22,14 +21,15 @@ async function main(): Promise<void> {
   try {
     const now = Date.parse(new Date().toString()) / 1000
     const day = 86405
+    const halfDay = 43200
     await (
       await tokenContract.transferWithLock(address, {
-        totalAmount: ethers.utils.parseEther(amountStr),
+        totalAmount: ethers.utils.parseEther(amount),
         amountStaked: 0,
         schedules: [
           {
-            amount: ethers.utils.parseEther(amountStr),
-            expirationBlock: now + day * 7,
+            amount: ethers.utils.parseEther(amount),
+            expirationBlock: now + day + halfDay,
           },
         ],
       })

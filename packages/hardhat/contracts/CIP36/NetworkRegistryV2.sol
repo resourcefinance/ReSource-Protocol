@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
-import "./iKeyWallet/IiKeyWalletDeployer.sol";
+import "../iKeyWallet/IiKeyWalletDeployer.sol";
 
 /// @title NetworkRegistry - Allows Network Members to be added and removed by Network Operators.
 /// @author Bridger Zoske - <bridger@resourcenetwork.co>
@@ -21,8 +21,6 @@ contract NetworkRegistry is OwnableUpgradeable  {
      */
     mapping(address => bool) public isMember;
     mapping(address => bool) public isOperator;
-    address[] public operators;
-    address[] public members;
     address walletDeployer;
 
     /*
@@ -74,9 +72,6 @@ contract NetworkRegistry is OwnableUpgradeable  {
             require(!isOperator[_operators[j]] && _operators[j] != address(0));
             isOperator[_operators[j]] = true;
         }
-        members = _members;
-        operators = _operators;
-        operators.push(owner());
         walletDeployer = _walletDeployer;
         isOperator[owner()] = true;
     }
@@ -85,9 +80,8 @@ contract NetworkRegistry is OwnableUpgradeable  {
     /// @param _members Addresses of new members.
     function addMembers(address[] memory _members) external onlyOperator(msg.sender) {
         for (uint256 i = 0; i < _members.length; i++) {
-            require(!isMember[_members[i]] && _members[i] != address(0));
+            require(!isMember[_members[i]] && _members[i] != address(0), "invalid members");
             isMember[_members[i]] = true;
-            members.push(_members[i]);
         }
         emit MemberAddition(_members);
     }
@@ -96,12 +90,6 @@ contract NetworkRegistry is OwnableUpgradeable  {
     /// @param member Address of member.
     function removeMember(address member) external onlyOperator(msg.sender) memberExists(member) {
         isMember[member] = false;
-        for (uint256 i = 0; i < members.length - 1; i++)
-            if (members[i] == member) {
-                members[i] = members[members.length - 1];
-                break;
-            }
-        members.pop();
         emit MemberRemoval(member);
     }
 
@@ -109,53 +97,38 @@ contract NetworkRegistry is OwnableUpgradeable  {
     /// @param operator Address of new operator.
     function addOperator(address operator)
         external
-        onlyOperator(msg.sender)
+        onlyOwner()
         operatorDoesNotExist(operator)
         notNull(operator)
     {
         isOperator[operator] = true;
-        operators.push(operator);
         emit OperatorAddition(operator);
     }
 
     /// @dev Allows to remove a operator. Transaction has to be sent by operator.
     /// @param operator Address of operator.
-    function removeOperator(address operator) external onlyOperator(msg.sender) operatorExists(operator) {
+    function removeOperator(address operator) external onlyOwner() operatorExists(operator) {
         require(operator != owner(), "can't remove owner operator");
         isOperator[operator] = false;
-        for (uint256 i = 0; i < operators.length - 1; i++)
-            if (operators[i] == operator) {
-                operators[i] = operators[operators.length - 1];
-                break;
-            }
-        operators.pop();
         emit OperatorRemoval(operator);
     }
 
-    function deployNewWallet(
-        address[] memory _clients,
-        address[] memory _guardians, 
-        address _coSigner,
-        uint256 _required) public onlyOperator(msg.sender) {
-        address newWallet = IiKeyWalletDeployer(walletDeployer).deployWallet(_clients, _guardians, _coSigner, _required);
+    /// @dev Deploys a multisigwallet and adds it to members
+    /// @param clients client wallets of the multisig
+    /// @param guardians guardian wallets of the multisig
+    /// @param coSigner coSigner wallet of the multiSig
+    /// @param required required signatures of the multiSig 
+    function deployWalletToRegistry(
+        address[] memory clients,
+        address[] memory guardians, 
+        address coSigner,
+        uint256 required) public onlyOperator(msg.sender) {
+        // deploy new wallet
+        address newWallet = IiKeyWalletDeployer(walletDeployer).deployWallet(clients, guardians, coSigner, required);
+        // transfer ownership to registry owner
         OwnableUpgradeable(newWallet).transferOwnership(owner());
+        // add new wallet to registry
         isMember[newWallet] = true;
-        members.push(newWallet);
         emit WalletDeployed(newWallet);
-    }
-
-    /*
-     * Web3 call functions
-     */
-    /// @dev Returns list of members.
-    /// @return List of member addresses.
-    function getMembers() external view returns (address[] memory) {
-        return members;
-    }
-
-    /// @dev Returns list of operators.
-    /// @return List of operator addresses.
-    function getOperators() external view returns (address[] memory) {
-        return operators;
     }
 }

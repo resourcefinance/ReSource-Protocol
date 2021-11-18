@@ -3,7 +3,7 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/dist/src/signers"
 import { expect } from "chai"
 import chai from "chai"
 import { solidity } from "ethereum-waffle"
-import { ReSourceToken } from "../types/ReSourceToken"
+import { SourceToken } from "../types/SourceToken"
 
 chai.use(solidity)
 
@@ -15,7 +15,7 @@ describe("ReSourcetoken Tests", function() {
   let memberD: SignerWithAddress
   let memberE: SignerWithAddress
   let stakingContract: SignerWithAddress
-  let reSourceToken: ReSourceToken
+  let reSourceToken: SourceToken
 
   before(async function() {
     const accounts = await ethers.getSigners()
@@ -29,11 +29,11 @@ describe("ReSourcetoken Tests", function() {
   })
 
   it("Successfully deploys ReSourceToken", async function() {
-    const reSourceTokenFactory = await ethers.getContractFactory("ReSourceToken")
+    const reSourceTokenFactory = await ethers.getContractFactory("SourceToken")
     reSourceToken = (await upgrades.deployProxy(reSourceTokenFactory, [
       ethers.utils.parseEther("100000000"),
       [stakingContract.address],
-    ])) as ReSourceToken
+    ])) as SourceToken
 
     expect(await reSourceToken.isStakeableContract(stakingContract.address)).to.equal(true)
     await (

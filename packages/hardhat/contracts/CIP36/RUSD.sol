@@ -78,7 +78,7 @@ contract RUSD is CIP36 {
     ) internal override {
         _verifyContractState(_from, _to, _amount);
         super._transfer(_from, _to, _amount);
-        underwriteManager.tryUpdateReward(_from, _amount);
+        //underwriteManager.tryUpdateReward(_from, _amount);
         emit BalanceUpdate(
             _from,
             _to,

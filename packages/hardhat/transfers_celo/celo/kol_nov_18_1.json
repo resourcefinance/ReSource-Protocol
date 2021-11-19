@@ -1,0 +1,110 @@
+{
+  "0xdcd50c64c5f416ff6842c9c49146597d8f05a027": {
+    "name": "Nguyen_Van_Tuyen",
+    "vc": "GTA Ventures ",
+    "email": "tuyennvtb@gmail.com",
+    "amount": ".01",
+    "txHash": "0xf06a401dcca22cc639f04df0d7561eecfa5209730e7fbf335f3a60a0dabd840d",
+    "isSuccess": true,
+    "error": ""
+  },
+  "0xaC6dE9f16c7b9B44C4e5C9073C3a10fA45aB4d5a": {
+    "name": "Lexman",
+    "vc": "Money King",
+    "email": "moneyyking01@gmail.com",
+    "amount": ".01",
+    "txHash": "0x769599c41dbd833fccf6c7667458ff119c805400f590beff9d89cc6f66a4c724",
+    "isSuccess": true,
+    "error": ""
+  },
+  "0x034777CBeCECbE88e911DC52F619C7Dbc92578A8": {
+    "name": "German_Casal",
+    "vc": "-",
+    "email": "german.casal@hotmail.com",
+    "amount": ".01",
+    "txHash": "0xd5ad32be6d4f6659e3258068c8478a8b87b14c9eaf0f85de65e37adde0fd8886",
+    "isSuccess": true,
+    "error": ""
+  },
+  "0x01204297db860f097c2902be6d6ac3e654b89c66": {
+    "name": "Tetsumaru_Ogawa",
+    "vc": "-",
+    "email": "tetsugan@pm.me",
+    "amount": ".01",
+    "txHash": "0x159abe16936c7a6156aea060db383de42de2202b959e8ffb61a296c734a0bd57",
+    "isSuccess": true,
+    "error": ""
+  },
+  "0xa1d8d972560c2f8144af871db508f0b0b10a3fbf": {
+    "name": "Byung_Ho_Lee",
+    "vc": "-",
+    "email": "taz5561@naver.com",
+    "amount": ".01",
+    "txHash": "0x60e3bd39eda67c6ae04a965a7b02f281d0e2d594bf0694080f35e932ec64b19c",
+    "isSuccess": true,
+    "error": ""
+  },
+  "0xb2521e1b30EB4192e2E377107d6e554CDBB5f73e": {
+    "name": "Hugo_Botto",
+    "vc": "-",
+    "email": "info@healthypockets.net",
+    "amount": ".01",
+    "txHash": "0xbd4736c71de06fba10bf5aec2fd839b345b6153d38302a2e59848a6f585e85ea",
+    "isSuccess": true,
+    "error": ""
+  },
+  "0xBBd6e8B4a644a1a511fd95f6a0e81Db3C03a7E16": {
+    "name": "Angel_Cantalapiedra",
+    "vc": "-",
+    "email": "rig4hodlers@gmail.com ",
+    "amount": ".01",
+    "txHash": "0x70fbdb75ee337649355b0b377ecfc3cc6b76a095f1630d29d86372cb1d6978a3",
+    "isSuccess": true,
+    "error": ""
+  },
+  "0xe259EE56f5D07b346A9015dA08B8de01e31798F5": {
+    "name": "Gonzalo_German_Aimar",
+    "vc": "-",
+    "email": "solucionesparatodos2020@gmail.com ",
+    "amount": ".01",
+    "txHash": "0x92bc4aa40bd9a04732fc2d57db4463917efaa8c17f1d4f90d7e60442de34e005",
+    "isSuccess": true,
+    "error": ""
+  },
+  "0x1b75c6dc2c2cff9e6eaf54c5d72b3447740f1e76": {
+    "name": "Maurizio_Esposito",
+    "vc": "Halving Capitals (KOL)",
+    "email": "maurizioesposito@halvingscapital.com",
+    "amount": ".01",
+    "txHash": "0xda96750621defc946f6aaa028a0315a978a3499b8e578c6fb8548820a3553716",
+    "isSuccess": true,
+    "error": ""
+  },
+  "0x39Bf5f80938b542818F45D2a824Fb32103C81a15": {
+    "name": "Alan_Osorio_Agustin",
+    "vc": "Cryptoboost",
+    "email": "cryptoboostyt@gmail.com",
+    "amount": ".01",
+    "txHash": "0xeeebe19ee24313c8ce3ea4ba79ae8c327f7e6984d639594e7ea2fcdc7bfa3671",
+    "isSuccess": true,
+    "error": ""
+  },
+  "0x3ce0e77f30a9ede0c9f951aafc59b0ef435c2b88": {
+    "name": "KOL_CIS",
+    "vc": "DAO Maker ",
+    "email": "valeriy.bukharkov@daomaker.com",
+    "amount": ".01",
+    "txHash": "0xd1b3016eb14b0f232252a2d9fa806ac474123e6f825ecd583c21fbf4d2c60b98",
+    "isSuccess": true,
+    "error": ""
+  },
+  "0xdfd5293d8e347dfe59e90efd55b2956a1343963d": {
+    "name": "Nguyen_Tri_duc",
+    "vc": "Raptor Capital",
+    "email": "",
+    "amount": ".01",
+    "txHash": "0x40b2631c816779ca13ac01c47e59a45434af3a0fc423917df37352e625754dc6",
+    "isSuccess": true,
+    "error": ""
+  }
+}

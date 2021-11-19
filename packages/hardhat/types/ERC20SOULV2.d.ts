@@ -27,6 +27,7 @@ interface ERC20SOULV2Interface extends ethers.utils.Interface {
     "balanceOf(address)": FunctionFragment;
     "decimals()": FunctionFragment;
     "decreaseAllowance(address,uint256)": FunctionFragment;
+    "getLockSchedules(address)": FunctionFragment;
     "increaseAllowance(address,uint256)": FunctionFragment;
     "initializeERC20SOUL(string,string,uint256,address[])": FunctionFragment;
     "isStakeableContract(address)": FunctionFragment;
@@ -66,6 +67,10 @@ interface ERC20SOULV2Interface extends ethers.utils.Interface {
   encodeFunctionData(
     functionFragment: "decreaseAllowance",
     values: [string, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getLockSchedules",
+    values: [string]
   ): string;
   encodeFunctionData(
     functionFragment: "increaseAllowance",
@@ -153,6 +158,10 @@ interface ERC20SOULV2Interface extends ethers.utils.Interface {
   decodeFunctionResult(functionFragment: "decimals", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "decreaseAllowance",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getLockSchedules",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -441,6 +450,18 @@ export class ERC20SOULV2 extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    getLockSchedules(
+      owner: string,
+      overrides?: CallOverrides
+    ): Promise<
+      [
+        ([BigNumber, BigNumber] & {
+          amount: BigNumber;
+          expirationBlock: BigNumber;
+        })[]
+      ]
+    >;
+
     increaseAllowance(
       spender: string,
       addedValue: BigNumberish,
@@ -564,6 +585,16 @@ export class ERC20SOULV2 extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  getLockSchedules(
+    owner: string,
+    overrides?: CallOverrides
+  ): Promise<
+    ([BigNumber, BigNumber] & {
+      amount: BigNumber;
+      expirationBlock: BigNumber;
+    })[]
+  >;
+
   increaseAllowance(
     spender: string,
     addedValue: BigNumberish,
@@ -683,6 +714,16 @@ export class ERC20SOULV2 extends BaseContract {
       subtractedValue: BigNumberish,
       overrides?: CallOverrides
     ): Promise<boolean>;
+
+    getLockSchedules(
+      owner: string,
+      overrides?: CallOverrides
+    ): Promise<
+      ([BigNumber, BigNumber] & {
+        amount: BigNumber;
+        expirationBlock: BigNumber;
+      })[]
+    >;
 
     increaseAllowance(
       spender: string,
@@ -1118,6 +1159,11 @@ export class ERC20SOULV2 extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    getLockSchedules(
+      owner: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     increaseAllowance(
       spender: string,
       addedValue: BigNumberish,
@@ -1235,6 +1281,11 @@ export class ERC20SOULV2 extends BaseContract {
       spender: string,
       subtractedValue: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    getLockSchedules(
+      owner: string,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     increaseAllowance(

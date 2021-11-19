@@ -18,10 +18,10 @@ async function main(): Promise<void> {
   let recipients = fs.readFileSync(recipientsFile).toString()
   recipients = JSON.parse(recipients)
 
-  let transferFile = transferPath + network.name + `/${recipients.name}.json`
-  if (fs.existsSync(transferFile)) {
-    throw Error("transfer file with name already exists")
-  }
+  let transferFile = transferPath + network.name + `/${recipients.fileName}.json`
+  if (!fs.existsSync(transferFile)) fs.writeFileSync(transferFile, JSON.stringify({}, null, 2))
+  let transfers = fs.readFileSync(transferFile).toString()
+  transfers = JSON.parse(transfers)
 
   const sourceTokenAddress = (await deployments.getOrNull("SourceToken"))?.address
   console.log(sourceTokenAddress)
@@ -37,10 +37,18 @@ async function main(): Promise<void> {
   ) as SourceToken
 
   const addresses = recipients.recipients
-  let transfers = {}
-  try {
-    for (let recipient of addresses) {
+
+  for (let recipient of addresses) {
+    try {
       const address = recipient.address
+
+      if (!ethers.utils.isAddress(recipient.address)) throw Error("Invalid address")
+
+      if (transfers[address] && transfers[address].isSuccess) {
+        console.log("✅ Transfer already sent to " + address)
+        continue
+      }
+
       const amount = ethers.utils.parseEther(recipient.amount)
 
       console.log("💵 Sending " + ethers.utils.formatEther(amount) + " SOURCE to " + address)
@@ -49,14 +57,28 @@ async function main(): Promise<void> {
 
       transfers[recipient.address] = {
         name: recipient.name,
+        vc: recipient.vc,
+        email: recipient.email,
         amount: recipient.amount,
         txHash: tx.transactionHash,
+        isSuccess: true,
+        error: "",
+      }
+      fs.writeFileSync(transferFile, JSON.stringify(transfers, null, 2))
+    } catch (e) {
+      transfers[recipient.address] = {
+        name: recipient.name,
+        vc: recipient.vc,
+        email: recipient.email,
+        amount: recipient.amount,
+        txHash: "",
+        isSuccess: false,
+        error: (e as any).message,
       }
       fs.writeFileSync(transferFile, JSON.stringify(transfers, null, 2))
     }
-  } catch (e) {
-    console.log(e)
   }
+
   console.log("funds transfered")
 }
 

@@ -3,7 +3,7 @@ import { SourceToken, SourceToken__factory } from "../types"
 
 const fs = require("fs")
 const recipientsFile = "./scripts/recipients.json"
-const transferPath = "./transfers_SOURCE/"
+const transferPath = "./transfers_celo/"
 
 async function main(): Promise<void> {
   if (!fs.existsSync(recipientsFile)) {
@@ -23,42 +23,25 @@ async function main(): Promise<void> {
     throw Error("transfer file with name already exists")
   }
 
-  const sourceTokenAddress = (await deployments.getOrNull("SourceToken"))?.address
-  console.log(sourceTokenAddress)
-
-  if (!sourceTokenAddress) throw new Error("token not deployed on this network")
-
-  const signer = (await ethers.getSigners())[0]
-
-  const sourceContract = new ethers.Contract(
-    sourceTokenAddress,
-    SourceToken__factory.createInterface(),
-    signer,
-  ) as SourceToken
-
   const addresses = recipients.recipients
   let transfers = {}
+  const signer = (await ethers.getSigners())[0]
+
   try {
     for (let recipient of addresses) {
-      const address = recipient.address
-      const amount = ethers.utils.parseEther(recipient.amount)
-      const schedules = formatLock(recipient.schedules)
+      const tx = {
+        to: recipient.address,
+        value: ethers.utils.parseEther(recipient.amount),
+      }
 
-      console.log("💵 Sending " + ethers.utils.formatEther(amount) + " locked SOURCE to " + address)
+      console.log("💵 Sending " + ethers.utils.formatEther(tx.value) + " Celo to " + tx.to)
 
-      const tx = await (
-        await sourceContract.transferWithLock(address, {
-          totalAmount: amount,
-          amountStaked: 0,
-          schedules: schedules,
-        })
-      ).wait()
+      const transaction = await (await signer.sendTransaction(tx)).wait()
 
       transfers[recipient.address] = {
         name: recipient.name,
         amount: recipient.amount,
-        schedules: recipient.schedules,
-        txHash: tx.transactionHash,
+        txHash: transaction.transactionHash,
       }
       fs.writeFileSync(transferFile, JSON.stringify(transfers, null, 2))
     }

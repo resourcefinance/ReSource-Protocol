@@ -20,8 +20,8 @@ import { HttpNetworkUserConfig } from "hardhat/types"
 
 import "./tasks/accounts"
 import "./tasks/clean"
-import { SourceToken, SourceToken__factory } from "./types"
-// import { ReSourceToken, ReSourceToken__factory } from "./types"
+import { SourceToken__factory } from "./types"
+import { SourceToken } from "./types/SourceToken"
 
 const { isAddress, getAddress, formatUnits, parseUnits } = utils
 

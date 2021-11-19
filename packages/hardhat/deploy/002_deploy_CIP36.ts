@@ -83,7 +83,7 @@ const func: DeployFunction = async function(hardhat: HardhatRuntimeEnvironment) 
     (await hardhat.ethers.getSigners())[0],
   ) as UnderwriteManager
 
-  if (!(await underwriteManager.networkContracts(RUSDAddress)))
+  if (!(await underwriteManager.isNetwork(RUSDAddress)))
     await underwriteManager.addNetwork(RUSDAddress)
 }
 export default func

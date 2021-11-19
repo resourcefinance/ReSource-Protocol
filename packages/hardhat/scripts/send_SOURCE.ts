@@ -42,22 +42,14 @@ async function main(): Promise<void> {
     for (let recipient of addresses) {
       const address = recipient.address
       const amount = ethers.utils.parseEther(recipient.amount)
-      const schedules = formatLock(recipient.schedules)
 
-      console.log("💵 Sending " + ethers.utils.formatEther(amount) + " locked SOURCE to " + address)
+      console.log("💵 Sending " + ethers.utils.formatEther(amount) + " SOURCE to " + address)
 
-      const tx = await (
-        await sourceContract.transferWithLock(address, {
-          totalAmount: amount,
-          amountStaked: 0,
-          schedules: schedules,
-        })
-      ).wait()
+      const tx = await (await sourceContract.transfer(address, amount)).wait()
 
       transfers[recipient.address] = {
         name: recipient.name,
         amount: recipient.amount,
-        schedules: recipient.schedules,
         txHash: tx.transactionHash,
       }
       fs.writeFileSync(transferFile, JSON.stringify(transfers, null, 2))

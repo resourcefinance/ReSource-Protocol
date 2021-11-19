@@ -19,6 +19,7 @@ export type { IiKeyWalletDeployer } from "./IiKeyWalletDeployer";
 export type { IKeyMultiSig } from "./IKeyMultiSig";
 export type { IKeyWalletDeployer } from "./IKeyWalletDeployer";
 export type { ERC20SOUL } from "./ERC20SOUL";
+export type { ERC20SOULV2 } from "./ERC20SOULV2";
 export type { SourceToken } from "./SourceToken";
 export type { TokenVesting } from "./TokenVesting";
 
@@ -40,5 +41,6 @@ export { IiKeyWalletDeployer__factory } from "./factories/IiKeyWalletDeployer__f
 export { IKeyMultiSig__factory } from "./factories/IKeyMultiSig__factory";
 export { IKeyWalletDeployer__factory } from "./factories/IKeyWalletDeployer__factory";
 export { ERC20SOUL__factory } from "./factories/ERC20SOUL__factory";
+export { ERC20SOULV2__factory } from "./factories/ERC20SOULV2__factory";
 export { SourceToken__factory } from "./factories/SourceToken__factory";
 export { TokenVesting__factory } from "./factories/TokenVesting__factory";

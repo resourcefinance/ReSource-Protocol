@@ -2,9 +2,9 @@ import { config, deployments, ethers } from "hardhat"
 import { SourceToken, SourceToken__factory } from "../types"
 
 async function main(): Promise<void> {
-  const senderAddress = "0x4400b73aD6a62b3d0096FB2AF9743D3F513De2c0"
-  const address = "0xE6BFb75fD6a9f73926EF9a580FD2107762497F8e"
-  const amount = "1"
+  const senderAddress = "0x3987426f3C429214BC078750948461A2abe03ec7"
+  const address = "0x4400b73aD6a62b3d0096FB2AF9743D3F513De2c0"
+  const amount = "1000"
 
   let sourceTokenAddress = (await deployments.getOrNull("SourceToken"))?.address
 

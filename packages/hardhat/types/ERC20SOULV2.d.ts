@@ -19,7 +19,7 @@ import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
-interface ERC20SOULInterface extends ethers.utils.Interface {
+interface ERC20SOULV2Interface extends ethers.utils.Interface {
   functions: {
     "addStakeableContract(address)": FunctionFragment;
     "allowance(address,address)": FunctionFragment;
@@ -370,7 +370,7 @@ export type TransferEvent = TypedEvent<
   [string, string, BigNumber] & { from: string; to: string; value: BigNumber }
 >;
 
-export class ERC20SOUL extends BaseContract {
+export class ERC20SOULV2 extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
@@ -411,7 +411,7 @@ export class ERC20SOUL extends BaseContract {
     toBlock?: string | number | undefined
   ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
 
-  interface: ERC20SOULInterface;
+  interface: ERC20SOULV2Interface;
 
   functions: {
     addStakeableContract(

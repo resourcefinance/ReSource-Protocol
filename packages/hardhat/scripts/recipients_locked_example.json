@@ -1,0 +1,24 @@
+{
+  "name": "thu_nov_18_test",
+  "recipients": [
+    {
+      "name": "Bridger_Zoske",
+      "address": "0x0bBE7BCF8cd7D0f7aeC93A9afa90eE9bE91D8015",
+      "amount": "3",
+      "schedules": [
+        {
+          "amount": "1",
+          "expirationDateTime": "Thu Nov 20 2021 15:35:41 GMT-0800 (Pacific Standard Time)"
+        },
+        {
+          "amount": "1",
+          "expirationDateTime": "Thu Nov 20 2021 15:40:41 GMT-0800 (Pacific Standard Time)"
+        },
+        {
+          "amount": "1",
+          "expirationDateTime": "Thu Nov 20 2021 15:50:41 GMT-0800 (Pacific Standard Time)"
+        }
+      ]
+    }
+  ]
+}

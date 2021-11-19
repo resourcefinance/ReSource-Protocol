@@ -1,0 +1,20 @@
+{
+  "0x95b0B264F7C924dd1824360ff8772cB05eF7033A": {
+    "name": "Resource DAO Maker SHO",
+    "vc": "",
+    "email": "",
+    "amount": "1.00",
+    "txHash": "0x20d40056cdc6588a0e642b38fcd877b3c7c9e50da41857de0501b96f5b698909",
+    "isSuccess": true,
+    "error": ""
+  },
+  "0x4790cF8E995a9394D06ae2cd5C9f854084530B60": {
+    "name": "Resource VY",
+    "vc": "",
+    "email": "",
+    "amount": "1.00",
+    "txHash": "0x4bddc9e7e80e15958d7e5436341ec67df8f5fff81ef1cc071774911bb3a2363c",
+    "isSuccess": true,
+    "error": ""
+  }
+}

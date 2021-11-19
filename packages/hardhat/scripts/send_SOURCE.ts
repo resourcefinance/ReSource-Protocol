@@ -66,6 +66,8 @@ async function main(): Promise<void> {
       }
       fs.writeFileSync(transferFile, JSON.stringify(transfers, null, 2))
     } catch (e) {
+      console.log("❌ Tx error")
+      console.log(e)
       transfers[recipient.address] = {
         name: recipient.name,
         vc: recipient.vc,

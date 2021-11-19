@@ -1,3 +1,4 @@
+import { BigNumber } from "ethers"
 import { config, deployments, ethers, network } from "hardhat"
 import { SourceToken, SourceToken__factory } from "../types"
 
@@ -24,7 +25,7 @@ async function main(): Promise<void> {
   transfers = JSON.parse(transfers)
 
   const sourceTokenAddress = (await deployments.getOrNull("SourceToken"))?.address
-  console.log(sourceTokenAddress)
+  console.log("SOURCE address: ", sourceTokenAddress)
 
   if (!sourceTokenAddress) throw new Error("token not deployed on this network")
 
@@ -50,7 +51,7 @@ async function main(): Promise<void> {
       }
 
       const amount = ethers.utils.parseEther(recipient.amount)
-      schedules = getSchedule(Number(recipient.amount))
+      schedules = getSchedule(amount)
 
       console.log("💵 Sending " + ethers.utils.formatEther(amount) + " locked SOURCE to " + address)
 
@@ -74,6 +75,8 @@ async function main(): Promise<void> {
       }
       fs.writeFileSync(transferFile, JSON.stringify(transfers, null, 2))
     } catch (e) {
+      console.log("❌ Tx error")
+      console.log(e)
       transfers[recipient.address] = {
         name: recipient.name,
         amount: recipient.amount,
@@ -95,22 +98,22 @@ main()
     process.exit(1)
   })
 
-const getSchedule = (amount: number) => {
+const getSchedule = (amount: BigNumber) => {
   const days = 86400
-  const month = days * 31
-  const startDate = new Date("Thu Nov 21 2021 22:10:00 GMT-0800 (Pacific Standard Time)")
+  const month = days * 30
+  const startDate = new Date("Thu Nov 21 2021 21:00:00 GMT-0800 (Pacific Standard Time)")
   const startTimeStamp = Date.parse(startDate.toString()) / 1000
-  const startFromPause = startTimeStamp + month * 4
+  const startFromPause = startTimeStamp + month * 3
 
   const arr = new Array()
   arr.push({
-    amount: ethers.utils.parseEther((amount * 0.2).toString()),
+    amount: amount.div(BigNumber.from("5")),
     expirationBlock: startTimeStamp,
   })
-  for (let i = 0; i < 16; i++) {
+  for (let i = 0; i < 4; i++) {
     arr.push({
-      amount: ethers.utils.parseEther((amount * 0.05).toString()),
-      expirationBlock: startFromPause + month * i,
+      amount: amount.div(BigNumber.from("5")),
+      expirationBlock: startFromPause + month * i * 3,
     })
   }
   return arr

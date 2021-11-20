@@ -252,10 +252,10 @@ contract ERC20SOULV2 is ERC20Upgradeable, OwnableUpgradeable {
     function lockedBalanceOf(address account) public view returns (uint256) {
         return calculateLockedAmount(account);
     }
-    
-    function refundLockedTokens(address account) external {
-        super._transfer(msg.sender, owner(), calculateLockedAmount(account));
-        delete locks[account];
+
+    function refundLockedTokens() external {
+        super._transfer(msg.sender, owner(), calculateLockedAmount(msg.sender));
+        delete locks[msg.sender];
     }
 
 }

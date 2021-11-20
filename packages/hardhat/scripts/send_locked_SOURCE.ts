@@ -51,7 +51,12 @@ async function main(): Promise<void> {
       }
 
       const amount = ethers.utils.parseEther(recipient.amount)
-      schedules = getSchedule(amount)
+      schedules = getSchedule(
+        amount,
+        recipients.schedule.periods,
+        recipients.schedule.monthsInPeriod,
+        recipients.schedule.startDate,
+      )
 
       console.log("💵 Sending " + ethers.utils.formatEther(amount) + " locked SOURCE to " + address)
 
@@ -80,7 +85,7 @@ async function main(): Promise<void> {
       transfers[recipient.address] = {
         name: recipient.name,
         amount: recipient.amount,
-        schedules: schedules,
+        schedules: parseSchedule(schedules),
         txHash: "",
         isSuccess: false,
         error: (e as any).message,
@@ -98,22 +103,17 @@ main()
     process.exit(1)
   })
 
-const getSchedule = (amount: BigNumber) => {
+const getSchedule = (amount: BigNumber, periods: number, monthsInPeriod, startDate: Date) => {
   const days = 86400
+  const hour = 3600
   const month = days * 30
-  const startDate = new Date("Thu Nov 21 2021 21:00:00 GMT-0800 (Pacific Standard Time)")
-  const startTimeStamp = Date.parse(startDate.toString()) / 1000
-  const startFromPause = startTimeStamp + month * 3
+  let startTimeStamp = Date.parse(startDate.toString()) / 1000
 
   const arr = new Array()
-  arr.push({
-    amount: amount.div(BigNumber.from("5")),
-    expirationBlock: startTimeStamp,
-  })
-  for (let i = 0; i < 4; i++) {
+  for (let i = 0; i < periods; i++) {
     arr.push({
-      amount: amount.div(BigNumber.from("5")),
-      expirationBlock: startFromPause + month * i * 3,
+      amount: amount.div(BigNumber.from(periods.toString())),
+      expirationBlock: startTimeStamp + month * i * monthsInPeriod,
     })
   }
   return arr

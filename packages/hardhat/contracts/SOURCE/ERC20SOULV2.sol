@@ -92,18 +92,6 @@ contract ERC20SOULV2 is ERC20Upgradeable, OwnableUpgradeable {
         }
     }
 
-    /*
-     * Internal functions
-     */
-    function _transfer(
-        address _from,
-        address _to,
-        uint256 _amount
-    ) internal override {
-        _updateLock(_from, _to, _amount);
-        super._transfer(_from, _to, _amount);
-    }
-
     /// @dev Creates a valid recipient lock after transfering tokens
     /// @param _to address to send tokens to
     /// @param _lock valid lock data associated with transfer
@@ -123,6 +111,18 @@ contract ERC20SOULV2 is ERC20Upgradeable, OwnableUpgradeable {
             ));
         }
         emit LockedTransfer(_lock, msg.sender, _to);
+    }
+
+    /*
+     * Internal functions
+     */
+    function _transfer(
+        address _from,
+        address _to,
+        uint256 _amount
+    ) internal override {
+        _updateLock(_from, _to, _amount);
+        super._transfer(_from, _to, _amount);
     }
 
     /// @dev internal function to update relevant lock if any
@@ -164,8 +164,6 @@ contract ERC20SOULV2 is ERC20Upgradeable, OwnableUpgradeable {
                 totalSenderSchedules--;
                 emit LockScheduleExpired(_from, locks[_from]);
             }
-            
-
         }
         uint256 availableAmount = 
             amountToUnlock + balanceOf(_from) + senderLock.amountStaked - senderLock.totalAmount;
@@ -177,9 +175,15 @@ contract ERC20SOULV2 is ERC20Upgradeable, OwnableUpgradeable {
         }
     }
 
-    function getLockSchedules(address owner) public view returns(Schedule[] memory){
-        Lock memory lock = locks[owner];
-        return lock.schedules;
+   function calculateLockedAmount(address owner) internal view returns (uint256) {
+        Lock memory senderLock = locks[owner];
+        uint256 lockedAmount;
+        for (uint256 i = 0; i < senderLock.schedules.length; i++) {
+            if (block.timestamp < senderLock.schedules[i].expirationBlock) {
+                lockedAmount += senderLock.schedules[i].amount;
+            }
+        }
+        return lockedAmount;
     }
 
     /// @dev internal function to update the recipient's lock if transaction is from stakeable contract
@@ -201,6 +205,8 @@ contract ERC20SOULV2 is ERC20Upgradeable, OwnableUpgradeable {
         recipientLock.amountStaked - sendAmount: 0;
         return true;
     }
+
+    // ADMIN
 
     /// @dev external function to update minimum lock time
     /// @param _newMin new minimum locking time
@@ -232,4 +238,24 @@ contract ERC20SOULV2 is ERC20Upgradeable, OwnableUpgradeable {
         require(isStakeableContract[stakingContract], "Invalid staking address");
         isStakeableContract[stakingContract] = false;
     }
+
+    // WEB3 interface
+    function getLockSchedules(address owner) public view returns(Schedule[] memory){
+        Lock memory lock = locks[owner];
+        return lock.schedules;
+    }
+
+    function balanceOf(address account) public view virtual override returns (uint256) {
+        return super.balanceOf(account) - calculateLockedAmount(account);
+    }
+
+    function lockedBalanceOf(address account) public view returns (uint256) {
+        return calculateLockedAmount(account);
+    }
+    
+    function refundLockedTokens(address account) external {
+        super._transfer(msg.sender, owner(), calculateLockedAmount(account));
+        delete locks[account];
+    }
+
 }

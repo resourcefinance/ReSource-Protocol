@@ -1,0 +1,33 @@
+{
+  "0x8bb2af5d4877345aAc16c89d7147D4CC73D808AA": {
+    "name": "bridger",
+    "vc": "",
+    "email": "",
+    "amount": "10000.0",
+    "txHash": "0x62de373de3b3aab5abd324d6f70625a629c542e7e45720235aecb847ce48dc6a",
+    "schedules": [
+      {
+        "amount": "2500.0",
+        "expirationBlock": 1637361414,
+        "expirationDate": "2021-11-19T22:36:54.000Z"
+      },
+      {
+        "amount": "2500.0",
+        "expirationBlock": 1637365014,
+        "expirationDate": "2021-11-19T23:36:54.000Z"
+      },
+      {
+        "amount": "2500.0",
+        "expirationBlock": 1637368614,
+        "expirationDate": "2021-11-20T00:36:54.000Z"
+      },
+      {
+        "amount": "2500.0",
+        "expirationBlock": 1637372214,
+        "expirationDate": "2021-11-20T01:36:54.000Z"
+      }
+    ],
+    "isSuccess": true,
+    "error": ""
+  }
+}

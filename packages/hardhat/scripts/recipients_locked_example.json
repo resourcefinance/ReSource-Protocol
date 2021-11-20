@@ -20,5 +20,10 @@
         }
       ]
     }
-  ]
+  ],
+  "schedule": {
+    "startDate": "Saturday Feb 19 2022 22:00:00 GMT-0800 (Pacific Standard Time)",
+    "periods": 16,
+    "monthsInPeriod": 1
+  }
 }

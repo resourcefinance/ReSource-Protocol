@@ -38,7 +38,7 @@ interface ERC20SOULV2Interface extends ethers.utils.Interface {
     "minLockTime()": FunctionFragment;
     "name()": FunctionFragment;
     "owner()": FunctionFragment;
-    "refundLockedTokens()": FunctionFragment;
+    "refundLockedTokensToOwner()": FunctionFragment;
     "removeStakeableContract(address)": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "setMaxLockTime(uint256)": FunctionFragment;
@@ -106,7 +106,7 @@ interface ERC20SOULV2Interface extends ethers.utils.Interface {
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "refundLockedTokens",
+    functionFragment: "refundLockedTokensToOwner",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -206,7 +206,7 @@ interface ERC20SOULV2Interface extends ethers.utils.Interface {
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "refundLockedTokens",
+    functionFragment: "refundLockedTokensToOwner",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -524,7 +524,7 @@ export class ERC20SOULV2 extends BaseContract {
 
     owner(overrides?: CallOverrides): Promise<[string]>;
 
-    refundLockedTokens(
+    refundLockedTokensToOwner(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -663,7 +663,7 @@ export class ERC20SOULV2 extends BaseContract {
 
   owner(overrides?: CallOverrides): Promise<string>;
 
-  refundLockedTokens(
+  refundLockedTokensToOwner(
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -805,7 +805,7 @@ export class ERC20SOULV2 extends BaseContract {
 
     owner(overrides?: CallOverrides): Promise<string>;
 
-    refundLockedTokens(overrides?: CallOverrides): Promise<void>;
+    refundLockedTokensToOwner(overrides?: CallOverrides): Promise<void>;
 
     removeStakeableContract(
       stakingContract: string,
@@ -1243,7 +1243,7 @@ export class ERC20SOULV2 extends BaseContract {
 
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
-    refundLockedTokens(
+    refundLockedTokensToOwner(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -1379,7 +1379,7 @@ export class ERC20SOULV2 extends BaseContract {
 
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    refundLockedTokens(
+    refundLockedTokensToOwner(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 

@@ -175,17 +175,6 @@ contract ERC20SOULV2 is ERC20Upgradeable, OwnableUpgradeable {
         }
     }
 
-   function calculateLockedAmount(address owner) internal view returns (uint256) {
-        Lock memory senderLock = locks[owner];
-        uint256 lockedAmount;
-        for (uint256 i = 0; i < senderLock.schedules.length; i++) {
-            if (block.timestamp < senderLock.schedules[i].expirationBlock) {
-                lockedAmount += senderLock.schedules[i].amount;
-            }
-        }
-        return lockedAmount;
-    }
-
     /// @dev internal function to update the recipient's lock if transaction is from stakeable contract
     /// @param _from transaction sender
     /// @param _to transaction recipient
@@ -246,15 +235,22 @@ contract ERC20SOULV2 is ERC20Upgradeable, OwnableUpgradeable {
     }
 
     function balanceOf(address account) public view virtual override returns (uint256) {
-        return super.balanceOf(account) - calculateLockedAmount(account);
+        return super.balanceOf(account) - lockedBalanceOf(account);
     }
 
     function lockedBalanceOf(address account) public view returns (uint256) {
-        return calculateLockedAmount(account);
+        Lock memory senderLock = locks[account];
+        uint256 lockedBalance;
+        for (uint256 i = 0; i < senderLock.schedules.length; i++) {
+            if (block.timestamp < senderLock.schedules[i].expirationBlock) {
+                lockedBalance += senderLock.schedules[i].amount;
+            }
+        }
+        return lockedBalance;
     }
 
     function refundLockedTokensToOwner() external {
-        super._transfer(msg.sender, owner(), calculateLockedAmount(msg.sender));
+        super._transfer(msg.sender, owner(), lockedBalanceOf(msg.sender));
         delete locks[msg.sender];
     }
 }

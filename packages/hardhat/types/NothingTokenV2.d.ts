@@ -19,7 +19,7 @@ import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
-interface ERC20SOULV2Interface extends ethers.utils.Interface {
+interface NothingTokenV2Interface extends ethers.utils.Interface {
   functions: {
     "addStakeableContract(address)": FunctionFragment;
     "allowance(address,address)": FunctionFragment;
@@ -29,6 +29,7 @@ interface ERC20SOULV2Interface extends ethers.utils.Interface {
     "decreaseAllowance(address,uint256)": FunctionFragment;
     "getLockSchedules(address)": FunctionFragment;
     "increaseAllowance(address,uint256)": FunctionFragment;
+    "initialize(uint256,address[])": FunctionFragment;
     "initializeERC20SOUL(string,string,uint256,address[])": FunctionFragment;
     "isStakeableContract(address)": FunctionFragment;
     "lockedBalanceOf(address)": FunctionFragment;
@@ -77,6 +78,10 @@ interface ERC20SOULV2Interface extends ethers.utils.Interface {
   encodeFunctionData(
     functionFragment: "increaseAllowance",
     values: [string, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "initialize",
+    values: [BigNumberish, string[]]
   ): string;
   encodeFunctionData(
     functionFragment: "initializeERC20SOUL",
@@ -178,6 +183,7 @@ interface ERC20SOULV2Interface extends ethers.utils.Interface {
     functionFragment: "increaseAllowance",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "initializeERC20SOUL",
     data: BytesLike
@@ -397,7 +403,7 @@ export type TransferEvent = TypedEvent<
   [string, string, BigNumber] & { from: string; to: string; value: BigNumber }
 >;
 
-export class ERC20SOULV2 extends BaseContract {
+export class NothingTokenV2 extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
@@ -438,7 +444,7 @@ export class ERC20SOULV2 extends BaseContract {
     toBlock?: string | number | undefined
   ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
 
-  interface: ERC20SOULV2Interface;
+  interface: NothingTokenV2Interface;
 
   functions: {
     addStakeableContract(
@@ -483,6 +489,12 @@ export class ERC20SOULV2 extends BaseContract {
     increaseAllowance(
       spender: string,
       addedValue: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    initialize(
+      initialSupply: BigNumberish,
+      stakableContracts: string[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -628,6 +640,12 @@ export class ERC20SOULV2 extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  initialize(
+    initialSupply: BigNumberish,
+    stakableContracts: string[],
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   initializeERC20SOUL(
     name: string,
     symbol: string,
@@ -766,6 +784,12 @@ export class ERC20SOULV2 extends BaseContract {
       addedValue: BigNumberish,
       overrides?: CallOverrides
     ): Promise<boolean>;
+
+    initialize(
+      initialSupply: BigNumberish,
+      stakableContracts: string[],
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     initializeERC20SOUL(
       name: string,
@@ -1213,6 +1237,12 @@ export class ERC20SOULV2 extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    initialize(
+      initialSupply: BigNumberish,
+      stakableContracts: string[],
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     initializeERC20SOUL(
       name: string,
       symbol: string,
@@ -1343,6 +1373,12 @@ export class ERC20SOULV2 extends BaseContract {
     increaseAllowance(
       spender: string,
       addedValue: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    initialize(
+      initialSupply: BigNumberish,
+      stakableContracts: string[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 

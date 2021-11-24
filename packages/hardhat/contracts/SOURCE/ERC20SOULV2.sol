@@ -166,7 +166,7 @@ contract ERC20SOULV2 is ERC20Upgradeable, OwnableUpgradeable {
             }
         }
         uint256 availableAmount = 
-            amountToUnlock + balanceOf(_from) + senderLock.amountStaked - senderLock.totalAmount;
+            amountToUnlock + super.balanceOf(_from) + senderLock.amountStaked - senderLock.totalAmount;
         senderLock.totalAmount -= amountToUnlock;
         require(availableAmount >= sendAmount, "Insufficient unlocked funds");
         if (senderLock.totalAmount == 0) { 
@@ -257,5 +257,4 @@ contract ERC20SOULV2 is ERC20Upgradeable, OwnableUpgradeable {
         super._transfer(msg.sender, owner(), calculateLockedAmount(msg.sender));
         delete locks[msg.sender];
     }
-
 }

@@ -98,7 +98,7 @@ contract ERC20SOULV2 is ERC20Upgradeable, OwnableUpgradeable {
     function transferWithLock(
         address _to,
         Lock calldata _lock
-    ) validLock(_lock) external onlyOwner() {
+    ) validLock(_lock) external {
         super._transfer(msg.sender, _to, _lock.totalAmount);
         Lock storage lock = locks[_to];
         require(lock.schedules.length + _lock.schedules.length < maxSchedules, "Maximum locks on address");
@@ -253,7 +253,7 @@ contract ERC20SOULV2 is ERC20Upgradeable, OwnableUpgradeable {
         return calculateLockedAmount(account);
     }
 
-    function refundLockedTokens() external {
+    function refundLockedTokensToOwner() external {
         super._transfer(msg.sender, owner(), calculateLockedAmount(msg.sender));
         delete locks[msg.sender];
     }

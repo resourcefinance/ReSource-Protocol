@@ -6,7 +6,7 @@ import "../iKeyWallet/IiKeyWalletDeployer.sol";
 
 /// @title NetworkRegistry - Allows Network Members to be added and removed by Network Operators.
 /// @author Bridger Zoske - <bridger@resourcenetwork.co>
-contract NetworkRegistry is OwnableUpgradeable  {
+contract NetworkRegistryV2 is OwnableUpgradeable  {
     /*
      *  Events
      */

@@ -18,7 +18,6 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 contract TokenVesting is Ownable, ReentrancyGuard{
     using SafeERC20 for IERC20;
 
-    // optimize storage (seconds don't need to be so large) can fit into 4 slots
     struct VestingSchedule {
         // whether or not the vesting has been revoked
         bool revocable;

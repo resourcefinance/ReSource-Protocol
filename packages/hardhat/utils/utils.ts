@@ -37,8 +37,6 @@ export const deployProxyAndSave = async (
   initializer?: {},
 ): Promise<string> => {
   const contractFactory = await hardhat.ethers.getContractFactory(name)
-  contractFactory.signer
-
   let contract
   let deployment = await hardhat.deployments.getOrNull(name)
 
@@ -49,7 +47,12 @@ export const deployProxyAndSave = async (
 
   await retry(
     async () => {
-      contract = await hardhat.upgrades.deployProxy(contractFactory, args, initializer)
+      try {
+        contract = await hardhat.upgrades.deployProxy(contractFactory, args, initializer)
+      } catch (e) {
+        console.log(e)
+        throw e
+      }
     },
     { delay: 200, maxTry: 10 },
   )

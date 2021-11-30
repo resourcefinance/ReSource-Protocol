@@ -5,7 +5,7 @@ import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "hardhat/console.sol";
 
-contract UnderwriteManager is OwnableUpgradeable {
+contract UnderwriteManagerV2 is OwnableUpgradeable {
     /*
      *  Constants
      */

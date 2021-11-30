@@ -45,6 +45,7 @@ interface ERC20SOULV2Interface extends ethers.utils.Interface {
     "setMaxSchedules(uint256)": FunctionFragment;
     "setMinLockTime(uint256)": FunctionFragment;
     "symbol()": FunctionFragment;
+    "totalLocked()": FunctionFragment;
     "totalSupply()": FunctionFragment;
     "transfer(address,uint256)": FunctionFragment;
     "transferFrom(address,address,uint256)": FunctionFragment;
@@ -130,6 +131,10 @@ interface ERC20SOULV2Interface extends ethers.utils.Interface {
     values: [BigNumberish]
   ): string;
   encodeFunctionData(functionFragment: "symbol", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "totalLocked",
+    values?: undefined
+  ): string;
   encodeFunctionData(
     functionFragment: "totalSupply",
     values?: undefined
@@ -230,6 +235,10 @@ interface ERC20SOULV2Interface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "symbol", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "totalLocked",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "totalSupply",
     data: BytesLike
@@ -554,6 +563,8 @@ export class ERC20SOULV2 extends BaseContract {
 
     symbol(overrides?: CallOverrides): Promise<[string]>;
 
+    totalLocked(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     totalSupply(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     transfer(
@@ -693,6 +704,8 @@ export class ERC20SOULV2 extends BaseContract {
 
   symbol(overrides?: CallOverrides): Promise<string>;
 
+  totalLocked(overrides?: CallOverrides): Promise<BigNumber>;
+
   totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
   transfer(
@@ -830,6 +843,8 @@ export class ERC20SOULV2 extends BaseContract {
     ): Promise<void>;
 
     symbol(overrides?: CallOverrides): Promise<string>;
+
+    totalLocked(overrides?: CallOverrides): Promise<BigNumber>;
 
     totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1273,6 +1288,8 @@ export class ERC20SOULV2 extends BaseContract {
 
     symbol(overrides?: CallOverrides): Promise<BigNumber>;
 
+    totalLocked(overrides?: CallOverrides): Promise<BigNumber>;
+
     totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
     transfer(
@@ -1408,6 +1425,8 @@ export class ERC20SOULV2 extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     symbol(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    totalLocked(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     totalSupply(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 

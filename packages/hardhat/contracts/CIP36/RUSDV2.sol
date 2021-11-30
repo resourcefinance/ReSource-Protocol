@@ -7,7 +7,7 @@ import "./UnderwriteManager.sol";
 import "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
-contract RUSD is CIP36 {
+contract RUSDV2 is CIP36 {
     /*
      *  REGISTERED: _to and _from must be registered wallets.
      *  POSITIVE: _from must have a positive balance if _to is not a registered wallet.

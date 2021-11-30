@@ -14,7 +14,7 @@ import {
 const func: DeployFunction = async function(hardhat: HardhatRuntimeEnvironment) {
   const { relaySigner } = await hardhat.getNamedAccounts()
 
-  let sourceTokenAddress = (await hardhat.deployments.getOrNull("ReSourceToken"))?.address
+  let sourceTokenAddress = (await hardhat.deployments.getOrNull("SourceToken"))?.address
 
   if (!sourceTokenAddress) throw Error("SOURCE not deployed")
 
@@ -83,7 +83,7 @@ const func: DeployFunction = async function(hardhat: HardhatRuntimeEnvironment) 
     (await hardhat.ethers.getSigners())[0],
   ) as UnderwriteManager
 
-  if (!(await underwriteManager.networkContracts(RUSDAddress)))
+  if (!(await underwriteManager.isNetwork(RUSDAddress)))
     await underwriteManager.addNetwork(RUSDAddress)
 }
 export default func

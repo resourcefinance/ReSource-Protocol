@@ -219,6 +219,46 @@
       "address": "0x3A51FE2790f2Fc13e992fa582c63A88CB925154B",
       "txHash": "0xe08ff12624003d97e418d8bda65f921d08d13aded36433a3a65392198e7a55d8",
       "kind": "transparent"
+    },
+    {
+      "address": "0x38eAeCC27A4772CD8112f9e0f9713082F199d359",
+      "txHash": "0x9a93b3664e0591602c668634b29e6a7168fdc91360ca4180f7e7e420064a0e46",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x8087beE1B50bE368f9C57e8eC703Dd7B113C33E6",
+      "txHash": "0x0a01f2cdafcaba96969cb2fc6d741cc7ef6974c64e26c664815a76b8e0008370",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x5062233EB5b11f7621dA178eCf9B862871F81BD5",
+      "txHash": "0x5a080b4f80d917d17103faaf088bab0cf6491dade7e4171db4ad06a9b254e17a",
+      "kind": "transparent"
+    },
+    {
+      "address": "0xfD7925BBD96460033Cf897650e67E14e17c1E5dF",
+      "txHash": "0xedfc38b8c1069f36410c980a106dce92f969ff5114f7bc5c12226b89a4efead4",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x9eD01E2A7A6108c2aAdf913cB9251C92C3505EA7",
+      "txHash": "0xf8887c195e92df61493cf1c808cf760d2d1b93d9e04409de9b80174913b549de",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x9fC3f5f53a27fB698aA3448875c3064a418bb712",
+      "txHash": "0xa98eb9515b0ef749d922f5ebe696b3b0452b536320cec9a6d814901367091093",
+      "kind": "transparent"
+    },
+    {
+      "address": "0xc1F80C5Ab9a1583d0Ece66E4DF02F54f99f7F577",
+      "txHash": "0x4c4ba3a5861598d0fbcd36fdff30c68098188313d5dd5d95377b5db98dd2d80b",
+      "kind": "transparent"
+    },
+    {
+      "address": "0xb33902e1f7aBd319E6E46097B40930b7a3dd5E04",
+      "txHash": "0x21e93a714486cab3e6d4fc295b557d72ddd39f1db276a5e5c4fd03b18b2f8245",
+      "kind": "transparent"
     }
   ],
   "impls": {
@@ -1390,6 +1430,190 @@
           },
           "t_array(t_uint256)50_storage": {
             "label": "uint256[50]"
+          }
+        }
+      }
+    },
+    "bff42ded00b9acd258bc66ec8f9abe625a48fe0e9a2c8edba4584e6175036356": {
+      "address": "0x2f2a5Ee0e648Ddeb9a5E781aE8283A538a2605Ff",
+      "txHash": "0xbf2acd7ba43a0e9d6e9746a8bf968029913c4eb717458697bce42eea65628e4c",
+      "layout": {
+        "storage": [
+          {
+            "contract": "Initializable",
+            "label": "_initialized",
+            "type": "t_bool",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:21"
+          },
+          {
+            "contract": "Initializable",
+            "label": "_initializing",
+            "type": "t_bool",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:26"
+          },
+          {
+            "contract": "ContextUpgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)50_storage",
+            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:30"
+          },
+          {
+            "contract": "OwnableUpgradeable",
+            "label": "_owner",
+            "type": "t_address",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:21"
+          },
+          {
+            "contract": "OwnableUpgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)49_storage",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:77"
+          },
+          {
+            "contract": "ERC20Upgradeable",
+            "label": "_balances",
+            "type": "t_mapping(t_address,t_uint256)",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol:36"
+          },
+          {
+            "contract": "ERC20Upgradeable",
+            "label": "_allowances",
+            "type": "t_mapping(t_address,t_mapping(t_address,t_uint256))",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol:38"
+          },
+          {
+            "contract": "ERC20Upgradeable",
+            "label": "_totalSupply",
+            "type": "t_uint256",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol:40"
+          },
+          {
+            "contract": "ERC20Upgradeable",
+            "label": "_name",
+            "type": "t_string_storage",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol:42"
+          },
+          {
+            "contract": "ERC20Upgradeable",
+            "label": "_symbol",
+            "type": "t_string_storage",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol:43"
+          },
+          {
+            "contract": "ERC20Upgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)45_storage",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol:361"
+          },
+          {
+            "contract": "ERC20BurnableUpgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)50_storage",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC20/extensions/ERC20BurnableUpgradeable.sol:50"
+          },
+          {
+            "contract": "CIP36",
+            "label": "_members",
+            "type": "t_mapping(t_address,t_struct(Member)1159_storage)",
+            "src": "contracts/CIP36/CIP36.sol:16"
+          },
+          {
+            "contract": "RUSD",
+            "label": "registry",
+            "type": "t_contract(NetworkRegistry)2009",
+            "src": "contracts/CIP36/RUSD.sol:40"
+          },
+          {
+            "contract": "RUSD",
+            "label": "underwriteManager",
+            "type": "t_contract(UnderwriteManager)3388",
+            "src": "contracts/CIP36/RUSD.sol:41"
+          },
+          {
+            "contract": "RUSD",
+            "label": "operator",
+            "type": "t_address",
+            "src": "contracts/CIP36/RUSD.sol:42"
+          },
+          {
+            "contract": "RUSD",
+            "label": "restrictionState",
+            "type": "t_enum(Restriction)2020",
+            "src": "contracts/CIP36/RUSD.sol:44"
+          },
+          {
+            "contract": "RUSD",
+            "label": "restrictionRenewal",
+            "type": "t_uint256",
+            "src": "contracts/CIP36/RUSD.sol:45"
+          },
+          {
+            "contract": "RUSD",
+            "label": "restrictionExpiration",
+            "type": "t_uint256",
+            "src": "contracts/CIP36/RUSD.sol:46"
+          }
+        ],
+        "types": {
+          "t_contract(NetworkRegistry)2009": {
+            "label": "contract NetworkRegistry"
+          },
+          "t_contract(UnderwriteManager)3388": {
+            "label": "contract UnderwriteManager"
+          },
+          "t_address": {
+            "label": "address"
+          },
+          "t_enum(Restriction)2020": {
+            "label": "enum RUSD.Restriction",
+            "members": [
+              "REGISTERED",
+              "POSITIVE",
+              "NONE"
+            ]
+          },
+          "t_uint256": {
+            "label": "uint256"
+          },
+          "t_mapping(t_address,t_struct(Member)1159_storage)": {
+            "label": "mapping(address => struct CIP36.Member)"
+          },
+          "t_struct(Member)1159_storage": {
+            "label": "struct CIP36.Member",
+            "members": [
+              {
+                "label": "creditBalance",
+                "type": "t_uint128"
+              },
+              {
+                "label": "creditLimit",
+                "type": "t_uint128"
+              }
+            ]
+          },
+          "t_uint128": {
+            "label": "uint128"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]"
+          },
+          "t_mapping(t_address,t_uint256)": {
+            "label": "mapping(address => uint256)"
+          },
+          "t_mapping(t_address,t_mapping(t_address,t_uint256))": {
+            "label": "mapping(address => mapping(address => uint256))"
+          },
+          "t_string_storage": {
+            "label": "string"
+          },
+          "t_array(t_uint256)45_storage": {
+            "label": "uint256[45]"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]"
+          },
+          "t_bool": {
+            "label": "bool"
           }
         }
       }

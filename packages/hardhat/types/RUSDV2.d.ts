@@ -19,40 +19,41 @@ import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
-interface ERC20SOULInterface extends ethers.utils.Interface {
+interface RUSDV2Interface extends ethers.utils.Interface {
   functions: {
-    "addStakeableContract(address)": FunctionFragment;
     "allowance(address,address)": FunctionFragment;
     "approve(address,uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
+    "bulkTransfer(address[],uint256[])": FunctionFragment;
+    "burn(uint256)": FunctionFragment;
+    "burnFrom(address,uint256)": FunctionFragment;
+    "creditBalanceOf(address)": FunctionFragment;
+    "creditLimitLeftOf(address)": FunctionFragment;
+    "creditLimitOf(address)": FunctionFragment;
     "decimals()": FunctionFragment;
     "decreaseAllowance(address,uint256)": FunctionFragment;
     "increaseAllowance(address,uint256)": FunctionFragment;
-    "initializeERC20SOUL(string,string,uint256,address[])": FunctionFragment;
-    "isStakeableContract(address)": FunctionFragment;
-    "locks(address)": FunctionFragment;
-    "maxLockTime()": FunctionFragment;
-    "maxSchedules()": FunctionFragment;
-    "minLockTime()": FunctionFragment;
+    "initialize(string,string)": FunctionFragment;
+    "initializeRUSD(address,uint256,address,address)": FunctionFragment;
     "name()": FunctionFragment;
+    "operator()": FunctionFragment;
     "owner()": FunctionFragment;
-    "removeStakeableContract(address)": FunctionFragment;
+    "registry()": FunctionFragment;
+    "removeRestrictions()": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
-    "setMaxLockTime(uint256)": FunctionFragment;
-    "setMaxSchedules(uint256)": FunctionFragment;
-    "setMinLockTime(uint256)": FunctionFragment;
+    "restrictPositiveBalance()": FunctionFragment;
+    "restrictRegistered()": FunctionFragment;
+    "restrictionState()": FunctionFragment;
+    "setCreditLimit(address,uint256)": FunctionFragment;
     "symbol()": FunctionFragment;
     "totalSupply()": FunctionFragment;
     "transfer(address,uint256)": FunctionFragment;
     "transferFrom(address,address,uint256)": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
-    "transferWithLock(address,(uint256,uint256,tuple[]))": FunctionFragment;
+    "underwriteManager()": FunctionFragment;
+    "updateRestrictionExpiration()": FunctionFragment;
   };
 
-  encodeFunctionData(
-    functionFragment: "addStakeableContract",
-    values: [string]
-  ): string;
   encodeFunctionData(
     functionFragment: "allowance",
     values: [string, string]
@@ -62,6 +63,27 @@ interface ERC20SOULInterface extends ethers.utils.Interface {
     values: [string, BigNumberish]
   ): string;
   encodeFunctionData(functionFragment: "balanceOf", values: [string]): string;
+  encodeFunctionData(
+    functionFragment: "bulkTransfer",
+    values: [string[], BigNumberish[]]
+  ): string;
+  encodeFunctionData(functionFragment: "burn", values: [BigNumberish]): string;
+  encodeFunctionData(
+    functionFragment: "burnFrom",
+    values: [string, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "creditBalanceOf",
+    values: [string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "creditLimitLeftOf",
+    values: [string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "creditLimitOf",
+    values: [string]
+  ): string;
   encodeFunctionData(functionFragment: "decimals", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "decreaseAllowance",
@@ -72,47 +94,40 @@ interface ERC20SOULInterface extends ethers.utils.Interface {
     values: [string, BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: "initializeERC20SOUL",
-    values: [string, string, BigNumberish, string[]]
+    functionFragment: "initialize",
+    values: [string, string]
   ): string;
   encodeFunctionData(
-    functionFragment: "isStakeableContract",
-    values: [string]
-  ): string;
-  encodeFunctionData(functionFragment: "locks", values: [string]): string;
-  encodeFunctionData(
-    functionFragment: "maxLockTime",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "maxSchedules",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "minLockTime",
-    values?: undefined
+    functionFragment: "initializeRUSD",
+    values: [string, BigNumberish, string, string]
   ): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
+  encodeFunctionData(functionFragment: "operator", values?: undefined): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
+  encodeFunctionData(functionFragment: "registry", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "removeStakeableContract",
-    values: [string]
+    functionFragment: "removeRestrictions",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "renounceOwnership",
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "setMaxLockTime",
-    values: [BigNumberish]
+    functionFragment: "restrictPositiveBalance",
+    values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "setMaxSchedules",
-    values: [BigNumberish]
+    functionFragment: "restrictRegistered",
+    values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "setMinLockTime",
-    values: [BigNumberish]
+    functionFragment: "restrictionState",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "setCreditLimit",
+    values: [string, BigNumberish]
   ): string;
   encodeFunctionData(functionFragment: "symbol", values?: undefined): string;
   encodeFunctionData(
@@ -132,24 +147,35 @@ interface ERC20SOULInterface extends ethers.utils.Interface {
     values: [string]
   ): string;
   encodeFunctionData(
-    functionFragment: "transferWithLock",
-    values: [
-      string,
-      {
-        totalAmount: BigNumberish;
-        amountStaked: BigNumberish;
-        schedules: { amount: BigNumberish; expirationBlock: BigNumberish }[];
-      }
-    ]
+    functionFragment: "underwriteManager",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "updateRestrictionExpiration",
+    values?: undefined
   ): string;
 
-  decodeFunctionResult(
-    functionFragment: "addStakeableContract",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "allowance", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "bulkTransfer",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "burn", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "burnFrom", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "creditBalanceOf",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "creditLimitLeftOf",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "creditLimitOf",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "decimals", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "decreaseAllowance",
@@ -159,31 +185,17 @@ interface ERC20SOULInterface extends ethers.utils.Interface {
     functionFragment: "increaseAllowance",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "initializeERC20SOUL",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "isStakeableContract",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "locks", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "maxLockTime",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "maxSchedules",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "minLockTime",
+    functionFragment: "initializeRUSD",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "operator", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "registry", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "removeStakeableContract",
+    functionFragment: "removeRestrictions",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -191,15 +203,19 @@ interface ERC20SOULInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "setMaxLockTime",
+    functionFragment: "restrictPositiveBalance",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "setMaxSchedules",
+    functionFragment: "restrictRegistered",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "setMinLockTime",
+    functionFragment: "restrictionState",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "setCreditLimit",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "symbol", data: BytesLike): Result;
@@ -217,24 +233,34 @@ interface ERC20SOULInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "transferWithLock",
+    functionFragment: "underwriteManager",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "updateRestrictionExpiration",
     data: BytesLike
   ): Result;
 
   events: {
     "Approval(address,address,uint256)": EventFragment;
-    "LockExpired(address,tuple)": EventFragment;
-    "LockScheduleExpired(address,tuple)": EventFragment;
-    "LockedTransfer(tuple,address,address)": EventFragment;
+    "BalanceUpdate(address,address,uint256,uint256,uint256,uint256)": EventFragment;
+    "BulkBalanceUpdate(address,address[],uint256,uint256,uint256[],uint256[])": EventFragment;
+    "CreditLimitUpdate(address,uint256)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
+    "RestrictionExpirationUpdated(uint256)": EventFragment;
+    "RestrictionUpdated(uint8)": EventFragment;
     "Transfer(address,address,uint256)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "Approval"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "LockExpired"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "LockScheduleExpired"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "LockedTransfer"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "BalanceUpdate"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "BulkBalanceUpdate"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "CreditLimitUpdate"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
+  getEvent(
+    nameOrSignatureOrTopic: "RestrictionExpirationUpdated"
+  ): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "RestrictionUpdated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Transfer"): EventFragment;
 }
 
@@ -246,131 +272,47 @@ export type ApprovalEvent = TypedEvent<
   }
 >;
 
-export type LockExpiredEvent = TypedEvent<
-  [
-    string,
-    [
-      BigNumber,
-      BigNumber,
-      ([BigNumber, BigNumber] & {
-        amount: BigNumber;
-        expirationBlock: BigNumber;
-      })[]
-    ] & {
-      totalAmount: BigNumber;
-      amountStaked: BigNumber;
-      schedules: ([BigNumber, BigNumber] & {
-        amount: BigNumber;
-        expirationBlock: BigNumber;
-      })[];
-    }
-  ] & {
-    owner: string;
-    lock: [
-      BigNumber,
-      BigNumber,
-      ([BigNumber, BigNumber] & {
-        amount: BigNumber;
-        expirationBlock: BigNumber;
-      })[]
-    ] & {
-      totalAmount: BigNumber;
-      amountStaked: BigNumber;
-      schedules: ([BigNumber, BigNumber] & {
-        amount: BigNumber;
-        expirationBlock: BigNumber;
-      })[];
-    };
-  }
->;
-
-export type LockScheduleExpiredEvent = TypedEvent<
-  [
-    string,
-    [
-      BigNumber,
-      BigNumber,
-      ([BigNumber, BigNumber] & {
-        amount: BigNumber;
-        expirationBlock: BigNumber;
-      })[]
-    ] & {
-      totalAmount: BigNumber;
-      amountStaked: BigNumber;
-      schedules: ([BigNumber, BigNumber] & {
-        amount: BigNumber;
-        expirationBlock: BigNumber;
-      })[];
-    }
-  ] & {
-    owner: string;
-    lock: [
-      BigNumber,
-      BigNumber,
-      ([BigNumber, BigNumber] & {
-        amount: BigNumber;
-        expirationBlock: BigNumber;
-      })[]
-    ] & {
-      totalAmount: BigNumber;
-      amountStaked: BigNumber;
-      schedules: ([BigNumber, BigNumber] & {
-        amount: BigNumber;
-        expirationBlock: BigNumber;
-      })[];
-    };
-  }
->;
-
-export type LockedTransferEvent = TypedEvent<
-  [
-    [
-      BigNumber,
-      BigNumber,
-      ([BigNumber, BigNumber] & {
-        amount: BigNumber;
-        expirationBlock: BigNumber;
-      })[]
-    ] & {
-      totalAmount: BigNumber;
-      amountStaked: BigNumber;
-      schedules: ([BigNumber, BigNumber] & {
-        amount: BigNumber;
-        expirationBlock: BigNumber;
-      })[];
-    },
-    string,
-    string
-  ] & {
-    lock: [
-      BigNumber,
-      BigNumber,
-      ([BigNumber, BigNumber] & {
-        amount: BigNumber;
-        expirationBlock: BigNumber;
-      })[]
-    ] & {
-      totalAmount: BigNumber;
-      amountStaked: BigNumber;
-      schedules: ([BigNumber, BigNumber] & {
-        amount: BigNumber;
-        expirationBlock: BigNumber;
-      })[];
-    };
+export type BalanceUpdateEvent = TypedEvent<
+  [string, string, BigNumber, BigNumber, BigNumber, BigNumber] & {
     sender: string;
     recipient: string;
+    senderBalance: BigNumber;
+    senderCreditBalance: BigNumber;
+    recipientBalance: BigNumber;
+    recipientCreditBalance: BigNumber;
   }
+>;
+
+export type BulkBalanceUpdateEvent = TypedEvent<
+  [string, string[], BigNumber, BigNumber, BigNumber[], BigNumber[]] & {
+    sender: string;
+    recipients: string[];
+    senderBalance: BigNumber;
+    senderCreditBalance: BigNumber;
+    recipientBalances: BigNumber[];
+    recipientCreditBalances: BigNumber[];
+  }
+>;
+
+export type CreditLimitUpdateEvent = TypedEvent<
+  [string, BigNumber] & { member: string; limit: BigNumber }
 >;
 
 export type OwnershipTransferredEvent = TypedEvent<
   [string, string] & { previousOwner: string; newOwner: string }
 >;
 
+export type RestrictionExpirationUpdatedEvent = TypedEvent<
+  [BigNumber] & { restrictionRenewal: BigNumber }
+>;
+
+export type RestrictionUpdatedEvent = TypedEvent<[number] & { state: number }>;
+
 export type TransferEvent = TypedEvent<
   [string, string, BigNumber] & { from: string; to: string; value: BigNumber }
 >;
 
-export class ERC20SOUL extends BaseContract {
+export class RUSDV2 extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
@@ -411,14 +353,9 @@ export class ERC20SOUL extends BaseContract {
     toBlock?: string | number | undefined
   ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
 
-  interface: ERC20SOULInterface;
+  interface: RUSDV2Interface;
 
   functions: {
-    addStakeableContract(
-      stakingContract: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
     allowance(
       owner: string,
       spender: string,
@@ -432,6 +369,38 @@ export class ERC20SOUL extends BaseContract {
     ): Promise<ContractTransaction>;
 
     balanceOf(account: string, overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    bulkTransfer(
+      _to: string[],
+      _values: BigNumberish[],
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    burn(
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    burnFrom(
+      account: string,
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    creditBalanceOf(
+      _member: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    creditLimitLeftOf(
+      _member: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    creditLimitOf(
+      _member: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
 
     decimals(overrides?: CallOverrides): Promise<[number]>;
 
@@ -447,41 +416,29 @@ export class ERC20SOUL extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    initializeERC20SOUL(
-      name: string,
-      symbol: string,
-      initialSupply: BigNumberish,
-      stakeableContracts: string[],
+    initialize(
+      name_: string,
+      symbol_: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    isStakeableContract(
-      arg0: string,
-      overrides?: CallOverrides
-    ): Promise<[boolean]>;
-
-    locks(
-      arg0: string,
-      overrides?: CallOverrides
-    ): Promise<
-      [BigNumber, BigNumber] & {
-        totalAmount: BigNumber;
-        amountStaked: BigNumber;
-      }
-    >;
-
-    maxLockTime(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    maxSchedules(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    minLockTime(overrides?: CallOverrides): Promise<[BigNumber]>;
+    initializeRUSD(
+      registryAddress: string,
+      _expiration: BigNumberish,
+      _underwriteManager: string,
+      operatorAddress: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
 
     name(overrides?: CallOverrides): Promise<[string]>;
 
+    operator(overrides?: CallOverrides): Promise<[string]>;
+
     owner(overrides?: CallOverrides): Promise<[string]>;
 
-    removeStakeableContract(
-      stakingContract: string,
+    registry(overrides?: CallOverrides): Promise<[string]>;
+
+    removeRestrictions(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -489,18 +446,19 @@ export class ERC20SOUL extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    setMaxLockTime(
-      _newMax: BigNumberish,
+    restrictPositiveBalance(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    setMaxSchedules(
-      _newMax: BigNumberish,
+    restrictRegistered(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    setMinLockTime(
-      _newMin: BigNumberish,
+    restrictionState(overrides?: CallOverrides): Promise<[number]>;
+
+    setCreditLimit(
+      _member: string,
+      _limit: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -526,21 +484,12 @@ export class ERC20SOUL extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    transferWithLock(
-      _to: string,
-      _lock: {
-        totalAmount: BigNumberish;
-        amountStaked: BigNumberish;
-        schedules: { amount: BigNumberish; expirationBlock: BigNumberish }[];
-      },
+    underwriteManager(overrides?: CallOverrides): Promise<[string]>;
+
+    updateRestrictionExpiration(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
   };
-
-  addStakeableContract(
-    stakingContract: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
 
   allowance(
     owner: string,
@@ -556,6 +505,35 @@ export class ERC20SOUL extends BaseContract {
 
   balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
 
+  bulkTransfer(
+    _to: string[],
+    _values: BigNumberish[],
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  burn(
+    amount: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  burnFrom(
+    account: string,
+    amount: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  creditBalanceOf(
+    _member: string,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  creditLimitLeftOf(
+    _member: string,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  creditLimitOf(_member: string, overrides?: CallOverrides): Promise<BigNumber>;
+
   decimals(overrides?: CallOverrides): Promise<number>;
 
   decreaseAllowance(
@@ -570,38 +548,29 @@ export class ERC20SOUL extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  initializeERC20SOUL(
-    name: string,
-    symbol: string,
-    initialSupply: BigNumberish,
-    stakeableContracts: string[],
+  initialize(
+    name_: string,
+    symbol_: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  isStakeableContract(
-    arg0: string,
-    overrides?: CallOverrides
-  ): Promise<boolean>;
-
-  locks(
-    arg0: string,
-    overrides?: CallOverrides
-  ): Promise<
-    [BigNumber, BigNumber] & { totalAmount: BigNumber; amountStaked: BigNumber }
-  >;
-
-  maxLockTime(overrides?: CallOverrides): Promise<BigNumber>;
-
-  maxSchedules(overrides?: CallOverrides): Promise<BigNumber>;
-
-  minLockTime(overrides?: CallOverrides): Promise<BigNumber>;
+  initializeRUSD(
+    registryAddress: string,
+    _expiration: BigNumberish,
+    _underwriteManager: string,
+    operatorAddress: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
 
   name(overrides?: CallOverrides): Promise<string>;
 
+  operator(overrides?: CallOverrides): Promise<string>;
+
   owner(overrides?: CallOverrides): Promise<string>;
 
-  removeStakeableContract(
-    stakingContract: string,
+  registry(overrides?: CallOverrides): Promise<string>;
+
+  removeRestrictions(
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -609,18 +578,19 @@ export class ERC20SOUL extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  setMaxLockTime(
-    _newMax: BigNumberish,
+  restrictPositiveBalance(
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  setMaxSchedules(
-    _newMax: BigNumberish,
+  restrictRegistered(
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  setMinLockTime(
-    _newMin: BigNumberish,
+  restrictionState(overrides?: CallOverrides): Promise<number>;
+
+  setCreditLimit(
+    _member: string,
+    _limit: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -646,22 +616,13 @@ export class ERC20SOUL extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  transferWithLock(
-    _to: string,
-    _lock: {
-      totalAmount: BigNumberish;
-      amountStaked: BigNumberish;
-      schedules: { amount: BigNumberish; expirationBlock: BigNumberish }[];
-    },
+  underwriteManager(overrides?: CallOverrides): Promise<string>;
+
+  updateRestrictionExpiration(
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   callStatic: {
-    addStakeableContract(
-      stakingContract: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
     allowance(
       owner: string,
       spender: string,
@@ -675,6 +636,35 @@ export class ERC20SOUL extends BaseContract {
     ): Promise<boolean>;
 
     balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    bulkTransfer(
+      _to: string[],
+      _values: BigNumberish[],
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    burn(amount: BigNumberish, overrides?: CallOverrides): Promise<void>;
+
+    burnFrom(
+      account: string,
+      amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    creditBalanceOf(
+      _member: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    creditLimitLeftOf(
+      _member: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    creditLimitOf(
+      _member: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     decimals(overrides?: CallOverrides): Promise<number>;
 
@@ -690,58 +680,41 @@ export class ERC20SOUL extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    initializeERC20SOUL(
-      name: string,
-      symbol: string,
-      initialSupply: BigNumberish,
-      stakeableContracts: string[],
+    initialize(
+      name_: string,
+      symbol_: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    isStakeableContract(
-      arg0: string,
+    initializeRUSD(
+      registryAddress: string,
+      _expiration: BigNumberish,
+      _underwriteManager: string,
+      operatorAddress: string,
       overrides?: CallOverrides
-    ): Promise<boolean>;
-
-    locks(
-      arg0: string,
-      overrides?: CallOverrides
-    ): Promise<
-      [BigNumber, BigNumber] & {
-        totalAmount: BigNumber;
-        amountStaked: BigNumber;
-      }
-    >;
-
-    maxLockTime(overrides?: CallOverrides): Promise<BigNumber>;
-
-    maxSchedules(overrides?: CallOverrides): Promise<BigNumber>;
-
-    minLockTime(overrides?: CallOverrides): Promise<BigNumber>;
+    ): Promise<void>;
 
     name(overrides?: CallOverrides): Promise<string>;
 
+    operator(overrides?: CallOverrides): Promise<string>;
+
     owner(overrides?: CallOverrides): Promise<string>;
 
-    removeStakeableContract(
-      stakingContract: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    registry(overrides?: CallOverrides): Promise<string>;
+
+    removeRestrictions(overrides?: CallOverrides): Promise<void>;
 
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
 
-    setMaxLockTime(
-      _newMax: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    restrictPositiveBalance(overrides?: CallOverrides): Promise<void>;
 
-    setMaxSchedules(
-      _newMax: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    restrictRegistered(overrides?: CallOverrides): Promise<void>;
 
-    setMinLockTime(
-      _newMin: BigNumberish,
+    restrictionState(overrides?: CallOverrides): Promise<number>;
+
+    setCreditLimit(
+      _member: string,
+      _limit: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -767,15 +740,9 @@ export class ERC20SOUL extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    transferWithLock(
-      _to: string,
-      _lock: {
-        totalAmount: BigNumberish;
-        amountStaked: BigNumberish;
-        schedules: { amount: BigNumberish; expirationBlock: BigNumberish }[];
-      },
-      overrides?: CallOverrides
-    ): Promise<void>;
+    underwriteManager(overrides?: CallOverrides): Promise<string>;
+
+    updateRestrictionExpiration(overrides?: CallOverrides): Promise<void>;
   };
 
   filters: {
@@ -797,262 +764,96 @@ export class ERC20SOUL extends BaseContract {
       { owner: string; spender: string; value: BigNumber }
     >;
 
-    "LockExpired(address,tuple)"(
-      owner?: null,
-      lock?: null
-    ): TypedEventFilter<
-      [
-        string,
-        [
-          BigNumber,
-          BigNumber,
-          ([BigNumber, BigNumber] & {
-            amount: BigNumber;
-            expirationBlock: BigNumber;
-          })[]
-        ] & {
-          totalAmount: BigNumber;
-          amountStaked: BigNumber;
-          schedules: ([BigNumber, BigNumber] & {
-            amount: BigNumber;
-            expirationBlock: BigNumber;
-          })[];
-        }
-      ],
-      {
-        owner: string;
-        lock: [
-          BigNumber,
-          BigNumber,
-          ([BigNumber, BigNumber] & {
-            amount: BigNumber;
-            expirationBlock: BigNumber;
-          })[]
-        ] & {
-          totalAmount: BigNumber;
-          amountStaked: BigNumber;
-          schedules: ([BigNumber, BigNumber] & {
-            amount: BigNumber;
-            expirationBlock: BigNumber;
-          })[];
-        };
-      }
-    >;
-
-    LockExpired(
-      owner?: null,
-      lock?: null
-    ): TypedEventFilter<
-      [
-        string,
-        [
-          BigNumber,
-          BigNumber,
-          ([BigNumber, BigNumber] & {
-            amount: BigNumber;
-            expirationBlock: BigNumber;
-          })[]
-        ] & {
-          totalAmount: BigNumber;
-          amountStaked: BigNumber;
-          schedules: ([BigNumber, BigNumber] & {
-            amount: BigNumber;
-            expirationBlock: BigNumber;
-          })[];
-        }
-      ],
-      {
-        owner: string;
-        lock: [
-          BigNumber,
-          BigNumber,
-          ([BigNumber, BigNumber] & {
-            amount: BigNumber;
-            expirationBlock: BigNumber;
-          })[]
-        ] & {
-          totalAmount: BigNumber;
-          amountStaked: BigNumber;
-          schedules: ([BigNumber, BigNumber] & {
-            amount: BigNumber;
-            expirationBlock: BigNumber;
-          })[];
-        };
-      }
-    >;
-
-    "LockScheduleExpired(address,tuple)"(
-      owner?: null,
-      lock?: null
-    ): TypedEventFilter<
-      [
-        string,
-        [
-          BigNumber,
-          BigNumber,
-          ([BigNumber, BigNumber] & {
-            amount: BigNumber;
-            expirationBlock: BigNumber;
-          })[]
-        ] & {
-          totalAmount: BigNumber;
-          amountStaked: BigNumber;
-          schedules: ([BigNumber, BigNumber] & {
-            amount: BigNumber;
-            expirationBlock: BigNumber;
-          })[];
-        }
-      ],
-      {
-        owner: string;
-        lock: [
-          BigNumber,
-          BigNumber,
-          ([BigNumber, BigNumber] & {
-            amount: BigNumber;
-            expirationBlock: BigNumber;
-          })[]
-        ] & {
-          totalAmount: BigNumber;
-          amountStaked: BigNumber;
-          schedules: ([BigNumber, BigNumber] & {
-            amount: BigNumber;
-            expirationBlock: BigNumber;
-          })[];
-        };
-      }
-    >;
-
-    LockScheduleExpired(
-      owner?: null,
-      lock?: null
-    ): TypedEventFilter<
-      [
-        string,
-        [
-          BigNumber,
-          BigNumber,
-          ([BigNumber, BigNumber] & {
-            amount: BigNumber;
-            expirationBlock: BigNumber;
-          })[]
-        ] & {
-          totalAmount: BigNumber;
-          amountStaked: BigNumber;
-          schedules: ([BigNumber, BigNumber] & {
-            amount: BigNumber;
-            expirationBlock: BigNumber;
-          })[];
-        }
-      ],
-      {
-        owner: string;
-        lock: [
-          BigNumber,
-          BigNumber,
-          ([BigNumber, BigNumber] & {
-            amount: BigNumber;
-            expirationBlock: BigNumber;
-          })[]
-        ] & {
-          totalAmount: BigNumber;
-          amountStaked: BigNumber;
-          schedules: ([BigNumber, BigNumber] & {
-            amount: BigNumber;
-            expirationBlock: BigNumber;
-          })[];
-        };
-      }
-    >;
-
-    "LockedTransfer(tuple,address,address)"(
-      lock?: null,
+    "BalanceUpdate(address,address,uint256,uint256,uint256,uint256)"(
       sender?: null,
-      recipient?: null
+      recipient?: null,
+      senderBalance?: null,
+      senderCreditBalance?: null,
+      recipientBalance?: null,
+      recipientCreditBalance?: null
     ): TypedEventFilter<
-      [
-        [
-          BigNumber,
-          BigNumber,
-          ([BigNumber, BigNumber] & {
-            amount: BigNumber;
-            expirationBlock: BigNumber;
-          })[]
-        ] & {
-          totalAmount: BigNumber;
-          amountStaked: BigNumber;
-          schedules: ([BigNumber, BigNumber] & {
-            amount: BigNumber;
-            expirationBlock: BigNumber;
-          })[];
-        },
-        string,
-        string
-      ],
+      [string, string, BigNumber, BigNumber, BigNumber, BigNumber],
       {
-        lock: [
-          BigNumber,
-          BigNumber,
-          ([BigNumber, BigNumber] & {
-            amount: BigNumber;
-            expirationBlock: BigNumber;
-          })[]
-        ] & {
-          totalAmount: BigNumber;
-          amountStaked: BigNumber;
-          schedules: ([BigNumber, BigNumber] & {
-            amount: BigNumber;
-            expirationBlock: BigNumber;
-          })[];
-        };
         sender: string;
         recipient: string;
+        senderBalance: BigNumber;
+        senderCreditBalance: BigNumber;
+        recipientBalance: BigNumber;
+        recipientCreditBalance: BigNumber;
       }
     >;
 
-    LockedTransfer(
-      lock?: null,
+    BalanceUpdate(
       sender?: null,
-      recipient?: null
+      recipient?: null,
+      senderBalance?: null,
+      senderCreditBalance?: null,
+      recipientBalance?: null,
+      recipientCreditBalance?: null
     ): TypedEventFilter<
-      [
-        [
-          BigNumber,
-          BigNumber,
-          ([BigNumber, BigNumber] & {
-            amount: BigNumber;
-            expirationBlock: BigNumber;
-          })[]
-        ] & {
-          totalAmount: BigNumber;
-          amountStaked: BigNumber;
-          schedules: ([BigNumber, BigNumber] & {
-            amount: BigNumber;
-            expirationBlock: BigNumber;
-          })[];
-        },
-        string,
-        string
-      ],
+      [string, string, BigNumber, BigNumber, BigNumber, BigNumber],
       {
-        lock: [
-          BigNumber,
-          BigNumber,
-          ([BigNumber, BigNumber] & {
-            amount: BigNumber;
-            expirationBlock: BigNumber;
-          })[]
-        ] & {
-          totalAmount: BigNumber;
-          amountStaked: BigNumber;
-          schedules: ([BigNumber, BigNumber] & {
-            amount: BigNumber;
-            expirationBlock: BigNumber;
-          })[];
-        };
         sender: string;
         recipient: string;
+        senderBalance: BigNumber;
+        senderCreditBalance: BigNumber;
+        recipientBalance: BigNumber;
+        recipientCreditBalance: BigNumber;
       }
+    >;
+
+    "BulkBalanceUpdate(address,address[],uint256,uint256,uint256[],uint256[])"(
+      sender?: null,
+      recipients?: null,
+      senderBalance?: null,
+      senderCreditBalance?: null,
+      recipientBalances?: null,
+      recipientCreditBalances?: null
+    ): TypedEventFilter<
+      [string, string[], BigNumber, BigNumber, BigNumber[], BigNumber[]],
+      {
+        sender: string;
+        recipients: string[];
+        senderBalance: BigNumber;
+        senderCreditBalance: BigNumber;
+        recipientBalances: BigNumber[];
+        recipientCreditBalances: BigNumber[];
+      }
+    >;
+
+    BulkBalanceUpdate(
+      sender?: null,
+      recipients?: null,
+      senderBalance?: null,
+      senderCreditBalance?: null,
+      recipientBalances?: null,
+      recipientCreditBalances?: null
+    ): TypedEventFilter<
+      [string, string[], BigNumber, BigNumber, BigNumber[], BigNumber[]],
+      {
+        sender: string;
+        recipients: string[];
+        senderBalance: BigNumber;
+        senderCreditBalance: BigNumber;
+        recipientBalances: BigNumber[];
+        recipientCreditBalances: BigNumber[];
+      }
+    >;
+
+    "CreditLimitUpdate(address,uint256)"(
+      member?: null,
+      limit?: null
+    ): TypedEventFilter<
+      [string, BigNumber],
+      { member: string; limit: BigNumber }
+    >;
+
+    CreditLimitUpdate(
+      member?: null,
+      limit?: null
+    ): TypedEventFilter<
+      [string, BigNumber],
+      { member: string; limit: BigNumber }
     >;
 
     "OwnershipTransferred(address,address)"(
@@ -1070,6 +871,22 @@ export class ERC20SOUL extends BaseContract {
       [string, string],
       { previousOwner: string; newOwner: string }
     >;
+
+    "RestrictionExpirationUpdated(uint256)"(
+      restrictionRenewal?: null
+    ): TypedEventFilter<[BigNumber], { restrictionRenewal: BigNumber }>;
+
+    RestrictionExpirationUpdated(
+      restrictionRenewal?: null
+    ): TypedEventFilter<[BigNumber], { restrictionRenewal: BigNumber }>;
+
+    "RestrictionUpdated(uint8)"(
+      state?: BigNumberish | null
+    ): TypedEventFilter<[number], { state: number }>;
+
+    RestrictionUpdated(
+      state?: BigNumberish | null
+    ): TypedEventFilter<[number], { state: number }>;
 
     "Transfer(address,address,uint256)"(
       from?: string | null,
@@ -1091,11 +908,6 @@ export class ERC20SOUL extends BaseContract {
   };
 
   estimateGas: {
-    addStakeableContract(
-      stakingContract: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
     allowance(
       owner: string,
       spender: string,
@@ -1109,6 +921,38 @@ export class ERC20SOUL extends BaseContract {
     ): Promise<BigNumber>;
 
     balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    bulkTransfer(
+      _to: string[],
+      _values: BigNumberish[],
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    burn(
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    burnFrom(
+      account: string,
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    creditBalanceOf(
+      _member: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    creditLimitLeftOf(
+      _member: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    creditLimitOf(
+      _member: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     decimals(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1124,33 +968,29 @@ export class ERC20SOUL extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    initializeERC20SOUL(
-      name: string,
-      symbol: string,
-      initialSupply: BigNumberish,
-      stakeableContracts: string[],
+    initialize(
+      name_: string,
+      symbol_: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    isStakeableContract(
-      arg0: string,
-      overrides?: CallOverrides
+    initializeRUSD(
+      registryAddress: string,
+      _expiration: BigNumberish,
+      _underwriteManager: string,
+      operatorAddress: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
-
-    locks(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
-
-    maxLockTime(overrides?: CallOverrides): Promise<BigNumber>;
-
-    maxSchedules(overrides?: CallOverrides): Promise<BigNumber>;
-
-    minLockTime(overrides?: CallOverrides): Promise<BigNumber>;
 
     name(overrides?: CallOverrides): Promise<BigNumber>;
 
+    operator(overrides?: CallOverrides): Promise<BigNumber>;
+
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
-    removeStakeableContract(
-      stakingContract: string,
+    registry(overrides?: CallOverrides): Promise<BigNumber>;
+
+    removeRestrictions(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -1158,18 +998,19 @@ export class ERC20SOUL extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    setMaxLockTime(
-      _newMax: BigNumberish,
+    restrictPositiveBalance(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    setMaxSchedules(
-      _newMax: BigNumberish,
+    restrictRegistered(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    setMinLockTime(
-      _newMin: BigNumberish,
+    restrictionState(overrides?: CallOverrides): Promise<BigNumber>;
+
+    setCreditLimit(
+      _member: string,
+      _limit: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -1195,23 +1036,14 @@ export class ERC20SOUL extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    transferWithLock(
-      _to: string,
-      _lock: {
-        totalAmount: BigNumberish;
-        amountStaked: BigNumberish;
-        schedules: { amount: BigNumberish; expirationBlock: BigNumberish }[];
-      },
+    underwriteManager(overrides?: CallOverrides): Promise<BigNumber>;
+
+    updateRestrictionExpiration(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    addStakeableContract(
-      stakingContract: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
     allowance(
       owner: string,
       spender: string,
@@ -1229,6 +1061,38 @@ export class ERC20SOUL extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    bulkTransfer(
+      _to: string[],
+      _values: BigNumberish[],
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    burn(
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    burnFrom(
+      account: string,
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    creditBalanceOf(
+      _member: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    creditLimitLeftOf(
+      _member: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    creditLimitOf(
+      _member: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     decimals(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     decreaseAllowance(
@@ -1243,36 +1107,29 @@ export class ERC20SOUL extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    initializeERC20SOUL(
-      name: string,
-      symbol: string,
-      initialSupply: BigNumberish,
-      stakeableContracts: string[],
+    initialize(
+      name_: string,
+      symbol_: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    isStakeableContract(
-      arg0: string,
-      overrides?: CallOverrides
+    initializeRUSD(
+      registryAddress: string,
+      _expiration: BigNumberish,
+      _underwriteManager: string,
+      operatorAddress: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
-
-    locks(
-      arg0: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    maxLockTime(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    maxSchedules(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    minLockTime(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    operator(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    removeStakeableContract(
-      stakingContract: string,
+    registry(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    removeRestrictions(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -1280,18 +1137,19 @@ export class ERC20SOUL extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    setMaxLockTime(
-      _newMax: BigNumberish,
+    restrictPositiveBalance(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    setMaxSchedules(
-      _newMax: BigNumberish,
+    restrictRegistered(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    setMinLockTime(
-      _newMin: BigNumberish,
+    restrictionState(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    setCreditLimit(
+      _member: string,
+      _limit: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -1317,13 +1175,9 @@ export class ERC20SOUL extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    transferWithLock(
-      _to: string,
-      _lock: {
-        totalAmount: BigNumberish;
-        amountStaked: BigNumberish;
-        schedules: { amount: BigNumberish; expirationBlock: BigNumberish }[];
-      },
+    underwriteManager(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    updateRestrictionExpiration(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
   };

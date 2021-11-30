@@ -34,6 +34,7 @@ contract ERC20SOULV2 is ERC20Upgradeable, OwnableUpgradeable {
      */
     mapping (address => bool) public isStakeableContract;
     mapping(address => Lock) public locks;
+    uint256 public totalLocked;
     uint256 public minLockTime;
     uint256 public maxLockTime;
     uint256 public maxSchedules;
@@ -110,6 +111,7 @@ contract ERC20SOULV2 is ERC20Upgradeable, OwnableUpgradeable {
                 _lock.schedules[i].expirationBlock
             ));
         }
+        totalLocked += _lock.totalAmount;
         emit LockedTransfer(_lock, msg.sender, _to);
     }
 
@@ -168,6 +170,8 @@ contract ERC20SOULV2 is ERC20Upgradeable, OwnableUpgradeable {
         uint256 availableAmount = 
             amountToUnlock + super.balanceOf(_from) + senderLock.amountStaked - senderLock.totalAmount;
         senderLock.totalAmount -= amountToUnlock;
+        // TODO: MAY NEED TO CHECK THAT THIS DOES NOT OVERFLOW
+        totalLocked -= amountToUnlock;
         require(availableAmount >= sendAmount, "Insufficient unlocked funds");
         if (senderLock.totalAmount == 0) { 
             emit LockExpired( _from, locks[_from]);

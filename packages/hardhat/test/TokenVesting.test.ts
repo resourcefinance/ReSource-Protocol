@@ -122,7 +122,7 @@ describe("TokenVesting Tests", function() {
       0,
     )
 
-    expect(newSchedule.initialized).to.be.true
+    expect(newSchedule.amountTotal).to.not.be.null
   })
   it("Successfully releases first month of vesting for beneficiaryB schedule", async function() {
     await ethers.provider.send("evm_increaseTime", [secondsInDay * 360]) // wait 1 year (cliff)

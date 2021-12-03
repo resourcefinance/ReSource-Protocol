@@ -1,8 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "./IERC20SOUL.sol";
 
@@ -13,18 +12,16 @@ import "./IERC20SOUL.sol";
 /// allows the owner to revoke a given claim in the case that
 /// a beneficiary does not or is unable to claim.
 /// @author Bridger Zoske - bridger@resourcenetwork.co
-contract TokenClaim is OwnableUpgradeable, ReentrancyGuard{
-    // using SafeERC20 for IERC20SOUL; // TODO: figure this out
+contract TokenClaim is OwnableUpgradeable, ReentrancyGuardUpgradeable {
 
     struct Claim {
         uint256 unlockedAmount;
-        uint256 totalAmount;
         IERC20SOUL.Lock lock;
         bool released;
     }
 
     // address of the ERC20 token
-    IERC20SOUL immutable private _token;
+    IERC20SOUL private _token;
     mapping(address => Claim) public claims;
     uint256 public totalClaimable;
     
@@ -42,8 +39,8 @@ contract TokenClaim is OwnableUpgradeable, ReentrancyGuard{
     * @dev Reverts if the claim does not exist or has been released.
     */
     modifier onlyIfClaimNotReleased(address beneficiary) {
-        require(claims[beneficiary].totalAmount != 0);
-        require(claims[beneficiary].released == false);
+        require(getClaimTotal(beneficiary) != 0, "TokenClaim: Claim does not exist");
+        require(claims[beneficiary].released == false, "TokenClaim: Claim has been released");
         _;
     }
 
@@ -51,8 +48,9 @@ contract TokenClaim is OwnableUpgradeable, ReentrancyGuard{
      * @dev Creates a claim contract.
      * @param token_ address of the ERC20 token contract
      */
-    constructor(address token_) {
+    function initialize(address token_) external virtual initializer {
         require(token_ != address(0x0));
+        __Ownable_init();
         _token = IERC20SOUL(token_);
     }
 
@@ -88,25 +86,25 @@ contract TokenClaim is OwnableUpgradeable, ReentrancyGuard{
         );
         require(totalAmount > 0, "TokenClaim: amount must be > 0");
 
-        Claim storage claim = claims[_beneficiary];
+        Claim storage _claim = claims[_beneficiary];
 
-        if (claim.totalAmount == 0) {
-            claim.lock = _lock;
-            claim.totalAmount = totalAmount;
-            claim.unlockedAmount = _unlockedAmount;
+        if (getClaimTotal(_beneficiary) == 0) {
+            _claim.lock = _lock;
+            _claim.unlockedAmount = _unlockedAmount;
+            // emit newClaimAdded
         } else {
-            claim.lock.totalAmount += _lock.totalAmount;
+            _claim.lock.totalAmount += _lock.totalAmount;
             for (uint256 i = 0; i < _lock.schedules.length; i++) {
-                claim.lock.schedules.push(
+                _claim.lock.schedules.push(
                     IERC20SOUL.Schedule(
                         _lock.schedules[i].amount, 
                         _lock.schedules[i].expirationBlock
                 ));
             }            
-            claim.unlockedAmount += _unlockedAmount;
-            claim.totalAmount += totalAmount;
-            claim.released = false;
+            _claim.unlockedAmount += _unlockedAmount;
+            // emit claimUpdated event
         }
+        _claim.released = false;
         totalClaimable += totalAmount;
     }
 
@@ -118,6 +116,7 @@ contract TokenClaim is OwnableUpgradeable, ReentrancyGuard{
         public
         onlyOwner
         onlyIfClaimNotReleased(beneficiary){
+        totalClaimable -= getClaimTotal(beneficiary);
         delete claims[beneficiary];
     }
 
@@ -130,7 +129,7 @@ contract TokenClaim is OwnableUpgradeable, ReentrancyGuard{
         nonReentrant
         onlyOwner{
         require(getWithdrawableAmount() >= amount, "TokenClaim: not enough withdrawable funds");
-        // _token.safeTransfer(owner(), amount);
+        _token.transfer(owner(), amount);
     }
 
     /**
@@ -140,15 +139,17 @@ contract TokenClaim is OwnableUpgradeable, ReentrancyGuard{
         public
         nonReentrant
         onlyIfClaimNotReleased(msg.sender) {
-        Claim storage claim = claims[msg.sender];
-        if (claim.unlockedAmount > 0) {
-            // _token.safeTransfer(msg.sender, claim.unlockedAmount);
+        Claim storage _claim = claims[msg.sender];
+        if (_claim.unlockedAmount > 0) {
+            _token.transfer(msg.sender, _claim.unlockedAmount);
         }
-        if (claim.lock.totalAmount > 0) {
-            _token.transferWithLock(msg.sender, claim.lock);
+        uint256 totalAmount = getClaimTotal(msg.sender);
+        if (_claim.lock.totalAmount > 0) {
+            _token.transferWithLock(msg.sender, _claim.lock);
         }
-        claim.released = true;
-        totalClaimable -= claim.totalAmount;
+        delete claims[msg.sender];
+        _claim.released = true;
+        totalClaimable -= totalAmount;
     }
 
     /**
@@ -159,7 +160,29 @@ contract TokenClaim is OwnableUpgradeable, ReentrancyGuard{
         public
         view
         returns(uint256){
-        // return _token.balanceOf(address(this));
-        return 0;
+        return _token.balanceOf(address(this)) - totalClaimable;
+    }
+
+     /**
+    * @dev Returns the amount of tokens that can be withdrawn by the owner.
+    * @return the amount of tokens
+    */
+    function getClaimTotal(address beneficiary)
+        public
+        view
+        returns(uint256){
+        Claim memory _claim = claims[beneficiary];
+        return _claim.unlockedAmount + _claim.lock.totalAmount;
+    }
+
+         /**
+    * @dev Returns the lock schedule of a given beneficiary.
+    * @return the lock schedule object of a claim
+    */
+    function getClaimLockSchedule(address beneficiary)
+        external
+        view
+        returns(IERC20SOUL.Schedule[] memory){
+        return claims[beneficiary].lock.schedules;
     }
 }

@@ -24,8 +24,11 @@ interface TokenClaimInterface extends ethers.utils.Interface {
     "addClaim(address,uint256,(uint256,uint256,tuple[]))": FunctionFragment;
     "claim()": FunctionFragment;
     "claims(address)": FunctionFragment;
+    "getClaimLockSchedule(address)": FunctionFragment;
+    "getClaimTotal(address)": FunctionFragment;
     "getToken()": FunctionFragment;
     "getWithdrawableAmount()": FunctionFragment;
+    "initialize(address)": FunctionFragment;
     "owner()": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "revoke(address)": FunctionFragment;
@@ -48,11 +51,20 @@ interface TokenClaimInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(functionFragment: "claim", values?: undefined): string;
   encodeFunctionData(functionFragment: "claims", values: [string]): string;
+  encodeFunctionData(
+    functionFragment: "getClaimLockSchedule",
+    values: [string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getClaimTotal",
+    values: [string]
+  ): string;
   encodeFunctionData(functionFragment: "getToken", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "getWithdrawableAmount",
     values?: undefined
   ): string;
+  encodeFunctionData(functionFragment: "initialize", values: [string]): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "renounceOwnership",
@@ -75,11 +87,20 @@ interface TokenClaimInterface extends ethers.utils.Interface {
   decodeFunctionResult(functionFragment: "addClaim", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "claim", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "claims", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "getClaimLockSchedule",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getClaimTotal",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "getToken", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "getWithdrawableAmount",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "renounceOwnership",
@@ -176,7 +197,6 @@ export class TokenClaim extends BaseContract {
     ): Promise<
       [
         BigNumber,
-        BigNumber,
         [
           BigNumber,
           BigNumber,
@@ -195,7 +215,6 @@ export class TokenClaim extends BaseContract {
         boolean
       ] & {
         unlockedAmount: BigNumber;
-        totalAmount: BigNumber;
         lock: [
           BigNumber,
           BigNumber,
@@ -215,9 +234,31 @@ export class TokenClaim extends BaseContract {
       }
     >;
 
+    getClaimLockSchedule(
+      beneficiary: string,
+      overrides?: CallOverrides
+    ): Promise<
+      [
+        ([BigNumber, BigNumber] & {
+          amount: BigNumber;
+          expirationBlock: BigNumber;
+        })[]
+      ]
+    >;
+
+    getClaimTotal(
+      beneficiary: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
     getToken(overrides?: CallOverrides): Promise<[string]>;
 
     getWithdrawableAmount(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    initialize(
+      token_: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
 
     owner(overrides?: CallOverrides): Promise<[string]>;
 
@@ -264,7 +305,6 @@ export class TokenClaim extends BaseContract {
   ): Promise<
     [
       BigNumber,
-      BigNumber,
       [
         BigNumber,
         BigNumber,
@@ -283,7 +323,6 @@ export class TokenClaim extends BaseContract {
       boolean
     ] & {
       unlockedAmount: BigNumber;
-      totalAmount: BigNumber;
       lock: [
         BigNumber,
         BigNumber,
@@ -303,9 +342,29 @@ export class TokenClaim extends BaseContract {
     }
   >;
 
+  getClaimLockSchedule(
+    beneficiary: string,
+    overrides?: CallOverrides
+  ): Promise<
+    ([BigNumber, BigNumber] & {
+      amount: BigNumber;
+      expirationBlock: BigNumber;
+    })[]
+  >;
+
+  getClaimTotal(
+    beneficiary: string,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
   getToken(overrides?: CallOverrides): Promise<string>;
 
   getWithdrawableAmount(overrides?: CallOverrides): Promise<BigNumber>;
+
+  initialize(
+    token_: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
 
   owner(overrides?: CallOverrides): Promise<string>;
 
@@ -350,7 +409,6 @@ export class TokenClaim extends BaseContract {
     ): Promise<
       [
         BigNumber,
-        BigNumber,
         [
           BigNumber,
           BigNumber,
@@ -369,7 +427,6 @@ export class TokenClaim extends BaseContract {
         boolean
       ] & {
         unlockedAmount: BigNumber;
-        totalAmount: BigNumber;
         lock: [
           BigNumber,
           BigNumber,
@@ -389,9 +446,26 @@ export class TokenClaim extends BaseContract {
       }
     >;
 
+    getClaimLockSchedule(
+      beneficiary: string,
+      overrides?: CallOverrides
+    ): Promise<
+      ([BigNumber, BigNumber] & {
+        amount: BigNumber;
+        expirationBlock: BigNumber;
+      })[]
+    >;
+
+    getClaimTotal(
+      beneficiary: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     getToken(overrides?: CallOverrides): Promise<string>;
 
     getWithdrawableAmount(overrides?: CallOverrides): Promise<BigNumber>;
+
+    initialize(token_: string, overrides?: CallOverrides): Promise<void>;
 
     owner(overrides?: CallOverrides): Promise<string>;
 
@@ -453,9 +527,24 @@ export class TokenClaim extends BaseContract {
 
     claims(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
+    getClaimLockSchedule(
+      beneficiary: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getClaimTotal(
+      beneficiary: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     getToken(overrides?: CallOverrides): Promise<BigNumber>;
 
     getWithdrawableAmount(overrides?: CallOverrides): Promise<BigNumber>;
+
+    initialize(
+      token_: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -502,10 +591,25 @@ export class TokenClaim extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    getClaimLockSchedule(
+      beneficiary: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getClaimTotal(
+      beneficiary: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     getToken(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     getWithdrawableAmount(
       overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    initialize(
+      token_: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;

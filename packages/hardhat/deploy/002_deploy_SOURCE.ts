@@ -6,7 +6,7 @@ import { deployments, ethers } from "hardhat"
 const func: DeployFunction = async function(hardhat: HardhatRuntimeEnvironment) {
   const { relaySigner } = await hardhat.getNamedAccounts()
 
-  // reSourceToken deploy
+  // sourceToken deploy
   const sourceTokenAbi = (await hardhat.artifacts.readArtifact("SourceToken")).abi
   const sourceTokenArgs = [hardhat.ethers.utils.parseEther("100000000"), []]
 
@@ -22,7 +22,20 @@ const func: DeployFunction = async function(hardhat: HardhatRuntimeEnvironment) 
     from: (await hardhat.ethers.getSigners())[0].address,
     args: [sourceTokenAddress],
   })
-  console.log(`🚀  TokenVesting ${!vesting.newlyDeployed ? "already" : ""} deployed`)
+  console.log(
+    `${!vesting.newlyDeployed ? "✅ TokenVesting already deployed" : "🚀  TokenVesting deployed"}`,
+  )
+
+  // tokenClaim deploy
+  const tokenClaimAbi = (await hardhat.artifacts.readArtifact("TokenClaim")).abi
+  const tokenClaimArgs = [sourceTokenAddress]
+
+  const tokenClaimAddress = await deployProxyAndSave(
+    "TokenClaim",
+    tokenClaimArgs,
+    hardhat,
+    tokenClaimAbi,
+  )
 }
 export default func
 func.tags = ["SOURCE"]

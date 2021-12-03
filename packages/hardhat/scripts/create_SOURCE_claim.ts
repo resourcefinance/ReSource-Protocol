@@ -1,10 +1,12 @@
 import { BigNumber } from "ethers"
 import { config, deployments, ethers, network } from "hardhat"
 import { SourceToken, SourceToken__factory } from "../types"
+import { TokenClaim__factory } from "../types/factories/TokenClaim__factory"
+import { TokenClaim } from "../types/TokenClaim"
 
 const fs = require("fs")
 const recipientsFile = "./scripts/recipients.json"
-const transferPath = "./tx_receipts/transfers_SOURCE/"
+const transferPath = "./tx_receipts/claims_SOURCE/"
 
 async function main(): Promise<void> {
   if (!fs.existsSync(recipientsFile)) {
@@ -19,15 +21,19 @@ async function main(): Promise<void> {
   let recipients = fs.readFileSync(recipientsFile).toString()
   recipients = JSON.parse(recipients)
 
-  let transferFile = transferPath + network.name + `/${recipients.fileName}.json`
-  if (!fs.existsSync(transferFile)) fs.writeFileSync(transferFile, JSON.stringify({}, null, 2))
-  let transfers = fs.readFileSync(transferFile).toString()
-  transfers = JSON.parse(transfers)
+  let receiptFile = transferPath + network.name + `/${recipients.fileName}.json`
+  if (!fs.existsSync(receiptFile)) fs.writeFileSync(receiptFile, JSON.stringify({}, null, 2))
+  let transactions = fs.readFileSync(receiptFile).toString()
+  transactions = JSON.parse(transactions)
 
   const sourceTokenAddress = (await deployments.getOrNull("SourceToken"))?.address
   console.log("SOURCE address: ", sourceTokenAddress)
 
+  const tokenClaimAddress = (await deployments.getOrNull("TokenClaim"))?.address
+  console.log("TokenClaim address: ", tokenClaimAddress)
+
   if (!sourceTokenAddress) throw new Error("token not deployed on this network")
+  if (!tokenClaimAddress) throw new Error("tokenClaim not deployed on this network")
 
   const signer = (await ethers.getSigners())[0]
 
@@ -37,6 +43,12 @@ async function main(): Promise<void> {
     signer,
   ) as SourceToken
 
+  const tokenClaimContract = new ethers.Contract(
+    tokenClaimAddress,
+    TokenClaim__factory.createInterface(),
+    signer,
+  ) as TokenClaim
+
   const addresses = recipients.recipients
   let schedules
   for (let recipient of addresses) {
@@ -45,30 +57,34 @@ async function main(): Promise<void> {
 
       if (!ethers.utils.isAddress(recipient.address)) throw Error("Invalid address")
 
-      if (transfers[address] && transfers[address].isSuccess) {
+      if (transactions[address] && transactions[address].isSuccess) {
         console.log("✅ Transfer already sent to " + address)
         continue
       }
 
-      const amount = ethers.utils.parseEther(recipient.amount)
+      const lockedAmount = ethers.utils.parseEther(recipient.lock.lockedAmount)
       schedules = getSchedule(
-        amount,
+        lockedAmount,
         recipients.schedule.periods,
         recipients.schedule.monthsInPeriod,
         recipients.schedule.startDate,
       )
 
-      console.log("💵 Sending " + ethers.utils.formatEther(amount) + " locked SOURCE to " + address)
+      console.log("💵 Creating Claim for " + address)
 
       const tx = await (
-        await sourceContract.transferWithLock(address, {
-          totalAmount: amount,
-          amountStaked: 0,
-          schedules: schedules,
-        })
+        await tokenClaimContract.addClaim(
+          address,
+          ethers.utils.parseEther(recipient.unlockedAmount),
+          {
+            totalAmount: lockedAmount,
+            amountStaked: 0,
+            schedules: schedules,
+          },
+        )
       ).wait()
 
-      transfers[recipient.address] = {
+      transactions[recipient.address] = {
         name: recipient.name,
         vc: recipient.vc,
         email: recipient.email,
@@ -78,11 +94,11 @@ async function main(): Promise<void> {
         isSuccess: true,
         error: "",
       }
-      fs.writeFileSync(transferFile, JSON.stringify(transfers, null, 2))
+      fs.writeFileSync(receiptFile, JSON.stringify(transactions, null, 2))
     } catch (e) {
       console.log("❌ Tx error")
       console.log(e)
-      transfers[recipient.address] = {
+      transactions[recipient.address] = {
         name: recipient.name,
         amount: recipient.amount,
         schedules: parseSchedule(schedules),
@@ -90,7 +106,7 @@ async function main(): Promise<void> {
         isSuccess: false,
         error: (e as any).message,
       }
-      fs.writeFileSync(transferFile, JSON.stringify(transfers, null, 2))
+      fs.writeFileSync(receiptFile, JSON.stringify(transactions, null, 2))
     }
   }
   console.log("funds transfered")

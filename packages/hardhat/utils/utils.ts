@@ -41,7 +41,7 @@ export const deployProxyAndSave = async (
   let deployment = await hardhat.deployments.getOrNull(name)
 
   if (deployment) {
-    console.log("🚀 ", name, " already deployed")
+    console.log("✅ ", name, " already deployed")
     return deployment.address
   }
 

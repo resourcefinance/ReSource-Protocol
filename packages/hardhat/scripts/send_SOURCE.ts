@@ -3,7 +3,7 @@ import { SourceToken, SourceToken__factory } from "../types"
 
 const fs = require("fs")
 const recipientsFile = "./scripts/recipients.json"
-const transferPath = "./transfers_SOURCE/"
+const transferPath = "./tx_receipts/transfers_SOURCE/"
 
 async function main(): Promise<void> {
   if (!fs.existsSync(recipientsFile)) {

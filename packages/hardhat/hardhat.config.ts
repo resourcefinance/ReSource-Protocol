@@ -20,8 +20,6 @@ import { HttpNetworkUserConfig } from "hardhat/types"
 
 import "./tasks/accounts"
 import "./tasks/clean"
-import { SourceToken__factory } from "./types"
-import { SourceToken } from "./types/SourceToken"
 
 const { isAddress, getAddress, formatUnits, parseUnits } = utils
 
@@ -381,11 +379,13 @@ task("sendSource", "Send SOURCE")
     debug(`Normalized to address: ${to}`)
     const signer = (await ethers.getSigners())[0]
 
+    const SourceTokenFactory = await ethers.getContractFactory("SourceToken")
+
     const tokenContract = new ethers.Contract(
       ReSourceTokenAddress,
-      SourceToken__factory.createInterface(),
+      SourceTokenFactory.interface,
       signer,
-    ) as SourceToken
+    )
 
     try {
       await (await tokenContract.transfer(to, amount)).wait()

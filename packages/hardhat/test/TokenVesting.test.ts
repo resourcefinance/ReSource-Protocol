@@ -3,7 +3,7 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/dist/src/signers"
 import { expect } from "chai"
 import chai from "chai"
 import { solidity } from "ethereum-waffle"
-import { TokenVesting, ReSourceToken } from "../types"
+import { TokenVesting, SourceToken } from "../types"
 
 chai.use(solidity)
 
@@ -15,7 +15,7 @@ describe("TokenVesting Tests", function() {
   let beneficiaryB: SignerWithAddress
   let beneficiaryC: SignerWithAddress
   let beneficiaryD: SignerWithAddress
-  let reSourceToken: ReSourceToken
+  let reSourceToken: SourceToken
   let tokenVesting: TokenVesting
 
   before(async function() {
@@ -33,7 +33,7 @@ describe("TokenVesting Tests", function() {
     reSourceToken = (await upgrades.deployProxy(reSourceTokenFactory, [
       ethers.utils.parseEther("10000000"),
       [],
-    ])) as ReSourceToken
+    ])) as SourceToken
 
     const tokenVestingFactory = await ethers.getContractFactory("TokenVesting")
 
@@ -72,7 +72,7 @@ describe("TokenVesting Tests", function() {
       0,
     )
 
-    expect(newSchedule.initialized).to.be.true
+    expect(newSchedule.beneficiary).to.properAddress
   })
   it("Successfully releases first month of vesting for beneficiaryA schedule", async function() {
     await ethers.provider.send("evm_increaseTime", [secondsInDay * 360]) // wait 1 year
@@ -172,7 +172,7 @@ describe("TokenVesting Tests", function() {
       0,
     )
 
-    expect(newSchedule.initialized).to.be.true
+    expect(newSchedule.beneficiary).to.properAddress
   })
   it("Successfully reclaims beneficiaryC schedule", async function() {
     const scheduleId = await tokenVesting.computeVestingScheduleIdForAddressAndIndex(

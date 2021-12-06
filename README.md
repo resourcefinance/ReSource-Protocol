@@ -14,8 +14,6 @@ yarn
 yarn chain
 ```
 
-<!-- TODO: setup postdeploy script to run setup-local / refactor setup-local a bit -->
-
 > deploy contracts to local hardhat chain
 
 ```bash

@@ -7,14 +7,14 @@ import {
   NetworkRegistry__factory,
   RUSD,
   RUSD__factory,
-  SourceToken,
+  SourceTokenV2,
   SourceToken__factory,
   UnderwriteManager__factory,
 } from "../types"
 const fs = require("fs")
 
 const underwriteAbi = "./deployments/localhost/UnderwriteManager.json"
-const mutualityAbi = "./deployments/localhost/ReSourceToken.json"
+const mutualityAbi = "./deployments/localhost/SourceToken.json"
 const rUSDAbi = "./deployments/localhost/RUSD.json"
 const networkRegistryAbi = "./deployments/localhost/NetworkRegistry.json"
 
@@ -61,11 +61,11 @@ async function issueCreditLine() {
       deployer,
     ) as UnderwriteManager
 
-    const reSourceToken = SourceToken__factory.getContract(
+    const sourceToken = SourceToken__factory.getContract(
       mutualityAddress,
       SourceToken__factory.createInterface(),
       deployer,
-    ) as SourceToken
+    ) as SourceTokenV2
 
     const networkRegistry = NetworkRegistry__factory.getContract(
       networkRegistryAddress,
@@ -85,8 +85,8 @@ async function issueCreditLine() {
         await (await networkRegistry.connect(deployer).addMembers([member])).wait
     }
     for (var underwriter of underwriters)
-      if (Number(ethers.utils.formatEther(await reSourceToken.balanceOf(underwriter))) < 1000)
-        await reSourceToken
+      if (Number(ethers.utils.formatEther(await sourceToken.balanceOf(underwriter))) < 1000)
+        await sourceToken
           .connect(deployer)
           .transfer(underwriter, ethers.utils.parseEther("10000.0"))
 
@@ -117,10 +117,10 @@ async function issueCreditLine() {
     }
     await (await signer.sendTransaction(tx)).wait()
 
-    await (await underwriteManager.updateUnderwriters([underwriterWallet.address], [true])).wait()
+    // await (await underwriteManager.updateUnderwriters([underwriterWallet.address], [true])).wait()
 
     await (
-      await reSourceToken
+      await sourceToken
         .connect(underwriterWallet)
         .approve(underwriteAddress, ethers.utils.parseEther("1000000000000"))
     ).wait()
@@ -128,7 +128,7 @@ async function issueCreditLine() {
     await (
       await underwriteManager
         .connect(underwriterWallet)
-        .underwriteCreditLine(rUSDAddress, ethers.utils.parseEther("1000.0"), member1.address)
+        .underwrite(rUSDAddress, ethers.utils.parseEther("1000.0"), member1.address)
     ).wait()
 
     await (

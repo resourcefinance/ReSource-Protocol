@@ -2,33 +2,37 @@
 
 # 🏄‍♂️ Quick Start
 
-> start all processes
+> install dependancies
 
 ```bash
-yarn start-all
+yarn
 ```
 
+> start hardhat chain
+
+```bash
+yarn chain
+```
+
+<!-- TODO: setup postdeploy script to run setup-local / refactor setup-local a bit -->
+
+> deploy contracts to local hardhat chain
+
+```bash
+yarn deploy
+```
+
+🔏 Contract deployments are stored in `packages/hardhat/deployments/<network>/<contract_name>`
+
 # 🏗 Run Contract Tests
+
 ```bash
 yarn test
 ```
 
 # 🤓 Details
 
-> install and start the 👷‍ Hardhat chain:
-
-```bash
-yarn
-yarn chain
-```
-
-> 🛰 deploy contracts:
-
-```bash
-yarn deploy
-```
-
-> start the local graph node
+> Local graph node
 
 ```bash
 yarn run-graph-node
@@ -50,28 +54,8 @@ yarn graph-create-local
 yarn graph-deploy-local
 ```
 
-> generate code for the frontend:
-
-```bash
-yarn codegen
-```
-
-> start the 📱 frontend:
-
-```bash
-yarn start
-```
-
-
-
 🔏 smart contracts in `packages/hardhat/contracts`
 
-📝 Source dApp frontend in `packages/source-dapp/src`
-
-📝 Vesting dApp frontend in `packages/vesting-dapp/src`
-
 💼 Deployment scripts in `packages/hardhat/deploy`
-
-📱 Local app can be found at http://localhost:3000
 
 📕 Go to our home page to learn more : https://www.resourcenetwork.co/

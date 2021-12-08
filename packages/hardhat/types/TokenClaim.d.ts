@@ -118,19 +118,261 @@ interface TokenClaimInterface extends ethers.utils.Interface {
   decodeFunctionResult(functionFragment: "withdraw", data: BytesLike): Result;
 
   events: {
+    "ClaimUpdated(tuple)": EventFragment;
+    "NewClaimAdded(tuple)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
-    "Released(uint256)": EventFragment;
+    "Released(tuple)": EventFragment;
   };
 
+  getEvent(nameOrSignatureOrTopic: "ClaimUpdated"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "NewClaimAdded"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Released"): EventFragment;
 }
+
+export type ClaimUpdatedEvent = TypedEvent<
+  [
+    [
+      BigNumber,
+      [
+        BigNumber,
+        BigNumber,
+        ([BigNumber, BigNumber] & {
+          amount: BigNumber;
+          expirationBlock: BigNumber;
+        })[]
+      ] & {
+        totalAmount: BigNumber;
+        amountStaked: BigNumber;
+        schedules: ([BigNumber, BigNumber] & {
+          amount: BigNumber;
+          expirationBlock: BigNumber;
+        })[];
+      },
+      boolean
+    ] & {
+      unlockedAmount: BigNumber;
+      lock: [
+        BigNumber,
+        BigNumber,
+        ([BigNumber, BigNumber] & {
+          amount: BigNumber;
+          expirationBlock: BigNumber;
+        })[]
+      ] & {
+        totalAmount: BigNumber;
+        amountStaked: BigNumber;
+        schedules: ([BigNumber, BigNumber] & {
+          amount: BigNumber;
+          expirationBlock: BigNumber;
+        })[];
+      };
+      released: boolean;
+    }
+  ] & {
+    claim: [
+      BigNumber,
+      [
+        BigNumber,
+        BigNumber,
+        ([BigNumber, BigNumber] & {
+          amount: BigNumber;
+          expirationBlock: BigNumber;
+        })[]
+      ] & {
+        totalAmount: BigNumber;
+        amountStaked: BigNumber;
+        schedules: ([BigNumber, BigNumber] & {
+          amount: BigNumber;
+          expirationBlock: BigNumber;
+        })[];
+      },
+      boolean
+    ] & {
+      unlockedAmount: BigNumber;
+      lock: [
+        BigNumber,
+        BigNumber,
+        ([BigNumber, BigNumber] & {
+          amount: BigNumber;
+          expirationBlock: BigNumber;
+        })[]
+      ] & {
+        totalAmount: BigNumber;
+        amountStaked: BigNumber;
+        schedules: ([BigNumber, BigNumber] & {
+          amount: BigNumber;
+          expirationBlock: BigNumber;
+        })[];
+      };
+      released: boolean;
+    };
+  }
+>;
+
+export type NewClaimAddedEvent = TypedEvent<
+  [
+    [
+      BigNumber,
+      [
+        BigNumber,
+        BigNumber,
+        ([BigNumber, BigNumber] & {
+          amount: BigNumber;
+          expirationBlock: BigNumber;
+        })[]
+      ] & {
+        totalAmount: BigNumber;
+        amountStaked: BigNumber;
+        schedules: ([BigNumber, BigNumber] & {
+          amount: BigNumber;
+          expirationBlock: BigNumber;
+        })[];
+      },
+      boolean
+    ] & {
+      unlockedAmount: BigNumber;
+      lock: [
+        BigNumber,
+        BigNumber,
+        ([BigNumber, BigNumber] & {
+          amount: BigNumber;
+          expirationBlock: BigNumber;
+        })[]
+      ] & {
+        totalAmount: BigNumber;
+        amountStaked: BigNumber;
+        schedules: ([BigNumber, BigNumber] & {
+          amount: BigNumber;
+          expirationBlock: BigNumber;
+        })[];
+      };
+      released: boolean;
+    }
+  ] & {
+    claim: [
+      BigNumber,
+      [
+        BigNumber,
+        BigNumber,
+        ([BigNumber, BigNumber] & {
+          amount: BigNumber;
+          expirationBlock: BigNumber;
+        })[]
+      ] & {
+        totalAmount: BigNumber;
+        amountStaked: BigNumber;
+        schedules: ([BigNumber, BigNumber] & {
+          amount: BigNumber;
+          expirationBlock: BigNumber;
+        })[];
+      },
+      boolean
+    ] & {
+      unlockedAmount: BigNumber;
+      lock: [
+        BigNumber,
+        BigNumber,
+        ([BigNumber, BigNumber] & {
+          amount: BigNumber;
+          expirationBlock: BigNumber;
+        })[]
+      ] & {
+        totalAmount: BigNumber;
+        amountStaked: BigNumber;
+        schedules: ([BigNumber, BigNumber] & {
+          amount: BigNumber;
+          expirationBlock: BigNumber;
+        })[];
+      };
+      released: boolean;
+    };
+  }
+>;
 
 export type OwnershipTransferredEvent = TypedEvent<
   [string, string] & { previousOwner: string; newOwner: string }
 >;
 
-export type ReleasedEvent = TypedEvent<[BigNumber] & { amount: BigNumber }>;
+export type ReleasedEvent = TypedEvent<
+  [
+    [
+      BigNumber,
+      [
+        BigNumber,
+        BigNumber,
+        ([BigNumber, BigNumber] & {
+          amount: BigNumber;
+          expirationBlock: BigNumber;
+        })[]
+      ] & {
+        totalAmount: BigNumber;
+        amountStaked: BigNumber;
+        schedules: ([BigNumber, BigNumber] & {
+          amount: BigNumber;
+          expirationBlock: BigNumber;
+        })[];
+      },
+      boolean
+    ] & {
+      unlockedAmount: BigNumber;
+      lock: [
+        BigNumber,
+        BigNumber,
+        ([BigNumber, BigNumber] & {
+          amount: BigNumber;
+          expirationBlock: BigNumber;
+        })[]
+      ] & {
+        totalAmount: BigNumber;
+        amountStaked: BigNumber;
+        schedules: ([BigNumber, BigNumber] & {
+          amount: BigNumber;
+          expirationBlock: BigNumber;
+        })[];
+      };
+      released: boolean;
+    }
+  ] & {
+    claim: [
+      BigNumber,
+      [
+        BigNumber,
+        BigNumber,
+        ([BigNumber, BigNumber] & {
+          amount: BigNumber;
+          expirationBlock: BigNumber;
+        })[]
+      ] & {
+        totalAmount: BigNumber;
+        amountStaked: BigNumber;
+        schedules: ([BigNumber, BigNumber] & {
+          amount: BigNumber;
+          expirationBlock: BigNumber;
+        })[];
+      },
+      boolean
+    ] & {
+      unlockedAmount: BigNumber;
+      lock: [
+        BigNumber,
+        BigNumber,
+        ([BigNumber, BigNumber] & {
+          amount: BigNumber;
+          expirationBlock: BigNumber;
+        })[]
+      ] & {
+        totalAmount: BigNumber;
+        amountStaked: BigNumber;
+        schedules: ([BigNumber, BigNumber] & {
+          amount: BigNumber;
+          expirationBlock: BigNumber;
+        })[];
+      };
+      released: boolean;
+    };
+  }
+>;
 
 export class TokenClaim extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -484,6 +726,338 @@ export class TokenClaim extends BaseContract {
   };
 
   filters: {
+    "ClaimUpdated(tuple)"(
+      claim?: null
+    ): TypedEventFilter<
+      [
+        [
+          BigNumber,
+          [
+            BigNumber,
+            BigNumber,
+            ([BigNumber, BigNumber] & {
+              amount: BigNumber;
+              expirationBlock: BigNumber;
+            })[]
+          ] & {
+            totalAmount: BigNumber;
+            amountStaked: BigNumber;
+            schedules: ([BigNumber, BigNumber] & {
+              amount: BigNumber;
+              expirationBlock: BigNumber;
+            })[];
+          },
+          boolean
+        ] & {
+          unlockedAmount: BigNumber;
+          lock: [
+            BigNumber,
+            BigNumber,
+            ([BigNumber, BigNumber] & {
+              amount: BigNumber;
+              expirationBlock: BigNumber;
+            })[]
+          ] & {
+            totalAmount: BigNumber;
+            amountStaked: BigNumber;
+            schedules: ([BigNumber, BigNumber] & {
+              amount: BigNumber;
+              expirationBlock: BigNumber;
+            })[];
+          };
+          released: boolean;
+        }
+      ],
+      {
+        claim: [
+          BigNumber,
+          [
+            BigNumber,
+            BigNumber,
+            ([BigNumber, BigNumber] & {
+              amount: BigNumber;
+              expirationBlock: BigNumber;
+            })[]
+          ] & {
+            totalAmount: BigNumber;
+            amountStaked: BigNumber;
+            schedules: ([BigNumber, BigNumber] & {
+              amount: BigNumber;
+              expirationBlock: BigNumber;
+            })[];
+          },
+          boolean
+        ] & {
+          unlockedAmount: BigNumber;
+          lock: [
+            BigNumber,
+            BigNumber,
+            ([BigNumber, BigNumber] & {
+              amount: BigNumber;
+              expirationBlock: BigNumber;
+            })[]
+          ] & {
+            totalAmount: BigNumber;
+            amountStaked: BigNumber;
+            schedules: ([BigNumber, BigNumber] & {
+              amount: BigNumber;
+              expirationBlock: BigNumber;
+            })[];
+          };
+          released: boolean;
+        };
+      }
+    >;
+
+    ClaimUpdated(
+      claim?: null
+    ): TypedEventFilter<
+      [
+        [
+          BigNumber,
+          [
+            BigNumber,
+            BigNumber,
+            ([BigNumber, BigNumber] & {
+              amount: BigNumber;
+              expirationBlock: BigNumber;
+            })[]
+          ] & {
+            totalAmount: BigNumber;
+            amountStaked: BigNumber;
+            schedules: ([BigNumber, BigNumber] & {
+              amount: BigNumber;
+              expirationBlock: BigNumber;
+            })[];
+          },
+          boolean
+        ] & {
+          unlockedAmount: BigNumber;
+          lock: [
+            BigNumber,
+            BigNumber,
+            ([BigNumber, BigNumber] & {
+              amount: BigNumber;
+              expirationBlock: BigNumber;
+            })[]
+          ] & {
+            totalAmount: BigNumber;
+            amountStaked: BigNumber;
+            schedules: ([BigNumber, BigNumber] & {
+              amount: BigNumber;
+              expirationBlock: BigNumber;
+            })[];
+          };
+          released: boolean;
+        }
+      ],
+      {
+        claim: [
+          BigNumber,
+          [
+            BigNumber,
+            BigNumber,
+            ([BigNumber, BigNumber] & {
+              amount: BigNumber;
+              expirationBlock: BigNumber;
+            })[]
+          ] & {
+            totalAmount: BigNumber;
+            amountStaked: BigNumber;
+            schedules: ([BigNumber, BigNumber] & {
+              amount: BigNumber;
+              expirationBlock: BigNumber;
+            })[];
+          },
+          boolean
+        ] & {
+          unlockedAmount: BigNumber;
+          lock: [
+            BigNumber,
+            BigNumber,
+            ([BigNumber, BigNumber] & {
+              amount: BigNumber;
+              expirationBlock: BigNumber;
+            })[]
+          ] & {
+            totalAmount: BigNumber;
+            amountStaked: BigNumber;
+            schedules: ([BigNumber, BigNumber] & {
+              amount: BigNumber;
+              expirationBlock: BigNumber;
+            })[];
+          };
+          released: boolean;
+        };
+      }
+    >;
+
+    "NewClaimAdded(tuple)"(
+      claim?: null
+    ): TypedEventFilter<
+      [
+        [
+          BigNumber,
+          [
+            BigNumber,
+            BigNumber,
+            ([BigNumber, BigNumber] & {
+              amount: BigNumber;
+              expirationBlock: BigNumber;
+            })[]
+          ] & {
+            totalAmount: BigNumber;
+            amountStaked: BigNumber;
+            schedules: ([BigNumber, BigNumber] & {
+              amount: BigNumber;
+              expirationBlock: BigNumber;
+            })[];
+          },
+          boolean
+        ] & {
+          unlockedAmount: BigNumber;
+          lock: [
+            BigNumber,
+            BigNumber,
+            ([BigNumber, BigNumber] & {
+              amount: BigNumber;
+              expirationBlock: BigNumber;
+            })[]
+          ] & {
+            totalAmount: BigNumber;
+            amountStaked: BigNumber;
+            schedules: ([BigNumber, BigNumber] & {
+              amount: BigNumber;
+              expirationBlock: BigNumber;
+            })[];
+          };
+          released: boolean;
+        }
+      ],
+      {
+        claim: [
+          BigNumber,
+          [
+            BigNumber,
+            BigNumber,
+            ([BigNumber, BigNumber] & {
+              amount: BigNumber;
+              expirationBlock: BigNumber;
+            })[]
+          ] & {
+            totalAmount: BigNumber;
+            amountStaked: BigNumber;
+            schedules: ([BigNumber, BigNumber] & {
+              amount: BigNumber;
+              expirationBlock: BigNumber;
+            })[];
+          },
+          boolean
+        ] & {
+          unlockedAmount: BigNumber;
+          lock: [
+            BigNumber,
+            BigNumber,
+            ([BigNumber, BigNumber] & {
+              amount: BigNumber;
+              expirationBlock: BigNumber;
+            })[]
+          ] & {
+            totalAmount: BigNumber;
+            amountStaked: BigNumber;
+            schedules: ([BigNumber, BigNumber] & {
+              amount: BigNumber;
+              expirationBlock: BigNumber;
+            })[];
+          };
+          released: boolean;
+        };
+      }
+    >;
+
+    NewClaimAdded(
+      claim?: null
+    ): TypedEventFilter<
+      [
+        [
+          BigNumber,
+          [
+            BigNumber,
+            BigNumber,
+            ([BigNumber, BigNumber] & {
+              amount: BigNumber;
+              expirationBlock: BigNumber;
+            })[]
+          ] & {
+            totalAmount: BigNumber;
+            amountStaked: BigNumber;
+            schedules: ([BigNumber, BigNumber] & {
+              amount: BigNumber;
+              expirationBlock: BigNumber;
+            })[];
+          },
+          boolean
+        ] & {
+          unlockedAmount: BigNumber;
+          lock: [
+            BigNumber,
+            BigNumber,
+            ([BigNumber, BigNumber] & {
+              amount: BigNumber;
+              expirationBlock: BigNumber;
+            })[]
+          ] & {
+            totalAmount: BigNumber;
+            amountStaked: BigNumber;
+            schedules: ([BigNumber, BigNumber] & {
+              amount: BigNumber;
+              expirationBlock: BigNumber;
+            })[];
+          };
+          released: boolean;
+        }
+      ],
+      {
+        claim: [
+          BigNumber,
+          [
+            BigNumber,
+            BigNumber,
+            ([BigNumber, BigNumber] & {
+              amount: BigNumber;
+              expirationBlock: BigNumber;
+            })[]
+          ] & {
+            totalAmount: BigNumber;
+            amountStaked: BigNumber;
+            schedules: ([BigNumber, BigNumber] & {
+              amount: BigNumber;
+              expirationBlock: BigNumber;
+            })[];
+          },
+          boolean
+        ] & {
+          unlockedAmount: BigNumber;
+          lock: [
+            BigNumber,
+            BigNumber,
+            ([BigNumber, BigNumber] & {
+              amount: BigNumber;
+              expirationBlock: BigNumber;
+            })[]
+          ] & {
+            totalAmount: BigNumber;
+            amountStaked: BigNumber;
+            schedules: ([BigNumber, BigNumber] & {
+              amount: BigNumber;
+              expirationBlock: BigNumber;
+            })[];
+          };
+          released: boolean;
+        };
+      }
+    >;
+
     "OwnershipTransferred(address,address)"(
       previousOwner?: string | null,
       newOwner?: string | null
@@ -500,13 +1074,171 @@ export class TokenClaim extends BaseContract {
       { previousOwner: string; newOwner: string }
     >;
 
-    "Released(uint256)"(
-      amount?: null
-    ): TypedEventFilter<[BigNumber], { amount: BigNumber }>;
+    "Released(tuple)"(
+      claim?: null
+    ): TypedEventFilter<
+      [
+        [
+          BigNumber,
+          [
+            BigNumber,
+            BigNumber,
+            ([BigNumber, BigNumber] & {
+              amount: BigNumber;
+              expirationBlock: BigNumber;
+            })[]
+          ] & {
+            totalAmount: BigNumber;
+            amountStaked: BigNumber;
+            schedules: ([BigNumber, BigNumber] & {
+              amount: BigNumber;
+              expirationBlock: BigNumber;
+            })[];
+          },
+          boolean
+        ] & {
+          unlockedAmount: BigNumber;
+          lock: [
+            BigNumber,
+            BigNumber,
+            ([BigNumber, BigNumber] & {
+              amount: BigNumber;
+              expirationBlock: BigNumber;
+            })[]
+          ] & {
+            totalAmount: BigNumber;
+            amountStaked: BigNumber;
+            schedules: ([BigNumber, BigNumber] & {
+              amount: BigNumber;
+              expirationBlock: BigNumber;
+            })[];
+          };
+          released: boolean;
+        }
+      ],
+      {
+        claim: [
+          BigNumber,
+          [
+            BigNumber,
+            BigNumber,
+            ([BigNumber, BigNumber] & {
+              amount: BigNumber;
+              expirationBlock: BigNumber;
+            })[]
+          ] & {
+            totalAmount: BigNumber;
+            amountStaked: BigNumber;
+            schedules: ([BigNumber, BigNumber] & {
+              amount: BigNumber;
+              expirationBlock: BigNumber;
+            })[];
+          },
+          boolean
+        ] & {
+          unlockedAmount: BigNumber;
+          lock: [
+            BigNumber,
+            BigNumber,
+            ([BigNumber, BigNumber] & {
+              amount: BigNumber;
+              expirationBlock: BigNumber;
+            })[]
+          ] & {
+            totalAmount: BigNumber;
+            amountStaked: BigNumber;
+            schedules: ([BigNumber, BigNumber] & {
+              amount: BigNumber;
+              expirationBlock: BigNumber;
+            })[];
+          };
+          released: boolean;
+        };
+      }
+    >;
 
     Released(
-      amount?: null
-    ): TypedEventFilter<[BigNumber], { amount: BigNumber }>;
+      claim?: null
+    ): TypedEventFilter<
+      [
+        [
+          BigNumber,
+          [
+            BigNumber,
+            BigNumber,
+            ([BigNumber, BigNumber] & {
+              amount: BigNumber;
+              expirationBlock: BigNumber;
+            })[]
+          ] & {
+            totalAmount: BigNumber;
+            amountStaked: BigNumber;
+            schedules: ([BigNumber, BigNumber] & {
+              amount: BigNumber;
+              expirationBlock: BigNumber;
+            })[];
+          },
+          boolean
+        ] & {
+          unlockedAmount: BigNumber;
+          lock: [
+            BigNumber,
+            BigNumber,
+            ([BigNumber, BigNumber] & {
+              amount: BigNumber;
+              expirationBlock: BigNumber;
+            })[]
+          ] & {
+            totalAmount: BigNumber;
+            amountStaked: BigNumber;
+            schedules: ([BigNumber, BigNumber] & {
+              amount: BigNumber;
+              expirationBlock: BigNumber;
+            })[];
+          };
+          released: boolean;
+        }
+      ],
+      {
+        claim: [
+          BigNumber,
+          [
+            BigNumber,
+            BigNumber,
+            ([BigNumber, BigNumber] & {
+              amount: BigNumber;
+              expirationBlock: BigNumber;
+            })[]
+          ] & {
+            totalAmount: BigNumber;
+            amountStaked: BigNumber;
+            schedules: ([BigNumber, BigNumber] & {
+              amount: BigNumber;
+              expirationBlock: BigNumber;
+            })[];
+          },
+          boolean
+        ] & {
+          unlockedAmount: BigNumber;
+          lock: [
+            BigNumber,
+            BigNumber,
+            ([BigNumber, BigNumber] & {
+              amount: BigNumber;
+              expirationBlock: BigNumber;
+            })[]
+          ] & {
+            totalAmount: BigNumber;
+            amountStaked: BigNumber;
+            schedules: ([BigNumber, BigNumber] & {
+              amount: BigNumber;
+              expirationBlock: BigNumber;
+            })[];
+          };
+          released: boolean;
+        };
+      }
+    >;
   };
 
   estimateGas: {

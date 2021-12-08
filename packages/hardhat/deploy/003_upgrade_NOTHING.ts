@@ -1,15 +1,23 @@
 import { HardhatRuntimeEnvironment } from "hardhat/types"
 import { DeployFunction } from "hardhat-deploy/types"
 import { deployments, upgrades, ethers } from "hardhat"
-import { NothingTokenV2__factory } from "../types"
+import { NothingToken, NothingTokenV2__factory } from "../types"
+import { NothingToken__factory } from "../types/factories/NothingToken__factory"
 
 const func: DeployFunction = async function(hardhat: HardhatRuntimeEnvironment) {
   const NothingTokenV2 = await ethers.getContractFactory("NothingTokenV2")
   const NothingTokenV2Abi = NothingTokenV2__factory.abi
 
   const proxy = await deployments.get("NothingToken")
-  console.log("upgrading NOTHING at: ", proxy.address)
-  const nothingTokenV2 = await upgrades.upgradeProxy(proxy.address, NothingTokenV2)
+
+  let nothingTokenV2
+  try {
+    nothingTokenV2 = await upgrades.upgradeProxy(proxy.address, NothingTokenV2, {
+      call: "upgradeV2",
+    })
+  } catch (e) {
+    console.log(e)
+  }
 
   const contractDeployment = {
     address: nothingTokenV2.address,

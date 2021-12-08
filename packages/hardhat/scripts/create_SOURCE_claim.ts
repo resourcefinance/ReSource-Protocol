@@ -62,7 +62,7 @@ async function main(): Promise<void> {
         continue
       }
 
-      const lockedAmount = ethers.utils.parseEther(recipient.lock.lockedAmount)
+      const lockedAmount = ethers.utils.parseEther(recipient.lockedAmount)
       schedules = getSchedule(
         lockedAmount,
         recipients.schedule.periods,

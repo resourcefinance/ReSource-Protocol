@@ -2,6 +2,7 @@ import { ContractFunction, Contract, BigNumber, ethers } from "ethers"
 import { HardhatRuntimeEnvironment } from "hardhat/types"
 import { retry } from "ts-retry"
 import { Deployment } from "hardhat-deploy/dist/types"
+import { DeployOptions } from "@openzeppelin/hardhat-upgrades/dist/utils"
 
 export const tryWithGas = async (
   func: ContractFunction,
@@ -34,7 +35,7 @@ export const deployProxyAndSave = async (
   args: any[],
   hardhat: HardhatRuntimeEnvironment,
   abi,
-  initializer?: {},
+  deployOptions?: DeployOptions,
 ): Promise<string> => {
   const contractFactory = await hardhat.ethers.getContractFactory(name)
   let contract
@@ -48,7 +49,7 @@ export const deployProxyAndSave = async (
   await retry(
     async () => {
       try {
-        contract = await hardhat.upgrades.deployProxy(contractFactory, args, initializer)
+        contract = await hardhat.upgrades.deployProxy(contractFactory, args, deployOptions)
       } catch (e) {
         console.log(e)
         throw e

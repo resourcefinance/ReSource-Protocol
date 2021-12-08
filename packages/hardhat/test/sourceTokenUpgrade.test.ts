@@ -47,28 +47,24 @@ describe("ReSourcetoken Tests", function() {
     )
   })
 
-  it("Successfully transfers token to memberB with lock of 90000 and 100000 seconds", async () => {
+  it("Successfully transfers tokens to memberB with lock of 90000 and 100000 seconds", async () => {
     const now = await (await ethers.provider.getBlock("latest")).timestamp
 
     await expect(
       sourceToken.transferWithLock(memberB.address, {
-        totalAmount: ethers.utils.parseEther("1000"),
+        totalAmount: ethers.utils.parseEther("1500000"),
         amountStaked: 0,
         schedules: [
           {
-            amount: ethers.utils.parseEther("300"),
+            amount: ethers.utils.parseEther("1500000"),
             expirationBlock: now + 90000,
-          },
-          {
-            amount: ethers.utils.parseEther("700"),
-            expirationBlock: now + 100000,
           },
         ],
       }),
     ).to.emit(sourceToken, "LockedTransfer")
 
     expect(ethers.utils.formatEther(await sourceToken.balanceOf(memberB.address))).to.equal(
-      "1000.0",
+      "1500000.0",
     )
   })
 
@@ -76,17 +72,18 @@ describe("ReSourcetoken Tests", function() {
     const ReSourceTokenV2 = await ethers.getContractFactory("SourceTokenV2")
     const ReSourceTokenV2Abi = SourceTokenV2__factory.abi
 
-    sourceTokenV2 = (await upgrades.upgradeProxy(
-      sourceToken.address,
-      ReSourceTokenV2,
-    )) as SourceTokenV2
+    sourceTokenV2 = (await upgrades.upgradeProxy(sourceToken.address, ReSourceTokenV2, {
+      call: "upgradeV2",
+    })) as SourceTokenV2
+
+    await expect(sourceTokenV2.upgradeV2()).to.be.reverted
 
     expect(sourceTokenV2.address).to.properAddress
 
     expect(ethers.utils.formatEther(await sourceTokenV2.balanceOf(memberB.address))).to.equal("0.0")
 
     expect(ethers.utils.formatEther(await sourceTokenV2.lockedBalanceOf(memberB.address))).to.equal(
-      "1000.0",
+      "1500000.0",
     )
 
     expect(ethers.utils.formatEther(await sourceToken.balanceOf(memberB.address))).to.equal("0.0")
@@ -95,12 +92,18 @@ describe("ReSourcetoken Tests", function() {
       "1000.0",
     )
 
+    expect(ethers.utils.formatEther(await sourceTokenV2.totalLocked())).to.equal("1500000.0")
+
     await ethers.provider.send("evm_increaseTime", [100001])
     await ethers.provider.send("evm_mine", [])
 
     await expect(
-      sourceTokenV2.connect(memberB).transfer(memberA.address, ethers.utils.parseEther("1000.0")),
+      sourceTokenV2
+        .connect(memberB)
+        .transfer(memberA.address, ethers.utils.parseEther("1500000.0")),
     ).to.emit(sourceTokenV2, "Transfer")
+
+    expect(ethers.utils.formatEther(await sourceTokenV2.totalLocked())).to.equal("0.0")
   })
 
   it("Successfully refunds locked tokens to owner", async () => {
@@ -124,7 +127,7 @@ describe("ReSourcetoken Tests", function() {
     ).to.emit(sourceToken, "LockedTransfer")
 
     expect(ethers.utils.formatEther(await sourceTokenV2.balanceOf(deployer.address))).to.equal(
-      "99988000.0",
+      "98489000.0",
     )
     expect(ethers.utils.formatEther(await sourceTokenV2.lockedBalanceOf(memberB.address))).to.equal(
       "1000.0",
@@ -136,7 +139,8 @@ describe("ReSourcetoken Tests", function() {
 
     expect(ethers.utils.formatEther(await sourceTokenV2.balanceOf(memberB.address))).to.equal("0.0")
     expect(ethers.utils.formatEther(await sourceTokenV2.balanceOf(deployer.address))).to.equal(
-      "99989000.0",
+      "98490000.0",
     )
+    expect(ethers.utils.formatEther(await sourceTokenV2.totalLocked())).to.equal("0.0")
   })
 })

@@ -14,7 +14,6 @@ import { utils } from "ethers"
 
 import { resolve } from "path"
 
-// import { config } from "dotenv";
 import { HardhatUserConfig, task } from "hardhat/config"
 import { HttpNetworkUserConfig } from "hardhat/types"
 
@@ -82,7 +81,7 @@ const config: HardhatUserConfig = {
     },
     "frame-celo-alfajores": {
       url: "http://127.0.0.1:1248",
-      chainId: 280455,
+      chainId: chainIds.testnet,
       saveDeployments: true,
     },
   },

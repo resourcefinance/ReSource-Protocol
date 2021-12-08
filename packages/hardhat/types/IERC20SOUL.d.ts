@@ -24,6 +24,9 @@ interface IERC20SOULInterface extends ethers.utils.Interface {
     "allowance(address,address)": FunctionFragment;
     "approve(address,uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
+    "getMaxLockTime()": FunctionFragment;
+    "getMaxSchedules()": FunctionFragment;
+    "getMinLockTime()": FunctionFragment;
     "totalSupply()": FunctionFragment;
     "transfer(address,uint256)": FunctionFragment;
     "transferFrom(address,address,uint256)": FunctionFragment;
@@ -39,6 +42,18 @@ interface IERC20SOULInterface extends ethers.utils.Interface {
     values: [string, BigNumberish]
   ): string;
   encodeFunctionData(functionFragment: "balanceOf", values: [string]): string;
+  encodeFunctionData(
+    functionFragment: "getMaxLockTime",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getMaxSchedules",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getMinLockTime",
+    values?: undefined
+  ): string;
   encodeFunctionData(
     functionFragment: "totalSupply",
     values?: undefined
@@ -66,6 +81,18 @@ interface IERC20SOULInterface extends ethers.utils.Interface {
   decodeFunctionResult(functionFragment: "allowance", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "getMaxLockTime",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getMaxSchedules",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getMinLockTime",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "totalSupply",
     data: BytesLike
@@ -281,6 +308,12 @@ export class IERC20SOUL extends BaseContract {
 
     balanceOf(account: string, overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    getMaxLockTime(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    getMaxSchedules(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    getMinLockTime(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     totalSupply(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     transfer(
@@ -321,6 +354,12 @@ export class IERC20SOUL extends BaseContract {
 
   balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
 
+  getMaxLockTime(overrides?: CallOverrides): Promise<BigNumber>;
+
+  getMaxSchedules(overrides?: CallOverrides): Promise<BigNumber>;
+
+  getMinLockTime(overrides?: CallOverrides): Promise<BigNumber>;
+
   totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
   transfer(
@@ -360,6 +399,12 @@ export class IERC20SOUL extends BaseContract {
     ): Promise<boolean>;
 
     balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    getMaxLockTime(overrides?: CallOverrides): Promise<BigNumber>;
+
+    getMaxSchedules(overrides?: CallOverrides): Promise<BigNumber>;
+
+    getMinLockTime(overrides?: CallOverrides): Promise<BigNumber>;
 
     totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -698,6 +743,12 @@ export class IERC20SOUL extends BaseContract {
 
     balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
 
+    getMaxLockTime(overrides?: CallOverrides): Promise<BigNumber>;
+
+    getMaxSchedules(overrides?: CallOverrides): Promise<BigNumber>;
+
+    getMinLockTime(overrides?: CallOverrides): Promise<BigNumber>;
+
     totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
     transfer(
@@ -741,6 +792,12 @@ export class IERC20SOUL extends BaseContract {
       account: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
+
+    getMaxLockTime(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    getMaxSchedules(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    getMinLockTime(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     totalSupply(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 

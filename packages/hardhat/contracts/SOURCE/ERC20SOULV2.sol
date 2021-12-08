@@ -1,7 +1,9 @@
+// SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+
 
 /// @title ERC20SOUL - An ERC20 extension that enables the transfer of
 /// tokens alongside locking periods that can be applied to subsets of
@@ -29,6 +31,8 @@ contract ERC20SOULV2 is ERC20Upgradeable, OwnableUpgradeable {
         Lock lock
     );
 
+    event LockReturned(address owner, uint256 amount);
+
     /*
      *  Storage
      */
@@ -38,6 +42,7 @@ contract ERC20SOULV2 is ERC20Upgradeable, OwnableUpgradeable {
     uint256 public maxLockTime;
     uint256 public maxSchedules;
     uint256 public totalLocked;
+    bool private _upgradeV2;
 
     struct Lock {
         uint256 totalAmount;
@@ -55,15 +60,15 @@ contract ERC20SOULV2 is ERC20Upgradeable, OwnableUpgradeable {
      */
     modifier validLock(Lock calldata _lock) {
         require(_lock.totalAmount > 0, "Invalid Lock amount");
-        uint256 totalLocked;
+        uint256 lockTotal;
         for (uint256 i = 0; i < _lock.schedules.length; i++) {
-            totalLocked += _lock.schedules[i].amount;
+            lockTotal += _lock.schedules[i].amount;
             require(_lock.schedules[i].expirationBlock > 
                 block.timestamp + minLockTime, "Lock schedule does not meet minimum");
             require(_lock.schedules[i].expirationBlock < 
                 block.timestamp + maxLockTime, "Lock schedule does not meet maximum");
         }
-        require(totalLocked == _lock.totalAmount, "Invalid Lock");
+        require(lockTotal == _lock.totalAmount, "Invalid Lock");
         _;
     }
 
@@ -91,6 +96,12 @@ contract ERC20SOULV2 is ERC20Upgradeable, OwnableUpgradeable {
             require(stakeableContracts[i] != address(0), "invalid stakeable contract address");
             isStakeableContract[stakeableContracts[i]] = true;
         }
+    }
+
+    function upgradeV2() public {
+        require (!_upgradeV2, "ERC20SOULV2: already upgraded to V2");
+        _upgradeV2 = true;
+        totalLocked = 1500000 ether;
     }
 
     /// @dev Creates a valid recipient lock after transfering tokens
@@ -206,15 +217,31 @@ contract ERC20SOULV2 is ERC20Upgradeable, OwnableUpgradeable {
         minLockTime = _newMin;
     }
 
+    /// @dev external function to get minimum lock time
+    function getMinLockTime() external view returns (uint256) {
+        return minLockTime;
+    }
+
     /// @dev external function to update maximum lock time
     /// @param _newMax new maximum locking time
     function setMaxLockTime(uint256 _newMax) external onlyOwner() {
         maxLockTime = _newMax;
     }
+
+    /// @dev external function to get maximum lock time
+    function getMaxLockTime() external view returns (uint256) {
+        return maxLockTime;
+    }
+
     /// @dev external function to update maximum number of schedules per lock
     /// @param _newMax new maximum number of shedules per lock
     function setMaxSchedules(uint256 _newMax) external onlyOwner() {
         maxSchedules = _newMax;
+    }
+
+    /// @dev external function to get maximum number of schedules per lock
+    function getMaxSchedules() external view returns (uint256) {
+        return maxSchedules;
     }
 
     /// @dev external function to add a stakeable contract
@@ -253,7 +280,10 @@ contract ERC20SOULV2 is ERC20Upgradeable, OwnableUpgradeable {
     }
 
     function refundLockedTokensToOwner() external {
+        uint256 lockedBalance = lockedBalanceOf(msg.sender);
+        totalLocked = totalLocked < lockedBalance ? 0 : totalLocked -= lockedBalance;
         super._transfer(msg.sender, owner(), lockedBalanceOf(msg.sender));
         delete locks[msg.sender];
+        emit LockReturned(msg.sender, totalLocked);
     }
 }

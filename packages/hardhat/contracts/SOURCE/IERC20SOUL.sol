@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.0;
 
 /// @title ERC20SOUL - An ERC20 extension that enables the transfer of
@@ -36,6 +37,15 @@ interface IERC20SOUL {
         uint256 amount;
         uint256 expirationBlock;
     }
+
+    /// @dev external function to get minimum lock time
+    function getMinLockTime() external view returns (uint256);
+
+    /// @dev external function to get maximum lock time
+    function getMaxLockTime() external view returns (uint256);
+
+    /// @dev external function to get maximum number of schedules per lock
+    function getMaxSchedules() external view returns (uint256);
 
     /// @dev Creates a valid recipient lock after transfering tokens
     /// @param _to address to send tokens to

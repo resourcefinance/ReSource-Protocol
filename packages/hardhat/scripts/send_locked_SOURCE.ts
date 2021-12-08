@@ -50,19 +50,21 @@ async function main(): Promise<void> {
         continue
       }
 
-      const amount = ethers.utils.parseEther(recipient.amount)
+      const lockedAmount = ethers.utils.parseEther(recipient.lockedAmount)
       schedules = getSchedule(
-        amount,
+        lockedAmount,
         recipients.schedule.periods,
         recipients.schedule.monthsInPeriod,
         recipients.schedule.startDate,
       )
 
-      console.log("💵 Sending " + ethers.utils.formatEther(amount) + " locked SOURCE to " + address)
+      console.log(
+        "💵 Sending " + ethers.utils.formatEther(lockedAmount) + " locked SOURCE to " + address,
+      )
 
       const tx = await (
         await sourceContract.transferWithLock(address, {
-          totalAmount: amount,
+          totalAmount: lockedAmount,
           amountStaked: 0,
           schedules: schedules,
         })

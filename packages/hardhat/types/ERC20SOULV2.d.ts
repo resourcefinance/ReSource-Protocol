@@ -28,6 +28,9 @@ interface ERC20SOULV2Interface extends ethers.utils.Interface {
     "decimals()": FunctionFragment;
     "decreaseAllowance(address,uint256)": FunctionFragment;
     "getLockSchedules(address)": FunctionFragment;
+    "getMaxLockTime()": FunctionFragment;
+    "getMaxSchedules()": FunctionFragment;
+    "getMinLockTime()": FunctionFragment;
     "increaseAllowance(address,uint256)": FunctionFragment;
     "initializeERC20SOUL(string,string,uint256,address[])": FunctionFragment;
     "isStakeableContract(address)": FunctionFragment;
@@ -51,6 +54,7 @@ interface ERC20SOULV2Interface extends ethers.utils.Interface {
     "transferFrom(address,address,uint256)": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
     "transferWithLock(address,(uint256,uint256,tuple[]))": FunctionFragment;
+    "upgradeV2()": FunctionFragment;
   };
 
   encodeFunctionData(
@@ -74,6 +78,18 @@ interface ERC20SOULV2Interface extends ethers.utils.Interface {
   encodeFunctionData(
     functionFragment: "getLockSchedules",
     values: [string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getMaxLockTime",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getMaxSchedules",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getMinLockTime",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "increaseAllowance",
@@ -162,6 +178,7 @@ interface ERC20SOULV2Interface extends ethers.utils.Interface {
       }
     ]
   ): string;
+  encodeFunctionData(functionFragment: "upgradeV2", values?: undefined): string;
 
   decodeFunctionResult(
     functionFragment: "addStakeableContract",
@@ -177,6 +194,18 @@ interface ERC20SOULV2Interface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "getLockSchedules",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getMaxLockTime",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getMaxSchedules",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getMinLockTime",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -256,10 +285,12 @@ interface ERC20SOULV2Interface extends ethers.utils.Interface {
     functionFragment: "transferWithLock",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "upgradeV2", data: BytesLike): Result;
 
   events: {
     "Approval(address,address,uint256)": EventFragment;
     "LockExpired(address,tuple)": EventFragment;
+    "LockReturned(address,uint256)": EventFragment;
     "LockScheduleExpired(address,tuple)": EventFragment;
     "LockedTransfer(tuple,address,address)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
@@ -268,6 +299,7 @@ interface ERC20SOULV2Interface extends ethers.utils.Interface {
 
   getEvent(nameOrSignatureOrTopic: "Approval"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "LockExpired"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "LockReturned"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "LockScheduleExpired"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "LockedTransfer"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
@@ -318,6 +350,10 @@ export type LockExpiredEvent = TypedEvent<
       })[];
     };
   }
+>;
+
+export type LockReturnedEvent = TypedEvent<
+  [string, BigNumber] & { owner: string; amount: BigNumber }
 >;
 
 export type LockScheduleExpiredEvent = TypedEvent<
@@ -489,6 +525,12 @@ export class ERC20SOULV2 extends BaseContract {
       ]
     >;
 
+    getMaxLockTime(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    getMaxSchedules(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    getMinLockTime(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     increaseAllowance(
       spender: string,
       addedValue: BigNumberish,
@@ -594,6 +636,10 @@ export class ERC20SOULV2 extends BaseContract {
       },
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
+
+    upgradeV2(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
   };
 
   addStakeableContract(
@@ -632,6 +678,12 @@ export class ERC20SOULV2 extends BaseContract {
       expirationBlock: BigNumber;
     })[]
   >;
+
+  getMaxLockTime(overrides?: CallOverrides): Promise<BigNumber>;
+
+  getMaxSchedules(overrides?: CallOverrides): Promise<BigNumber>;
+
+  getMinLockTime(overrides?: CallOverrides): Promise<BigNumber>;
 
   increaseAllowance(
     spender: string,
@@ -736,6 +788,10 @@ export class ERC20SOULV2 extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  upgradeV2(
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   callStatic: {
     addStakeableContract(
       stakingContract: string,
@@ -773,6 +829,12 @@ export class ERC20SOULV2 extends BaseContract {
         expirationBlock: BigNumber;
       })[]
     >;
+
+    getMaxLockTime(overrides?: CallOverrides): Promise<BigNumber>;
+
+    getMaxSchedules(overrides?: CallOverrides): Promise<BigNumber>;
+
+    getMinLockTime(overrides?: CallOverrides): Promise<BigNumber>;
 
     increaseAllowance(
       spender: string,
@@ -875,6 +937,8 @@ export class ERC20SOULV2 extends BaseContract {
       },
       overrides?: CallOverrides
     ): Promise<void>;
+
+    upgradeV2(overrides?: CallOverrides): Promise<void>;
   };
 
   filters: {
@@ -978,6 +1042,22 @@ export class ERC20SOULV2 extends BaseContract {
           })[];
         };
       }
+    >;
+
+    "LockReturned(address,uint256)"(
+      owner?: null,
+      amount?: null
+    ): TypedEventFilter<
+      [string, BigNumber],
+      { owner: string; amount: BigNumber }
+    >;
+
+    LockReturned(
+      owner?: null,
+      amount?: null
+    ): TypedEventFilter<
+      [string, BigNumber],
+      { owner: string; amount: BigNumber }
     >;
 
     "LockScheduleExpired(address,tuple)"(
@@ -1222,6 +1302,12 @@ export class ERC20SOULV2 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    getMaxLockTime(overrides?: CallOverrides): Promise<BigNumber>;
+
+    getMaxSchedules(overrides?: CallOverrides): Promise<BigNumber>;
+
+    getMinLockTime(overrides?: CallOverrides): Promise<BigNumber>;
+
     increaseAllowance(
       spender: string,
       addedValue: BigNumberish,
@@ -1319,6 +1405,10 @@ export class ERC20SOULV2 extends BaseContract {
       },
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
+
+    upgradeV2(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
   };
 
   populateTransaction: {
@@ -1356,6 +1446,12 @@ export class ERC20SOULV2 extends BaseContract {
       owner: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
+
+    getMaxLockTime(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    getMaxSchedules(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    getMinLockTime(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     increaseAllowance(
       spender: string,
@@ -1455,6 +1551,10 @@ export class ERC20SOULV2 extends BaseContract {
         amountStaked: BigNumberish;
         schedules: { amount: BigNumberish; expirationBlock: BigNumberish }[];
       },
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    upgradeV2(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
   };

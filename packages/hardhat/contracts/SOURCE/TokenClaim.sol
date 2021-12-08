@@ -5,7 +5,6 @@ import "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "./IERC20SOUL.sol";
 
-
 /// @title TokenClaim - This contract enables the storage of
 /// locked (specified by the ERC20SOUL standard) and unlocked
 /// tokens by a beneficiary address. This implementation also 
@@ -25,7 +24,9 @@ contract TokenClaim is OwnableUpgradeable, ReentrancyGuardUpgradeable {
     mapping(address => Claim) public claims;
     uint256 public totalClaimable;
     
-    event Released(uint256 amount);
+    event Released(Claim claim);
+    event NewClaimAdded(Claim claim);
+    event ClaimUpdated(Claim claim);
 
     /**
     * @dev Reverts if the address is null.
@@ -47,6 +48,7 @@ contract TokenClaim is OwnableUpgradeable, ReentrancyGuardUpgradeable {
     /**
      * @dev Creates a claim contract.
      * @param token_ address of the ERC20 token contract
+
      */
     function initialize(address token_) external virtual initializer {
         require(token_ != address(0x0));
@@ -76,7 +78,6 @@ contract TokenClaim is OwnableUpgradeable, ReentrancyGuardUpgradeable {
         IERC20SOUL.Lock calldata _lock
     )
         public
-        // TODO: validLock(_lock)
         notNull(_beneficiary)
         onlyOwner{
         uint256 totalAmount = _unlockedAmount + _lock.totalAmount;
@@ -86,12 +87,16 @@ contract TokenClaim is OwnableUpgradeable, ReentrancyGuardUpgradeable {
         );
         require(totalAmount > 0, "TokenClaim: amount must be > 0");
 
+        if (_lock.totalAmount > 0) {
+            validLock(_lock);
+        }
+
         Claim storage _claim = claims[_beneficiary];
 
         if (getClaimTotal(_beneficiary) == 0) {
             _claim.lock = _lock;
             _claim.unlockedAmount = _unlockedAmount;
-            // emit newClaimAdded
+            emit NewClaimAdded(_claim);
         } else {
             _claim.lock.totalAmount += _lock.totalAmount;
             for (uint256 i = 0; i < _lock.schedules.length; i++) {
@@ -102,10 +107,23 @@ contract TokenClaim is OwnableUpgradeable, ReentrancyGuardUpgradeable {
                 ));
             }            
             _claim.unlockedAmount += _unlockedAmount;
-            // emit claimUpdated event
+            emit ClaimUpdated(_claim);
         }
         _claim.released = false;
         totalClaimable += totalAmount;
+    }
+
+    function validLock(IERC20SOUL.Lock calldata _lock) internal view {
+        require(_lock.totalAmount > 0, "Invalid Lock amount");
+        uint256 lockTotal;
+        for (uint256 i = 0; i < _lock.schedules.length; i++) {
+            lockTotal += _lock.schedules[i].amount;
+            require(_lock.schedules[i].expirationBlock > 
+                block.timestamp + _token.getMinLockTime(), "Lock schedule does not meet minimum");
+            require(_lock.schedules[i].expirationBlock < 
+                block.timestamp + _token.getMaxLockTime(), "Lock schedule does not meet maximum");
+        }
+        require(lockTotal == _lock.totalAmount, "Invalid Lock");
     }
 
     /**
@@ -150,6 +168,7 @@ contract TokenClaim is OwnableUpgradeable, ReentrancyGuardUpgradeable {
         delete claims[msg.sender];
         _claim.released = true;
         totalClaimable -= totalAmount;
+        emit Released(_claim);
     }
 
     /**

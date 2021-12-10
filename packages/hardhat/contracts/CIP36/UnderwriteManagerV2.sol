@@ -18,8 +18,8 @@ contract UnderwriteManagerV2 is OwnableUpgradeable {
     IERC20 public collateralToken;
     uint256 public totalCollateral;
     mapping(address => CreditLine) public creditLines;
-    mapping(address => bool) public underwriters;
-    mapping(address => bool) public networkContracts;
+    mapping(address => bool) public isUnderwriter;
+    mapping(address => bool) public isRegisteredNetwork;
     uint256 public collateralBasisPoints;
     uint256 public creditLineRenewalOffset;
     uint256 public rewardPercent;
@@ -87,7 +87,7 @@ contract UnderwriteManagerV2 is OwnableUpgradeable {
     }
 
     modifier onlyNetwork(address _address) {
-        require(networkContracts[_address] == true || _address == owner(), "Invalid network address");
+        require(isRegisteredNetwork[_address] == true || _address == owner(), "Invalid network address");
         _;
     }
 
@@ -108,7 +108,7 @@ contract UnderwriteManagerV2 is OwnableUpgradeable {
     }
 
     modifier onlyUnderwriter(address underwriter) {
-        require(underwriters[underwriter], "Caller is not an underwriter");
+        require(isUnderwriter[underwriter], "Caller is not an underwriter");
         _;
     }
 
@@ -133,7 +133,7 @@ contract UnderwriteManagerV2 is OwnableUpgradeable {
     external {
         CreditLine storage creditLine = creditLines[counterparty];
         require(collateralAmount >= minimumCollateral, "Insufficient collateral");
-        require(networkContracts[networkToken], "Invalid network token");
+        require(isRegisteredNetwork[networkToken], "Invalid network token");
         // use safe transfer from openzep
         collateralToken.transferFrom(msg.sender, address(this), collateralAmount);
         creditLine.collateral = collateralAmount;
@@ -299,19 +299,19 @@ contract UnderwriteManagerV2 is OwnableUpgradeable {
 
 
 
-    function updateUnderwriters(address[] memory _underwriters, bool[] memory isUnderwriter) external onlyOwner() {
-        require(_underwriters.length == isUnderwriter.length, "Invalid update value length");
+    function updateUnderwriters(address[] memory _underwriters, bool[] memory _isUnderwriter) external onlyOwner() {
+        require(_underwriters.length == _isUnderwriter.length, "Invalid update value length");
         for (uint256 i = 0; i < _underwriters.length; i++) {
-            underwriters[_underwriters[i]] = isUnderwriter[i];
+            isUnderwriter[_underwriters[i]] = _isUnderwriter[i];
         }
     }
 
     function addNetwork(address networkAddress) external onlyOwner() {
-        networkContracts[networkAddress] = true;
+        isRegisteredNetwork[networkAddress] = true;
     }
 
     function removeNetwork(address networkAddress) external onlyOwner() {
-        networkContracts[networkAddress] = false;
+        isRegisteredNetwork[networkAddress] = false;
     }
 
     // Returns calculation in mwei units

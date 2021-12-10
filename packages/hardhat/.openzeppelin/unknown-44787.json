@@ -264,6 +264,26 @@
       "address": "0x46283DE6b81050EE898f4CB0e6e62A1C5e916612",
       "txHash": "0x62aae39a6e4b8cd8913c2d907e57a7d07dcd0d90d60cbce5783f287c8fbbe0c8",
       "kind": "transparent"
+    },
+    {
+      "address": "0x04a72E6fC15F898C7bfB893482535eb8B2f4D70B",
+      "txHash": "0x6593ea749aafd17c643d6427adbe520406696db96c4750fec443267d4dd5e599",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x07f74519C4C59888cb2794762b926c777b4ABA77",
+      "txHash": "0xc4a1f3d1d5896667e0ffae2aaab7f730bfe21623617f7342ddf9c0a337df5e1f",
+      "kind": "transparent"
+    },
+    {
+      "address": "0xF8ed10417Cd6cdc74deB6B7c6C605DE9CBf1a5d5",
+      "txHash": "0x37bef5963f93171695b42790bc0b58cff635e0781372df672bfc098872a68871",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x4eE03A8580210768Ec2a138906E12dCa776Ee416",
+      "txHash": "0x95c85038ea38459541b69efae752c1284f1b0ce94ea55db580f09f242f36dc52",
+      "kind": "transparent"
     }
   ],
   "impls": {
@@ -1347,7 +1367,7 @@
           {
             "contract": "ERC20SOUL",
             "label": "locks",
-            "type": "t_mapping(t_address,t_struct(Lock)946_storage)",
+            "type": "t_mapping(t_address,t_struct(Lock)6243_storage)",
             "src": "contracts/SOURCE/ERC20SOUL.sol:36"
           },
           {
@@ -1379,10 +1399,10 @@
           "t_bool": {
             "label": "bool"
           },
-          "t_mapping(t_address,t_struct(Lock)946_storage)": {
+          "t_mapping(t_address,t_struct(Lock)6243_storage)": {
             "label": "mapping(address => struct ERC20SOUL.Lock)"
           },
-          "t_struct(Lock)946_storage": {
+          "t_struct(Lock)6243_storage": {
             "label": "struct ERC20SOUL.Lock",
             "members": [
               {
@@ -1395,17 +1415,17 @@
               },
               {
                 "label": "schedules",
-                "type": "t_array(t_struct(Schedule)951_storage)dyn_storage"
+                "type": "t_array(t_struct(Schedule)6248_storage)dyn_storage"
               }
             ]
           },
           "t_uint256": {
             "label": "uint256"
           },
-          "t_array(t_struct(Schedule)951_storage)dyn_storage": {
+          "t_array(t_struct(Schedule)6248_storage)dyn_storage": {
             "label": "struct ERC20SOUL.Schedule[]"
           },
-          "t_struct(Schedule)951_storage": {
+          "t_struct(Schedule)6248_storage": {
             "label": "struct ERC20SOUL.Schedule",
             "members": [
               {
@@ -1946,6 +1966,331 @@
             "label": "struct ERC20SOULV2.Schedule[]"
           },
           "t_struct(Schedule)961_storage": {
+            "label": "struct ERC20SOULV2.Schedule",
+            "members": [
+              {
+                "label": "amount",
+                "type": "t_uint256"
+              },
+              {
+                "label": "expirationBlock",
+                "type": "t_uint256"
+              }
+            ]
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]"
+          },
+          "t_mapping(t_address,t_uint256)": {
+            "label": "mapping(address => uint256)"
+          },
+          "t_mapping(t_address,t_mapping(t_address,t_uint256))": {
+            "label": "mapping(address => mapping(address => uint256))"
+          },
+          "t_string_storage": {
+            "label": "string"
+          },
+          "t_array(t_uint256)45_storage": {
+            "label": "uint256[45]"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]"
+          }
+        }
+      }
+    },
+    "6825feef95bb766b8e00e706e4b77c88f4ad8b04c0e17bc0bb2797c54201469f": {
+      "address": "0xEDF72a015d28D7aE57aFFa46Db2B291d2Af180c6",
+      "txHash": "0x896de2094e52da109e0614f1143102c13e5a06467ed5c05df02017be1e616b1b",
+      "layout": {
+        "storage": [
+          {
+            "contract": "Initializable",
+            "label": "_initialized",
+            "type": "t_bool",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:21"
+          },
+          {
+            "contract": "Initializable",
+            "label": "_initializing",
+            "type": "t_bool",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:26"
+          },
+          {
+            "contract": "ContextUpgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)50_storage",
+            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:30"
+          },
+          {
+            "contract": "OwnableUpgradeable",
+            "label": "_owner",
+            "type": "t_address",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:21"
+          },
+          {
+            "contract": "OwnableUpgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)49_storage",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:77"
+          },
+          {
+            "contract": "ReentrancyGuardUpgradeable",
+            "label": "_status",
+            "type": "t_uint256",
+            "src": "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol:37"
+          },
+          {
+            "contract": "ReentrancyGuardUpgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)49_storage",
+            "src": "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol:67"
+          },
+          {
+            "contract": "TokenClaim",
+            "label": "_token",
+            "type": "t_contract(IERC20SOUL)7854",
+            "src": "contracts/SOURCE/TokenClaim.sol:23"
+          },
+          {
+            "contract": "TokenClaim",
+            "label": "claims",
+            "type": "t_mapping(t_address,t_struct(Claim)7993_storage)",
+            "src": "contracts/SOURCE/TokenClaim.sol:24"
+          },
+          {
+            "contract": "TokenClaim",
+            "label": "totalClaimable",
+            "type": "t_uint256",
+            "src": "contracts/SOURCE/TokenClaim.sol:25"
+          }
+        ],
+        "types": {
+          "t_contract(IERC20SOUL)7854": {
+            "label": "contract IERC20SOUL"
+          },
+          "t_mapping(t_address,t_struct(Claim)7993_storage)": {
+            "label": "mapping(address => struct TokenClaim.Claim)"
+          },
+          "t_address": {
+            "label": "address"
+          },
+          "t_struct(Claim)7993_storage": {
+            "label": "struct TokenClaim.Claim",
+            "members": [
+              {
+                "label": "unlockedAmount",
+                "type": "t_uint256"
+              },
+              {
+                "label": "lock",
+                "type": "t_struct(Lock)7747_storage"
+              },
+              {
+                "label": "released",
+                "type": "t_bool"
+              }
+            ]
+          },
+          "t_uint256": {
+            "label": "uint256"
+          },
+          "t_struct(Lock)7747_storage": {
+            "label": "struct IERC20SOUL.Lock",
+            "members": [
+              {
+                "label": "totalAmount",
+                "type": "t_uint256"
+              },
+              {
+                "label": "amountStaked",
+                "type": "t_uint256"
+              },
+              {
+                "label": "schedules",
+                "type": "t_array(t_struct(Schedule)7752_storage)dyn_storage"
+              }
+            ]
+          },
+          "t_bool": {
+            "label": "bool"
+          },
+          "t_array(t_struct(Schedule)7752_storage)dyn_storage": {
+            "label": "struct IERC20SOUL.Schedule[]"
+          },
+          "t_struct(Schedule)7752_storage": {
+            "label": "struct IERC20SOUL.Schedule",
+            "members": [
+              {
+                "label": "amount",
+                "type": "t_uint256"
+              },
+              {
+                "label": "expirationBlock",
+                "type": "t_uint256"
+              }
+            ]
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]"
+          }
+        }
+      }
+    },
+    "8c16622965739c01242b44307c172db73a7674546830a5ac90a309e20894fd44": {
+      "address": "0x70094EEF73c206E732EA0837E648B0A4F28bd433",
+      "txHash": "0x6110592774eabb05e827f9861d9d0416b9c428c3b0b9e7919f0a58c60db1ddbb",
+      "layout": {
+        "storage": [
+          {
+            "contract": "Initializable",
+            "label": "_initialized",
+            "type": "t_bool",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:21"
+          },
+          {
+            "contract": "Initializable",
+            "label": "_initializing",
+            "type": "t_bool",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:26"
+          },
+          {
+            "contract": "ContextUpgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)50_storage",
+            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:30"
+          },
+          {
+            "contract": "ERC20Upgradeable",
+            "label": "_balances",
+            "type": "t_mapping(t_address,t_uint256)",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol:36"
+          },
+          {
+            "contract": "ERC20Upgradeable",
+            "label": "_allowances",
+            "type": "t_mapping(t_address,t_mapping(t_address,t_uint256))",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol:38"
+          },
+          {
+            "contract": "ERC20Upgradeable",
+            "label": "_totalSupply",
+            "type": "t_uint256",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol:40"
+          },
+          {
+            "contract": "ERC20Upgradeable",
+            "label": "_name",
+            "type": "t_string_storage",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol:42"
+          },
+          {
+            "contract": "ERC20Upgradeable",
+            "label": "_symbol",
+            "type": "t_string_storage",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol:43"
+          },
+          {
+            "contract": "ERC20Upgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)45_storage",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol:361"
+          },
+          {
+            "contract": "OwnableUpgradeable",
+            "label": "_owner",
+            "type": "t_address",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:21"
+          },
+          {
+            "contract": "OwnableUpgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)49_storage",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:77"
+          },
+          {
+            "contract": "ERC20SOULV2",
+            "label": "isStakeableContract",
+            "type": "t_mapping(t_address,t_bool)",
+            "src": "contracts/SOURCE/ERC20SOULV2.sol:39"
+          },
+          {
+            "contract": "ERC20SOULV2",
+            "label": "locks",
+            "type": "t_mapping(t_address,t_struct(Lock)6912_storage)",
+            "src": "contracts/SOURCE/ERC20SOULV2.sol:40"
+          },
+          {
+            "contract": "ERC20SOULV2",
+            "label": "minLockTime",
+            "type": "t_uint256",
+            "src": "contracts/SOURCE/ERC20SOULV2.sol:41"
+          },
+          {
+            "contract": "ERC20SOULV2",
+            "label": "maxLockTime",
+            "type": "t_uint256",
+            "src": "contracts/SOURCE/ERC20SOULV2.sol:42"
+          },
+          {
+            "contract": "ERC20SOULV2",
+            "label": "maxSchedules",
+            "type": "t_uint256",
+            "src": "contracts/SOURCE/ERC20SOULV2.sol:43"
+          },
+          {
+            "contract": "ERC20SOULV2",
+            "label": "totalLocked",
+            "type": "t_uint256",
+            "src": "contracts/SOURCE/ERC20SOULV2.sol:44"
+          },
+          {
+            "contract": "ERC20SOULV2",
+            "label": "_upgradeV2",
+            "type": "t_bool",
+            "src": "contracts/SOURCE/ERC20SOULV2.sol:45"
+          }
+        ],
+        "types": {
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)"
+          },
+          "t_address": {
+            "label": "address"
+          },
+          "t_bool": {
+            "label": "bool"
+          },
+          "t_mapping(t_address,t_struct(Lock)6912_storage)": {
+            "label": "mapping(address => struct ERC20SOULV2.Lock)"
+          },
+          "t_struct(Lock)6912_storage": {
+            "label": "struct ERC20SOULV2.Lock",
+            "members": [
+              {
+                "label": "totalAmount",
+                "type": "t_uint256"
+              },
+              {
+                "label": "amountStaked",
+                "type": "t_uint256"
+              },
+              {
+                "label": "schedules",
+                "type": "t_array(t_struct(Schedule)6917_storage)dyn_storage"
+              }
+            ]
+          },
+          "t_uint256": {
+            "label": "uint256"
+          },
+          "t_array(t_struct(Schedule)6917_storage)dyn_storage": {
+            "label": "struct ERC20SOULV2.Schedule[]"
+          },
+          "t_struct(Schedule)6917_storage": {
             "label": "struct ERC20SOULV2.Schedule",
             "members": [
               {

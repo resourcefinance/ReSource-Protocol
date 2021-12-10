@@ -37,8 +37,9 @@ interface UnderwriteManagerV2Interface extends ethers.utils.Interface {
     "extendCreditLine(address,uint256)": FunctionFragment;
     "initialize(address)": FunctionFragment;
     "isActive()": FunctionFragment;
+    "isRegisteredNetwork(address)": FunctionFragment;
+    "isUnderwriter(address)": FunctionFragment;
     "minimumCollateral()": FunctionFragment;
-    "networkContracts(address)": FunctionFragment;
     "owner()": FunctionFragment;
     "removeNetwork(address)": FunctionFragment;
     "renewCreditLine(address)": FunctionFragment;
@@ -48,7 +49,6 @@ interface UnderwriteManagerV2Interface extends ethers.utils.Interface {
     "transferOwnership(address)": FunctionFragment;
     "tryUpdateReward(address,uint256)": FunctionFragment;
     "underwriteCreditLine(address,uint256,address)": FunctionFragment;
-    "underwriters(address)": FunctionFragment;
     "updateCollateralBP(uint256)": FunctionFragment;
     "updateCollateralPriceCents(uint256)": FunctionFragment;
     "updateCreditLineExpiration(uint256)": FunctionFragment;
@@ -106,12 +106,16 @@ interface UnderwriteManagerV2Interface extends ethers.utils.Interface {
   encodeFunctionData(functionFragment: "initialize", values: [string]): string;
   encodeFunctionData(functionFragment: "isActive", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "minimumCollateral",
-    values?: undefined
+    functionFragment: "isRegisteredNetwork",
+    values: [string]
   ): string;
   encodeFunctionData(
-    functionFragment: "networkContracts",
+    functionFragment: "isUnderwriter",
     values: [string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "minimumCollateral",
+    values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
@@ -145,10 +149,6 @@ interface UnderwriteManagerV2Interface extends ethers.utils.Interface {
   encodeFunctionData(
     functionFragment: "underwriteCreditLine",
     values: [string, BigNumberish, string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "underwriters",
-    values: [string]
   ): string;
   encodeFunctionData(
     functionFragment: "updateCollateralBP",
@@ -230,11 +230,15 @@ interface UnderwriteManagerV2Interface extends ethers.utils.Interface {
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "isActive", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "minimumCollateral",
+    functionFragment: "isRegisteredNetwork",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "networkContracts",
+    functionFragment: "isUnderwriter",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "minimumCollateral",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
@@ -268,10 +272,6 @@ interface UnderwriteManagerV2Interface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "underwriteCreditLine",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "underwriters",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -653,12 +653,14 @@ export class UnderwriteManagerV2 extends BaseContract {
 
     isActive(overrides?: CallOverrides): Promise<[boolean]>;
 
-    minimumCollateral(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    networkContracts(
+    isRegisteredNetwork(
       arg0: string,
       overrides?: CallOverrides
     ): Promise<[boolean]>;
+
+    isUnderwriter(arg0: string, overrides?: CallOverrides): Promise<[boolean]>;
+
+    minimumCollateral(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     owner(overrides?: CallOverrides): Promise<[string]>;
 
@@ -698,8 +700,6 @@ export class UnderwriteManagerV2 extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    underwriters(arg0: string, overrides?: CallOverrides): Promise<[boolean]>;
-
     updateCollateralBP(
       _collateralBasisPoints: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -732,7 +732,7 @@ export class UnderwriteManagerV2 extends BaseContract {
 
     updateUnderwriters(
       _underwriters: string[],
-      isUnderwriter: boolean[],
+      _isUnderwriter: boolean[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -808,9 +808,14 @@ export class UnderwriteManagerV2 extends BaseContract {
 
   isActive(overrides?: CallOverrides): Promise<boolean>;
 
-  minimumCollateral(overrides?: CallOverrides): Promise<BigNumber>;
+  isRegisteredNetwork(
+    arg0: string,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
 
-  networkContracts(arg0: string, overrides?: CallOverrides): Promise<boolean>;
+  isUnderwriter(arg0: string, overrides?: CallOverrides): Promise<boolean>;
+
+  minimumCollateral(overrides?: CallOverrides): Promise<BigNumber>;
 
   owner(overrides?: CallOverrides): Promise<string>;
 
@@ -850,8 +855,6 @@ export class UnderwriteManagerV2 extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  underwriters(arg0: string, overrides?: CallOverrides): Promise<boolean>;
-
   updateCollateralBP(
     _collateralBasisPoints: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
@@ -884,7 +887,7 @@ export class UnderwriteManagerV2 extends BaseContract {
 
   updateUnderwriters(
     _underwriters: string[],
-    isUnderwriter: boolean[],
+    _isUnderwriter: boolean[],
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -956,9 +959,14 @@ export class UnderwriteManagerV2 extends BaseContract {
 
     isActive(overrides?: CallOverrides): Promise<boolean>;
 
-    minimumCollateral(overrides?: CallOverrides): Promise<BigNumber>;
+    isRegisteredNetwork(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
 
-    networkContracts(arg0: string, overrides?: CallOverrides): Promise<boolean>;
+    isUnderwriter(arg0: string, overrides?: CallOverrides): Promise<boolean>;
+
+    minimumCollateral(overrides?: CallOverrides): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<string>;
 
@@ -996,8 +1004,6 @@ export class UnderwriteManagerV2 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    underwriters(arg0: string, overrides?: CallOverrides): Promise<boolean>;
-
     updateCollateralBP(
       _collateralBasisPoints: BigNumberish,
       overrides?: CallOverrides
@@ -1030,7 +1036,7 @@ export class UnderwriteManagerV2 extends BaseContract {
 
     updateUnderwriters(
       _underwriters: string[],
-      isUnderwriter: boolean[],
+      _isUnderwriter: boolean[],
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -1582,12 +1588,14 @@ export class UnderwriteManagerV2 extends BaseContract {
 
     isActive(overrides?: CallOverrides): Promise<BigNumber>;
 
-    minimumCollateral(overrides?: CallOverrides): Promise<BigNumber>;
-
-    networkContracts(
+    isRegisteredNetwork(
       arg0: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    isUnderwriter(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    minimumCollateral(overrides?: CallOverrides): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1627,8 +1635,6 @@ export class UnderwriteManagerV2 extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    underwriters(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
-
     updateCollateralBP(
       _collateralBasisPoints: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -1661,7 +1667,7 @@ export class UnderwriteManagerV2 extends BaseContract {
 
     updateUnderwriters(
       _underwriters: string[],
-      isUnderwriter: boolean[],
+      _isUnderwriter: boolean[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -1738,12 +1744,17 @@ export class UnderwriteManagerV2 extends BaseContract {
 
     isActive(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    minimumCollateral(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    networkContracts(
+    isRegisteredNetwork(
       arg0: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
+
+    isUnderwriter(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    minimumCollateral(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
@@ -1783,11 +1794,6 @@ export class UnderwriteManagerV2 extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    underwriters(
-      arg0: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     updateCollateralBP(
       _collateralBasisPoints: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -1820,7 +1826,7 @@ export class UnderwriteManagerV2 extends BaseContract {
 
     updateUnderwriters(
       _underwriters: string[],
-      isUnderwriter: boolean[],
+      _isUnderwriter: boolean[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 

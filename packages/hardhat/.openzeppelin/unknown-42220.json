@@ -44,6 +44,11 @@
       "address": "0x74c0C58B99b68cF16A717279AC2d056A34ba2bFe",
       "txHash": "0xcf426c7919cdafb2dfd71ea5230597c91fe149aa0773ef8032ee40ab89bc2697",
       "kind": "transparent"
+    },
+    {
+      "address": "0xbf143A8aCDC9aa46d9a98db1c0b9A558D178999B",
+      "txHash": "0xff790c7cbed7f9ec2ce6c9509d8d1cf0dd4f6daa753b686ad96c882e5342cefc",
+      "kind": "transparent"
     }
   ],
   "impls": {
@@ -1114,6 +1119,147 @@
           },
           "t_array(t_uint256)45_storage": {
             "label": "uint256[45]"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]"
+          }
+        }
+      }
+    },
+    "6825feef95bb766b8e00e706e4b77c88f4ad8b04c0e17bc0bb2797c54201469f": {
+      "address": "0xCd6aF2F0ADe656232A237D7ef773790c916C6861",
+      "txHash": "0xd37a749b5664634176d2e6b2f8c2689cdfec357d56c6ec808735feaf3fe7e712",
+      "layout": {
+        "storage": [
+          {
+            "contract": "Initializable",
+            "label": "_initialized",
+            "type": "t_bool",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:21"
+          },
+          {
+            "contract": "Initializable",
+            "label": "_initializing",
+            "type": "t_bool",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:26"
+          },
+          {
+            "contract": "ContextUpgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)50_storage",
+            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:30"
+          },
+          {
+            "contract": "OwnableUpgradeable",
+            "label": "_owner",
+            "type": "t_address",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:21"
+          },
+          {
+            "contract": "OwnableUpgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)49_storage",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:77"
+          },
+          {
+            "contract": "ReentrancyGuardUpgradeable",
+            "label": "_status",
+            "type": "t_uint256",
+            "src": "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol:37"
+          },
+          {
+            "contract": "ReentrancyGuardUpgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)49_storage",
+            "src": "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol:67"
+          },
+          {
+            "contract": "TokenClaim",
+            "label": "_token",
+            "type": "t_contract(IERC20SOUL)7854",
+            "src": "contracts/SOURCE/TokenClaim.sol:23"
+          },
+          {
+            "contract": "TokenClaim",
+            "label": "claims",
+            "type": "t_mapping(t_address,t_struct(Claim)7993_storage)",
+            "src": "contracts/SOURCE/TokenClaim.sol:24"
+          },
+          {
+            "contract": "TokenClaim",
+            "label": "totalClaimable",
+            "type": "t_uint256",
+            "src": "contracts/SOURCE/TokenClaim.sol:25"
+          }
+        ],
+        "types": {
+          "t_contract(IERC20SOUL)7854": {
+            "label": "contract IERC20SOUL"
+          },
+          "t_mapping(t_address,t_struct(Claim)7993_storage)": {
+            "label": "mapping(address => struct TokenClaim.Claim)"
+          },
+          "t_address": {
+            "label": "address"
+          },
+          "t_struct(Claim)7993_storage": {
+            "label": "struct TokenClaim.Claim",
+            "members": [
+              {
+                "label": "unlockedAmount",
+                "type": "t_uint256"
+              },
+              {
+                "label": "lock",
+                "type": "t_struct(Lock)7747_storage"
+              },
+              {
+                "label": "released",
+                "type": "t_bool"
+              }
+            ]
+          },
+          "t_uint256": {
+            "label": "uint256"
+          },
+          "t_struct(Lock)7747_storage": {
+            "label": "struct IERC20SOUL.Lock",
+            "members": [
+              {
+                "label": "totalAmount",
+                "type": "t_uint256"
+              },
+              {
+                "label": "amountStaked",
+                "type": "t_uint256"
+              },
+              {
+                "label": "schedules",
+                "type": "t_array(t_struct(Schedule)7752_storage)dyn_storage"
+              }
+            ]
+          },
+          "t_bool": {
+            "label": "bool"
+          },
+          "t_array(t_struct(Schedule)7752_storage)dyn_storage": {
+            "label": "struct IERC20SOUL.Schedule[]"
+          },
+          "t_struct(Schedule)7752_storage": {
+            "label": "struct IERC20SOUL.Schedule",
+            "members": [
+              {
+                "label": "amount",
+                "type": "t_uint256"
+              },
+              {
+                "label": "expirationBlock",
+                "type": "t_uint256"
+              }
+            ]
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]"
           },
           "t_array(t_uint256)50_storage": {
             "label": "uint256[50]"

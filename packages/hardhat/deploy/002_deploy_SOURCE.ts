@@ -25,17 +25,6 @@ const func: DeployFunction = async function(hardhat: HardhatRuntimeEnvironment) 
   console.log(
     `${!vesting.newlyDeployed ? "✅ TokenVesting already deployed" : "🚀  TokenVesting deployed"}`,
   )
-
-  // tokenClaim deploy
-  const tokenClaimAbi = (await hardhat.artifacts.readArtifact("TokenClaim")).abi
-  const tokenClaimArgs = [sourceTokenAddress]
-
-  const tokenClaimAddress = await deployProxyAndSave(
-    "TokenClaim",
-    tokenClaimArgs,
-    hardhat,
-    tokenClaimAbi,
-  )
 }
 export default func
 func.tags = ["SOURCE"]

@@ -125,12 +125,13 @@ describe("UnderwriteManager Tests", function() {
     await expect(
       underwriteManager
         .connect(underwriterA)
-        .underwriteCreditLine(rUSD.address, ethers.utils.parseEther("10000.0"), memberA.address),
+        .underwrite(rUSD.address, ethers.utils.parseEther("10000.0"), memberA.address),
     ).to.emit(underwriteManager, "NewCreditLine")
 
     expect(
       ethers.utils.formatEther(
-        await (await underwriteManager.creditLines(memberA.address)).collateral,
+        await (await underwriteManager.creditLines(underwriterA.address, memberA.address))
+          .collateral,
       ),
     ).to.equal("10000.0")
 

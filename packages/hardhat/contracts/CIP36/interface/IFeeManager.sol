@@ -18,11 +18,12 @@ interface IFeeManager {
   /// @param _tokens the amount of CIP36 tokens transfered. 
   function accrueFees(address networkAccount, uint256 _tokens) external;
 
-  /// @notice This function is called by a fee stakeholder (Underwriter, 
-  /// Ambassador, etc.) to claim a portion of a network account's fees.
-  /// @dev This function is called by a stakeholder of an account fees.
+  /// @notice This function is called by a network role assigned address
+  /// to claim a portion of a network account's fees.
+  /// @dev The caller of this function must be a assigned a role.
   /// @param networkAccount the address of the account 
-  function claimFees(address networkAccount) external;
+  /// @param role the role of the caller address
+  function claimFees(address networkAccount, bytes32 role) external;
 
   /// @notice This function returns the relevant amount of tokens for a 
   /// given fee stakeholder.

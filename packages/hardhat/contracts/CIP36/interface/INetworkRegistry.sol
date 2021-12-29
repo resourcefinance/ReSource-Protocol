@@ -1,17 +1,23 @@
 pragma solidity ^0.8.0;
 
 interface INetworkRegistry {
-    function addMembers(address[] memory _members) external;
+    function grantMemberships(address[] memory _members) external;
 
-    function removeMember(address member) external;
+    function revokeMembership(address member) external;
 
-    function addOperator(address operator) external;
+    function grantAmbassadorships(address[] memory _ambassadors) external;
 
-    function removeOperator(address operator) external;
+    function revokeAmbassadorship(address ambassador) external;
 
     function deployWalletToRegistry(
         address[] memory clients,
         address[] memory guardians, 
         address coSigner,
         uint256 required) external;
+
+    function isMember(address _member) external view returns(bool);
+    
+    function isAmbassador(address _ambassador) external view returns(bool);
+    
+    function isOperator(address _operator) external view returns(bool);
 }

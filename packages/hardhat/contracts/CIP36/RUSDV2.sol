@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 import "./CIP36.sol";
-import "./NetworkRegistry.sol";
+import "./interface/INetworkRegistry.sol";
 import "./UnderwriteManager.sol";
 import "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
@@ -39,7 +39,7 @@ contract RUSDV2 is CIP36 {
     /*
      *  Storage
      */
-    NetworkRegistry public registry;
+    INetworkRegistry public registry;
     UnderwriteManager public underwriteManager;
     address public operator;
 
@@ -60,7 +60,7 @@ contract RUSDV2 is CIP36 {
         address operatorAddress
     ) external virtual initializer {
         CIP36.initialize("rUSD", "rUSD");
-        registry = NetworkRegistry(registryAddress);
+        registry = INetworkRegistry(registryAddress);
         underwriteManager = UnderwriteManager(_underwriteManager);
         operator = operatorAddress;
         restrictionState = Restriction.REGISTERED;

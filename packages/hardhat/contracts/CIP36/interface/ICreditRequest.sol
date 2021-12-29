@@ -12,8 +12,9 @@ pragma solidity ^0.8.0;
 interface ICreditRequest {
     struct CreditRequest {
         bytes32 id;
+        address ambassador;
         uint256 creditLimit;
-        address networkToken;
+        address network;
         bool approved;
     }
 

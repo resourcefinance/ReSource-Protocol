@@ -78,6 +78,8 @@ describe("TokenClaim Tests", function() {
     expect(claim.released).to.be.false
     let withdrawable = ethers.utils.formatEther(await tokenClaim.getWithdrawableAmount())
     expect(withdrawable).to.equal("900000.0")
+    let totalClaimable = ethers.utils.formatEther(await tokenClaim.totalClaimable())
+    expect(totalClaimable).to.equal("100000.0")
   })
 
   it("beneficiaryA claims tokens", async function() {
@@ -92,6 +94,8 @@ describe("TokenClaim Tests", function() {
     expect((await tokenClaim.claims(beneficiaryA.address)).released).to.be.true
     let withdrawable = ethers.utils.formatEther(await tokenClaim.getWithdrawableAmount())
     expect(withdrawable).to.equal("900000.0")
+    let totalClaimable = ethers.utils.formatEther(await tokenClaim.totalClaimable())
+    expect(totalClaimable).to.equal("0.0")
   })
 
   it("Creates unlocked Claim in TokenClaim contract for beneficiaryA", async function() {
@@ -108,6 +112,8 @@ describe("TokenClaim Tests", function() {
     expect((await tokenClaim.claims(beneficiaryA.address)).released).to.be.false
     let withdrawable = ethers.utils.formatEther(await tokenClaim.getWithdrawableAmount())
     expect(withdrawable).to.equal("875000.0")
+    let totalClaimable = ethers.utils.formatEther(await tokenClaim.totalClaimable())
+    expect(totalClaimable).to.equal("25000.0")
   })
 
   it("beneficiaryA claims tokens ", async function() {
@@ -122,6 +128,8 @@ describe("TokenClaim Tests", function() {
     expect((await tokenClaim.claims(beneficiaryA.address)).released).to.be.true
     let withdrawable = ethers.utils.formatEther(await tokenClaim.getWithdrawableAmount())
     expect(withdrawable).to.equal("875000.0")
+    let totalClaimable = ethers.utils.formatEther(await tokenClaim.totalClaimable())
+    expect(totalClaimable).to.equal("0.0")
   })
 
   it("Creates locked Claim in TokenClaim contract for beneficiaryA", async function() {
@@ -146,6 +154,8 @@ describe("TokenClaim Tests", function() {
     expect(claim.released).to.be.false
     let withdrawable = ethers.utils.formatEther(await tokenClaim.getWithdrawableAmount())
     expect(withdrawable).to.equal("850000.0")
+    let totalClaimable = ethers.utils.formatEther(await tokenClaim.totalClaimable())
+    expect(totalClaimable).to.equal("25000.0")
   })
 
   it("beneficiaryA claims tokens ", async function() {
@@ -160,6 +170,8 @@ describe("TokenClaim Tests", function() {
     expect((await tokenClaim.claims(beneficiaryA.address)).released).to.be.true
     let withdrawable = ethers.utils.formatEther(await tokenClaim.getWithdrawableAmount())
     expect(withdrawable).to.equal("850000.0")
+    let totalClaimable = ethers.utils.formatEther(await tokenClaim.totalClaimable())
+    expect(totalClaimable).to.equal("0.0")
   })
 
   it("Creates Claim in TokenClaim contract for beneficiaryB", async function() {
@@ -184,6 +196,8 @@ describe("TokenClaim Tests", function() {
     expect(claim.released).to.be.false
     let withdrawable = ethers.utils.formatEther(await tokenClaim.getWithdrawableAmount())
     expect(withdrawable).to.equal("750000.0")
+    let totalClaimable = ethers.utils.formatEther(await tokenClaim.totalClaimable())
+    expect(totalClaimable).to.equal("100000.0")
   })
 
   it("Revoke beneficiaryB claim", async function() {
@@ -207,6 +221,8 @@ describe("TokenClaim Tests", function() {
     expect(ethers.utils.formatEther(claim.unlockedAmount)).to.equal("0.0")
     expect(ethers.utils.formatEther(claim.lock.totalAmount)).to.equal("0.0")
     expect(claim.released).to.be.false
+    let totalClaimable = ethers.utils.formatEther(await tokenClaim.totalClaimable())
+    expect(totalClaimable).to.equal("0.0")
   })
 
   it("Withdraw total amount from token claim contract", async function() {

@@ -1,0 +1,422 @@
+{
+  "0x8cD2270eFaAd0fa381ecb9A85ab4138a3eC08806": {
+    "name": "Kwame Van Leeuwen",
+    "unlockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x00"
+    },
+    "lockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x017f592fea4393a49000"
+    },
+    "txHash": "0xe47ce5c7ec187b4bea4b4fe6d0cd7589d00ffa366ca617312278f7d6a902a3db",
+    "schedules": [
+      {
+        "amount": "7071.529593",
+        "expirationBlock": 1669096800,
+        "expirationDate": "2022-11-22T06:00:00.000Z"
+      }
+    ],
+    "isSuccess": true,
+    "error": ""
+  },
+  "0x5318E5b4321f0c9d866F65b571a4b4fEC2689617": {
+    "name": "Noah Gale",
+    "unlockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x00"
+    },
+    "lockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x077cbdef97de09702000"
+    },
+    "txHash": "0x4e1b12ee909c9726733889c769ac3cfec570e70803e2bf554ccba6d11692de27",
+    "schedules": [
+      {
+        "amount": "35357.64797",
+        "expirationBlock": 1669096800,
+        "expirationDate": "2022-11-22T06:00:00.000Z"
+      }
+    ],
+    "isSuccess": true,
+    "error": ""
+  },
+  "0x96287d1183dE4c735E85588F4E2f3e8669F8156B": {
+    "name": "Justin Wiley",
+    "unlockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x00"
+    },
+    "lockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x017f592fea4393a49000"
+    },
+    "txHash": "0x0c56f6595605d08e0bd5e7587d7e2c730548acb8ad0965ace54ef05069d61c82",
+    "schedules": [
+      {
+        "amount": "7071.529593",
+        "expirationBlock": 1669096800,
+        "expirationDate": "2022-11-22T06:00:00.000Z"
+      }
+    ],
+    "isSuccess": true,
+    "error": ""
+  },
+  "0xe20f0795127D67E2ebCE249a7380680e18a17Ae6": {
+    "name": "Patrick",
+    "unlockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x00"
+    },
+    "lockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x02feb25fd82a79dd6000"
+    },
+    "txHash": "0xc9f5d02ba9050a43d79c19dfec126628c6b5cb65ecd4151bf0c2f338228fcfa7",
+    "schedules": [
+      {
+        "amount": "14143.05919",
+        "expirationBlock": 1669096800,
+        "expirationDate": "2022-11-22T06:00:00.000Z"
+      }
+    ],
+    "isSuccess": true,
+    "error": ""
+  },
+  "0x8E17150Cf9387e205941dE811738d01059e61a07": {
+    "name": "Elizabeth Yeung",
+    "unlockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x00"
+    },
+    "lockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x077cbdef97de09702000"
+    },
+    "txHash": "0x1dbcc067bc3bbf682aa41f110903de9f22600580c51e789862ba34cecc9a03e9",
+    "schedules": [
+      {
+        "amount": "35357.64797",
+        "expirationBlock": 1669096800,
+        "expirationDate": "2022-11-22T06:00:00.000Z"
+      }
+    ],
+    "isSuccess": true,
+    "error": ""
+  },
+  "0x120c28227114CA14FDC7C36818Db2d43929E5ce2": {
+    "name": "Djouzar Mnyusiwalla",
+    "unlockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x00"
+    },
+    "lockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x077cbdef97de09702000"
+    },
+    "txHash": "0x1bbb0d77998d5e55f0247ab3f7a224975219dff325798e1927a51055379fd5d5",
+    "schedules": [
+      {
+        "amount": "35357.64797",
+        "expirationBlock": 1669096800,
+        "expirationDate": "2022-11-22T06:00:00.000Z"
+      }
+    ],
+    "isSuccess": true,
+    "error": ""
+  },
+  "0x290799659d0C5F56d3700D0dE334b8A561b09e57": {
+    "name": "See Eun Ha",
+    "unlockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x00"
+    },
+    "lockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x02feb25fd82a79dd6000"
+    },
+    "txHash": "0x036ab7320e41f0c881ae3d57927860e9c2c4e80e6ea57b00b25029525f5b670f",
+    "schedules": [
+      {
+        "amount": "14143.05919",
+        "expirationBlock": 1669096800,
+        "expirationDate": "2022-11-22T06:00:00.000Z"
+      }
+    ],
+    "isSuccess": true,
+    "error": ""
+  },
+  "0xcb1E8C57EBE080DC703EF4074F23D92Ab5299515": {
+    "name": "Diogo Ferreira",
+    "unlockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x00"
+    },
+    "lockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x02feb25fd82a79dd6000"
+    },
+    "txHash": "0x7b25d5713e47975a68ca60effdd23337735a691a18da8dff18d68ad9521dc789",
+    "schedules": [
+      {
+        "amount": "14143.05919",
+        "expirationBlock": 1669096800,
+        "expirationDate": "2022-11-22T06:00:00.000Z"
+      }
+    ],
+    "isSuccess": true,
+    "error": ""
+  },
+  "0x9F62257406227b87724ea6B049CFaB63c42df407": {
+    "name": "Itail Elizur",
+    "unlockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x00"
+    },
+    "lockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x02feb25fd82a79dd6000"
+    },
+    "txHash": "0x7b8a46e3028c6332ebe91e7075acbd7b913656831e004429aead3b4afebbc336",
+    "schedules": [
+      {
+        "amount": "14143.05919",
+        "expirationBlock": 1669096800,
+        "expirationDate": "2022-11-22T06:00:00.000Z"
+      }
+    ],
+    "isSuccess": true,
+    "error": ""
+  },
+  "0x2B00B61433036c032f29F39971ED7fA81618CB7c": {
+    "name": "Winslow C Strong",
+    "unlockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x00"
+    },
+    "lockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x02feb25fd82a79dd6000"
+    },
+    "txHash": "0x8ff88ce2bdab2699ba4bcd8539fbc4ec44373fc57fc40a4d33b3abaf7e5e759a",
+    "schedules": [
+      {
+        "amount": "14143.05919",
+        "expirationBlock": 1669096800,
+        "expirationDate": "2022-11-22T06:00:00.000Z"
+      }
+    ],
+    "isSuccess": true,
+    "error": ""
+  },
+  "0x4E05Bc165652140654e0F07b7cB429E5E1B0ed92": {
+    "name": "Jalak",
+    "unlockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x00"
+    },
+    "lockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x4adf6b5beeac5e614000"
+    },
+    "txHash": "0x0370ac4b3a2abbdde0e21b83094841fc191e0327e8078acfa072e210b796c0e3",
+    "schedules": [
+      {
+        "amount": "353576.4797",
+        "expirationBlock": 1669096800,
+        "expirationDate": "2022-11-22T06:00:00.000Z"
+      }
+    ],
+    "isSuccess": true,
+    "error": ""
+  },
+  "0x21dc8De88E439705A968c6C3981EFbeB87eB9160": {
+    "name": "Fabien Dureuil",
+    "unlockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x00"
+    },
+    "lockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x1df2f7be71a8c2a5c000"
+    },
+    "txHash": "0x4d66c13eea59d3d6938127e6ce73dd1e8f6ec357a236d70405017021f5bbb747",
+    "schedules": [
+      {
+        "amount": "141430.5919",
+        "expirationBlock": 1669096800,
+        "expirationDate": "2022-11-22T06:00:00.000Z"
+      }
+    ],
+    "isSuccess": true,
+    "error": ""
+  },
+  "0x57a9fcdD1D23E4D9462Ff3d18E4c308e370Ec546": {
+    "name": "Simon Schwerin",
+    "unlockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x00"
+    },
+    "lockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x11f82e3efece3e4b0000"
+    },
+    "txHash": "0xb89918b1e27f253fafe2d8a6e1d4f23798c811a26ad33affa261333f309e3dc1",
+    "schedules": [
+      {
+        "amount": "84858.35512",
+        "expirationBlock": 1669096800,
+        "expirationDate": "2022-11-22T06:00:00.000Z"
+      }
+    ],
+    "isSuccess": true,
+    "error": ""
+  },
+  "0x1828e5b6F0d6cf8C535B7212A27A27640532b598": {
+    "name": "Danny Christ",
+    "unlockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x00"
+    },
+    "lockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x4adf6b5beeac5e614000"
+    },
+    "txHash": "0x002cf021b9dafa77a5a06ec8d89dc0b2b9efac3446331207a575da1a92047778",
+    "schedules": [
+      {
+        "amount": "353576.4797",
+        "expirationBlock": 1669096800,
+        "expirationDate": "2022-11-22T06:00:00.000Z"
+      }
+    ],
+    "isSuccess": true,
+    "error": ""
+  },
+  "0x545B8761179d08E15CE4788bB028f2a4a8efF624": {
+    "name": "Eric Clark Su",
+    "unlockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x00"
+    },
+    "lockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x4adf6b5beeac5e614000"
+    },
+    "txHash": "0x81e35461a5e79e4cb21763fc54b37f2fa3f50bd7e98195d2ec0a72747c9e913e",
+    "schedules": [
+      {
+        "amount": "353576.4797",
+        "expirationBlock": 1669096800,
+        "expirationDate": "2022-11-22T06:00:00.000Z"
+      }
+    ],
+    "isSuccess": true,
+    "error": ""
+  },
+  "0x777770dFFDD7bbfc1622aD1205634eb9759D2035": {
+    "name": "Refaldi",
+    "unlockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x00"
+    },
+    "lockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x0ef97bdf26a3c46da000"
+    },
+    "txHash": "0xae5a223357087e954411461aacb01cf611c7668c558476c6e9ccc12b4ddb0283",
+    "schedules": [
+      {
+        "amount": "70715.29593",
+        "expirationBlock": 1669096800,
+        "expirationDate": "2022-11-22T06:00:00.000Z"
+      }
+    ],
+    "isSuccess": true,
+    "error": ""
+  },
+  "0x84656D6a55289Cf6667b1f5655fDdFa4eDB537f3": {
+    "name": "Gaurav Dhar",
+    "unlockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x00"
+    },
+    "lockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x02feb25fd82a79dd6000"
+    },
+    "txHash": "0xd7158cf193a3bf9b9d22a967139b3f0db65b7fbfbb590928c49675d32f539163",
+    "schedules": [
+      {
+        "amount": "14143.05919",
+        "expirationBlock": 1669096800,
+        "expirationDate": "2022-11-22T06:00:00.000Z"
+      }
+    ],
+    "isSuccess": true,
+    "error": ""
+  },
+  "0x6AD7baBfdC153ec9dDC78b49523f33FFaD4f3631": {
+    "name": "Stefano Bernadi",
+    "unlockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x00"
+    },
+    "lockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x077cbdef97de09702000"
+    },
+    "txHash": "0x166cc5e4b7c95a418a6e106f8ad961fcfa2684b09586685e89adc0ed1f2d9b3d",
+    "schedules": [
+      {
+        "amount": "35357.64797",
+        "expirationBlock": 1669096800,
+        "expirationDate": "2022-11-22T06:00:00.000Z"
+      }
+    ],
+    "isSuccess": true,
+    "error": ""
+  },
+  "0xD1854BC342A6788cFFEeC1f3FD9819E2d75ba8ca": {
+    "name": "Felix Machart",
+    "unlockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x00"
+    },
+    "lockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x02feb25fd82a79dd6000"
+    },
+    "txHash": "0x69e561f57759bfdc7109373b44076d1521674ec75027bc68ccb052f53812e218",
+    "schedules": [
+      {
+        "amount": "14143.05919",
+        "expirationBlock": 1669096800,
+        "expirationDate": "2022-11-22T06:00:00.000Z"
+      }
+    ],
+    "isSuccess": true,
+    "error": ""
+  },
+  "0x6C67B5bb3541D77cF1994493fF82a8511eb1352A": {
+    "name": "Andrei",
+    "unlockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x00"
+    },
+    "lockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x0a7b704f66f034dae000"
+    },
+    "txHash": "0x525f0ba2f1997a80d902d33d6b30295ca8b4c1c5c9a7cc62c3a6fadbf9ccc8ca",
+    "schedules": [
+      {
+        "amount": "49500.70715",
+        "expirationBlock": 1669096800,
+        "expirationDate": "2022-11-22T06:00:00.000Z"
+      }
+    ],
+    "isSuccess": true,
+    "error": ""
+  }
+}

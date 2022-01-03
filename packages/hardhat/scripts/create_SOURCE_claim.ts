@@ -50,7 +50,7 @@ async function main(): Promise<void> {
   ) as TokenClaim
 
   const addresses = recipients.recipients
-  let schedules
+  let schedules, scheduleTotal
   for (let recipient of addresses) {
     try {
       const address = recipient.address
@@ -63,7 +63,7 @@ async function main(): Promise<void> {
       }
 
       const lockedAmount = ethers.utils.parseEther(recipient.lockedAmount)
-      schedules = getSchedule(
+      let { schedules, scheduleTotal } = getSchedule(
         lockedAmount,
         recipients.schedule.periods,
         recipients.schedule.monthsInPeriod,
@@ -77,7 +77,7 @@ async function main(): Promise<void> {
           address,
           ethers.utils.parseEther(recipient.unlockedAmount),
           {
-            totalAmount: lockedAmount,
+            totalAmount: scheduleTotal,
             amountStaked: 0,
             schedules: schedules,
           },
@@ -127,13 +127,15 @@ const getSchedule = (amount: BigNumber, periods: number, monthsInPeriod, startDa
   let startTimeStamp = Date.parse(startDate.toString()) / 1000
 
   const arr = new Array()
+  let scheduleTotal = BigNumber.from(0)
   for (let i = 0; i < periods; i++) {
+    scheduleTotal = scheduleTotal.add(amount.div(BigNumber.from(periods.toString())))
     arr.push({
       amount: amount.div(BigNumber.from(periods.toString())),
       expirationBlock: startTimeStamp + month * i * monthsInPeriod,
     })
   }
-  return arr
+  return { schedules: arr, scheduleTotal }
 }
 
 const parseSchedule = (schedules) => {

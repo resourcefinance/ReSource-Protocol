@@ -9,7 +9,6 @@ const func: DeployFunction = async function(hardhat: HardhatRuntimeEnvironment) 
   const ReSourceTokenV2Abi = SourceTokenV2__factory.abi
 
   const proxy = await deployments.get("SourceToken")
-  console.log(proxy.address)
   let sourceTokenV2
   try {
     sourceTokenV2 = await upgrades.upgradeProxy(proxy.address, ReSourceTokenV2, {

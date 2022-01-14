@@ -18,28 +18,25 @@ import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
-interface INetworkRegistryInterface extends ethers.utils.Interface {
+interface IERC165UpgradeableInterface extends ethers.utils.Interface {
   functions: {
-    "isMember(address)": FunctionFragment;
-    "isValidOperator(address)": FunctionFragment;
+    "supportsInterface(bytes4)": FunctionFragment;
   };
 
-  encodeFunctionData(functionFragment: "isMember", values: [string]): string;
   encodeFunctionData(
-    functionFragment: "isValidOperator",
-    values: [string]
+    functionFragment: "supportsInterface",
+    values: [BytesLike]
   ): string;
 
-  decodeFunctionResult(functionFragment: "isMember", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "isValidOperator",
+    functionFragment: "supportsInterface",
     data: BytesLike
   ): Result;
 
   events: {};
 }
 
-export class INetworkRegistry extends BaseContract {
+export class IERC165Upgradeable extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
@@ -80,29 +77,23 @@ export class INetworkRegistry extends BaseContract {
     toBlock?: string | number | undefined
   ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
 
-  interface: INetworkRegistryInterface;
+  interface: IERC165UpgradeableInterface;
 
   functions: {
-    isMember(_member: string, overrides?: CallOverrides): Promise<[boolean]>;
-
-    isValidOperator(
-      _operator: string,
+    supportsInterface(
+      interfaceId: BytesLike,
       overrides?: CallOverrides
     ): Promise<[boolean]>;
   };
 
-  isMember(_member: string, overrides?: CallOverrides): Promise<boolean>;
-
-  isValidOperator(
-    _operator: string,
+  supportsInterface(
+    interfaceId: BytesLike,
     overrides?: CallOverrides
   ): Promise<boolean>;
 
   callStatic: {
-    isMember(_member: string, overrides?: CallOverrides): Promise<boolean>;
-
-    isValidOperator(
-      _operator: string,
+    supportsInterface(
+      interfaceId: BytesLike,
       overrides?: CallOverrides
     ): Promise<boolean>;
   };
@@ -110,22 +101,15 @@ export class INetworkRegistry extends BaseContract {
   filters: {};
 
   estimateGas: {
-    isMember(_member: string, overrides?: CallOverrides): Promise<BigNumber>;
-
-    isValidOperator(
-      _operator: string,
+    supportsInterface(
+      interfaceId: BytesLike,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    isMember(
-      _member: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    isValidOperator(
-      _operator: string,
+    supportsInterface(
+      interfaceId: BytesLike,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
   };

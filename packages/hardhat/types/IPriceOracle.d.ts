@@ -18,28 +18,19 @@ import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
-interface INetworkRegistryInterface extends ethers.utils.Interface {
+interface IPriceOracleInterface extends ethers.utils.Interface {
   functions: {
-    "isMember(address)": FunctionFragment;
-    "isValidOperator(address)": FunctionFragment;
+    "getPrice()": FunctionFragment;
   };
 
-  encodeFunctionData(functionFragment: "isMember", values: [string]): string;
-  encodeFunctionData(
-    functionFragment: "isValidOperator",
-    values: [string]
-  ): string;
+  encodeFunctionData(functionFragment: "getPrice", values?: undefined): string;
 
-  decodeFunctionResult(functionFragment: "isMember", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "isValidOperator",
-    data: BytesLike
-  ): Result;
+  decodeFunctionResult(functionFragment: "getPrice", data: BytesLike): Result;
 
   events: {};
 }
 
-export class INetworkRegistry extends BaseContract {
+export class IPriceOracle extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
@@ -80,53 +71,25 @@ export class INetworkRegistry extends BaseContract {
     toBlock?: string | number | undefined
   ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
 
-  interface: INetworkRegistryInterface;
+  interface: IPriceOracleInterface;
 
   functions: {
-    isMember(_member: string, overrides?: CallOverrides): Promise<[boolean]>;
-
-    isValidOperator(
-      _operator: string,
-      overrides?: CallOverrides
-    ): Promise<[boolean]>;
+    getPrice(overrides?: CallOverrides): Promise<[BigNumber]>;
   };
 
-  isMember(_member: string, overrides?: CallOverrides): Promise<boolean>;
-
-  isValidOperator(
-    _operator: string,
-    overrides?: CallOverrides
-  ): Promise<boolean>;
+  getPrice(overrides?: CallOverrides): Promise<BigNumber>;
 
   callStatic: {
-    isMember(_member: string, overrides?: CallOverrides): Promise<boolean>;
-
-    isValidOperator(
-      _operator: string,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
+    getPrice(overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   filters: {};
 
   estimateGas: {
-    isMember(_member: string, overrides?: CallOverrides): Promise<BigNumber>;
-
-    isValidOperator(
-      _operator: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    getPrice(overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    isMember(
-      _member: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    isValidOperator(
-      _operator: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    getPrice(overrides?: CallOverrides): Promise<PopulatedTransaction>;
   };
 }

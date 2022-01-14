@@ -13,9 +13,9 @@ const _abi = [
   {
     inputs: [
       {
-        internalType: "bytes32",
-        name: "requestId",
-        type: "bytes32",
+        internalType: "address",
+        name: "_counterparty",
+        type: "address",
       },
     ],
     name: "acceptRequest",
@@ -26,9 +26,9 @@ const _abi = [
   {
     inputs: [
       {
-        internalType: "bytes32",
-        name: "requestId",
-        type: "bytes32",
+        internalType: "address",
+        name: "_counterparty",
+        type: "address",
       },
     ],
     name: "approveRequest",
@@ -39,12 +39,12 @@ const _abi = [
   {
     inputs: [
       {
-        internalType: "bytes32",
-        name: "requestId",
-        type: "bytes32",
+        internalType: "address",
+        name: "_counterparty",
+        type: "address",
       },
     ],
-    name: "calculateMinRequestCollateral",
+    name: "calculateRequestCollateral",
     outputs: [
       {
         internalType: "uint256",
@@ -56,7 +56,23 @@ const _abi = [
     type: "function",
   },
   {
-    inputs: [],
+    inputs: [
+      {
+        internalType: "address",
+        name: "_counterparty",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "_creditLimit",
+        type: "uint256",
+      },
+      {
+        internalType: "address",
+        name: "_networkToken",
+        type: "address",
+      },
+    ],
     name: "createRequest",
     outputs: [],
     stateMutability: "nonpayable",
@@ -65,9 +81,63 @@ const _abi = [
   {
     inputs: [
       {
-        internalType: "bytes32",
-        name: "requestId",
-        type: "bytes32",
+        internalType: "address",
+        name: "_counterparty",
+        type: "address",
+      },
+    ],
+    name: "deleteRequest",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_counterparty",
+        type: "address",
+      },
+    ],
+    name: "getCreditRequest",
+    outputs: [
+      {
+        components: [
+          {
+            internalType: "bool",
+            name: "approved",
+            type: "bool",
+          },
+          {
+            internalType: "address",
+            name: "ambassador",
+            type: "address",
+          },
+          {
+            internalType: "address",
+            name: "networkToken",
+            type: "address",
+          },
+          {
+            internalType: "uint256",
+            name: "creditLimit",
+            type: "uint256",
+          },
+        ],
+        internalType: "struct ICreditRequest.CreditRequest",
+        name: "",
+        type: "tuple",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_counterparty",
+        type: "address",
       },
       {
         internalType: "uint256",

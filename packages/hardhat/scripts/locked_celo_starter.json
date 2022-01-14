@@ -1,0 +1,274 @@
+{
+  "fileName": "celo_starter_locked_Dec_29",
+  "recipients": [
+    {
+      "name": "FERNANDO HERMOGENES LOPEZ GARCIA",
+      "address": "0x315388deb1608BDcF532CE0BF6fC130542f5132C",
+      "unlockedAmount": "0",
+      "lockedAmount": "13750"
+    },
+    {
+      "name": "ANDREW KHENG AUN LIM",
+      "address": "0xe0878a84505a33e0bece816f8d70a0c635caef00",
+      "unlockedAmount": "0",
+      "lockedAmount": "25000"
+    },
+    {
+      "name": "VIET DUNG TRAN",
+      "address": "0x84f95484298639Db0D67Dd515cB0783e4246e90D",
+      "unlockedAmount": "0",
+      "lockedAmount": "5000"
+    },
+    {
+      "name": "THI THUY NGA VU",
+      "address": "0xC01b1D7e6ad86C41d1456C45A65c69108D7dBde0",
+      "unlockedAmount": "0",
+      "lockedAmount": "3750"
+    },
+    {
+      "name": "\u017dARKO BI\u017dACA",
+      "address": "0xce4B0642B6e7d603fa6f6635FdDFb1201cBFEdbF",
+      "unlockedAmount": "0",
+      "lockedAmount": "5000"
+    },
+    {
+      "name": "LUCA CIUCCI",
+      "address": "0xE1441C61bfA1F10d9Ce1Dc453b1Ec7D57516D349",
+      "unlockedAmount": "0",
+      "lockedAmount": "2500"
+    },
+    {
+      "name": "DAVID BENSADON",
+      "address": "0xeb99Dd982564d2a075Bed6D25A92EE58f542cA92",
+      "unlockedAmount": "0",
+      "lockedAmount": "25000"
+    },
+    {
+      "name": "SEVERIN VIGNOLLES",
+      "address": "0xEcD1046b037D046F524D5Ce08F27dAa916d7721C",
+      "unlockedAmount": "0",
+      "lockedAmount": "1075"
+    },
+    {
+      "name": "JANKO GREGORKA SLANA",
+      "address": "0x84c33Ce1E7802694cDAF3730CCB13475DE196d5F",
+      "unlockedAmount": "0",
+      "lockedAmount": "25000"
+    },
+    {
+      "name": "CAN SEN",
+      "address": "0x00a5af2d7da07df76073a6f478f0fb4942d2659a",
+      "unlockedAmount": "0",
+      "lockedAmount": "50000"
+    },
+    {
+      "name": "\u4e0b\u6751 \u78a7 \u4e0b\u6751\u5bb6",
+      "address": "0xCBf1C41b206DC683214EaFA3f3d6304553bc5d35",
+      "unlockedAmount": "0",
+      "lockedAmount": "5000"
+    },
+    {
+      "name": "CHRISTOPHER JAMES HALCROW",
+      "address": "0x9a23f67A3E260e737ac52479AB577C0f49144d47",
+      "unlockedAmount": "0",
+      "lockedAmount": "7500"
+    },
+    {
+      "name": "DUJE TVRDI\u0106",
+      "address": "0xE94c151CefdAA7085928AF67840B07e2d128D9CE",
+      "unlockedAmount": "0",
+      "lockedAmount": "7500"
+    },
+    {
+      "name": "AMIT AJAY ASHWIN SAMANI",
+      "address": "0x271bc1d79A6cA300de99E634E0a0508fa1b0DdF9",
+      "unlockedAmount": "0",
+      "lockedAmount": "7500"
+    },
+    {
+      "name": "MANAN PANDIT",
+      "address": "0xf64416860e74091E180FE0319cdE479BA112A899",
+      "unlockedAmount": "0",
+      "lockedAmount": "2500"
+    },
+    {
+      "name": "TORSTEN FRIEDSMANN",
+      "address": "0xbb067b86188D5F2556d613AC54318a2F4Ca000d1",
+      "unlockedAmount": "0",
+      "lockedAmount": "1500"
+    },
+    {
+      "name": "JAN CHRISTOPH GRINGEL",
+      "address": "0x6f962b66cea23c24eD28E25279BaF4B9F8E51D56",
+      "unlockedAmount": "0",
+      "lockedAmount": "12500"
+    },
+    {
+      "name": "MARIO ANDRES SASSANO MONTIEL",
+      "address": "0x0a322c9145274525db0150cf68659cb74357a21f",
+      "unlockedAmount": "0",
+      "lockedAmount": "18750"
+    },
+    {
+      "name": "TIAN SHUN CHAN",
+      "address": "0x3Bd58f67baE1C3Dacd5D06442C89eF638ca8C8B2",
+      "unlockedAmount": "0",
+      "lockedAmount": "62500"
+    },
+    {
+      "name": "HUYNH NGUY\u1ec4N V\u0102N",
+      "address": "0x661bd9e8e534c7D1CD9C7A30acb5C5f2D0647231",
+      "unlockedAmount": "0",
+      "lockedAmount": "750"
+    },
+    {
+      "name": "CHU VAN DUC",
+      "address": "0x891b69F290aeC2eB64e29633AB732AEcea290E5a",
+      "unlockedAmount": "0",
+      "lockedAmount": "12500"
+    },
+    {
+      "name": "THUY NGUYEN THI",
+      "address": "0x147485139864293A053E8087B59B1dE5E26EbFfb",
+      "unlockedAmount": "0",
+      "lockedAmount": "5000"
+    },
+    {
+      "name": "TOAN BUI",
+      "address": "0xF27724365977945c3bdA9Be5070cD64Ee00634Cf",
+      "unlockedAmount": "0",
+      "lockedAmount": "4500"
+    },
+    {
+      "name": "XIANG GAO",
+      "address": "0x0CaA30B7A830283794817dee2e7e7cF3bCB060A3",
+      "unlockedAmount": "0",
+      "lockedAmount": "1250"
+    },
+    {
+      "name": "SIDNEI DE GODOI",
+      "address": "0x710209886a87aB3D3BA92EC8188FE71d7e5F5B2A",
+      "unlockedAmount": "0",
+      "lockedAmount": "50000"
+    },
+    {
+      "name": "MATIAS VOLPE",
+      "address": "0x7e68E3DD05f46a2BC783C362bC73576586fCC90D",
+      "unlockedAmount": "0",
+      "lockedAmount": "2500"
+    },
+    {
+      "name": "MARIN TVRDI\u0106",
+      "address": "0xe860EeEeFA17a16Ca7509cf94b7Eb8048ac839aa",
+      "unlockedAmount": "0",
+      "lockedAmount": "5000"
+    },
+    {
+      "name": "JULIEN GASPARD MELCHIOR BALTHAZARD",
+      "address": "0x97034EeCd212EF3c6b11F2CB070aAb1AcA006620",
+      "unlockedAmount": "0",
+      "lockedAmount": "2500"
+    },
+    {
+      "name": "DANG QUOC SON",
+      "address": "0x348Ef43F4d20C68f20c95860D84B6736c42C3d35",
+      "unlockedAmount": "0",
+      "lockedAmount": "500"
+    },
+    {
+      "name": "CLEMENT SIDES",
+      "address": "0x0771475FFA0Dc6c9253337EC5eAAe8F735Aa8D99",
+      "unlockedAmount": "0",
+      "lockedAmount": "5000"
+    },
+    {
+      "name": "LUKA LIPOV\u0160\u0106AK",
+      "address": "0xEf6471446cc78ff2588ADABDEA97376cAE0Dc467",
+      "unlockedAmount": "0",
+      "lockedAmount": "30000"
+    },
+    {
+      "name": "LONGLONG YANG",
+      "address": "0xb798Ef4E91B94EE26d2bE212Dd0f17851DF543f0",
+      "unlockedAmount": "0",
+      "lockedAmount": "12500"
+    },
+    {
+      "name": "KA WING CHEUNG",
+      "address": "0xceb638A3DD2CD569992c3D92dB9433fe90987E5b",
+      "unlockedAmount": "0",
+      "lockedAmount": "2675"
+    },
+    {
+      "name": "FEIYANG SHI",
+      "address": "0x180580501244f5088FDB0298Db7E52eEcb48ec38",
+      "unlockedAmount": "0",
+      "lockedAmount": "2545"
+    },
+    {
+      "name": "TAN LE",
+      "address": "0x8340a6bdFdE254eb3f5a858BF23d30E28E3b32d7",
+      "unlockedAmount": "0",
+      "lockedAmount": "2500"
+    },
+    {
+      "name": "CHEN KAR WENG",
+      "address": "0x5522941073D6E2FdBBEa2Df2359d7466E7F67304",
+      "unlockedAmount": "0",
+      "lockedAmount": "2500"
+    },
+    {
+      "name": "JEROME KALMAN PIERRE VANCZAK",
+      "address": "0x4C29342d3D7121da87109e9bB444451984DE7386",
+      "unlockedAmount": "0",
+      "lockedAmount": "2500"
+    },
+    {
+      "name": "ANTERJIT SINGH KHAIRA",
+      "address": "0x4fD95c6FA765e64eC9313E465F4D2B88Cbf8dEaa",
+      "unlockedAmount": "0",
+      "lockedAmount": "10000"
+    },
+    {
+      "name": "MARCOS ANTONIO DO NASCIMENTO",
+      "address": "0xCb6a1FF7AabBE2AFCEB4f7C5A6eC7Ded94506C50",
+      "unlockedAmount": "0",
+      "lockedAmount": "12500"
+    },
+    {
+      "name": "KE XIE",
+      "address": "0xE7E727B524b82D41ea5683D8B924aeB4f7083004",
+      "unlockedAmount": "0",
+      "lockedAmount": "5000"
+    },
+    {
+      "name": "NESTOR JOS\u00c9 VIEITES PEREIRA",
+      "address": "0x980A2200E71135D0Bf98550B0aD715903459ca3d",
+      "unlockedAmount": "0",
+      "lockedAmount": "12500"
+    },
+    {
+      "name": "MARION MUTTER",
+      "address": "0x7B136a407dC06582727386A0413A8B4797eb551B",
+      "unlockedAmount": "0",
+      "lockedAmount": "25000"
+    },
+    {
+      "name": "PEDRO CAMILO DA COSTA",
+      "address": "0x95B9F2F528338b0cDB3F14442837b0e7F05DCEeC",
+      "unlockedAmount": "0",
+      "lockedAmount": "500"
+    },
+    {
+      "name": "AUBREY LEE OLMILLA",
+      "address": "0x060c9C259134e0e5D434dB7be18a1e98248065Ec",
+      "unlockedAmount": "0",
+      "lockedAmount": "7500"
+    }
+  ],
+  "schedule": {
+    "startDate": "Monday Nov 21 2022 22:00:00 GMT-0800 (Pacific Standard Time)",
+    "periods": 12,
+    "monthsInPeriod": 1
+  }
+}

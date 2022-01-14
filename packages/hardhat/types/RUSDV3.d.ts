@@ -19,7 +19,7 @@ import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
-interface RUSDV2Interface extends ethers.utils.Interface {
+interface RUSDV3Interface extends ethers.utils.Interface {
   functions: {
     "allowance(address,address)": FunctionFragment;
     "approve(address,uint256)": FunctionFragment;
@@ -32,17 +32,15 @@ interface RUSDV2Interface extends ethers.utils.Interface {
     "creditLimitOf(address)": FunctionFragment;
     "decimals()": FunctionFragment;
     "decreaseAllowance(address,uint256)": FunctionFragment;
+    "feeManager()": FunctionFragment;
     "increaseAllowance(address,uint256)": FunctionFragment;
     "initialize(string,string)": FunctionFragment;
-    "initializeRUSD(address,uint256,address,address)": FunctionFragment;
+    "initializeRUSD(address,address,address,address)": FunctionFragment;
     "name()": FunctionFragment;
-    "operator()": FunctionFragment;
     "owner()": FunctionFragment;
-    "removeRestrictions()": FunctionFragment;
+    "protocolRoles()": FunctionFragment;
+    "registry()": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
-    "restrictPositiveBalance()": FunctionFragment;
-    "restrictRegistered()": FunctionFragment;
-    "restrictionState()": FunctionFragment;
     "setCreditLimit(address,uint256)": FunctionFragment;
     "symbol()": FunctionFragment;
     "totalSupply()": FunctionFragment;
@@ -50,7 +48,7 @@ interface RUSDV2Interface extends ethers.utils.Interface {
     "transferFrom(address,address,uint256)": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
     "underwriteManager()": FunctionFragment;
-    "updateRestrictionExpiration()": FunctionFragment;
+    "withdrawFeeToken()": FunctionFragment;
   };
 
   encodeFunctionData(
@@ -89,6 +87,10 @@ interface RUSDV2Interface extends ethers.utils.Interface {
     values: [string, BigNumberish]
   ): string;
   encodeFunctionData(
+    functionFragment: "feeManager",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "increaseAllowance",
     values: [string, BigNumberish]
   ): string;
@@ -98,29 +100,17 @@ interface RUSDV2Interface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "initializeRUSD",
-    values: [string, BigNumberish, string, string]
+    values: [string, string, string, string]
   ): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
-  encodeFunctionData(functionFragment: "operator", values?: undefined): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "removeRestrictions",
+    functionFragment: "protocolRoles",
     values?: undefined
   ): string;
+  encodeFunctionData(functionFragment: "registry", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "renounceOwnership",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "restrictPositiveBalance",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "restrictRegistered",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "restrictionState",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -149,7 +139,7 @@ interface RUSDV2Interface extends ethers.utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "updateRestrictionExpiration",
+    functionFragment: "withdrawFeeToken",
     values?: undefined
   ): string;
 
@@ -179,6 +169,7 @@ interface RUSDV2Interface extends ethers.utils.Interface {
     functionFragment: "decreaseAllowance",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "feeManager", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "increaseAllowance",
     data: BytesLike
@@ -189,26 +180,14 @@ interface RUSDV2Interface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "operator", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "removeRestrictions",
+    functionFragment: "protocolRoles",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "registry", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "renounceOwnership",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "restrictPositiveBalance",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "restrictRegistered",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "restrictionState",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -234,30 +213,22 @@ interface RUSDV2Interface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "updateRestrictionExpiration",
+    functionFragment: "withdrawFeeToken",
     data: BytesLike
   ): Result;
 
   events: {
     "Approval(address,address,uint256)": EventFragment;
     "BalanceUpdate(address,address,uint256,uint256,uint256,uint256)": EventFragment;
-    "BulkBalanceUpdate(address,address[],uint256,uint256,uint256[],uint256[])": EventFragment;
     "CreditLimitUpdate(address,uint256)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
-    "RestrictionExpirationUpdated(uint256)": EventFragment;
-    "RestrictionUpdated(uint8)": EventFragment;
     "Transfer(address,address,uint256)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "Approval"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "BalanceUpdate"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "BulkBalanceUpdate"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "CreditLimitUpdate"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
-  getEvent(
-    nameOrSignatureOrTopic: "RestrictionExpirationUpdated"
-  ): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "RestrictionUpdated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Transfer"): EventFragment;
 }
 
@@ -280,17 +251,6 @@ export type BalanceUpdateEvent = TypedEvent<
   }
 >;
 
-export type BulkBalanceUpdateEvent = TypedEvent<
-  [string, string[], BigNumber, BigNumber, BigNumber[], BigNumber[]] & {
-    sender: string;
-    recipients: string[];
-    senderBalance: BigNumber;
-    senderCreditBalance: BigNumber;
-    recipientBalances: BigNumber[];
-    recipientCreditBalances: BigNumber[];
-  }
->;
-
 export type CreditLimitUpdateEvent = TypedEvent<
   [string, BigNumber] & { member: string; limit: BigNumber }
 >;
@@ -299,17 +259,11 @@ export type OwnershipTransferredEvent = TypedEvent<
   [string, string] & { previousOwner: string; newOwner: string }
 >;
 
-export type RestrictionExpirationUpdatedEvent = TypedEvent<
-  [BigNumber] & { restrictionRenewal: BigNumber }
->;
-
-export type RestrictionUpdatedEvent = TypedEvent<[number] & { state: number }>;
-
 export type TransferEvent = TypedEvent<
   [string, string, BigNumber] & { from: string; to: string; value: BigNumber }
 >;
 
-export class RUSDV2 extends BaseContract {
+export class RUSDV3 extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
@@ -350,7 +304,7 @@ export class RUSDV2 extends BaseContract {
     toBlock?: string | number | undefined
   ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
 
-  interface: RUSDV2Interface;
+  interface: RUSDV3Interface;
 
   functions: {
     allowance(
@@ -407,6 +361,8 @@ export class RUSDV2 extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    feeManager(overrides?: CallOverrides): Promise<[string]>;
+
     increaseAllowance(
       spender: string,
       addedValue: BigNumberish,
@@ -420,36 +376,24 @@ export class RUSDV2 extends BaseContract {
     ): Promise<ContractTransaction>;
 
     initializeRUSD(
-      registryAddress: string,
-      _expiration: BigNumberish,
       _underwriteManager: string,
-      operatorAddress: string,
+      _feeManager: string,
+      _registry: string,
+      _protocolRoles: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     name(overrides?: CallOverrides): Promise<[string]>;
 
-    operator(overrides?: CallOverrides): Promise<[string]>;
-
     owner(overrides?: CallOverrides): Promise<[string]>;
 
-    removeRestrictions(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+    protocolRoles(overrides?: CallOverrides): Promise<[string]>;
+
+    registry(overrides?: CallOverrides): Promise<[string]>;
 
     renounceOwnership(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
-
-    restrictPositiveBalance(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    restrictRegistered(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    restrictionState(overrides?: CallOverrides): Promise<[number]>;
 
     setCreditLimit(
       _member: string,
@@ -481,7 +425,7 @@ export class RUSDV2 extends BaseContract {
 
     underwriteManager(overrides?: CallOverrides): Promise<[string]>;
 
-    updateRestrictionExpiration(
+    withdrawFeeToken(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
   };
@@ -537,6 +481,8 @@ export class RUSDV2 extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  feeManager(overrides?: CallOverrides): Promise<string>;
+
   increaseAllowance(
     spender: string,
     addedValue: BigNumberish,
@@ -550,36 +496,24 @@ export class RUSDV2 extends BaseContract {
   ): Promise<ContractTransaction>;
 
   initializeRUSD(
-    registryAddress: string,
-    _expiration: BigNumberish,
     _underwriteManager: string,
-    operatorAddress: string,
+    _feeManager: string,
+    _registry: string,
+    _protocolRoles: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   name(overrides?: CallOverrides): Promise<string>;
 
-  operator(overrides?: CallOverrides): Promise<string>;
-
   owner(overrides?: CallOverrides): Promise<string>;
 
-  removeRestrictions(
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  protocolRoles(overrides?: CallOverrides): Promise<string>;
+
+  registry(overrides?: CallOverrides): Promise<string>;
 
   renounceOwnership(
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
-
-  restrictPositiveBalance(
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  restrictRegistered(
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  restrictionState(overrides?: CallOverrides): Promise<number>;
 
   setCreditLimit(
     _member: string,
@@ -611,7 +545,7 @@ export class RUSDV2 extends BaseContract {
 
   underwriteManager(overrides?: CallOverrides): Promise<string>;
 
-  updateRestrictionExpiration(
+  withdrawFeeToken(
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -667,6 +601,8 @@ export class RUSDV2 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
+    feeManager(overrides?: CallOverrides): Promise<string>;
+
     increaseAllowance(
       spender: string,
       addedValue: BigNumberish,
@@ -680,28 +616,22 @@ export class RUSDV2 extends BaseContract {
     ): Promise<void>;
 
     initializeRUSD(
-      registryAddress: string,
-      _expiration: BigNumberish,
       _underwriteManager: string,
-      operatorAddress: string,
+      _feeManager: string,
+      _registry: string,
+      _protocolRoles: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
     name(overrides?: CallOverrides): Promise<string>;
 
-    operator(overrides?: CallOverrides): Promise<string>;
-
     owner(overrides?: CallOverrides): Promise<string>;
 
-    removeRestrictions(overrides?: CallOverrides): Promise<void>;
+    protocolRoles(overrides?: CallOverrides): Promise<string>;
+
+    registry(overrides?: CallOverrides): Promise<string>;
 
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
-
-    restrictPositiveBalance(overrides?: CallOverrides): Promise<void>;
-
-    restrictRegistered(overrides?: CallOverrides): Promise<void>;
-
-    restrictionState(overrides?: CallOverrides): Promise<number>;
 
     setCreditLimit(
       _member: string,
@@ -733,7 +663,7 @@ export class RUSDV2 extends BaseContract {
 
     underwriteManager(overrides?: CallOverrides): Promise<string>;
 
-    updateRestrictionExpiration(overrides?: CallOverrides): Promise<void>;
+    withdrawFeeToken(overrides?: CallOverrides): Promise<void>;
   };
 
   filters: {
@@ -793,44 +723,6 @@ export class RUSDV2 extends BaseContract {
       }
     >;
 
-    "BulkBalanceUpdate(address,address[],uint256,uint256,uint256[],uint256[])"(
-      sender?: null,
-      recipients?: null,
-      senderBalance?: null,
-      senderCreditBalance?: null,
-      recipientBalances?: null,
-      recipientCreditBalances?: null
-    ): TypedEventFilter<
-      [string, string[], BigNumber, BigNumber, BigNumber[], BigNumber[]],
-      {
-        sender: string;
-        recipients: string[];
-        senderBalance: BigNumber;
-        senderCreditBalance: BigNumber;
-        recipientBalances: BigNumber[];
-        recipientCreditBalances: BigNumber[];
-      }
-    >;
-
-    BulkBalanceUpdate(
-      sender?: null,
-      recipients?: null,
-      senderBalance?: null,
-      senderCreditBalance?: null,
-      recipientBalances?: null,
-      recipientCreditBalances?: null
-    ): TypedEventFilter<
-      [string, string[], BigNumber, BigNumber, BigNumber[], BigNumber[]],
-      {
-        sender: string;
-        recipients: string[];
-        senderBalance: BigNumber;
-        senderCreditBalance: BigNumber;
-        recipientBalances: BigNumber[];
-        recipientCreditBalances: BigNumber[];
-      }
-    >;
-
     "CreditLimitUpdate(address,uint256)"(
       member?: null,
       limit?: null
@@ -862,22 +754,6 @@ export class RUSDV2 extends BaseContract {
       [string, string],
       { previousOwner: string; newOwner: string }
     >;
-
-    "RestrictionExpirationUpdated(uint256)"(
-      restrictionRenewal?: null
-    ): TypedEventFilter<[BigNumber], { restrictionRenewal: BigNumber }>;
-
-    RestrictionExpirationUpdated(
-      restrictionRenewal?: null
-    ): TypedEventFilter<[BigNumber], { restrictionRenewal: BigNumber }>;
-
-    "RestrictionUpdated(uint8)"(
-      state?: BigNumberish | null
-    ): TypedEventFilter<[number], { state: number }>;
-
-    RestrictionUpdated(
-      state?: BigNumberish | null
-    ): TypedEventFilter<[number], { state: number }>;
 
     "Transfer(address,address,uint256)"(
       from?: string | null,
@@ -953,6 +829,8 @@ export class RUSDV2 extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    feeManager(overrides?: CallOverrides): Promise<BigNumber>;
+
     increaseAllowance(
       spender: string,
       addedValue: BigNumberish,
@@ -966,36 +844,24 @@ export class RUSDV2 extends BaseContract {
     ): Promise<BigNumber>;
 
     initializeRUSD(
-      registryAddress: string,
-      _expiration: BigNumberish,
       _underwriteManager: string,
-      operatorAddress: string,
+      _feeManager: string,
+      _registry: string,
+      _protocolRoles: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     name(overrides?: CallOverrides): Promise<BigNumber>;
 
-    operator(overrides?: CallOverrides): Promise<BigNumber>;
-
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
-    removeRestrictions(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    protocolRoles(overrides?: CallOverrides): Promise<BigNumber>;
+
+    registry(overrides?: CallOverrides): Promise<BigNumber>;
 
     renounceOwnership(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
-
-    restrictPositiveBalance(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    restrictRegistered(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    restrictionState(overrides?: CallOverrides): Promise<BigNumber>;
 
     setCreditLimit(
       _member: string,
@@ -1027,7 +893,7 @@ export class RUSDV2 extends BaseContract {
 
     underwriteManager(overrides?: CallOverrides): Promise<BigNumber>;
 
-    updateRestrictionExpiration(
+    withdrawFeeToken(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
   };
@@ -1090,6 +956,8 @@ export class RUSDV2 extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
+    feeManager(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     increaseAllowance(
       spender: string,
       addedValue: BigNumberish,
@@ -1103,36 +971,24 @@ export class RUSDV2 extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     initializeRUSD(
-      registryAddress: string,
-      _expiration: BigNumberish,
       _underwriteManager: string,
-      operatorAddress: string,
+      _feeManager: string,
+      _registry: string,
+      _protocolRoles: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    operator(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    removeRestrictions(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
+    protocolRoles(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    registry(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     renounceOwnership(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
-
-    restrictPositiveBalance(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    restrictRegistered(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    restrictionState(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     setCreditLimit(
       _member: string,
@@ -1164,7 +1020,7 @@ export class RUSDV2 extends BaseContract {
 
     underwriteManager(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    updateRestrictionExpiration(
+    withdrawFeeToken(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
   };

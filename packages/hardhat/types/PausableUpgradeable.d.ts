@@ -18,28 +18,29 @@ import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
-interface INetworkRegistryInterface extends ethers.utils.Interface {
+interface PausableUpgradeableInterface extends ethers.utils.Interface {
   functions: {
-    "isMember(address)": FunctionFragment;
-    "isValidOperator(address)": FunctionFragment;
+    "paused()": FunctionFragment;
   };
 
-  encodeFunctionData(functionFragment: "isMember", values: [string]): string;
-  encodeFunctionData(
-    functionFragment: "isValidOperator",
-    values: [string]
-  ): string;
+  encodeFunctionData(functionFragment: "paused", values?: undefined): string;
 
-  decodeFunctionResult(functionFragment: "isMember", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "isValidOperator",
-    data: BytesLike
-  ): Result;
+  decodeFunctionResult(functionFragment: "paused", data: BytesLike): Result;
 
-  events: {};
+  events: {
+    "Paused(address)": EventFragment;
+    "Unpaused(address)": EventFragment;
+  };
+
+  getEvent(nameOrSignatureOrTopic: "Paused"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "Unpaused"): EventFragment;
 }
 
-export class INetworkRegistry extends BaseContract {
+export type PausedEvent = TypedEvent<[string] & { account: string }>;
+
+export type UnpausedEvent = TypedEvent<[string] & { account: string }>;
+
+export class PausableUpgradeable extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
@@ -80,53 +81,37 @@ export class INetworkRegistry extends BaseContract {
     toBlock?: string | number | undefined
   ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
 
-  interface: INetworkRegistryInterface;
+  interface: PausableUpgradeableInterface;
 
   functions: {
-    isMember(_member: string, overrides?: CallOverrides): Promise<[boolean]>;
-
-    isValidOperator(
-      _operator: string,
-      overrides?: CallOverrides
-    ): Promise<[boolean]>;
+    paused(overrides?: CallOverrides): Promise<[boolean]>;
   };
 
-  isMember(_member: string, overrides?: CallOverrides): Promise<boolean>;
-
-  isValidOperator(
-    _operator: string,
-    overrides?: CallOverrides
-  ): Promise<boolean>;
+  paused(overrides?: CallOverrides): Promise<boolean>;
 
   callStatic: {
-    isMember(_member: string, overrides?: CallOverrides): Promise<boolean>;
-
-    isValidOperator(
-      _operator: string,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
+    paused(overrides?: CallOverrides): Promise<boolean>;
   };
 
-  filters: {};
+  filters: {
+    "Paused(address)"(
+      account?: null
+    ): TypedEventFilter<[string], { account: string }>;
+
+    Paused(account?: null): TypedEventFilter<[string], { account: string }>;
+
+    "Unpaused(address)"(
+      account?: null
+    ): TypedEventFilter<[string], { account: string }>;
+
+    Unpaused(account?: null): TypedEventFilter<[string], { account: string }>;
+  };
 
   estimateGas: {
-    isMember(_member: string, overrides?: CallOverrides): Promise<BigNumber>;
-
-    isValidOperator(
-      _operator: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    paused(overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    isMember(
-      _member: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    isValidOperator(
-      _operator: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    paused(overrides?: CallOverrides): Promise<PopulatedTransaction>;
   };
 }

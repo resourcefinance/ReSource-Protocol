@@ -5,39 +5,40 @@
 import { Contract, Signer, utils } from "ethers";
 import { Provider } from "@ethersproject/providers";
 import type {
-  INetworkRegistry,
-  INetworkRegistryInterface,
-} from "../INetworkRegistry";
+  PausableUpgradeable,
+  PausableUpgradeableInterface,
+} from "../PausableUpgradeable";
 
 const _abi = [
   {
+    anonymous: false,
     inputs: [
       {
+        indexed: false,
         internalType: "address",
-        name: "_member",
+        name: "account",
         type: "address",
       },
     ],
-    name: "isMember",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
+    name: "Paused",
+    type: "event",
   },
   {
+    anonymous: false,
     inputs: [
       {
+        indexed: false,
         internalType: "address",
-        name: "_operator",
+        name: "account",
         type: "address",
       },
     ],
-    name: "isValidOperator",
+    name: "Unpaused",
+    type: "event",
+  },
+  {
+    inputs: [],
+    name: "paused",
     outputs: [
       {
         internalType: "bool",
@@ -50,15 +51,15 @@ const _abi = [
   },
 ];
 
-export class INetworkRegistry__factory {
+export class PausableUpgradeable__factory {
   static readonly abi = _abi;
-  static createInterface(): INetworkRegistryInterface {
-    return new utils.Interface(_abi) as INetworkRegistryInterface;
+  static createInterface(): PausableUpgradeableInterface {
+    return new utils.Interface(_abi) as PausableUpgradeableInterface;
   }
   static connect(
     address: string,
     signerOrProvider: Signer | Provider
-  ): INetworkRegistry {
-    return new Contract(address, _abi, signerOrProvider) as INetworkRegistry;
+  ): PausableUpgradeable {
+    return new Contract(address, _abi, signerOrProvider) as PausableUpgradeable;
   }
 }

@@ -18,28 +18,25 @@ import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
-interface INetworkRegistryInterface extends ethers.utils.Interface {
+interface ExtraMathInterface extends ethers.utils.Interface {
   functions: {
-    "isMember(address)": FunctionFragment;
-    "isValidOperator(address)": FunctionFragment;
+    "c_0x9e5e1cd8(bytes32)": FunctionFragment;
   };
 
-  encodeFunctionData(functionFragment: "isMember", values: [string]): string;
   encodeFunctionData(
-    functionFragment: "isValidOperator",
-    values: [string]
+    functionFragment: "c_0x9e5e1cd8",
+    values: [BytesLike]
   ): string;
 
-  decodeFunctionResult(functionFragment: "isMember", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "isValidOperator",
+    functionFragment: "c_0x9e5e1cd8",
     data: BytesLike
   ): Result;
 
   events: {};
 }
 
-export class INetworkRegistry extends BaseContract {
+export class ExtraMath extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
@@ -80,52 +77,39 @@ export class INetworkRegistry extends BaseContract {
     toBlock?: string | number | undefined
   ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
 
-  interface: INetworkRegistryInterface;
+  interface: ExtraMathInterface;
 
   functions: {
-    isMember(_member: string, overrides?: CallOverrides): Promise<[boolean]>;
-
-    isValidOperator(
-      _operator: string,
+    c_0x9e5e1cd8(
+      c__0x9e5e1cd8: BytesLike,
       overrides?: CallOverrides
-    ): Promise<[boolean]>;
+    ): Promise<[void]>;
   };
 
-  isMember(_member: string, overrides?: CallOverrides): Promise<boolean>;
-
-  isValidOperator(
-    _operator: string,
+  c_0x9e5e1cd8(
+    c__0x9e5e1cd8: BytesLike,
     overrides?: CallOverrides
-  ): Promise<boolean>;
+  ): Promise<void>;
 
   callStatic: {
-    isMember(_member: string, overrides?: CallOverrides): Promise<boolean>;
-
-    isValidOperator(
-      _operator: string,
+    c_0x9e5e1cd8(
+      c__0x9e5e1cd8: BytesLike,
       overrides?: CallOverrides
-    ): Promise<boolean>;
+    ): Promise<void>;
   };
 
   filters: {};
 
   estimateGas: {
-    isMember(_member: string, overrides?: CallOverrides): Promise<BigNumber>;
-
-    isValidOperator(
-      _operator: string,
+    c_0x9e5e1cd8(
+      c__0x9e5e1cd8: BytesLike,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    isMember(
-      _member: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    isValidOperator(
-      _operator: string,
+    c_0x9e5e1cd8(
+      c__0x9e5e1cd8: BytesLike,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
   };

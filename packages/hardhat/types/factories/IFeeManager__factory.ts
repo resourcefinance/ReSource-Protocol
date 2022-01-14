@@ -11,16 +11,26 @@ const _abi = [
     inputs: [
       {
         internalType: "address",
-        name: "networkAccount",
+        name: "_network",
         type: "address",
       },
       {
         internalType: "uint256",
-        name: "_tokens",
+        name: "_totalFeePercent",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "_underwriterFeePercent",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "_ambassadorFeePercent",
         type: "uint256",
       },
     ],
-    name: "accrueFees",
+    name: "addNetwork",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -29,7 +39,12 @@ const _abi = [
     inputs: [
       {
         internalType: "address",
-        name: "networkAccount",
+        name: "_network",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "_networkMember",
         type: "address",
       },
     ],
@@ -42,23 +57,22 @@ const _abi = [
     inputs: [
       {
         internalType: "address",
-        name: "claimer",
+        name: "_network",
         type: "address",
       },
       {
         internalType: "address",
-        name: "networkAccount",
+        name: "_networkMember",
         type: "address",
       },
-    ],
-    name: "getFeeClaim",
-    outputs: [
       {
         internalType: "uint256",
-        name: "",
+        name: "_creditUsed",
         type: "uint256",
       },
     ],
+    name: "collectFees",
+    outputs: [],
     stateMutability: "nonpayable",
     type: "function",
   },

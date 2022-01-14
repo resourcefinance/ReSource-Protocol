@@ -21,25 +21,28 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface IFeeManagerInterface extends ethers.utils.Interface {
   functions: {
-    "accrueFees(address,uint256)": FunctionFragment;
-    "claimFees(address)": FunctionFragment;
-    "getFeeClaim(address,address)": FunctionFragment;
+    "addNetwork(address,uint256,uint256,uint256)": FunctionFragment;
+    "claimFees(address,address)": FunctionFragment;
+    "collectFees(address,address,uint256)": FunctionFragment;
   };
 
   encodeFunctionData(
-    functionFragment: "accrueFees",
-    values: [string, BigNumberish]
+    functionFragment: "addNetwork",
+    values: [string, BigNumberish, BigNumberish, BigNumberish]
   ): string;
-  encodeFunctionData(functionFragment: "claimFees", values: [string]): string;
   encodeFunctionData(
-    functionFragment: "getFeeClaim",
+    functionFragment: "claimFees",
     values: [string, string]
   ): string;
+  encodeFunctionData(
+    functionFragment: "collectFees",
+    values: [string, string, BigNumberish]
+  ): string;
 
-  decodeFunctionResult(functionFragment: "accrueFees", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "addNetwork", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "claimFees", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "getFeeClaim",
+    functionFragment: "collectFees",
     data: BytesLike
   ): Result;
 
@@ -90,93 +93,116 @@ export class IFeeManager extends BaseContract {
   interface: IFeeManagerInterface;
 
   functions: {
-    accrueFees(
-      networkAccount: string,
-      _tokens: BigNumberish,
+    addNetwork(
+      _network: string,
+      _totalFeePercent: BigNumberish,
+      _underwriterFeePercent: BigNumberish,
+      _ambassadorFeePercent: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     claimFees(
-      networkAccount: string,
+      _network: string,
+      _networkMember: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    getFeeClaim(
-      claimer: string,
-      networkAccount: string,
+    collectFees(
+      _network: string,
+      _networkMember: string,
+      _creditUsed: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
   };
 
-  accrueFees(
-    networkAccount: string,
-    _tokens: BigNumberish,
+  addNetwork(
+    _network: string,
+    _totalFeePercent: BigNumberish,
+    _underwriterFeePercent: BigNumberish,
+    _ambassadorFeePercent: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   claimFees(
-    networkAccount: string,
+    _network: string,
+    _networkMember: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  getFeeClaim(
-    claimer: string,
-    networkAccount: string,
+  collectFees(
+    _network: string,
+    _networkMember: string,
+    _creditUsed: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   callStatic: {
-    accrueFees(
-      networkAccount: string,
-      _tokens: BigNumberish,
+    addNetwork(
+      _network: string,
+      _totalFeePercent: BigNumberish,
+      _underwriterFeePercent: BigNumberish,
+      _ambassadorFeePercent: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    claimFees(networkAccount: string, overrides?: CallOverrides): Promise<void>;
-
-    getFeeClaim(
-      claimer: string,
-      networkAccount: string,
+    claimFees(
+      _network: string,
+      _networkMember: string,
       overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    ): Promise<void>;
+
+    collectFees(
+      _network: string,
+      _networkMember: string,
+      _creditUsed: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
   };
 
   filters: {};
 
   estimateGas: {
-    accrueFees(
-      networkAccount: string,
-      _tokens: BigNumberish,
+    addNetwork(
+      _network: string,
+      _totalFeePercent: BigNumberish,
+      _underwriterFeePercent: BigNumberish,
+      _ambassadorFeePercent: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     claimFees(
-      networkAccount: string,
+      _network: string,
+      _networkMember: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    getFeeClaim(
-      claimer: string,
-      networkAccount: string,
+    collectFees(
+      _network: string,
+      _networkMember: string,
+      _creditUsed: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    accrueFees(
-      networkAccount: string,
-      _tokens: BigNumberish,
+    addNetwork(
+      _network: string,
+      _totalFeePercent: BigNumberish,
+      _underwriterFeePercent: BigNumberish,
+      _ambassadorFeePercent: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     claimFees(
-      networkAccount: string,
+      _network: string,
+      _networkMember: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    getFeeClaim(
-      claimer: string,
-      networkAccount: string,
+    collectFees(
+      _network: string,
+      _networkMember: string,
+      _creditUsed: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
   };

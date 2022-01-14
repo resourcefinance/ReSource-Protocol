@@ -19,103 +19,123 @@ import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
-interface IUnderwriteManagerInterface extends ethers.utils.Interface {
+interface NetworkRegistryV3Interface extends ethers.utils.Interface {
   functions: {
-    "calculateLTV(address)": FunctionFragment;
-    "convertNetworkToCollateral(address,uint256)": FunctionFragment;
-    "createCreditLine(address,address,address,uint256,uint256,address)": FunctionFragment;
-    "depositCollateral(address,uint256)": FunctionFragment;
-    "extendCreditLine(address,uint256,uint256)": FunctionFragment;
-    "getCollateralToken()": FunctionFragment;
-    "getCreditLine(address)": FunctionFragment;
-    "getMinLTV()": FunctionFragment;
-    "isValidLTV(address)": FunctionFragment;
-    "requestUnstake(address)": FunctionFragment;
-    "swapCreditLine(address,address)": FunctionFragment;
+    "addAmbassador(address)": FunctionFragment;
+    "addMembers(address[])": FunctionFragment;
+    "addOperator(address)": FunctionFragment;
+    "deployAndAddWallet(address[],address[],address,uint256)": FunctionFragment;
+    "initialize(address,address)": FunctionFragment;
+    "isMember(address)": FunctionFragment;
+    "isValidOperator(address)": FunctionFragment;
+    "owner()": FunctionFragment;
+    "removeAmbassador(address)": FunctionFragment;
+    "removeMember(address)": FunctionFragment;
+    "removeOperator(address)": FunctionFragment;
+    "renounceOwnership()": FunctionFragment;
+    "roles()": FunctionFragment;
+    "transferOwnership(address)": FunctionFragment;
   };
 
   encodeFunctionData(
-    functionFragment: "calculateLTV",
+    functionFragment: "addAmbassador",
     values: [string]
   ): string;
   encodeFunctionData(
-    functionFragment: "convertNetworkToCollateral",
-    values: [string, BigNumberish]
+    functionFragment: "addMembers",
+    values: [string[]]
+  ): string;
+  encodeFunctionData(functionFragment: "addOperator", values: [string]): string;
+  encodeFunctionData(
+    functionFragment: "deployAndAddWallet",
+    values: [string[], string[], string, BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: "createCreditLine",
-    values: [string, string, string, BigNumberish, BigNumberish, string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "depositCollateral",
-    values: [string, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "extendCreditLine",
-    values: [string, BigNumberish, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getCollateralToken",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getCreditLine",
-    values: [string]
-  ): string;
-  encodeFunctionData(functionFragment: "getMinLTV", values?: undefined): string;
-  encodeFunctionData(functionFragment: "isValidLTV", values: [string]): string;
-  encodeFunctionData(
-    functionFragment: "requestUnstake",
-    values: [string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "swapCreditLine",
+    functionFragment: "initialize",
     values: [string, string]
   ): string;
+  encodeFunctionData(functionFragment: "isMember", values: [string]): string;
+  encodeFunctionData(
+    functionFragment: "isValidOperator",
+    values: [string]
+  ): string;
+  encodeFunctionData(functionFragment: "owner", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "removeAmbassador",
+    values: [string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "removeMember",
+    values: [string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "removeOperator",
+    values: [string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "renounceOwnership",
+    values?: undefined
+  ): string;
+  encodeFunctionData(functionFragment: "roles", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "transferOwnership",
+    values: [string]
+  ): string;
 
   decodeFunctionResult(
-    functionFragment: "calculateLTV",
+    functionFragment: "addAmbassador",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "addMembers", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "addOperator",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "convertNetworkToCollateral",
+    functionFragment: "deployAndAddWallet",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "isMember", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "isValidOperator",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "removeAmbassador",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "createCreditLine",
+    functionFragment: "removeMember",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "depositCollateral",
+    functionFragment: "removeOperator",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "extendCreditLine",
+    functionFragment: "renounceOwnership",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "roles", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "getCollateralToken",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getCreditLine",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "getMinLTV", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "isValidLTV", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "requestUnstake",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "swapCreditLine",
+    functionFragment: "transferOwnership",
     data: BytesLike
   ): Result;
 
-  events: {};
+  events: {
+    "OwnershipTransferred(address,address)": EventFragment;
+  };
+
+  getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
 }
 
-export class IUnderwriteManager extends BaseContract {
+export type OwnershipTransferredEvent = TypedEvent<
+  [string, string] & { previousOwner: string; newOwner: string }
+>;
+
+export class NetworkRegistryV3 extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
@@ -156,333 +176,339 @@ export class IUnderwriteManager extends BaseContract {
     toBlock?: string | number | undefined
   ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
 
-  interface: IUnderwriteManagerInterface;
+  interface: NetworkRegistryV3Interface;
 
   functions: {
-    calculateLTV(
-      _counterparty: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    convertNetworkToCollateral(
-      _networkToken: string,
-      _amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    createCreditLine(
-      _counterparty: string,
-      _underwriter: string,
+    addAmbassador(
       _ambassador: string,
-      _collateral: BigNumberish,
-      _creditLimit: BigNumberish,
-      _networkToken: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    depositCollateral(
-      _counterparty: string,
-      _amount: BigNumberish,
+    addMembers(
+      _members: string[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    extendCreditLine(
-      _counterparty: string,
-      _collateral: BigNumberish,
-      _creditLimit: BigNumberish,
+    addOperator(
+      operator: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    getCollateralToken(
+    deployAndAddWallet(
+      clients: string[],
+      guardians: string[],
+      coSigner: string,
+      required: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    getCreditLine(
-      _counterparty: string,
+    initialize(
+      _roles: string,
+      _walletDeployer: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    getMinLTV(
+    isMember(_member: string, overrides?: CallOverrides): Promise<[boolean]>;
+
+    isValidOperator(
+      _operator: string,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
+    owner(overrides?: CallOverrides): Promise<[string]>;
+
+    removeAmbassador(
+      _ambassador: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    isValidLTV(
-      _counterparty: string,
+    removeMember(
+      member: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    requestUnstake(
-      _counterparty: string,
+    removeOperator(
+      operator: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    swapCreditLine(
-      _counterparty: string,
-      _underwriter: string,
+    renounceOwnership(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    roles(overrides?: CallOverrides): Promise<[string]>;
+
+    transferOwnership(
+      newOwner: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
   };
 
-  calculateLTV(
-    _counterparty: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  convertNetworkToCollateral(
-    _networkToken: string,
-    _amount: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  createCreditLine(
-    _counterparty: string,
-    _underwriter: string,
+  addAmbassador(
     _ambassador: string,
-    _collateral: BigNumberish,
-    _creditLimit: BigNumberish,
-    _networkToken: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  depositCollateral(
-    _counterparty: string,
-    _amount: BigNumberish,
+  addMembers(
+    _members: string[],
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  extendCreditLine(
-    _counterparty: string,
-    _collateral: BigNumberish,
-    _creditLimit: BigNumberish,
+  addOperator(
+    operator: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  getCollateralToken(
+  deployAndAddWallet(
+    clients: string[],
+    guardians: string[],
+    coSigner: string,
+    required: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  getCreditLine(
-    _counterparty: string,
+  initialize(
+    _roles: string,
+    _walletDeployer: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  getMinLTV(
+  isMember(_member: string, overrides?: CallOverrides): Promise<boolean>;
+
+  isValidOperator(
+    _operator: string,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
+
+  owner(overrides?: CallOverrides): Promise<string>;
+
+  removeAmbassador(
+    _ambassador: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  isValidLTV(
-    _counterparty: string,
+  removeMember(
+    member: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  requestUnstake(
-    _counterparty: string,
+  removeOperator(
+    operator: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  swapCreditLine(
-    _counterparty: string,
-    _underwriter: string,
+  renounceOwnership(
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  roles(overrides?: CallOverrides): Promise<string>;
+
+  transferOwnership(
+    newOwner: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   callStatic: {
-    calculateLTV(
-      _counterparty: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    convertNetworkToCollateral(
-      _networkToken: string,
-      _amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    createCreditLine(
-      _counterparty: string,
-      _underwriter: string,
+    addAmbassador(
       _ambassador: string,
-      _collateral: BigNumberish,
-      _creditLimit: BigNumberish,
-      _networkToken: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    depositCollateral(
-      _counterparty: string,
-      _amount: BigNumberish,
+    addMembers(_members: string[], overrides?: CallOverrides): Promise<void>;
+
+    addOperator(operator: string, overrides?: CallOverrides): Promise<void>;
+
+    deployAndAddWallet(
+      clients: string[],
+      guardians: string[],
+      coSigner: string,
+      required: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    extendCreditLine(
-      _counterparty: string,
-      _collateral: BigNumberish,
-      _creditLimit: BigNumberish,
+    initialize(
+      _roles: string,
+      _walletDeployer: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    getCollateralToken(overrides?: CallOverrides): Promise<string>;
+    isMember(_member: string, overrides?: CallOverrides): Promise<boolean>;
 
-    getCreditLine(
-      _counterparty: string,
-      overrides?: CallOverrides
-    ): Promise<
-      [string, string, string, BigNumber, BigNumber] & {
-        underwriter: string;
-        ambassador: string;
-        networkToken: string;
-        collateral: BigNumber;
-        issueDate: BigNumber;
-      }
-    >;
-
-    getMinLTV(overrides?: CallOverrides): Promise<BigNumber>;
-
-    isValidLTV(
-      _counterparty: string,
+    isValidOperator(
+      _operator: string,
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    requestUnstake(
-      _counterparty: string,
+    owner(overrides?: CallOverrides): Promise<string>;
+
+    removeAmbassador(
+      _ambassador: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    swapCreditLine(
-      _counterparty: string,
-      _underwriter: string,
+    removeMember(member: string, overrides?: CallOverrides): Promise<void>;
+
+    removeOperator(operator: string, overrides?: CallOverrides): Promise<void>;
+
+    renounceOwnership(overrides?: CallOverrides): Promise<void>;
+
+    roles(overrides?: CallOverrides): Promise<string>;
+
+    transferOwnership(
+      newOwner: string,
       overrides?: CallOverrides
     ): Promise<void>;
   };
 
-  filters: {};
+  filters: {
+    "OwnershipTransferred(address,address)"(
+      previousOwner?: string | null,
+      newOwner?: string | null
+    ): TypedEventFilter<
+      [string, string],
+      { previousOwner: string; newOwner: string }
+    >;
+
+    OwnershipTransferred(
+      previousOwner?: string | null,
+      newOwner?: string | null
+    ): TypedEventFilter<
+      [string, string],
+      { previousOwner: string; newOwner: string }
+    >;
+  };
 
   estimateGas: {
-    calculateLTV(
-      _counterparty: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    convertNetworkToCollateral(
-      _networkToken: string,
-      _amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    createCreditLine(
-      _counterparty: string,
-      _underwriter: string,
+    addAmbassador(
       _ambassador: string,
-      _collateral: BigNumberish,
-      _creditLimit: BigNumberish,
-      _networkToken: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    depositCollateral(
-      _counterparty: string,
-      _amount: BigNumberish,
+    addMembers(
+      _members: string[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    extendCreditLine(
-      _counterparty: string,
-      _collateral: BigNumberish,
-      _creditLimit: BigNumberish,
+    addOperator(
+      operator: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    getCollateralToken(
+    deployAndAddWallet(
+      clients: string[],
+      guardians: string[],
+      coSigner: string,
+      required: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    getCreditLine(
-      _counterparty: string,
+    initialize(
+      _roles: string,
+      _walletDeployer: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    getMinLTV(
+    isMember(_member: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    isValidOperator(
+      _operator: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    owner(overrides?: CallOverrides): Promise<BigNumber>;
+
+    removeAmbassador(
+      _ambassador: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    isValidLTV(
-      _counterparty: string,
+    removeMember(
+      member: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    requestUnstake(
-      _counterparty: string,
+    removeOperator(
+      operator: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    swapCreditLine(
-      _counterparty: string,
-      _underwriter: string,
+    renounceOwnership(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    roles(overrides?: CallOverrides): Promise<BigNumber>;
+
+    transferOwnership(
+      newOwner: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    calculateLTV(
-      _counterparty: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    convertNetworkToCollateral(
-      _networkToken: string,
-      _amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    createCreditLine(
-      _counterparty: string,
-      _underwriter: string,
+    addAmbassador(
       _ambassador: string,
-      _collateral: BigNumberish,
-      _creditLimit: BigNumberish,
-      _networkToken: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    depositCollateral(
-      _counterparty: string,
-      _amount: BigNumberish,
+    addMembers(
+      _members: string[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    extendCreditLine(
-      _counterparty: string,
-      _collateral: BigNumberish,
-      _creditLimit: BigNumberish,
+    addOperator(
+      operator: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    getCollateralToken(
+    deployAndAddWallet(
+      clients: string[],
+      guardians: string[],
+      coSigner: string,
+      required: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    getCreditLine(
-      _counterparty: string,
+    initialize(
+      _roles: string,
+      _walletDeployer: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    getMinLTV(
+    isMember(
+      _member: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    isValidOperator(
+      _operator: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    removeAmbassador(
+      _ambassador: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    isValidLTV(
-      _counterparty: string,
+    removeMember(
+      member: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    requestUnstake(
-      _counterparty: string,
+    removeOperator(
+      operator: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    swapCreditLine(
-      _counterparty: string,
-      _underwriter: string,
+    renounceOwnership(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    roles(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    transferOwnership(
+      newOwner: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
   };

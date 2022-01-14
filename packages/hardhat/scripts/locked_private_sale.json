@@ -1,0 +1,286 @@
+{
+  "fileName": "private_sale_locked_Dec_29",
+  "recipients": [
+    {
+      "name": "Jiyun Kim",
+      "address": "0xffdcabffb9ec425fd0b469ef626c844cb68670e8",
+      "unlockedAmount": "0",
+      "lockedAmount": "261437"
+    },
+    {
+      "name": "Omri Erez",
+      "address": "0x7D555Aa86324467a25c43e839B9Afc543B885d5F",
+      "unlockedAmount": "0",
+      "lockedAmount": "26143"
+    },
+    {
+      "name": "Maurizio Esposito",
+      "address": "0x1b75c6dc2c2cff9e6eaf54c5d72b3447740f1e76",
+      "unlockedAmount": "0",
+      "lockedAmount": "261437"
+    },
+    {
+      "name": "Lionel Rebibo",
+      "address": "0x2B021beae06554040e09c88C2071BbecD6Ee5b54",
+      "unlockedAmount": "0",
+      "lockedAmount": "26143"
+    },
+    {
+      "name": "Ivailo Jordanov",
+      "address": "0xf83b436aba9a424eca7053b1ada17099c93e438e",
+      "unlockedAmount": "0",
+      "lockedAmount": "65359"
+    },
+    {
+      "name": "Djouzar Mnyusiwalla",
+      "address": "0x120c28227114CA14FDC7C36818Db2d43929E5ce2",
+      "unlockedAmount": "0",
+      "lockedAmount": "65359"
+    },
+    {
+      "name": "Alex Witt",
+      "address": "0x30675cc41d2317c5858d4e61ef3fbf6f7341b42d",
+      "unlockedAmount": "0",
+      "lockedAmount": "26143"
+    },
+    {
+      "name": "Ramesh Nair",
+      "address": "0x0d24f692c05036602076b3f51242b5a34c55ee38",
+      "unlockedAmount": "0",
+      "lockedAmount": "104575"
+    },
+    {
+      "name": "Stanislav Oski",
+      "address": "0x5F0Ea2b991f90FA56E8dfe2029aBc4e5646C451a",
+      "unlockedAmount": "0",
+      "lockedAmount": "65359"
+    },
+    {
+      "name": "Deepak Nuli",
+      "address": "0x8b4ac53a5a684e668a685777b3563cda1c4588c2",
+      "unlockedAmount": "0",
+      "lockedAmount": "26143"
+    },
+    {
+      "name": "Joseph Kauer",
+      "address": "0x875F35AceDFC80779Df169BaB000c0e41DB90809",
+      "unlockedAmount": "0",
+      "lockedAmount": "26143"
+    },
+    {
+      "name": "Martin Pfl\u00fcgler",
+      "address": "0xD328a78498B72d88a4d79361e757b9e6fE35fb30",
+      "unlockedAmount": "0",
+      "lockedAmount": "52287"
+    },
+    {
+      "name": "Quan Nguyen Che",
+      "address": "0x4646D4D2E25e981bb85369e92FaEF648201A320C",
+      "unlockedAmount": "0",
+      "lockedAmount": "65359"
+    },
+    {
+      "name": "Sebastian Stupurac",
+      "address": "0x285b10c73de847ee35bcb5cd86f17d55ff936476",
+      "unlockedAmount": "0",
+      "lockedAmount": "65359"
+    },
+    {
+      "name": "Wade Abel",
+      "address": "0x8caB03C38c8be5d76404D647a5C45aE53A027341",
+      "unlockedAmount": "0",
+      "lockedAmount": "13071"
+    },
+    {
+      "name": "Youbin Kang",
+      "address": "0x290799659d0C5F56d3700D0dE334b8A561b09e57",
+      "unlockedAmount": "0",
+      "lockedAmount": "261437"
+    },
+    {
+      "name": "Cameron Bodenstadt",
+      "address": "0xEAd0A2297258612Cf5B79B70164Ff931B6d233FD",
+      "unlockedAmount": "0",
+      "lockedAmount": "26143"
+    },
+    {
+      "name": "Liberaid Limited",
+      "address": "0x7F6EA1eD2Dda47ED5AB15c2763330c628A089509",
+      "unlockedAmount": "0",
+      "lockedAmount": "26143"
+    },
+    {
+      "name": "Konstantin Zagaynov",
+      "address": "0x7FE505754D406324C1133f8043f2C2Cdcd44ad3C",
+      "unlockedAmount": "0",
+      "lockedAmount": "26143"
+    },
+    {
+      "name": "William Ogorzaly",
+      "address": "0x05A1ff0a32bc24265BCB39499d0c5D9A6cb2011c",
+      "unlockedAmount": "0",
+      "lockedAmount": "26143"
+    },
+    {
+      "name": "Edward Fricker",
+      "address": "0x878CcA1F123fD9702E8FDf78ED6EE35a44Fb6085",
+      "unlockedAmount": "0",
+      "lockedAmount": "65359"
+    },
+    {
+      "name": "Federico Nitidi",
+      "address": "0x8410373df6e9b20765c9599c26d585b2cd0ef628",
+      "unlockedAmount": "0",
+      "lockedAmount": "26143"
+    },
+    {
+      "name": "Boateng Richard Asamoah",
+      "address": "0x1F77E494cC9fE73eFc67400581B7193912857b9D",
+      "unlockedAmount": "0",
+      "lockedAmount": "91503"
+    },
+    {
+      "name": "YUSUF FERNANDI LAAK",
+      "address": "0x637e21ac11f0e0cf95d926d6bd2737b059a2858a",
+      "unlockedAmount": "0",
+      "lockedAmount": "130718"
+    },
+    {
+      "name": "Gabriele Cavargna bontosi",
+      "address": "0x474194164611B580a528e8C91140212Fa3e8AC82",
+      "unlockedAmount": "0",
+      "lockedAmount": "52287"
+    },
+    {
+      "name": "Simone Giacomellli",
+      "address": "0xd6516878ae1c3eff3b057c80ac9e0bf2dc8c2b53",
+      "unlockedAmount": "0",
+      "lockedAmount": "130718"
+    },
+    {
+      "name": "Nicola Di Marco",
+      "address": "0xCB388d0f190496109316e0d5526DA46D72E52F61",
+      "unlockedAmount": "0",
+      "lockedAmount": "26143"
+    },
+    {
+      "name": "Faris Owels",
+      "address": "0xa96c66Ec4D1f1988Ba178d40512eC7575088f58e",
+      "unlockedAmount": "0",
+      "lockedAmount": "32679"
+    },
+    {
+      "name": "Jeremie Vaislic",
+      "address": "0x6627E92A879940ed1A4Aa76055C8cd930c759559",
+      "unlockedAmount": "0",
+      "lockedAmount": "39215"
+    },
+    {
+      "name": "Louis Balac",
+      "address": "0x1B1F99F5d052c94FE349874EE7Be3832260742eb",
+      "unlockedAmount": "0",
+      "lockedAmount": "26143"
+    },
+    {
+      "name": "Rouven Heck",
+      "address": "0xB594128D9365ECF60F996ec725087ecc96EfB928",
+      "unlockedAmount": "0",
+      "lockedAmount": "65359"
+    },
+    {
+      "name": "Lee Cheng Chun",
+      "address": "0xD9328b96fC89203122a1B78ca65930862CcC4E5b",
+      "unlockedAmount": "0",
+      "lockedAmount": "52287"
+    },
+    {
+      "name": "Sahil Sachdev",
+      "address": "0x0Ab0148A0fcC098DE0959987a320B133A7E7dA74",
+      "unlockedAmount": "0",
+      "lockedAmount": "26143"
+    },
+    {
+      "name": "Nguyen Dang Minh",
+      "address": "0x93B33eE189b06F3aeb32a63A320ab46a2c55337b",
+      "unlockedAmount": "0",
+      "lockedAmount": "65359"
+    },
+    {
+      "name": "Evan Kittay",
+      "address": "0x755e4f986436e2a5e5a47854aa2a1b36d270ac3f",
+      "unlockedAmount": "0",
+      "lockedAmount": "130718"
+    },
+    {
+      "name": "Ali Aygul",
+      "address": "0x7dcef46ab2102d5f1498e9c09e18313d3984dfff",
+      "unlockedAmount": "0",
+      "lockedAmount": "65359"
+    },
+    {
+      "name": "Alina Sultanajeva",
+      "address": "0x484CF83d33551f2Abad064006a97aaD734eE9b85",
+      "unlockedAmount": "0",
+      "lockedAmount": "13071"
+    },
+    {
+      "name": "Harsha Vardan",
+      "address": "0xa1d8d972560c2f8144af871db508f0b0b10a3fbf",
+      "unlockedAmount": "0",
+      "lockedAmount": "130718"
+    },
+    {
+      "name": "Gavin Birch",
+      "address": "0x575317efa00a69691f6efa322d4fa29331f574a7",
+      "unlockedAmount": "0",
+      "lockedAmount": "39215"
+    },
+    {
+      "name": "Chista AG",
+      "address": "0xbca7a3a904751fa2afd0c634e9883bbaac06b7fa",
+      "unlockedAmount": "0",
+      "lockedAmount": "130718"
+    },
+    {
+      "name": "Scott  Beibin",
+      "address": "0x0a3df540725cdc07d906f8317a762da6c4910fdb",
+      "unlockedAmount": "0",
+      "lockedAmount": "65359"
+    },
+    {
+      "name": "Andrino Agnas",
+      "address": "0xd2f80f967a31fe7c521416a7552c25f32ce4babc",
+      "unlockedAmount": "0",
+      "lockedAmount": "65359"
+    },
+    {
+      "name": "Seth Taube",
+      "address": "0xa8a3ecafd6a4695c4c830767096e7d967210f290",
+      "unlockedAmount": "0",
+      "lockedAmount": "130718"
+    },
+    {
+      "name": "Abdelhamid Bakhta",
+      "address": "0x3ec4421962392e840c8A4DEAC605C377fd70411C",
+      "unlockedAmount": "0",
+      "lockedAmount": "130718"
+    },
+    {
+      "name": "Mirna Nassif",
+      "address": "0xb28550bb69fd7c884ed7b293428a35c70bd32d60",
+      "unlockedAmount": "0",
+      "lockedAmount": "261437"
+    },
+    {
+      "name": "Gal Gershon",
+      "address": "0x21a31ee1afc51d94c2efccaa2092ad1028285549",
+      "unlockedAmount": "0",
+      "lockedAmount": "2614"
+    }
+  ],
+  "schedule": {
+    "startDate": "Monday Nov 21 2022 22:00:00 GMT-0800 (Pacific Standard Time)",
+    "periods": 12,
+    "monthsInPeriod": 1
+  }
+}

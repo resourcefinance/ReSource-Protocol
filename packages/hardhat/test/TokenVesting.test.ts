@@ -15,7 +15,7 @@ describe("TokenVesting Tests", function() {
   let beneficiaryB: SignerWithAddress
   let beneficiaryC: SignerWithAddress
   let beneficiaryD: SignerWithAddress
-  let reSourceToken: SourceToken
+  let sourceToken: SourceToken
   let tokenVesting: TokenVesting
 
   before(async function() {
@@ -27,26 +27,26 @@ describe("TokenVesting Tests", function() {
     beneficiaryD = accounts[4]
   })
 
-  it("Successfully deploys a ReSourceToken and TokenVesting contract", async function() {
-    const reSourceTokenFactory = await ethers.getContractFactory("ReSourceToken")
+  it("Successfully deploys a SourceToken and TokenVesting contract", async function() {
+    const sourceTokenFactory = await ethers.getContractFactory("SourceToken")
 
-    reSourceToken = (await upgrades.deployProxy(reSourceTokenFactory, [
+    sourceToken = (await upgrades.deployProxy(sourceTokenFactory, [
       ethers.utils.parseEther("10000000"),
       [],
     ])) as SourceToken
 
     const tokenVestingFactory = await ethers.getContractFactory("TokenVesting")
 
-    tokenVesting = (await tokenVestingFactory.deploy(reSourceToken.address)) as TokenVesting
+    tokenVesting = (await tokenVestingFactory.deploy(sourceToken.address)) as TokenVesting
 
-    expect(reSourceToken.address).to.properAddress
+    expect(sourceToken.address).to.properAddress
     expect(tokenVesting.address).to.properAddress
   })
 
   it("Successfully creates the group 1 vesting schedule", async function() {
     // send vesting contract 100k SOURCE
     await (
-      await reSourceToken.transfer(tokenVesting.address, ethers.utils.parseEther("100000"))
+      await sourceToken.transfer(tokenVesting.address, ethers.utils.parseEther("100000"))
     ).wait()
 
     // create vesting schedule for beneficiaryA
@@ -87,7 +87,7 @@ describe("TokenVesting Tests", function() {
     await (await tokenVesting.connect(beneficiaryA).release(scheduleId, amount)).wait()
 
     const beneficiaryBalance = ethers.utils.formatEther(
-      await reSourceToken.balanceOf(beneficiaryA.address),
+      await sourceToken.balanceOf(beneficiaryA.address),
     )
 
     expect(beneficiaryBalance).to.equal("33333.333333333333333333")
@@ -96,7 +96,7 @@ describe("TokenVesting Tests", function() {
   it("Successfully creates the group 2 vesting schedule", async function() {
     // send vesting contract 100k SOURCE
     await (
-      await reSourceToken.transfer(tokenVesting.address, ethers.utils.parseEther("100000"))
+      await sourceToken.transfer(tokenVesting.address, ethers.utils.parseEther("100000"))
     ).wait()
 
     // create vesting schedule for beneficiaryB
@@ -137,7 +137,7 @@ describe("TokenVesting Tests", function() {
     await (await tokenVesting.connect(beneficiaryB).release(scheduleId, amount)).wait()
 
     const beneficiaryBalance = ethers.utils.formatEther(
-      await reSourceToken.balanceOf(beneficiaryB.address),
+      await sourceToken.balanceOf(beneficiaryB.address),
     )
 
     expect(beneficiaryBalance).to.equal("50000.0")
@@ -146,7 +146,7 @@ describe("TokenVesting Tests", function() {
   it("Successfully creates the group 3 vesting schedule", async function() {
     // send vesting contract 100k SOURCE
     await (
-      await reSourceToken.transfer(tokenVesting.address, ethers.utils.parseEther("100000"))
+      await sourceToken.transfer(tokenVesting.address, ethers.utils.parseEther("100000"))
     ).wait()
 
     // create vesting schedule for beneficiaryC
@@ -190,13 +190,13 @@ describe("TokenVesting Tests", function() {
 
     expect(withdrawableAmount).to.equal("100000.0")
 
-    expect(ethers.utils.formatEther(await reSourceToken.balanceOf(deployer.address))).to.equal(
+    expect(ethers.utils.formatEther(await sourceToken.balanceOf(deployer.address))).to.equal(
       "9700000.0",
     )
 
     await (await tokenVesting.withdraw(await tokenVesting.getWithdrawableAmount())).wait()
 
-    expect(ethers.utils.formatEther(await reSourceToken.balanceOf(deployer.address))).to.equal(
+    expect(ethers.utils.formatEther(await sourceToken.balanceOf(deployer.address))).to.equal(
       "9800000.0",
     )
   })

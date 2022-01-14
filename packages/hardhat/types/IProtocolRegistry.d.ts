@@ -19,79 +19,103 @@ import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
-interface ICreditRequestInterface extends ethers.utils.Interface {
+interface IProtocolRegistryInterface extends ethers.utils.Interface {
   functions: {
-    "acceptRequest(address)": FunctionFragment;
-    "approveRequest(address)": FunctionFragment;
-    "calculateRequestCollateral(address)": FunctionFragment;
-    "createRequest(address,uint256,address)": FunctionFragment;
-    "deleteRequest(address)": FunctionFragment;
-    "getCreditRequest(address)": FunctionFragment;
-    "updateRequest(address,uint256,bool)": FunctionFragment;
+    "deployWalletToRegistry(address[],address[],address,uint256)": FunctionFragment;
+    "grantAmbassadors(address[])": FunctionFragment;
+    "grantMembers(address[])": FunctionFragment;
+    "grantUnderwriters(address[])": FunctionFragment;
+    "isAmbassador(address)": FunctionFragment;
+    "isMember(address)": FunctionFragment;
+    "isOperator(address)": FunctionFragment;
+    "isUnderwriter(address)": FunctionFragment;
+    "revokeAmbassador(address)": FunctionFragment;
+    "revokeMember(address)": FunctionFragment;
+    "revokeUnderwriter(address)": FunctionFragment;
   };
 
   encodeFunctionData(
-    functionFragment: "acceptRequest",
+    functionFragment: "deployWalletToRegistry",
+    values: [string[], string[], string, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "grantAmbassadors",
+    values: [string[]]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "grantMembers",
+    values: [string[]]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "grantUnderwriters",
+    values: [string[]]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "isAmbassador",
+    values: [string]
+  ): string;
+  encodeFunctionData(functionFragment: "isMember", values: [string]): string;
+  encodeFunctionData(functionFragment: "isOperator", values: [string]): string;
+  encodeFunctionData(
+    functionFragment: "isUnderwriter",
     values: [string]
   ): string;
   encodeFunctionData(
-    functionFragment: "approveRequest",
+    functionFragment: "revokeAmbassador",
     values: [string]
   ): string;
   encodeFunctionData(
-    functionFragment: "calculateRequestCollateral",
+    functionFragment: "revokeMember",
     values: [string]
   ): string;
   encodeFunctionData(
-    functionFragment: "createRequest",
-    values: [string, BigNumberish, string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "deleteRequest",
+    functionFragment: "revokeUnderwriter",
     values: [string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getCreditRequest",
-    values: [string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "updateRequest",
-    values: [string, BigNumberish, boolean]
   ): string;
 
   decodeFunctionResult(
-    functionFragment: "acceptRequest",
+    functionFragment: "deployWalletToRegistry",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "approveRequest",
+    functionFragment: "grantAmbassadors",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "calculateRequestCollateral",
+    functionFragment: "grantMembers",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "createRequest",
+    functionFragment: "grantUnderwriters",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "deleteRequest",
+    functionFragment: "isAmbassador",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "isMember", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "isOperator", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "isUnderwriter",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "getCreditRequest",
+    functionFragment: "revokeAmbassador",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "updateRequest",
+    functionFragment: "revokeMember",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "revokeUnderwriter",
     data: BytesLike
   ): Result;
 
   events: {};
 }
 
-export class ICreditRequest extends BaseContract {
+export class IProtocolRegistry extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
@@ -132,132 +156,161 @@ export class ICreditRequest extends BaseContract {
     toBlock?: string | number | undefined
   ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
 
-  interface: ICreditRequestInterface;
+  interface: IProtocolRegistryInterface;
 
   functions: {
-    acceptRequest(
-      _counterparty: string,
+    deployWalletToRegistry(
+      clients: string[],
+      guardians: string[],
+      coSigner: string,
+      required: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    approveRequest(
-      _counterparty: string,
+    grantAmbassadors(
+      _ambassadors: string[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    calculateRequestCollateral(
-      _counterparty: string,
+    grantMembers(
+      _members: string[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    createRequest(
-      _counterparty: string,
-      _creditLimit: BigNumberish,
-      _networkToken: string,
+    grantUnderwriters(
+      _underwriters: string[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    deleteRequest(
-      _counterparty: string,
+    isAmbassador(
+      _ambassador: string,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
+    isMember(_member: string, overrides?: CallOverrides): Promise<[boolean]>;
+
+    isOperator(
+      _operator: string,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
+    isUnderwriter(
+      _underwriter: string,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
+    revokeAmbassador(
+      _ambassador: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    getCreditRequest(
-      _counterparty: string,
+    revokeMember(
+      _member: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    updateRequest(
-      _counterparty: string,
-      _creditLimit: BigNumberish,
-      _approved: boolean,
+    revokeUnderwriter(
+      _underwriter: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
   };
 
-  acceptRequest(
-    _counterparty: string,
+  deployWalletToRegistry(
+    clients: string[],
+    guardians: string[],
+    coSigner: string,
+    required: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  approveRequest(
-    _counterparty: string,
+  grantAmbassadors(
+    _ambassadors: string[],
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  calculateRequestCollateral(
-    _counterparty: string,
+  grantMembers(
+    _members: string[],
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  createRequest(
-    _counterparty: string,
-    _creditLimit: BigNumberish,
-    _networkToken: string,
+  grantUnderwriters(
+    _underwriters: string[],
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  deleteRequest(
-    _counterparty: string,
+  isAmbassador(
+    _ambassador: string,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
+
+  isMember(_member: string, overrides?: CallOverrides): Promise<boolean>;
+
+  isOperator(_operator: string, overrides?: CallOverrides): Promise<boolean>;
+
+  isUnderwriter(
+    _underwriter: string,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
+
+  revokeAmbassador(
+    _ambassador: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  getCreditRequest(
-    _counterparty: string,
+  revokeMember(
+    _member: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  updateRequest(
-    _counterparty: string,
-    _creditLimit: BigNumberish,
-    _approved: boolean,
+  revokeUnderwriter(
+    _underwriter: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   callStatic: {
-    acceptRequest(
-      _counterparty: string,
+    deployWalletToRegistry(
+      clients: string[],
+      guardians: string[],
+      coSigner: string,
+      required: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    approveRequest(
-      _counterparty: string,
+    grantAmbassadors(
+      _ambassadors: string[],
       overrides?: CallOverrides
     ): Promise<void>;
 
-    calculateRequestCollateral(
-      _counterparty: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    grantMembers(_members: string[], overrides?: CallOverrides): Promise<void>;
 
-    createRequest(
-      _counterparty: string,
-      _creditLimit: BigNumberish,
-      _networkToken: string,
+    grantUnderwriters(
+      _underwriters: string[],
       overrides?: CallOverrides
     ): Promise<void>;
 
-    deleteRequest(
-      _counterparty: string,
+    isAmbassador(
+      _ambassador: string,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
+    isMember(_member: string, overrides?: CallOverrides): Promise<boolean>;
+
+    isOperator(_operator: string, overrides?: CallOverrides): Promise<boolean>;
+
+    isUnderwriter(
+      _underwriter: string,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
+    revokeAmbassador(
+      _ambassador: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    getCreditRequest(
-      _counterparty: string,
-      overrides?: CallOverrides
-    ): Promise<
-      [boolean, string, string, BigNumber] & {
-        approved: boolean;
-        ambassador: string;
-        networkToken: string;
-        creditLimit: BigNumber;
-      }
-    >;
+    revokeMember(_member: string, overrides?: CallOverrides): Promise<void>;
 
-    updateRequest(
-      _counterparty: string,
-      _creditLimit: BigNumberish,
-      _approved: boolean,
+    revokeUnderwriter(
+      _underwriter: string,
       overrides?: CallOverrides
     ): Promise<void>;
   };
@@ -265,83 +318,118 @@ export class ICreditRequest extends BaseContract {
   filters: {};
 
   estimateGas: {
-    acceptRequest(
-      _counterparty: string,
+    deployWalletToRegistry(
+      clients: string[],
+      guardians: string[],
+      coSigner: string,
+      required: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    approveRequest(
-      _counterparty: string,
+    grantAmbassadors(
+      _ambassadors: string[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    calculateRequestCollateral(
-      _counterparty: string,
+    grantMembers(
+      _members: string[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    createRequest(
-      _counterparty: string,
-      _creditLimit: BigNumberish,
-      _networkToken: string,
+    grantUnderwriters(
+      _underwriters: string[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    deleteRequest(
-      _counterparty: string,
+    isAmbassador(
+      _ambassador: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    isMember(_member: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    isOperator(
+      _operator: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    isUnderwriter(
+      _underwriter: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    revokeAmbassador(
+      _ambassador: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    getCreditRequest(
-      _counterparty: string,
+    revokeMember(
+      _member: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    updateRequest(
-      _counterparty: string,
-      _creditLimit: BigNumberish,
-      _approved: boolean,
+    revokeUnderwriter(
+      _underwriter: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    acceptRequest(
-      _counterparty: string,
+    deployWalletToRegistry(
+      clients: string[],
+      guardians: string[],
+      coSigner: string,
+      required: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    approveRequest(
-      _counterparty: string,
+    grantAmbassadors(
+      _ambassadors: string[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    calculateRequestCollateral(
-      _counterparty: string,
+    grantMembers(
+      _members: string[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    createRequest(
-      _counterparty: string,
-      _creditLimit: BigNumberish,
-      _networkToken: string,
+    grantUnderwriters(
+      _underwriters: string[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    deleteRequest(
-      _counterparty: string,
+    isAmbassador(
+      _ambassador: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    isMember(
+      _member: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    isOperator(
+      _operator: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    isUnderwriter(
+      _underwriter: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    revokeAmbassador(
+      _ambassador: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    getCreditRequest(
-      _counterparty: string,
+    revokeMember(
+      _member: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    updateRequest(
-      _counterparty: string,
-      _creditLimit: BigNumberish,
-      _approved: boolean,
+    revokeUnderwriter(
+      _underwriter: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
   };

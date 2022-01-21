@@ -26,7 +26,7 @@ interface ProtocolRolesInterface extends ethers.utils.Interface {
     "grantAmbassador(address)": FunctionFragment;
     "grantNetwork(address)": FunctionFragment;
     "grantRole(bytes32,address)": FunctionFragment;
-    "grantUnderwriters(address[])": FunctionFragment;
+    "grantUnderwriter(address)": FunctionFragment;
     "hasRole(bytes32,address)": FunctionFragment;
     "initialize(address[],address)": FunctionFragment;
     "isAmbassador(address)": FunctionFragment;
@@ -65,8 +65,8 @@ interface ProtocolRolesInterface extends ethers.utils.Interface {
     values: [BytesLike, string]
   ): string;
   encodeFunctionData(
-    functionFragment: "grantUnderwriters",
-    values: [string[]]
+    functionFragment: "grantUnderwriter",
+    values: [string]
   ): string;
   encodeFunctionData(
     functionFragment: "hasRole",
@@ -138,7 +138,7 @@ interface ProtocolRolesInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "grantRole", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "grantUnderwriters",
+    functionFragment: "grantUnderwriter",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "hasRole", data: BytesLike): Result;
@@ -281,8 +281,8 @@ export class ProtocolRoles extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    grantUnderwriters(
-      _ambassadors: string[],
+    grantUnderwriter(
+      _ambassador: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -379,8 +379,8 @@ export class ProtocolRoles extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  grantUnderwriters(
-    _ambassadors: string[],
+  grantUnderwriter(
+    _ambassador: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -471,8 +471,8 @@ export class ProtocolRoles extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    grantUnderwriters(
-      _ambassadors: string[],
+    grantUnderwriter(
+      _ambassador: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -637,8 +637,8 @@ export class ProtocolRoles extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    grantUnderwriters(
-      _ambassadors: string[],
+    grantUnderwriter(
+      _ambassador: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -741,8 +741,8 @@ export class ProtocolRoles extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    grantUnderwriters(
-      _ambassadors: string[],
+    grantUnderwriter(
+      _ambassador: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 

@@ -26,6 +26,7 @@ interface FeeManagerInterface extends ethers.utils.Interface {
     "claimFees(address,address)": FunctionFragment;
     "collateralToken()": FunctionFragment;
     "collectFees(address,address,uint256)": FunctionFragment;
+    "creditRequest()": FunctionFragment;
     "initialize(address,address,address,address)": FunctionFragment;
     "owner()": FunctionFragment;
     "priceOracle()": FunctionFragment;
@@ -56,6 +57,10 @@ interface FeeManagerInterface extends ethers.utils.Interface {
   encodeFunctionData(
     functionFragment: "collectFees",
     values: [string, string, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "creditRequest",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "initialize",
@@ -103,6 +108,10 @@ interface FeeManagerInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "collectFees",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "creditRequest",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
@@ -216,9 +225,11 @@ export class FeeManager extends BaseContract {
     collectFees(
       _networkAccount: string,
       _network: string,
-      _creditUsed: BigNumberish,
+      _transactionValue: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
+
+    creditRequest(overrides?: CallOverrides): Promise<[string]>;
 
     initialize(
       _collateralToken: string,
@@ -283,9 +294,11 @@ export class FeeManager extends BaseContract {
   collectFees(
     _networkAccount: string,
     _network: string,
-    _creditUsed: BigNumberish,
+    _transactionValue: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
+
+  creditRequest(overrides?: CallOverrides): Promise<string>;
 
   initialize(
     _collateralToken: string,
@@ -350,9 +363,11 @@ export class FeeManager extends BaseContract {
     collectFees(
       _networkAccount: string,
       _network: string,
-      _creditUsed: BigNumberish,
+      _transactionValue: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    creditRequest(overrides?: CallOverrides): Promise<string>;
 
     initialize(
       _collateralToken: string,
@@ -431,9 +446,11 @@ export class FeeManager extends BaseContract {
     collectFees(
       _networkAccount: string,
       _network: string,
-      _creditUsed: BigNumberish,
+      _transactionValue: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
+
+    creditRequest(overrides?: CallOverrides): Promise<BigNumber>;
 
     initialize(
       _collateralToken: string,
@@ -499,9 +516,11 @@ export class FeeManager extends BaseContract {
     collectFees(
       _networkAccount: string,
       _network: string,
-      _creditUsed: BigNumberish,
+      _transactionValue: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
+
+    creditRequest(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     initialize(
       _collateralToken: string,

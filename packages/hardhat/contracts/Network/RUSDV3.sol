@@ -66,10 +66,7 @@ contract RUSDV3 is CIP36 {
         address _to,
         uint256 _amount
     ) internal override onlyRegistered(_from, _to) {
-        uint256 senderBalance = balanceOf(_from);
-        if (_amount > senderBalance) {
-            feeManager.collectFees(address(this), _from, _amount - senderBalance);
-        }
+        feeManager.collectFees(address(this), _from, _amount);
         super._transfer(_from, _to, _amount);
         
         emit BalanceUpdate(

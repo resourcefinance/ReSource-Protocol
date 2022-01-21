@@ -4,6 +4,7 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "../iKeyWallet/IiKeyWalletDeployer.sol";
 import "../Securitization/interface/IProtocolRoles.sol";
+import "../Securitization/interface/ICreditRequest.sol";
 import "./interface/INetworkRegistry.sol";
 
 
@@ -13,6 +14,7 @@ contract NetworkRegistryV3 is OwnableUpgradeable, INetworkRegistry  {
     /*
      *  Storage
      */
+    ICreditRequest private creditRequest;
     IiKeyWalletDeployer private walletDeployer;
     IProtocolRoles public roles;
     mapping(address => address) membership;
@@ -133,17 +135,19 @@ contract NetworkRegistryV3 is OwnableUpgradeable, INetworkRegistry  {
 
 
     /// @dev Deploys a multisigwallet and adds it to members
-    /// @param clients client wallets of the multisig
-    /// @param guardians guardian wallets of the multisig
-    /// @param coSigner coSigner wallet of the multiSig
-    /// @param required required signatures of the multiSig 
+    /// @param _clients client wallets of the multisig
+    /// @param _guardians guardian wallets of the multisig
+    /// @param _coSigner coSigner wallet of the multiSig
+    /// @param _required required signatures of the multiSig 
     function deployAndAddWallet(
-        address[] memory clients,
-        address[] memory guardians, 
-        address coSigner,
-        uint256 required) public onlyAmbassador { 
-        address newWallet = walletDeployer.deployWallet(clients, guardians, coSigner, required);
+        address[] memory _clients,
+        address[] memory _guardians, 
+        address _coSigner,
+        address _network,
+        uint256 _required) public onlyAmbassador { 
+        address newWallet = walletDeployer.deployWallet(_clients, _guardians, _coSigner, _required);
         OwnableUpgradeable(newWallet).transferOwnership(owner());
         membership[newWallet] = msg.sender;
+        creditRequest.inviteCounterparty(_network, newWallet);
     }
 }

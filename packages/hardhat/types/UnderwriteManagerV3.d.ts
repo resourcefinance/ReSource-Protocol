@@ -21,35 +21,49 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface UnderwriteManagerV3Interface extends ethers.utils.Interface {
   functions: {
-    "calculateLTV(address)": FunctionFragment;
+    "calculateLTV(address,address)": FunctionFragment;
+    "closeCreditLine(address,address)": FunctionFragment;
     "collateralToken()": FunctionFragment;
     "convertNetworkToCollateral(address,uint256)": FunctionFragment;
-    "createCreditLine(address,address,address,uint256,uint256,address)": FunctionFragment;
+    "createCreditLine(address,address,uint256,uint256,address)": FunctionFragment;
     "creditLineExpiration()": FunctionFragment;
-    "creditLines(address)": FunctionFragment;
+    "creditLines(address,address)": FunctionFragment;
+    "depositAndStakeCollateral(address,address,address,uint256)": FunctionFragment;
     "depositCollateral(address,uint256)": FunctionFragment;
-    "extendCreditLine(address,uint256,uint256)": FunctionFragment;
+    "deposits(address)": FunctionFragment;
+    "extendCreditLine(address,address,address,uint256,uint256)": FunctionFragment;
     "getCollateralToken()": FunctionFragment;
-    "getCreditLine(address)": FunctionFragment;
+    "getCreditLine(address,address)": FunctionFragment;
     "getMinLTV()": FunctionFragment;
+    "getNeededCollateral(address,address)": FunctionFragment;
     "initialize(address,address,address,address)": FunctionFragment;
-    "isValidLTV(address)": FunctionFragment;
+    "isCreditLineExpired(address,address)": FunctionFragment;
+    "isValidLTV(address,address)": FunctionFragment;
     "minLTV()": FunctionFragment;
     "oracle()": FunctionFragment;
     "owner()": FunctionFragment;
     "paused()": FunctionFragment;
     "protocolRoles()": FunctionFragment;
+    "renewCreditLine(address,address)": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "request()": FunctionFragment;
-    "requestUnstake(address)": FunctionFragment;
-    "swapCreditLine(address,address)": FunctionFragment;
+    "requestUnstake(address,address)": FunctionFragment;
+    "stakeCollateral(address,address,address,uint256)": FunctionFragment;
+    "swapCreditLine(address,address,address)": FunctionFragment;
     "totalCollateral()": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
+    "unstakeAndWithdrawCollateral(address,address,uint256)": FunctionFragment;
+    "unstakeCollateral(address,address,uint256)": FunctionFragment;
+    "withdrawCollateral(uint256)": FunctionFragment;
   };
 
   encodeFunctionData(
     functionFragment: "calculateLTV",
-    values: [string]
+    values: [string, string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "closeCreditLine",
+    values: [string, string]
   ): string;
   encodeFunctionData(
     functionFragment: "collateralToken",
@@ -61,20 +75,28 @@ interface UnderwriteManagerV3Interface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "createCreditLine",
-    values: [string, string, string, BigNumberish, BigNumberish, string]
+    values: [string, string, BigNumberish, BigNumberish, string]
   ): string;
   encodeFunctionData(
     functionFragment: "creditLineExpiration",
     values?: undefined
   ): string;
-  encodeFunctionData(functionFragment: "creditLines", values: [string]): string;
+  encodeFunctionData(
+    functionFragment: "creditLines",
+    values: [string, string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "depositAndStakeCollateral",
+    values: [string, string, string, BigNumberish]
+  ): string;
   encodeFunctionData(
     functionFragment: "depositCollateral",
     values: [string, BigNumberish]
   ): string;
+  encodeFunctionData(functionFragment: "deposits", values: [string]): string;
   encodeFunctionData(
     functionFragment: "extendCreditLine",
-    values: [string, BigNumberish, BigNumberish]
+    values: [string, string, string, BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "getCollateralToken",
@@ -82,14 +104,25 @@ interface UnderwriteManagerV3Interface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "getCreditLine",
-    values: [string]
+    values: [string, string]
   ): string;
   encodeFunctionData(functionFragment: "getMinLTV", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "getNeededCollateral",
+    values: [string, string]
+  ): string;
   encodeFunctionData(
     functionFragment: "initialize",
     values: [string, string, string, string]
   ): string;
-  encodeFunctionData(functionFragment: "isValidLTV", values: [string]): string;
+  encodeFunctionData(
+    functionFragment: "isCreditLineExpired",
+    values: [string, string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "isValidLTV",
+    values: [string, string]
+  ): string;
   encodeFunctionData(functionFragment: "minLTV", values?: undefined): string;
   encodeFunctionData(functionFragment: "oracle", values?: undefined): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
@@ -99,17 +132,25 @@ interface UnderwriteManagerV3Interface extends ethers.utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
+    functionFragment: "renewCreditLine",
+    values: [string, string]
+  ): string;
+  encodeFunctionData(
     functionFragment: "renounceOwnership",
     values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "request", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "requestUnstake",
-    values: [string]
+    values: [string, string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "stakeCollateral",
+    values: [string, string, string, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "swapCreditLine",
-    values: [string, string]
+    values: [string, string, string]
   ): string;
   encodeFunctionData(
     functionFragment: "totalCollateral",
@@ -119,9 +160,25 @@ interface UnderwriteManagerV3Interface extends ethers.utils.Interface {
     functionFragment: "transferOwnership",
     values: [string]
   ): string;
+  encodeFunctionData(
+    functionFragment: "unstakeAndWithdrawCollateral",
+    values: [string, string, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "unstakeCollateral",
+    values: [string, string, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "withdrawCollateral",
+    values: [BigNumberish]
+  ): string;
 
   decodeFunctionResult(
     functionFragment: "calculateLTV",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "closeCreditLine",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -145,9 +202,14 @@ interface UnderwriteManagerV3Interface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "depositAndStakeCollateral",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "depositCollateral",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "deposits", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "extendCreditLine",
     data: BytesLike
@@ -161,7 +223,15 @@ interface UnderwriteManagerV3Interface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "getMinLTV", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "getNeededCollateral",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "isCreditLineExpired",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "isValidLTV", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "minLTV", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "oracle", data: BytesLike): Result;
@@ -169,6 +239,10 @@ interface UnderwriteManagerV3Interface extends ethers.utils.Interface {
   decodeFunctionResult(functionFragment: "paused", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "protocolRoles",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "renewCreditLine",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -181,6 +255,10 @@ interface UnderwriteManagerV3Interface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "stakeCollateral",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "swapCreditLine",
     data: BytesLike
   ): Result;
@@ -190,6 +268,18 @@ interface UnderwriteManagerV3Interface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "transferOwnership",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "unstakeAndWithdrawCollateral",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "unstakeCollateral",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "withdrawCollateral",
     data: BytesLike
   ): Result;
 
@@ -257,6 +347,13 @@ export class UnderwriteManagerV3 extends BaseContract {
 
   functions: {
     calculateLTV(
+      _network: string,
+      _counterparty: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    closeCreditLine(
+      _network: string,
       _counterparty: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
@@ -264,18 +361,17 @@ export class UnderwriteManagerV3 extends BaseContract {
     collateralToken(overrides?: CallOverrides): Promise<[string]>;
 
     convertNetworkToCollateral(
-      _networkToken: string,
+      _network: string,
       _amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
 
     createCreditLine(
       _counterparty: string,
       _underwriter: string,
-      _ambassador: string,
       _collateral: BigNumberish,
       _creditLimit: BigNumberish,
-      _networkToken: string,
+      _network: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -283,42 +379,66 @@ export class UnderwriteManagerV3 extends BaseContract {
 
     creditLines(
       arg0: string,
+      arg1: string,
       overrides?: CallOverrides
     ): Promise<
-      [string, string, string, BigNumber, BigNumber] & {
+      [string, string, BigNumber, BigNumber] & {
         underwriter: string;
-        ambassador: string;
-        networkToken: string;
+        network: string;
         collateral: BigNumber;
         issueDate: BigNumber;
       }
     >;
 
-    depositCollateral(
+    depositAndStakeCollateral(
+      _network: string,
       _counterparty: string,
+      _underwriter: string,
       _amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    depositCollateral(
+      _underwriter: string,
+      _amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    deposits(arg0: string, overrides?: CallOverrides): Promise<[BigNumber]>;
+
     extendCreditLine(
+      _network: string,
       _counterparty: string,
+      _underwriter: string,
       _collateral: BigNumberish,
       _creditLimit: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    getCollateralToken(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+    getCollateralToken(overrides?: CallOverrides): Promise<[string]>;
 
     getCreditLine(
+      _network: string,
       _counterparty: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+      overrides?: CallOverrides
+    ): Promise<
+      [
+        [string, string, BigNumber, BigNumber] & {
+          underwriter: string;
+          network: string;
+          collateral: BigNumber;
+          issueDate: BigNumber;
+        }
+      ]
+    >;
 
-    getMinLTV(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+    getMinLTV(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    getNeededCollateral(
+      _network: string,
+      _counterparty: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
 
     initialize(
       collateralTokenAddress: string,
@@ -328,10 +448,17 @@ export class UnderwriteManagerV3 extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    isValidLTV(
+    isCreditLineExpired(
+      _network: string,
       _counterparty: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
+    isValidLTV(
+      _network: string,
+      _counterparty: string,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
 
     minLTV(overrides?: CallOverrides): Promise<[BigNumber]>;
 
@@ -343,6 +470,12 @@ export class UnderwriteManagerV3 extends BaseContract {
 
     protocolRoles(overrides?: CallOverrides): Promise<[string]>;
 
+    renewCreditLine(
+      _network: string,
+      _counterparty: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     renounceOwnership(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
@@ -350,11 +483,21 @@ export class UnderwriteManagerV3 extends BaseContract {
     request(overrides?: CallOverrides): Promise<[string]>;
 
     requestUnstake(
+      _network: string,
       _counterparty: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    stakeCollateral(
+      _network: string,
+      _counterparty: string,
+      _underwriter: string,
+      _amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     swapCreditLine(
+      _network: string,
       _counterparty: string,
       _underwriter: string,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -366,9 +509,35 @@ export class UnderwriteManagerV3 extends BaseContract {
       newOwner: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
+
+    unstakeAndWithdrawCollateral(
+      _network: string,
+      _counterparty: string,
+      _amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    unstakeCollateral(
+      _network: string,
+      _counterparty: string,
+      _amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    withdrawCollateral(
+      _amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
   };
 
   calculateLTV(
+    _network: string,
+    _counterparty: string,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  closeCreditLine(
+    _network: string,
     _counterparty: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
@@ -376,18 +545,17 @@ export class UnderwriteManagerV3 extends BaseContract {
   collateralToken(overrides?: CallOverrides): Promise<string>;
 
   convertNetworkToCollateral(
-    _networkToken: string,
+    _network: string,
     _amount: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
 
   createCreditLine(
     _counterparty: string,
     _underwriter: string,
-    _ambassador: string,
     _collateral: BigNumberish,
     _creditLimit: BigNumberish,
-    _networkToken: string,
+    _network: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -395,42 +563,64 @@ export class UnderwriteManagerV3 extends BaseContract {
 
   creditLines(
     arg0: string,
+    arg1: string,
     overrides?: CallOverrides
   ): Promise<
-    [string, string, string, BigNumber, BigNumber] & {
+    [string, string, BigNumber, BigNumber] & {
       underwriter: string;
-      ambassador: string;
-      networkToken: string;
+      network: string;
       collateral: BigNumber;
       issueDate: BigNumber;
     }
   >;
 
-  depositCollateral(
+  depositAndStakeCollateral(
+    _network: string,
     _counterparty: string,
+    _underwriter: string,
     _amount: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  depositCollateral(
+    _underwriter: string,
+    _amount: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  deposits(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
+
   extendCreditLine(
+    _network: string,
     _counterparty: string,
+    _underwriter: string,
     _collateral: BigNumberish,
     _creditLimit: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  getCollateralToken(
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  getCollateralToken(overrides?: CallOverrides): Promise<string>;
 
   getCreditLine(
+    _network: string,
     _counterparty: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+    overrides?: CallOverrides
+  ): Promise<
+    [string, string, BigNumber, BigNumber] & {
+      underwriter: string;
+      network: string;
+      collateral: BigNumber;
+      issueDate: BigNumber;
+    }
+  >;
 
-  getMinLTV(
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  getMinLTV(overrides?: CallOverrides): Promise<BigNumber>;
+
+  getNeededCollateral(
+    _network: string,
+    _counterparty: string,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
 
   initialize(
     collateralTokenAddress: string,
@@ -440,10 +630,17 @@ export class UnderwriteManagerV3 extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  isValidLTV(
+  isCreditLineExpired(
+    _network: string,
     _counterparty: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+    overrides?: CallOverrides
+  ): Promise<boolean>;
+
+  isValidLTV(
+    _network: string,
+    _counterparty: string,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
 
   minLTV(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -455,6 +652,12 @@ export class UnderwriteManagerV3 extends BaseContract {
 
   protocolRoles(overrides?: CallOverrides): Promise<string>;
 
+  renewCreditLine(
+    _network: string,
+    _counterparty: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   renounceOwnership(
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
@@ -462,11 +665,21 @@ export class UnderwriteManagerV3 extends BaseContract {
   request(overrides?: CallOverrides): Promise<string>;
 
   requestUnstake(
+    _network: string,
     _counterparty: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  stakeCollateral(
+    _network: string,
+    _counterparty: string,
+    _underwriter: string,
+    _amount: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   swapCreditLine(
+    _network: string,
     _counterparty: string,
     _underwriter: string,
     overrides?: Overrides & { from?: string | Promise<string> }
@@ -479,16 +692,42 @@ export class UnderwriteManagerV3 extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  unstakeAndWithdrawCollateral(
+    _network: string,
+    _counterparty: string,
+    _amount: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  unstakeCollateral(
+    _network: string,
+    _counterparty: string,
+    _amount: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  withdrawCollateral(
+    _amount: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   callStatic: {
     calculateLTV(
+      _network: string,
       _counterparty: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    closeCreditLine(
+      _network: string,
+      _counterparty: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     collateralToken(overrides?: CallOverrides): Promise<string>;
 
     convertNetworkToCollateral(
-      _networkToken: string,
+      _network: string,
       _amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
@@ -496,10 +735,9 @@ export class UnderwriteManagerV3 extends BaseContract {
     createCreditLine(
       _counterparty: string,
       _underwriter: string,
-      _ambassador: string,
       _collateral: BigNumberish,
       _creditLimit: BigNumberish,
-      _networkToken: string,
+      _network: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -507,25 +745,37 @@ export class UnderwriteManagerV3 extends BaseContract {
 
     creditLines(
       arg0: string,
+      arg1: string,
       overrides?: CallOverrides
     ): Promise<
-      [string, string, string, BigNumber, BigNumber] & {
+      [string, string, BigNumber, BigNumber] & {
         underwriter: string;
-        ambassador: string;
-        networkToken: string;
+        network: string;
         collateral: BigNumber;
         issueDate: BigNumber;
       }
     >;
 
-    depositCollateral(
+    depositAndStakeCollateral(
+      _network: string,
       _counterparty: string,
+      _underwriter: string,
       _amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
+    depositCollateral(
+      _underwriter: string,
+      _amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    deposits(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
+
     extendCreditLine(
+      _network: string,
       _counterparty: string,
+      _underwriter: string,
       _collateral: BigNumberish,
       _creditLimit: BigNumberish,
       overrides?: CallOverrides
@@ -534,19 +784,25 @@ export class UnderwriteManagerV3 extends BaseContract {
     getCollateralToken(overrides?: CallOverrides): Promise<string>;
 
     getCreditLine(
+      _network: string,
       _counterparty: string,
       overrides?: CallOverrides
     ): Promise<
-      [string, string, string, BigNumber, BigNumber] & {
+      [string, string, BigNumber, BigNumber] & {
         underwriter: string;
-        ambassador: string;
-        networkToken: string;
+        network: string;
         collateral: BigNumber;
         issueDate: BigNumber;
       }
     >;
 
     getMinLTV(overrides?: CallOverrides): Promise<BigNumber>;
+
+    getNeededCollateral(
+      _network: string,
+      _counterparty: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     initialize(
       collateralTokenAddress: string,
@@ -556,7 +812,14 @@ export class UnderwriteManagerV3 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    isCreditLineExpired(
+      _network: string,
+      _counterparty: string,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
     isValidLTV(
+      _network: string,
       _counterparty: string,
       overrides?: CallOverrides
     ): Promise<boolean>;
@@ -571,16 +834,32 @@ export class UnderwriteManagerV3 extends BaseContract {
 
     protocolRoles(overrides?: CallOverrides): Promise<string>;
 
+    renewCreditLine(
+      _network: string,
+      _counterparty: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
 
     request(overrides?: CallOverrides): Promise<string>;
 
     requestUnstake(
+      _network: string,
       _counterparty: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
+    stakeCollateral(
+      _network: string,
+      _counterparty: string,
+      _underwriter: string,
+      _amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     swapCreditLine(
+      _network: string,
       _counterparty: string,
       _underwriter: string,
       overrides?: CallOverrides
@@ -590,6 +869,25 @@ export class UnderwriteManagerV3 extends BaseContract {
 
     transferOwnership(
       newOwner: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    unstakeAndWithdrawCollateral(
+      _network: string,
+      _counterparty: string,
+      _amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    unstakeCollateral(
+      _network: string,
+      _counterparty: string,
+      _amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    withdrawCollateral(
+      _amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
   };
@@ -626,6 +924,13 @@ export class UnderwriteManagerV3 extends BaseContract {
 
   estimateGas: {
     calculateLTV(
+      _network: string,
+      _counterparty: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    closeCreditLine(
+      _network: string,
       _counterparty: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
@@ -633,49 +938,67 @@ export class UnderwriteManagerV3 extends BaseContract {
     collateralToken(overrides?: CallOverrides): Promise<BigNumber>;
 
     convertNetworkToCollateral(
-      _networkToken: string,
+      _network: string,
       _amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     createCreditLine(
       _counterparty: string,
       _underwriter: string,
-      _ambassador: string,
       _collateral: BigNumberish,
       _creditLimit: BigNumberish,
-      _networkToken: string,
+      _network: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     creditLineExpiration(overrides?: CallOverrides): Promise<BigNumber>;
 
-    creditLines(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
+    creditLines(
+      arg0: string,
+      arg1: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
-    depositCollateral(
+    depositAndStakeCollateral(
+      _network: string,
       _counterparty: string,
+      _underwriter: string,
       _amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    depositCollateral(
+      _underwriter: string,
+      _amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    deposits(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
+
     extendCreditLine(
+      _network: string,
       _counterparty: string,
+      _underwriter: string,
       _collateral: BigNumberish,
       _creditLimit: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    getCollateralToken(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    getCollateralToken(overrides?: CallOverrides): Promise<BigNumber>;
 
     getCreditLine(
+      _network: string,
       _counterparty: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    getMinLTV(
-      overrides?: Overrides & { from?: string | Promise<string> }
+    getMinLTV(overrides?: CallOverrides): Promise<BigNumber>;
+
+    getNeededCollateral(
+      _network: string,
+      _counterparty: string,
+      overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     initialize(
@@ -686,9 +1009,16 @@ export class UnderwriteManagerV3 extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    isValidLTV(
+    isCreditLineExpired(
+      _network: string,
       _counterparty: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    isValidLTV(
+      _network: string,
+      _counterparty: string,
+      overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     minLTV(overrides?: CallOverrides): Promise<BigNumber>;
@@ -701,6 +1031,12 @@ export class UnderwriteManagerV3 extends BaseContract {
 
     protocolRoles(overrides?: CallOverrides): Promise<BigNumber>;
 
+    renewCreditLine(
+      _network: string,
+      _counterparty: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     renounceOwnership(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
@@ -708,11 +1044,21 @@ export class UnderwriteManagerV3 extends BaseContract {
     request(overrides?: CallOverrides): Promise<BigNumber>;
 
     requestUnstake(
+      _network: string,
       _counterparty: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    stakeCollateral(
+      _network: string,
+      _counterparty: string,
+      _underwriter: string,
+      _amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     swapCreditLine(
+      _network: string,
       _counterparty: string,
       _underwriter: string,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -724,10 +1070,36 @@ export class UnderwriteManagerV3 extends BaseContract {
       newOwner: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
+
+    unstakeAndWithdrawCollateral(
+      _network: string,
+      _counterparty: string,
+      _amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    unstakeCollateral(
+      _network: string,
+      _counterparty: string,
+      _amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    withdrawCollateral(
+      _amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
   };
 
   populateTransaction: {
     calculateLTV(
+      _network: string,
+      _counterparty: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    closeCreditLine(
+      _network: string,
       _counterparty: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
@@ -735,18 +1107,17 @@ export class UnderwriteManagerV3 extends BaseContract {
     collateralToken(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     convertNetworkToCollateral(
-      _networkToken: string,
+      _network: string,
       _amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     createCreditLine(
       _counterparty: string,
       _underwriter: string,
-      _ambassador: string,
       _collateral: BigNumberish,
       _creditLimit: BigNumberish,
-      _networkToken: string,
+      _network: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -756,33 +1127,54 @@ export class UnderwriteManagerV3 extends BaseContract {
 
     creditLines(
       arg0: string,
+      arg1: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    depositCollateral(
+    depositAndStakeCollateral(
+      _network: string,
       _counterparty: string,
+      _underwriter: string,
       _amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
+    depositCollateral(
+      _underwriter: string,
+      _amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    deposits(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     extendCreditLine(
+      _network: string,
       _counterparty: string,
+      _underwriter: string,
       _collateral: BigNumberish,
       _creditLimit: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     getCollateralToken(
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     getCreditLine(
+      _network: string,
       _counterparty: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    getMinLTV(
-      overrides?: Overrides & { from?: string | Promise<string> }
+    getMinLTV(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    getNeededCollateral(
+      _network: string,
+      _counterparty: string,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     initialize(
@@ -793,9 +1185,16 @@ export class UnderwriteManagerV3 extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    isValidLTV(
+    isCreditLineExpired(
+      _network: string,
       _counterparty: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    isValidLTV(
+      _network: string,
+      _counterparty: string,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     minLTV(overrides?: CallOverrides): Promise<PopulatedTransaction>;
@@ -808,6 +1207,12 @@ export class UnderwriteManagerV3 extends BaseContract {
 
     protocolRoles(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    renewCreditLine(
+      _network: string,
+      _counterparty: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
     renounceOwnership(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
@@ -815,11 +1220,21 @@ export class UnderwriteManagerV3 extends BaseContract {
     request(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     requestUnstake(
+      _network: string,
       _counterparty: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
+    stakeCollateral(
+      _network: string,
+      _counterparty: string,
+      _underwriter: string,
+      _amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
     swapCreditLine(
+      _network: string,
       _counterparty: string,
       _underwriter: string,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -829,6 +1244,25 @@ export class UnderwriteManagerV3 extends BaseContract {
 
     transferOwnership(
       newOwner: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    unstakeAndWithdrawCollateral(
+      _network: string,
+      _counterparty: string,
+      _amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    unstakeCollateral(
+      _network: string,
+      _counterparty: string,
+      _amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    withdrawCollateral(
+      _amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
   };

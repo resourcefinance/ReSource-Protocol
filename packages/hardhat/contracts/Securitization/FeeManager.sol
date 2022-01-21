@@ -6,19 +6,25 @@ import "./interface/IFeeManager.sol";
 import "./interface/IPriceOracle.sol";
 import "./interface/IUnderwriteManager.sol";
 import "./interface/IProtocolRoles.sol";
+import "./interface/ICreditRequest.sol";
 
 contract FeeManager is IFeeManager, OwnableUpgradeable {
-  // CONSTANTS
+  /*
+   *  Constants
+   */
   uint32 private constant MAX_PPM = 1000000;
   bytes32 private constant UNDERWRITER = "UNDERWRITER";
   bytes32 private constant AMBASSADOR = "AMBASSADOR";
   bytes32 private constant NETWORK = "NETWORK";
 
-  // STORAGE
+  /*
+   *  Storage
+   */
   IERC20 public collateralToken;
   IPriceOracle public priceOracle;
   IUnderwriteManager public underwriteManager;
   IProtocolRoles public protocolRoles;
+  ICreditRequest public creditRequest;
   mapping(address => uint256) accruedFees; 
   mapping(address => uint256) rewards;
   mapping(address => NetworkFees) networks;
@@ -35,14 +41,18 @@ contract FeeManager is IFeeManager, OwnableUpgradeable {
     __Ownable_init();
   }
 
-  function collectFees(address _networkAccount, address _network, uint256 _creditUsed) external override {
-    uint256 totalFee = calculateTotalFee(_network, _creditUsed);
-    if (!underwriteManager.isValidLTV(_networkAccount)) {
-      uint256 underwriterFeePercent = networks[_network].roleFeePercent[UNDERWRITER];
-      uint256 underwriterFee = (underwriterFeePercent * totalFee) / MAX_PPM;
-      underwriteManager.depositCollateral(_networkAccount, underwriterFee);
-    } else {
+  function collectFees(address _networkAccount, address _network, uint256 _transactionValue) external override {
+    uint256 totalFee = calculateTotalFee(_network, _transactionValue);
+    bool creditLineExpired = underwriteManager.isCreditLineExpired(_network, _networkAccount);
+    
+    uint256 senderBalance = IERC20(_network).balanceOf(_networkAccount);
+    bool isPositiveBalance = _transactionValue > senderBalance;
+
+    if (!creditLineExpired && isPositiveBalance) {
       accruedFees[_networkAccount] += totalFee;
+    } else { // credit line is expired, unstaking and using negative balance
+      require(creditRequest.isUnstaking(_network, _networkAccount), "FeeManager: ");
+      underwriteManager.renewCreditLine(_network, _networkAccount);
     }
   }
 
@@ -59,16 +69,28 @@ contract FeeManager is IFeeManager, OwnableUpgradeable {
     uint256 totalFees = accruedFees[_networkAccount];
     if (totalFees == 0) { return; }
     NetworkFees storage network = networks[_network];
-    IUnderwriteManager.CreditLine memory creditLine = underwriteManager.getCreditLine(_networkAccount);
+    IUnderwriteManager.CreditLine memory creditLine = underwriteManager.getCreditLine(_network, _networkAccount);
     bytes32[] memory feeRoles = network.roles;
     for (uint256 i = 0; i < feeRoles.length; i++) {
       uint256 roleFeePercent = network.roleFeePercent[feeRoles[i]];
+      uint256 roleFee = (roleFeePercent * totalFees) / MAX_PPM;
       if (feeRoles[i] == UNDERWRITER) {
-        rewards[creditLine.underwriter] = (roleFeePercent * totalFees) / MAX_PPM;
+        if (underwriteManager.isValidLTV(_network, _networkAccount)) {
+          rewards[creditLine.underwriter] = roleFee;
+          return;
+        }
+        uint256 neededCollateral = underwriteManager.getNeededCollateral(_network, _networkAccount);
+        if (roleFee < neededCollateral) {
+          underwriteManager.depositAndStakeCollateral(_network, _networkAccount, creditLine.underwriter, roleFee);
+        } else {
+          underwriteManager.depositAndStakeCollateral(_network, _networkAccount, creditLine.underwriter, neededCollateral);
+          rewards[creditLine.underwriter] = roleFee - neededCollateral;
+        }
       } else if (feeRoles[i] == AMBASSADOR) {
-        rewards[creditLine.ambassador] = (roleFeePercent * totalFees) / MAX_PPM;
+        address ambassador = creditRequest.getAmbassador(_network, _networkAccount);
+        rewards[ambassador] = roleFee;
       } else {
-        rewards[network.roleAddress[feeRoles[i]]] = (roleFeePercent * totalFees) / MAX_PPM;
+        rewards[network.roleAddress[feeRoles[i]]] = roleFee;
       }
     }
   }

@@ -39,12 +39,12 @@ const _abi = [
   {
     inputs: [
       {
-        internalType: "address[]",
-        name: "_underwriters",
-        type: "address[]",
+        internalType: "address",
+        name: "_underwriter",
+        type: "address",
       },
     ],
-    name: "grantUnderwriters",
+    name: "grantUnderwriter",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",

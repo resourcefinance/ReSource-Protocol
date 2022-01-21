@@ -83,19 +83,17 @@ contract ProtocolRoles is AccessControlUpgradeable, OwnableUpgradeable, IProtoco
         revokeRole("NETWORK", _network);
     }
 
-    function grantUnderwriters(address[] memory _ambassadors) external override onlyRole("OPERATOR") {
-        for (uint256 i = 0; i < _ambassadors.length; i++) {
-            require(!hasRole("AMBASSADOR", _ambassadors[i]) && _ambassadors[i] != address(0), "invalid operator");
-            grantRole("AMBASSADOR", _ambassadors[i]);
-        }
+    function grantUnderwriter(address _ambassador) external override onlyRole("OPERATOR") {
+        require(!hasRole("AMBASSADOR", _ambassador) && _ambassador != address(0), "invalid operator");
+        grantRole("AMBASSADOR", _ambassador);
     }
     
     function isAmbassador(address _ambassador) external view override returns(bool) {
-        return hasRole("AMBASSADOR", _ambassador);
+        return hasRole("AMBASSADOR", _ambassador) || hasRole("OPERATOR", _ambassador);
     }
 
     function isUnderwriter(address _underwriter) external view override returns(bool) {
-        return hasRole("UNDERWRITER", _underwriter);
+        return hasRole("UNDERWRITER", _underwriter) || hasRole("OPERATOR", _underwriter);
     }
     
     function isOperator(address _operator) external view override returns(bool) {
@@ -103,6 +101,6 @@ contract ProtocolRoles is AccessControlUpgradeable, OwnableUpgradeable, IProtoco
     }
 
     function isNetwork(address _network) external view override returns(bool) {
-        return hasRole("NETWORK", _network);
+        return hasRole("NETWORK", _network) || hasRole("OPERATOR", _network);
     }
 }

@@ -14,6 +14,29 @@ const _abi = [
     inputs: [
       {
         internalType: "address",
+        name: "_network",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "_ambassador",
+        type: "address",
+      },
+    ],
+    name: "acceptAmbassadorInvitation",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_network",
+        type: "address",
+      },
+      {
+        internalType: "address",
         name: "_counterparty",
         type: "address",
       },
@@ -27,6 +50,11 @@ const _abi = [
     inputs: [
       {
         internalType: "address",
+        name: "_network",
+        type: "address",
+      },
+      {
+        internalType: "address",
         name: "_counterparty",
         type: "address",
       },
@@ -38,6 +66,11 @@ const _abi = [
   },
   {
     inputs: [
+      {
+        internalType: "address",
+        name: "_network",
+        type: "address",
+      },
       {
         internalType: "address",
         name: "_counterparty",
@@ -69,7 +102,7 @@ const _abi = [
       },
       {
         internalType: "address",
-        name: "_networkToken",
+        name: "_network",
         type: "address",
       },
     ],
@@ -80,6 +113,11 @@ const _abi = [
   },
   {
     inputs: [
+      {
+        internalType: "address",
+        name: "_network",
+        type: "address",
+      },
       {
         internalType: "address",
         name: "_counterparty",
@@ -93,6 +131,35 @@ const _abi = [
   },
   {
     inputs: [
+      {
+        internalType: "address",
+        name: "_network",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "_counterparty",
+        type: "address",
+      },
+    ],
+    name: "getAmbassador",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_network",
+        type: "address",
+      },
       {
         internalType: "address",
         name: "_counterparty",
@@ -115,7 +182,7 @@ const _abi = [
           },
           {
             internalType: "address",
-            name: "networkToken",
+            name: "network",
             type: "address",
           },
           {
@@ -129,11 +196,58 @@ const _abi = [
         type: "tuple",
       },
     ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_network",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "_counterparty",
+        type: "address",
+      },
+    ],
+    name: "inviteCounterparty",
+    outputs: [],
     stateMutability: "nonpayable",
     type: "function",
   },
   {
     inputs: [
+      {
+        internalType: "address",
+        name: "_network",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "_networkAccount",
+        type: "address",
+      },
+    ],
+    name: "isUnstaking",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_network",
+        type: "address",
+      },
       {
         internalType: "address",
         name: "_counterparty",
@@ -144,13 +258,8 @@ const _abi = [
         name: "_creditLimit",
         type: "uint256",
       },
-      {
-        internalType: "bool",
-        name: "_approved",
-        type: "bool",
-      },
     ],
-    name: "updateRequest",
+    name: "updateRequestLimit",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",

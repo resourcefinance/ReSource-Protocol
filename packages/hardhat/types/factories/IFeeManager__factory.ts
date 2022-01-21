@@ -67,7 +67,7 @@ const _abi = [
       },
       {
         internalType: "uint256",
-        name: "_creditUsed",
+        name: "_transactionValue",
         type: "uint256",
       },
     ],

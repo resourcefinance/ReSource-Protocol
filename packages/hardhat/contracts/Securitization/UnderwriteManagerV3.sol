@@ -27,8 +27,10 @@ contract UnderwriteManagerV3 is OwnableUpgradeable, PausableUpgradeable, IUnderw
     IPriceOracle public oracle;
     uint256 public totalCollateral;
     uint256 public minLTV;
-    mapping(address => CreditLine) public creditLines;
     uint256 public creditLineExpiration;
+    // network => member => creditline
+    mapping(address => mapping(address => CreditLine)) public creditLines;
+    mapping(address => uint256) public deposits;
 
     function initialize(address collateralTokenAddress, address _protocolRoles, address _request, address _oracle) external virtual initializer {
         collateralToken = IERC20(collateralTokenAddress);
@@ -60,8 +62,8 @@ contract UnderwriteManagerV3 is OwnableUpgradeable, PausableUpgradeable, IUnderw
       _;
     }
 
-    modifier onlyRegisteredNetwork(address _networkToken) {
-      require(protocolRoles.isNetwork(_networkToken), "CreditRequest: Network token address is not registered");
+    modifier onlyRegisteredNetwork(address _network) {
+      require(protocolRoles.isNetwork(_network), "CreditRequest: Network token address is not registered");
       _;
     }
 
@@ -71,43 +73,78 @@ contract UnderwriteManagerV3 is OwnableUpgradeable, PausableUpgradeable, IUnderw
     function createCreditLine(
       address _counterparty, 
       address _underwriter, 
-      address _ambassador, 
       uint256 _collateral,
       uint256 _creditLimit,
-      address _networkToken) external override onlyRequest onlyUnderwriter(_underwriter) onlyRegisteredNetwork(_networkToken) {
-      collateralToken.transferFrom(msg.sender, address(this), _collateral);
-      ICIP36(_networkToken).setCreditLimit(_counterparty, _creditLimit);
-      creditLines[_counterparty] = CreditLine(
+      address _network) external override onlyRequest onlyUnderwriter(_underwriter) onlyRegisteredNetwork(_network) {
+      ICIP36(_network).setCreditLimit(_counterparty, _creditLimit);
+      creditLines[_network][_counterparty] = CreditLine(
         _underwriter,
-        _ambassador,
-        _networkToken,
-        _collateral,
+        _network,
+        0,
         block.timestamp
       );
+      stakeCollateral(_network, _counterparty, _underwriter, _collateral);
     }
 
-    function isValidLTV(address _counterparty) external override returns(bool) {
-      uint256 LTV = calculateLTV(_counterparty);
+    function isValidLTV(address _network, address _counterparty) public override view returns(bool) {
+      uint256 LTV = calculateLTV(_network, _counterparty);
       return LTV > minLTV;
     }
 
-    function calculateLTV(address _counterparty) public override returns(uint256) {
-      CreditLine memory creditLine = creditLines[_counterparty];
-      uint256 creditLimit = ICIP36(creditLine.networkToken).creditLimitOf(_counterparty);
-      uint256 limitInCollateral = convertNetworkToCollateral(creditLine.networkToken, creditLimit);
-      return (creditLine.collateral / limitInCollateral) * MAX_PPM;
+    function calculateLTV(address _network, address _counterparty) public override view returns(uint256) {
+      CreditLine memory creditLine = creditLines[_network][_counterparty];
+      uint256 creditLimit = ICIP36(creditLine.network).creditLimitOf(_counterparty);
+      uint256 creditLimitInCollateral = convertNetworkToCollateral(creditLine.network, creditLimit);
+      return (creditLimitInCollateral / creditLine.collateral) * MAX_PPM;
     }
 
-    function depositCollateral(address _counterparty, uint256 _amount) external override {
-      collateralToken.transferFrom(msg.sender, address(this), _amount);
-      CreditLine storage creditLine = creditLines[_counterparty];
+    function getNeededCollateral(address _network, address _counterparty) external override view returns(uint256) {
+      CreditLine memory creditLine = creditLines[_network][_counterparty];
+      uint256 creditLimit = ICIP36(creditLine.network).creditLimitOf(_counterparty);
+      uint256 creditLimitInCollateral = convertNetworkToCollateral(_network, creditLimit);
+      uint256 minimumCollateral = (creditLimitInCollateral / minLTV) / MAX_PPM;
+      return minimumCollateral - creditLine.collateral;      
+    }
+
+    function depositAndStakeCollateral(address _network, address _counterparty, address _underwriter, uint256 _amount) external override {
+      depositCollateral(_underwriter, _amount);
+      stakeCollateral(_network, _counterparty, _underwriter, _amount);
+    }
+
+    function depositCollateral(address _underwriter, uint256 _amount) public {
+      collateralToken.transferFrom(_underwriter, address(this), _amount);
+      deposits[_underwriter] += _amount;
+    }
+
+    function stakeCollateral(address _network, address _counterparty, address _underwriter, uint256 _amount) public {
+      require(deposits[_underwriter] >= _amount, "UnderwriteManager: Not enough collateral deposited");
+      CreditLine storage creditLine = creditLines[_network][_counterparty];
       creditLine.collateral += _amount;
+      creditLine.underwriter = _underwriter;
     }
 
-    function requestUnstake(address _counterparty) external override {
-      CreditLine storage creditLine = creditLines[_counterparty];
-      ICreditRequest.CreditRequest memory creditRequest = request.getCreditRequest(_counterparty);
-      uint256 creditLimit = ICIP36(creditLine.networkToken).creditLimitOf(_counterparty);
+    function unstakeAndWithdrawCollateral(address _network, address _counterparty, uint256 _amount) external {
+      unstakeCollateral(_network, _counterparty, _amount);
+      withdrawCollateral(_amount);
+    }
+
+    function unstakeCollateral(address _network, address _counterparty, uint256 _amount) public override {
+      CreditLine storage creditLine = creditLines[_network][_counterparty];
+      creditLine.collateral -= _amount;
+      require(isValidLTV(_network, _counterparty), "UnderwriteManager: Invalid unstake amount");
+      deposits[creditLine.underwriter] += _amount;
+    }
+
+    function withdrawCollateral(uint256 _amount) public {
+      require(deposits[msg.sender] >= _amount, "UnderwriteManager: Invalid withdraw amount");
+      collateralToken.transferFrom(address(this), msg.sender, _amount);
+      deposits[msg.sender] -= _amount;
+    }
+
+    function requestUnstake(address _network, address _counterparty) external {
+      CreditLine storage creditLine = creditLines[_network][_counterparty];
+      ICreditRequest.CreditRequest memory creditRequest = request.getCreditRequest(_network,  _counterparty);
+      uint256 creditLimit = ICIP36(creditLine.network).creditLimitOf(_counterparty);
       if (creditRequest.creditLimit == creditLimit) {
         revert("Unstake Request already exists");
       } if (creditRequest.creditLimit > creditLimit) {
@@ -116,41 +153,55 @@ contract UnderwriteManagerV3 is OwnableUpgradeable, PausableUpgradeable, IUnderw
         request.createRequest(
           _counterparty, 
           creditLimit, 
-          creditLine.networkToken);
+          creditLine.network);
       }
     }
 
-    function extendCreditLine(address _counterparty, uint256 _collateral, uint256 _creditLimit) external override {
-      CreditLine storage creditLine = creditLines[_counterparty];
+    function extendCreditLine(address _network, address _counterparty, address _underwriter, uint256 _collateral, uint256 _creditLimit) external override {
+      CreditLine storage creditLine = creditLines[_network][_counterparty];
       uint256 neededCollateral = _collateral - creditLine.collateral;
-      collateralToken.transferFrom(creditLine.underwriter, address(this), neededCollateral);
-      creditLine.collateral = _collateral;
+      stakeCollateral(_network, _counterparty, _underwriter, neededCollateral);
+      ICIP36(_network).setCreditLimit(_counterparty, _creditLimit);
     }
 
 
-    function swapCreditLine(address _counterparty, address _underwriter) external override {
-      CreditLine storage creditLine = creditLines[_counterparty];
-      collateralToken.transferFrom(address(this), creditLine.underwriter, creditLine.collateral);
-      creditLine.underwriter = _underwriter;
-      collateralToken.transferFrom(_underwriter, address(this), creditLine.collateral);
+    function swapCreditLine(address _network, address _counterparty, address _underwriter) external override {
+      CreditLine storage creditLine = creditLines[_network][_counterparty];
+      unstakeCollateral(_network, _counterparty, creditLine.collateral);
+      stakeCollateral(_network, _counterparty, _underwriter, creditLine.collateral);
     }
 
-    function getCollateralToken() external override returns(address) {
+    function closeCreditLine(address _network, address _counterparty) external onlyUnderwriter(msg.sender) {
+      require(ICIP36(_network).creditBalanceOf(_counterparty) == 0, "UnderwriteManager: Line of Credit has outstanding balance");
+      delete creditLines[_network][_counterparty];
+      ICIP36(_network).setCreditLimit(_counterparty, 0);
+    }
+
+    function isCreditLineExpired(address _network, address _counterparty) external override view returns(bool) {
+      CreditLine storage creditLine = creditLines[_network][_counterparty];
+      return creditLine.issueDate + creditLineExpiration >= block.timestamp;
+    }
+
+    function renewCreditLine(address _network, address _counterparty) external override {
+      creditLines[_network][_counterparty].issueDate = block.timestamp;
+    }
+
+    function getCollateralToken() external override view returns(address) {
       return address(collateralToken);
     }
-    
-    function getMinLTV() external override returns(uint256) {
+
+    function getMinLTV() external override view returns(uint256) {
       return minLTV;
     }
 
-    function getCreditLine(address _counterparty) public override returns(CreditLine memory) {
-      return creditLines[_counterparty];
+    function getCreditLine(address _network, address _counterparty) public override view returns(CreditLine memory) {
+      return creditLines[_network][_counterparty];
     }
 
-    function convertNetworkToCollateral(address _networkToken, uint256 _amount) override public returns(uint256) {
+    function convertNetworkToCollateral(address _network, uint256 _amount) override public view returns(uint256) {
       require (_amount > 0, "CreditRequest: Request does not exist");
       uint256 decimalConversion = IERC20Metadata(address(collateralToken)).decimals() - 
-          IERC20Metadata(_networkToken).decimals();
+          IERC20Metadata(_network).decimals();
       return (_amount * 10**decimalConversion) / oracle.getPrice();
     }
 

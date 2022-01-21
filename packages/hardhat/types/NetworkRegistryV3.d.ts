@@ -24,7 +24,7 @@ interface NetworkRegistryV3Interface extends ethers.utils.Interface {
     "addAmbassador(address)": FunctionFragment;
     "addMembers(address[])": FunctionFragment;
     "addOperator(address)": FunctionFragment;
-    "deployAndAddWallet(address[],address[],address,uint256)": FunctionFragment;
+    "deployAndAddWallet(address[],address[],address,address,uint256)": FunctionFragment;
     "initialize(address,address)": FunctionFragment;
     "isMember(address)": FunctionFragment;
     "isValidOperator(address)": FunctionFragment;
@@ -48,7 +48,7 @@ interface NetworkRegistryV3Interface extends ethers.utils.Interface {
   encodeFunctionData(functionFragment: "addOperator", values: [string]): string;
   encodeFunctionData(
     functionFragment: "deployAndAddWallet",
-    values: [string[], string[], string, BigNumberish]
+    values: [string[], string[], string, string, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "initialize",
@@ -195,10 +195,11 @@ export class NetworkRegistryV3 extends BaseContract {
     ): Promise<ContractTransaction>;
 
     deployAndAddWallet(
-      clients: string[],
-      guardians: string[],
-      coSigner: string,
-      required: BigNumberish,
+      _clients: string[],
+      _guardians: string[],
+      _coSigner: string,
+      _network: string,
+      _required: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -260,10 +261,11 @@ export class NetworkRegistryV3 extends BaseContract {
   ): Promise<ContractTransaction>;
 
   deployAndAddWallet(
-    clients: string[],
-    guardians: string[],
-    coSigner: string,
-    required: BigNumberish,
+    _clients: string[],
+    _guardians: string[],
+    _coSigner: string,
+    _network: string,
+    _required: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -319,10 +321,11 @@ export class NetworkRegistryV3 extends BaseContract {
     addOperator(operator: string, overrides?: CallOverrides): Promise<void>;
 
     deployAndAddWallet(
-      clients: string[],
-      guardians: string[],
-      coSigner: string,
-      required: BigNumberish,
+      _clients: string[],
+      _guardians: string[],
+      _coSigner: string,
+      _network: string,
+      _required: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -395,10 +398,11 @@ export class NetworkRegistryV3 extends BaseContract {
     ): Promise<BigNumber>;
 
     deployAndAddWallet(
-      clients: string[],
-      guardians: string[],
-      coSigner: string,
-      required: BigNumberish,
+      _clients: string[],
+      _guardians: string[],
+      _coSigner: string,
+      _network: string,
+      _required: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -461,10 +465,11 @@ export class NetworkRegistryV3 extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     deployAndAddWallet(
-      clients: string[],
-      guardians: string[],
-      coSigner: string,
-      required: BigNumberish,
+      _clients: string[],
+      _guardians: string[],
+      _coSigner: string,
+      _network: string,
+      _required: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 

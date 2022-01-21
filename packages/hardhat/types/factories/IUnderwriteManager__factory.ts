@@ -14,6 +14,11 @@ const _abi = [
     inputs: [
       {
         internalType: "address",
+        name: "_network",
+        type: "address",
+      },
+      {
+        internalType: "address",
         name: "_counterparty",
         type: "address",
       },
@@ -33,7 +38,7 @@ const _abi = [
     inputs: [
       {
         internalType: "address",
-        name: "_networkToken",
+        name: "_network",
         type: "address",
       },
       {
@@ -66,11 +71,6 @@ const _abi = [
         type: "address",
       },
       {
-        internalType: "address",
-        name: "_ambassador",
-        type: "address",
-      },
-      {
         internalType: "uint256",
         name: "_collateral",
         type: "uint256",
@@ -82,7 +82,7 @@ const _abi = [
       },
       {
         internalType: "address",
-        name: "_networkToken",
+        name: "_network",
         type: "address",
       },
     ],
@@ -95,7 +95,17 @@ const _abi = [
     inputs: [
       {
         internalType: "address",
+        name: "_network",
+        type: "address",
+      },
+      {
+        internalType: "address",
         name: "_counterparty",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "_underwriter",
         type: "address",
       },
       {
@@ -104,7 +114,7 @@ const _abi = [
         type: "uint256",
       },
     ],
-    name: "depositCollateral",
+    name: "depositAndStakeCollateral",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -113,7 +123,17 @@ const _abi = [
     inputs: [
       {
         internalType: "address",
+        name: "_network",
+        type: "address",
+      },
+      {
+        internalType: "address",
         name: "_counterparty",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "_underwriter",
         type: "address",
       },
       {
@@ -149,6 +169,11 @@ const _abi = [
     inputs: [
       {
         internalType: "address",
+        name: "getCreditLine",
+        type: "address",
+      },
+      {
+        internalType: "address",
         name: "_counterparty",
         type: "address",
       },
@@ -164,12 +189,7 @@ const _abi = [
           },
           {
             internalType: "address",
-            name: "ambassador",
-            type: "address",
-          },
-          {
-            internalType: "address",
-            name: "networkToken",
+            name: "network",
             type: "address",
           },
           {
@@ -208,6 +228,59 @@ const _abi = [
     inputs: [
       {
         internalType: "address",
+        name: "_network",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "_counterparty",
+        type: "address",
+      },
+    ],
+    name: "getNeededCollateral",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_network",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "_counterparty",
+        type: "address",
+      },
+    ],
+    name: "isCreditLineExpired",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_network",
+        type: "address",
+      },
+      {
+        internalType: "address",
         name: "_counterparty",
         type: "address",
       },
@@ -227,17 +300,27 @@ const _abi = [
     inputs: [
       {
         internalType: "address",
+        name: "_network",
+        type: "address",
+      },
+      {
+        internalType: "address",
         name: "_counterparty",
         type: "address",
       },
     ],
-    name: "requestUnstake",
+    name: "renewCreditLine",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
   },
   {
     inputs: [
+      {
+        internalType: "address",
+        name: "_network",
+        type: "address",
+      },
       {
         internalType: "address",
         name: "_counterparty",
@@ -250,6 +333,29 @@ const _abi = [
       },
     ],
     name: "swapCreditLine",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_network",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "_counterparty",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "_amount",
+        type: "uint256",
+      },
+    ],
+    name: "unstakeCollateral",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",

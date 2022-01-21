@@ -110,7 +110,7 @@ export class IFeeManager extends BaseContract {
     collectFees(
       _network: string,
       _networkMember: string,
-      _creditUsed: BigNumberish,
+      _transactionValue: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
   };
@@ -132,7 +132,7 @@ export class IFeeManager extends BaseContract {
   collectFees(
     _network: string,
     _networkMember: string,
-    _creditUsed: BigNumberish,
+    _transactionValue: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -154,7 +154,7 @@ export class IFeeManager extends BaseContract {
     collectFees(
       _network: string,
       _networkMember: string,
-      _creditUsed: BigNumberish,
+      _transactionValue: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
   };
@@ -179,7 +179,7 @@ export class IFeeManager extends BaseContract {
     collectFees(
       _network: string,
       _networkMember: string,
-      _creditUsed: BigNumberish,
+      _transactionValue: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
   };
@@ -202,7 +202,7 @@ export class IFeeManager extends BaseContract {
     collectFees(
       _network: string,
       _networkMember: string,
-      _creditUsed: BigNumberish,
+      _transactionValue: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
   };

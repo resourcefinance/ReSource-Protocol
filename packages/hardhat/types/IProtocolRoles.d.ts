@@ -23,7 +23,7 @@ interface IProtocolRolesInterface extends ethers.utils.Interface {
   functions: {
     "grantAmbassador(address)": FunctionFragment;
     "grantNetwork(address)": FunctionFragment;
-    "grantUnderwriters(address[])": FunctionFragment;
+    "grantUnderwriter(address)": FunctionFragment;
     "isAmbassador(address)": FunctionFragment;
     "isNetwork(address)": FunctionFragment;
     "isOperator(address)": FunctionFragment;
@@ -42,8 +42,8 @@ interface IProtocolRolesInterface extends ethers.utils.Interface {
     values: [string]
   ): string;
   encodeFunctionData(
-    functionFragment: "grantUnderwriters",
-    values: [string[]]
+    functionFragment: "grantUnderwriter",
+    values: [string]
   ): string;
   encodeFunctionData(
     functionFragment: "isAmbassador",
@@ -77,7 +77,7 @@ interface IProtocolRolesInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "grantUnderwriters",
+    functionFragment: "grantUnderwriter",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -160,8 +160,8 @@ export class IProtocolRoles extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    grantUnderwriters(
-      _underwriters: string[],
+    grantUnderwriter(
+      _underwriter: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -208,8 +208,8 @@ export class IProtocolRoles extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  grantUnderwriters(
-    _underwriters: string[],
+  grantUnderwriter(
+    _underwriter: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -250,8 +250,8 @@ export class IProtocolRoles extends BaseContract {
 
     grantNetwork(_network: string, overrides?: CallOverrides): Promise<void>;
 
-    grantUnderwriters(
-      _underwriters: string[],
+    grantUnderwriter(
+      _underwriter: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -295,8 +295,8 @@ export class IProtocolRoles extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    grantUnderwriters(
-      _underwriters: string[],
+    grantUnderwriter(
+      _underwriter: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -344,8 +344,8 @@ export class IProtocolRoles extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    grantUnderwriters(
-      _underwriters: string[],
+    grantUnderwriter(
+      _underwriter: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 

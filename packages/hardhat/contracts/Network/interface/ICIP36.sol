@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 interface ICIP36 {
-  function creditBalanceOf(address _member) external view returns (address);
+  function creditBalanceOf(address _member) external view returns (uint256);
 
   function creditLimitOf(address _member) external view returns (uint256);
 

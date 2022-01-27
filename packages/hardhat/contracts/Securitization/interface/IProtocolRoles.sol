@@ -2,16 +2,6 @@
 pragma solidity ^0.8.0;
 
 interface IProtocolRoles {
-    /// @notice This function is for networks to grant AMBASSADOR role privileges
-    /// @dev This function requires the caller to have NETWORK role privileges
-    /// @param _ambassador The address to grant AMBASSADOR role privileges to
-    function grantAmbassador(address _ambassador) external;
-
-    /// @notice This function is for networks to revoke AMBASSADOR role privileges
-    /// @dev This function requires the caller to have NETWORK role privileges
-    /// @param _ambassador The address to revoke AMBASSADOR role privileges from
-    function revokeAmbassador(address _ambassador) external;
-
     /// @notice This function is for operators to grant UNDERWRITER role privileges
     /// @dev This function requires the caller to have OPERATOR role privileges
     /// @param _underwriter The address to grant UNDERWRITER role privileges to
@@ -32,11 +22,6 @@ interface IProtocolRoles {
     /// @param _network The address to revoke NETWORK role privileges from
     function revokeNetwork(address _network) external;
     
-    /// @notice This function is used to identifiy if a given address has AMBASSADOR privileges
-    /// @param _ambassador The address to identify AMBASSADOR role access
-    /// @return address has AMBASSADOR role access
-    function isAmbassador(address _ambassador) external view returns(bool);
-    
     /// @notice This function is used to identifiy if a given address has UNDERWRITER privileges
     /// @param _underwriter The address to identify UNDERWRITER role access
     /// @return address has UNDERWRITER role access
@@ -50,5 +35,5 @@ interface IProtocolRoles {
     /// @notice This function is used to identifiy if a given address has OPERATOR privileges
     /// @param _operator The address to identify OPERATOR role access
     /// @return address has OPERATOR role access
-    function isOperator(address _operator) external view returns(bool);
+    function isProtocolOperator(address _operator) external view returns(bool);
 }

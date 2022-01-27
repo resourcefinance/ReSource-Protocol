@@ -21,23 +21,16 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface ICreditRequestInterface extends ethers.utils.Interface {
   functions: {
-    "acceptAmbassadorInvitation(address,address)": FunctionFragment;
     "acceptRequest(address,address)": FunctionFragment;
     "approveRequest(address,address)": FunctionFragment;
     "calculateRequestCollateral(address,address)": FunctionFragment;
-    "createRequest(address,uint256,address)": FunctionFragment;
+    "createRequest(address,address,uint256)": FunctionFragment;
     "deleteRequest(address,address)": FunctionFragment;
-    "getAmbassador(address,address)": FunctionFragment;
     "getCreditRequest(address,address)": FunctionFragment;
-    "inviteCounterparty(address,address)": FunctionFragment;
     "isUnstaking(address,address)": FunctionFragment;
     "updateRequestLimit(address,address,uint256)": FunctionFragment;
   };
 
-  encodeFunctionData(
-    functionFragment: "acceptAmbassadorInvitation",
-    values: [string, string]
-  ): string;
   encodeFunctionData(
     functionFragment: "acceptRequest",
     values: [string, string]
@@ -52,22 +45,14 @@ interface ICreditRequestInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "createRequest",
-    values: [string, BigNumberish, string]
+    values: [string, string, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "deleteRequest",
     values: [string, string]
   ): string;
   encodeFunctionData(
-    functionFragment: "getAmbassador",
-    values: [string, string]
-  ): string;
-  encodeFunctionData(
     functionFragment: "getCreditRequest",
-    values: [string, string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "inviteCounterparty",
     values: [string, string]
   ): string;
   encodeFunctionData(
@@ -80,10 +65,6 @@ interface ICreditRequestInterface extends ethers.utils.Interface {
   ): string;
 
   decodeFunctionResult(
-    functionFragment: "acceptAmbassadorInvitation",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "acceptRequest",
     data: BytesLike
   ): Result;
@@ -104,15 +85,7 @@ interface ICreditRequestInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "getAmbassador",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "getCreditRequest",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "inviteCounterparty",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -171,12 +144,6 @@ export class ICreditRequest extends BaseContract {
   interface: ICreditRequestInterface;
 
   functions: {
-    acceptAmbassadorInvitation(
-      _network: string,
-      _ambassador: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
     acceptRequest(
       _network: string,
       _counterparty: string,
@@ -196,19 +163,13 @@ export class ICreditRequest extends BaseContract {
     ): Promise<ContractTransaction>;
 
     createRequest(
+      _network: string,
       _counterparty: string,
       _creditLimit: BigNumberish,
-      _network: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     deleteRequest(
-      _network: string,
-      _counterparty: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    getAmbassador(
       _network: string,
       _counterparty: string,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -229,12 +190,6 @@ export class ICreditRequest extends BaseContract {
       ]
     >;
 
-    inviteCounterparty(
-      _network: string,
-      _counterparty: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
     isUnstaking(
       _network: string,
       _networkAccount: string,
@@ -248,12 +203,6 @@ export class ICreditRequest extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
   };
-
-  acceptAmbassadorInvitation(
-    _network: string,
-    _ambassador: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
 
   acceptRequest(
     _network: string,
@@ -274,19 +223,13 @@ export class ICreditRequest extends BaseContract {
   ): Promise<ContractTransaction>;
 
   createRequest(
+    _network: string,
     _counterparty: string,
     _creditLimit: BigNumberish,
-    _network: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   deleteRequest(
-    _network: string,
-    _counterparty: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  getAmbassador(
     _network: string,
     _counterparty: string,
     overrides?: Overrides & { from?: string | Promise<string> }
@@ -305,12 +248,6 @@ export class ICreditRequest extends BaseContract {
     }
   >;
 
-  inviteCounterparty(
-    _network: string,
-    _counterparty: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
   isUnstaking(
     _network: string,
     _networkAccount: string,
@@ -325,12 +262,6 @@ export class ICreditRequest extends BaseContract {
   ): Promise<ContractTransaction>;
 
   callStatic: {
-    acceptAmbassadorInvitation(
-      _network: string,
-      _ambassador: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
     acceptRequest(
       _network: string,
       _counterparty: string,
@@ -350,9 +281,9 @@ export class ICreditRequest extends BaseContract {
     ): Promise<BigNumber>;
 
     createRequest(
+      _network: string,
       _counterparty: string,
       _creditLimit: BigNumberish,
-      _network: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -361,12 +292,6 @@ export class ICreditRequest extends BaseContract {
       _counterparty: string,
       overrides?: CallOverrides
     ): Promise<void>;
-
-    getAmbassador(
-      _network: string,
-      _counterparty: string,
-      overrides?: CallOverrides
-    ): Promise<string>;
 
     getCreditRequest(
       _network: string,
@@ -380,12 +305,6 @@ export class ICreditRequest extends BaseContract {
         creditLimit: BigNumber;
       }
     >;
-
-    inviteCounterparty(
-      _network: string,
-      _counterparty: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
 
     isUnstaking(
       _network: string,
@@ -404,12 +323,6 @@ export class ICreditRequest extends BaseContract {
   filters: {};
 
   estimateGas: {
-    acceptAmbassadorInvitation(
-      _network: string,
-      _ambassador: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
     acceptRequest(
       _network: string,
       _counterparty: string,
@@ -429,9 +342,9 @@ export class ICreditRequest extends BaseContract {
     ): Promise<BigNumber>;
 
     createRequest(
+      _network: string,
       _counterparty: string,
       _creditLimit: BigNumberish,
-      _network: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -441,22 +354,10 @@ export class ICreditRequest extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    getAmbassador(
-      _network: string,
-      _counterparty: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
     getCreditRequest(
       _network: string,
       _counterparty: string,
       overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    inviteCounterparty(
-      _network: string,
-      _counterparty: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     isUnstaking(
@@ -474,12 +375,6 @@ export class ICreditRequest extends BaseContract {
   };
 
   populateTransaction: {
-    acceptAmbassadorInvitation(
-      _network: string,
-      _ambassador: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
     acceptRequest(
       _network: string,
       _counterparty: string,
@@ -499,9 +394,9 @@ export class ICreditRequest extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     createRequest(
+      _network: string,
       _counterparty: string,
       _creditLimit: BigNumberish,
-      _network: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -511,22 +406,10 @@ export class ICreditRequest extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    getAmbassador(
-      _network: string,
-      _counterparty: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
     getCreditRequest(
       _network: string,
       _counterparty: string,
       overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    inviteCounterparty(
-      _network: string,
-      _counterparty: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     isUnstaking(

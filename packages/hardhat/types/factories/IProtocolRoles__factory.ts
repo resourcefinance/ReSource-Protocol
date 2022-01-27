@@ -14,19 +14,6 @@ const _abi = [
     inputs: [
       {
         internalType: "address",
-        name: "_ambassador",
-        type: "address",
-      },
-    ],
-    name: "grantAmbassador",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
         name: "_network",
         type: "address",
       },
@@ -47,25 +34,6 @@ const _abi = [
     name: "grantUnderwriter",
     outputs: [],
     stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "_ambassador",
-        type: "address",
-      },
-    ],
-    name: "isAmbassador",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
-    stateMutability: "view",
     type: "function",
   },
   {
@@ -95,7 +63,7 @@ const _abi = [
         type: "address",
       },
     ],
-    name: "isOperator",
+    name: "isProtocolOperator",
     outputs: [
       {
         internalType: "bool",
@@ -123,19 +91,6 @@ const _abi = [
       },
     ],
     stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "_ambassador",
-        type: "address",
-      },
-    ],
-    name: "revokeAmbassador",
-    outputs: [],
-    stateMutability: "nonpayable",
     type: "function",
   },
   {

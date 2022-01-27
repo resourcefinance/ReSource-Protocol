@@ -11,7 +11,6 @@ import {
   PopulatedTransaction,
   BaseContract,
   ContractTransaction,
-  Overrides,
   CallOverrides,
 } from "ethers";
 import { BytesLike } from "@ethersproject/bytes";
@@ -19,52 +18,46 @@ import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
-interface ICIP36Interface extends ethers.utils.Interface {
+interface INetworkRolesInterface extends ethers.utils.Interface {
   functions: {
-    "creditBalanceOf(address)": FunctionFragment;
-    "creditLimitLeftOf(address)": FunctionFragment;
-    "creditLimitOf(address)": FunctionFragment;
-    "setCreditLimit(address,uint256)": FunctionFragment;
+    "getMemberAmbassador(address)": FunctionFragment;
+    "isAmbassador(address)": FunctionFragment;
+    "isMember(address)": FunctionFragment;
+    "isNetworkOperator(address)": FunctionFragment;
   };
 
   encodeFunctionData(
-    functionFragment: "creditBalanceOf",
+    functionFragment: "getMemberAmbassador",
     values: [string]
   ): string;
   encodeFunctionData(
-    functionFragment: "creditLimitLeftOf",
+    functionFragment: "isAmbassador",
     values: [string]
   ): string;
+  encodeFunctionData(functionFragment: "isMember", values: [string]): string;
   encodeFunctionData(
-    functionFragment: "creditLimitOf",
+    functionFragment: "isNetworkOperator",
     values: [string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "setCreditLimit",
-    values: [string, BigNumberish]
   ): string;
 
   decodeFunctionResult(
-    functionFragment: "creditBalanceOf",
+    functionFragment: "getMemberAmbassador",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "creditLimitLeftOf",
+    functionFragment: "isAmbassador",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "isMember", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "creditLimitOf",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "setCreditLimit",
+    functionFragment: "isNetworkOperator",
     data: BytesLike
   ): Result;
 
   events: {};
 }
 
-export class ICIP36 extends BaseContract {
+export class INetworkRoles extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
@@ -105,114 +98,103 @@ export class ICIP36 extends BaseContract {
     toBlock?: string | number | undefined
   ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
 
-  interface: ICIP36Interface;
+  interface: INetworkRolesInterface;
 
   functions: {
-    creditBalanceOf(
+    getMemberAmbassador(
       _member: string,
       overrides?: CallOverrides
     ): Promise<[string]>;
 
-    creditLimitLeftOf(
-      _member: string,
+    isAmbassador(
+      _ambassador: string,
       overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
+    ): Promise<[boolean]>;
 
-    creditLimitOf(
-      _member: string,
+    isMember(_member: string, overrides?: CallOverrides): Promise<[boolean]>;
+
+    isNetworkOperator(
+      _operator: string,
       overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
-    setCreditLimit(
-      _member: string,
-      _limit: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+    ): Promise<[boolean]>;
   };
 
-  creditBalanceOf(_member: string, overrides?: CallOverrides): Promise<string>;
-
-  creditLimitLeftOf(
+  getMemberAmbassador(
     _member: string,
     overrides?: CallOverrides
-  ): Promise<BigNumber>;
+  ): Promise<string>;
 
-  creditLimitOf(_member: string, overrides?: CallOverrides): Promise<BigNumber>;
+  isAmbassador(
+    _ambassador: string,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
 
-  setCreditLimit(
-    _member: string,
-    _limit: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  isMember(_member: string, overrides?: CallOverrides): Promise<boolean>;
+
+  isNetworkOperator(
+    _operator: string,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
 
   callStatic: {
-    creditBalanceOf(
+    getMemberAmbassador(
       _member: string,
       overrides?: CallOverrides
     ): Promise<string>;
 
-    creditLimitLeftOf(
-      _member: string,
+    isAmbassador(
+      _ambassador: string,
       overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    ): Promise<boolean>;
 
-    creditLimitOf(
-      _member: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    isMember(_member: string, overrides?: CallOverrides): Promise<boolean>;
 
-    setCreditLimit(
-      _member: string,
-      _limit: BigNumberish,
+    isNetworkOperator(
+      _operator: string,
       overrides?: CallOverrides
-    ): Promise<void>;
+    ): Promise<boolean>;
   };
 
   filters: {};
 
   estimateGas: {
-    creditBalanceOf(
+    getMemberAmbassador(
       _member: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    creditLimitLeftOf(
-      _member: string,
+    isAmbassador(
+      _ambassador: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    creditLimitOf(
-      _member: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    isMember(_member: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    setCreditLimit(
-      _member: string,
-      _limit: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+    isNetworkOperator(
+      _operator: string,
+      overrides?: CallOverrides
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    creditBalanceOf(
+    getMemberAmbassador(
       _member: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    creditLimitLeftOf(
+    isAmbassador(
+      _ambassador: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    isMember(
       _member: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    creditLimitOf(
-      _member: string,
+    isNetworkOperator(
+      _operator: string,
       overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    setCreditLimit(
-      _member: string,
-      _limit: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
   };
 }

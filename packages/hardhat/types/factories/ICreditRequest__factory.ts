@@ -19,24 +19,6 @@ const _abi = [
       },
       {
         internalType: "address",
-        name: "_ambassador",
-        type: "address",
-      },
-    ],
-    name: "acceptAmbassadorInvitation",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "_network",
-        type: "address",
-      },
-      {
-        internalType: "address",
         name: "_counterparty",
         type: "address",
       },
@@ -92,6 +74,11 @@ const _abi = [
     inputs: [
       {
         internalType: "address",
+        name: "_network",
+        type: "address",
+      },
+      {
+        internalType: "address",
         name: "_counterparty",
         type: "address",
       },
@@ -99,11 +86,6 @@ const _abi = [
         internalType: "uint256",
         name: "_creditLimit",
         type: "uint256",
-      },
-      {
-        internalType: "address",
-        name: "_network",
-        type: "address",
       },
     ],
     name: "createRequest",
@@ -126,30 +108,6 @@ const _abi = [
     ],
     name: "deleteRequest",
     outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "_network",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "_counterparty",
-        type: "address",
-      },
-    ],
-    name: "getAmbassador",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
     stateMutability: "nonpayable",
     type: "function",
   },
@@ -197,24 +155,6 @@ const _abi = [
       },
     ],
     stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "_network",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "_counterparty",
-        type: "address",
-      },
-    ],
-    name: "inviteCounterparty",
-    outputs: [],
-    stateMutability: "nonpayable",
     type: "function",
   },
   {

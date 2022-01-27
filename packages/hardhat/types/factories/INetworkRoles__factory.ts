@@ -4,7 +4,7 @@
 
 import { Contract, Signer, utils } from "ethers";
 import { Provider } from "@ethersproject/providers";
-import type { ICIP36, ICIP36Interface } from "../ICIP36";
+import type { INetworkRoles, INetworkRolesInterface } from "../INetworkRoles";
 
 const _abi = [
   {
@@ -15,7 +15,7 @@ const _abi = [
         type: "address",
       },
     ],
-    name: "creditBalanceOf",
+    name: "getMemberAmbassador",
     outputs: [
       {
         internalType: "address",
@@ -30,16 +30,16 @@ const _abi = [
     inputs: [
       {
         internalType: "address",
-        name: "_member",
+        name: "_ambassador",
         type: "address",
       },
     ],
-    name: "creditLimitLeftOf",
+    name: "isAmbassador",
     outputs: [
       {
-        internalType: "uint256",
+        internalType: "bool",
         name: "",
-        type: "uint256",
+        type: "bool",
       },
     ],
     stateMutability: "view",
@@ -53,12 +53,12 @@ const _abi = [
         type: "address",
       },
     ],
-    name: "creditLimitOf",
+    name: "isMember",
     outputs: [
       {
-        internalType: "uint256",
+        internalType: "bool",
         name: "",
-        type: "uint256",
+        type: "bool",
       },
     ],
     stateMutability: "view",
@@ -68,28 +68,32 @@ const _abi = [
     inputs: [
       {
         internalType: "address",
-        name: "_member",
+        name: "_operator",
         type: "address",
       },
+    ],
+    name: "isNetworkOperator",
+    outputs: [
       {
-        internalType: "uint256",
-        name: "_limit",
-        type: "uint256",
+        internalType: "bool",
+        name: "",
+        type: "bool",
       },
     ],
-    name: "setCreditLimit",
-    outputs: [],
-    stateMutability: "nonpayable",
+    stateMutability: "view",
     type: "function",
   },
 ];
 
-export class ICIP36__factory {
+export class INetworkRoles__factory {
   static readonly abi = _abi;
-  static createInterface(): ICIP36Interface {
-    return new utils.Interface(_abi) as ICIP36Interface;
+  static createInterface(): INetworkRolesInterface {
+    return new utils.Interface(_abi) as INetworkRolesInterface;
   }
-  static connect(address: string, signerOrProvider: Signer | Provider): ICIP36 {
-    return new Contract(address, _abi, signerOrProvider) as ICIP36;
+  static connect(
+    address: string,
+    signerOrProvider: Signer | Provider
+  ): INetworkRoles {
+    return new Contract(address, _abi, signerOrProvider) as INetworkRoles;
   }
 }

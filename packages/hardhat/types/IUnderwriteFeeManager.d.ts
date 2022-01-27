@@ -19,73 +19,49 @@ import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
-interface IProtocolRolesInterface extends ethers.utils.Interface {
+interface IUnderwriteFeeManagerInterface extends ethers.utils.Interface {
   functions: {
-    "grantNetwork(address)": FunctionFragment;
-    "grantUnderwriter(address)": FunctionFragment;
-    "isNetwork(address)": FunctionFragment;
-    "isProtocolOperator(address)": FunctionFragment;
-    "isUnderwriter(address)": FunctionFragment;
-    "revokeNetwork(address)": FunctionFragment;
-    "revokeUnderwriter(address)": FunctionFragment;
+    "calculatePercentInCollateral(address,uint256,uint256)": FunctionFragment;
+    "claimFees(address,address)": FunctionFragment;
+    "collectFees(address,address,uint256)": FunctionFragment;
+    "getCollateralToken()": FunctionFragment;
   };
 
   encodeFunctionData(
-    functionFragment: "grantNetwork",
-    values: [string]
+    functionFragment: "calculatePercentInCollateral",
+    values: [string, BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: "grantUnderwriter",
-    values: [string]
-  ): string;
-  encodeFunctionData(functionFragment: "isNetwork", values: [string]): string;
-  encodeFunctionData(
-    functionFragment: "isProtocolOperator",
-    values: [string]
+    functionFragment: "claimFees",
+    values: [string, string]
   ): string;
   encodeFunctionData(
-    functionFragment: "isUnderwriter",
-    values: [string]
+    functionFragment: "collectFees",
+    values: [string, string, BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: "revokeNetwork",
-    values: [string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "revokeUnderwriter",
-    values: [string]
+    functionFragment: "getCollateralToken",
+    values?: undefined
   ): string;
 
   decodeFunctionResult(
-    functionFragment: "grantNetwork",
+    functionFragment: "calculatePercentInCollateral",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "claimFees", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "collectFees",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "grantUnderwriter",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "isNetwork", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "isProtocolOperator",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "isUnderwriter",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "revokeNetwork",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "revokeUnderwriter",
+    functionFragment: "getCollateralToken",
     data: BytesLike
   ): Result;
 
   events: {};
 }
 
-export class IProtocolRoles extends BaseContract {
+export class IUnderwriteFeeManager extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
@@ -126,171 +102,132 @@ export class IProtocolRoles extends BaseContract {
     toBlock?: string | number | undefined
   ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
 
-  interface: IProtocolRolesInterface;
+  interface: IUnderwriteFeeManagerInterface;
 
   functions: {
-    grantNetwork(
+    calculatePercentInCollateral(
+      _networkToken: string,
+      _percent: BigNumberish,
+      _amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    claimFees(
       _network: string,
+      _networkMember: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    grantUnderwriter(
-      _underwriter: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    isNetwork(_network: string, overrides?: CallOverrides): Promise<[boolean]>;
-
-    isProtocolOperator(
-      _operator: string,
-      overrides?: CallOverrides
-    ): Promise<[boolean]>;
-
-    isUnderwriter(
-      _underwriter: string,
-      overrides?: CallOverrides
-    ): Promise<[boolean]>;
-
-    revokeNetwork(
+    collectFees(
       _network: string,
+      _networkMember: string,
+      _transactionValue: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    revokeUnderwriter(
-      _underwriter: string,
+    getCollateralToken(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
   };
 
-  grantNetwork(
+  calculatePercentInCollateral(
+    _networkToken: string,
+    _percent: BigNumberish,
+    _amount: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  claimFees(
     _network: string,
+    _networkMember: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  grantUnderwriter(
-    _underwriter: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  isNetwork(_network: string, overrides?: CallOverrides): Promise<boolean>;
-
-  isProtocolOperator(
-    _operator: string,
-    overrides?: CallOverrides
-  ): Promise<boolean>;
-
-  isUnderwriter(
-    _underwriter: string,
-    overrides?: CallOverrides
-  ): Promise<boolean>;
-
-  revokeNetwork(
+  collectFees(
     _network: string,
+    _networkMember: string,
+    _transactionValue: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  revokeUnderwriter(
-    _underwriter: string,
+  getCollateralToken(
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   callStatic: {
-    grantNetwork(_network: string, overrides?: CallOverrides): Promise<void>;
+    calculatePercentInCollateral(
+      _networkToken: string,
+      _percent: BigNumberish,
+      _amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
-    grantUnderwriter(
-      _underwriter: string,
+    claimFees(
+      _network: string,
+      _networkMember: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    isNetwork(_network: string, overrides?: CallOverrides): Promise<boolean>;
-
-    isProtocolOperator(
-      _operator: string,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
-
-    isUnderwriter(
-      _underwriter: string,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
-
-    revokeNetwork(_network: string, overrides?: CallOverrides): Promise<void>;
-
-    revokeUnderwriter(
-      _underwriter: string,
+    collectFees(
+      _network: string,
+      _networkMember: string,
+      _transactionValue: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    getCollateralToken(overrides?: CallOverrides): Promise<string>;
   };
 
   filters: {};
 
   estimateGas: {
-    grantNetwork(
+    calculatePercentInCollateral(
+      _networkToken: string,
+      _percent: BigNumberish,
+      _amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    claimFees(
       _network: string,
+      _networkMember: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    grantUnderwriter(
-      _underwriter: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    isNetwork(_network: string, overrides?: CallOverrides): Promise<BigNumber>;
-
-    isProtocolOperator(
-      _operator: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    isUnderwriter(
-      _underwriter: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    revokeNetwork(
+    collectFees(
       _network: string,
+      _networkMember: string,
+      _transactionValue: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    revokeUnderwriter(
-      _underwriter: string,
+    getCollateralToken(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    grantNetwork(
-      _network: string,
+    calculatePercentInCollateral(
+      _networkToken: string,
+      _percent: BigNumberish,
+      _amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    grantUnderwriter(
-      _underwriter: string,
+    claimFees(
+      _network: string,
+      _networkMember: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    isNetwork(
+    collectFees(
       _network: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    isProtocolOperator(
-      _operator: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    isUnderwriter(
-      _underwriter: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    revokeNetwork(
-      _network: string,
+      _networkMember: string,
+      _transactionValue: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    revokeUnderwriter(
-      _underwriter: string,
+    getCollateralToken(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
   };

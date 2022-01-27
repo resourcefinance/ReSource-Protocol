@@ -30,16 +30,17 @@ interface RUSDV3Interface extends ethers.utils.Interface {
     "creditBalanceOf(address)": FunctionFragment;
     "creditLimitLeftOf(address)": FunctionFragment;
     "creditLimitOf(address)": FunctionFragment;
+    "creditManager()": FunctionFragment;
     "decimals()": FunctionFragment;
     "decreaseAllowance(address,uint256)": FunctionFragment;
     "feeManager()": FunctionFragment;
+    "getNetworkRoles()": FunctionFragment;
     "increaseAllowance(address,uint256)": FunctionFragment;
     "initialize(string,string)": FunctionFragment;
-    "initializeRUSD(address,address,address,address)": FunctionFragment;
+    "initializeRUSD(address,address,address)": FunctionFragment;
     "name()": FunctionFragment;
+    "networkRoles()": FunctionFragment;
     "owner()": FunctionFragment;
-    "protocolRoles()": FunctionFragment;
-    "registry()": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "setCreditLimit(address,uint256)": FunctionFragment;
     "symbol()": FunctionFragment;
@@ -47,8 +48,6 @@ interface RUSDV3Interface extends ethers.utils.Interface {
     "transfer(address,uint256)": FunctionFragment;
     "transferFrom(address,address,uint256)": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
-    "underwriteManager()": FunctionFragment;
-    "withdrawFeeToken()": FunctionFragment;
   };
 
   encodeFunctionData(
@@ -81,6 +80,10 @@ interface RUSDV3Interface extends ethers.utils.Interface {
     functionFragment: "creditLimitOf",
     values: [string]
   ): string;
+  encodeFunctionData(
+    functionFragment: "creditManager",
+    values?: undefined
+  ): string;
   encodeFunctionData(functionFragment: "decimals", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "decreaseAllowance",
@@ -88,6 +91,10 @@ interface RUSDV3Interface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "feeManager",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getNetworkRoles",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -100,15 +107,14 @@ interface RUSDV3Interface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "initializeRUSD",
-    values: [string, string, string, string]
+    values: [string, string, string]
   ): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
-  encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "protocolRoles",
+    functionFragment: "networkRoles",
     values?: undefined
   ): string;
-  encodeFunctionData(functionFragment: "registry", values?: undefined): string;
+  encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "renounceOwnership",
     values?: undefined
@@ -134,14 +140,6 @@ interface RUSDV3Interface extends ethers.utils.Interface {
     functionFragment: "transferOwnership",
     values: [string]
   ): string;
-  encodeFunctionData(
-    functionFragment: "underwriteManager",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "withdrawFeeToken",
-    values?: undefined
-  ): string;
 
   decodeFunctionResult(functionFragment: "allowance", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
@@ -164,12 +162,20 @@ interface RUSDV3Interface extends ethers.utils.Interface {
     functionFragment: "creditLimitOf",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "creditManager",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "decimals", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "decreaseAllowance",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "feeManager", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "getNetworkRoles",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "increaseAllowance",
     data: BytesLike
@@ -180,12 +186,11 @@ interface RUSDV3Interface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "protocolRoles",
+    functionFragment: "networkRoles",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "registry", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "renounceOwnership",
     data: BytesLike
@@ -206,14 +211,6 @@ interface RUSDV3Interface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "transferOwnership",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "underwriteManager",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "withdrawFeeToken",
     data: BytesLike
   ): Result;
 
@@ -353,6 +350,8 @@ export class RUSDV3 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
+    creditManager(overrides?: CallOverrides): Promise<[string]>;
+
     decimals(overrides?: CallOverrides): Promise<[number]>;
 
     decreaseAllowance(
@@ -362,6 +361,8 @@ export class RUSDV3 extends BaseContract {
     ): Promise<ContractTransaction>;
 
     feeManager(overrides?: CallOverrides): Promise<[string]>;
+
+    getNetworkRoles(overrides?: CallOverrides): Promise<[string]>;
 
     increaseAllowance(
       spender: string,
@@ -376,20 +377,17 @@ export class RUSDV3 extends BaseContract {
     ): Promise<ContractTransaction>;
 
     initializeRUSD(
-      _underwriteManager: string,
+      _creditManager: string,
       _feeManager: string,
-      _registry: string,
-      _protocolRoles: string,
+      _networkRoles: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     name(overrides?: CallOverrides): Promise<[string]>;
 
+    networkRoles(overrides?: CallOverrides): Promise<[string]>;
+
     owner(overrides?: CallOverrides): Promise<[string]>;
-
-    protocolRoles(overrides?: CallOverrides): Promise<[string]>;
-
-    registry(overrides?: CallOverrides): Promise<[string]>;
 
     renounceOwnership(
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -420,12 +418,6 @@ export class RUSDV3 extends BaseContract {
 
     transferOwnership(
       newOwner: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    underwriteManager(overrides?: CallOverrides): Promise<[string]>;
-
-    withdrawFeeToken(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
   };
@@ -473,6 +465,8 @@ export class RUSDV3 extends BaseContract {
 
   creditLimitOf(_member: string, overrides?: CallOverrides): Promise<BigNumber>;
 
+  creditManager(overrides?: CallOverrides): Promise<string>;
+
   decimals(overrides?: CallOverrides): Promise<number>;
 
   decreaseAllowance(
@@ -482,6 +476,8 @@ export class RUSDV3 extends BaseContract {
   ): Promise<ContractTransaction>;
 
   feeManager(overrides?: CallOverrides): Promise<string>;
+
+  getNetworkRoles(overrides?: CallOverrides): Promise<string>;
 
   increaseAllowance(
     spender: string,
@@ -496,20 +492,17 @@ export class RUSDV3 extends BaseContract {
   ): Promise<ContractTransaction>;
 
   initializeRUSD(
-    _underwriteManager: string,
+    _creditManager: string,
     _feeManager: string,
-    _registry: string,
-    _protocolRoles: string,
+    _networkRoles: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   name(overrides?: CallOverrides): Promise<string>;
 
+  networkRoles(overrides?: CallOverrides): Promise<string>;
+
   owner(overrides?: CallOverrides): Promise<string>;
-
-  protocolRoles(overrides?: CallOverrides): Promise<string>;
-
-  registry(overrides?: CallOverrides): Promise<string>;
 
   renounceOwnership(
     overrides?: Overrides & { from?: string | Promise<string> }
@@ -540,12 +533,6 @@ export class RUSDV3 extends BaseContract {
 
   transferOwnership(
     newOwner: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  underwriteManager(overrides?: CallOverrides): Promise<string>;
-
-  withdrawFeeToken(
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -593,6 +580,8 @@ export class RUSDV3 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    creditManager(overrides?: CallOverrides): Promise<string>;
+
     decimals(overrides?: CallOverrides): Promise<number>;
 
     decreaseAllowance(
@@ -602,6 +591,8 @@ export class RUSDV3 extends BaseContract {
     ): Promise<boolean>;
 
     feeManager(overrides?: CallOverrides): Promise<string>;
+
+    getNetworkRoles(overrides?: CallOverrides): Promise<string>;
 
     increaseAllowance(
       spender: string,
@@ -616,20 +607,17 @@ export class RUSDV3 extends BaseContract {
     ): Promise<void>;
 
     initializeRUSD(
-      _underwriteManager: string,
+      _creditManager: string,
       _feeManager: string,
-      _registry: string,
-      _protocolRoles: string,
+      _networkRoles: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
     name(overrides?: CallOverrides): Promise<string>;
 
+    networkRoles(overrides?: CallOverrides): Promise<string>;
+
     owner(overrides?: CallOverrides): Promise<string>;
-
-    protocolRoles(overrides?: CallOverrides): Promise<string>;
-
-    registry(overrides?: CallOverrides): Promise<string>;
 
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
 
@@ -660,10 +648,6 @@ export class RUSDV3 extends BaseContract {
       newOwner: string,
       overrides?: CallOverrides
     ): Promise<void>;
-
-    underwriteManager(overrides?: CallOverrides): Promise<string>;
-
-    withdrawFeeToken(overrides?: CallOverrides): Promise<void>;
   };
 
   filters: {
@@ -821,6 +805,8 @@ export class RUSDV3 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    creditManager(overrides?: CallOverrides): Promise<BigNumber>;
+
     decimals(overrides?: CallOverrides): Promise<BigNumber>;
 
     decreaseAllowance(
@@ -830,6 +816,8 @@ export class RUSDV3 extends BaseContract {
     ): Promise<BigNumber>;
 
     feeManager(overrides?: CallOverrides): Promise<BigNumber>;
+
+    getNetworkRoles(overrides?: CallOverrides): Promise<BigNumber>;
 
     increaseAllowance(
       spender: string,
@@ -844,20 +832,17 @@ export class RUSDV3 extends BaseContract {
     ): Promise<BigNumber>;
 
     initializeRUSD(
-      _underwriteManager: string,
+      _creditManager: string,
       _feeManager: string,
-      _registry: string,
-      _protocolRoles: string,
+      _networkRoles: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     name(overrides?: CallOverrides): Promise<BigNumber>;
 
+    networkRoles(overrides?: CallOverrides): Promise<BigNumber>;
+
     owner(overrides?: CallOverrides): Promise<BigNumber>;
-
-    protocolRoles(overrides?: CallOverrides): Promise<BigNumber>;
-
-    registry(overrides?: CallOverrides): Promise<BigNumber>;
 
     renounceOwnership(
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -888,12 +873,6 @@ export class RUSDV3 extends BaseContract {
 
     transferOwnership(
       newOwner: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    underwriteManager(overrides?: CallOverrides): Promise<BigNumber>;
-
-    withdrawFeeToken(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
   };
@@ -948,6 +927,8 @@ export class RUSDV3 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    creditManager(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     decimals(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     decreaseAllowance(
@@ -957,6 +938,8 @@ export class RUSDV3 extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     feeManager(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    getNetworkRoles(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     increaseAllowance(
       spender: string,
@@ -971,20 +954,17 @@ export class RUSDV3 extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     initializeRUSD(
-      _underwriteManager: string,
+      _creditManager: string,
       _feeManager: string,
-      _registry: string,
-      _protocolRoles: string,
+      _networkRoles: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    networkRoles(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    protocolRoles(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    registry(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     renounceOwnership(
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -1015,12 +995,6 @@ export class RUSDV3 extends BaseContract {
 
     transferOwnership(
       newOwner: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    underwriteManager(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    withdrawFeeToken(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
   };

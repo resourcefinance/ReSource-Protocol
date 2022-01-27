@@ -2,21 +2,18 @@
 pragma solidity ^0.8.0;
 
 import "./CIP36.sol";
-import "../Securitization/interface/IFeeManager.sol";
-import "../Securitization/interface/IUnderwriteManager.sol";
-import "../Securitization/interface/IProtocolRoles.sol";
-import "./interface/INetworkRegistry.sol";
+import "./interface/INetworkRoles.sol";
+import "./interface/INetworkFeeManager.sol";
 import "../iKeyWallet/IiKeyWalletDeployer.sol";
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "./interface/INetworkToken.sol";
 
-contract RUSDV3 is CIP36 {
+contract RUSDV3 is CIP36, INetworkToken {
     /*
      *  Storage
      */
-    IProtocolRoles public protocolRoles;
-    INetworkRegistry public registry;
-    IFeeManager public feeManager;
-    IUnderwriteManager public underwriteManager;
+    INetworkRoles public networkRoles;
+    INetworkFeeManager public feeManager;
+    address public creditManager;
 
     /*
      *  Events
@@ -30,32 +27,30 @@ contract RUSDV3 is CIP36 {
         uint256 recipientCreditBalance);
 
     modifier onlyAuthorized() override {
-        require(msg.sender == address(underwriteManager) || msg.sender == owner() || protocolRoles.isOperator(msg.sender), "Unauthorized caller");
+        require(msg.sender == creditManager || msg.sender == owner() || networkRoles.isNetworkOperator(msg.sender), "Unauthorized caller");
         _;
     }
 
     modifier onlyRegistered(address _from, address _to) {
-        require(registry.isMember(_from), "Sender is not network member");
-        require(registry.isMember(_to), "Recipient is not network member");
+        require(networkRoles.isMember(_from), "Sender is not network member");
+        require(networkRoles.isMember(_to), "Recipient is not network member");
         _;
     }
 
-    modifier onlyOperator() {
-        require(registry.isValidOperator(msg.sender), "Caller is not network operator");
+    modifier onlyNetworkOperator() {
+        require(networkRoles.isNetworkOperator(msg.sender), "Caller is not network operator");
         _;
     }
 
     function initializeRUSD(
-        address _underwriteManager,
+        address _creditManager,
         address _feeManager,
-        address _registry,
-        address _protocolRoles
+        address _networkRoles
     ) external virtual initializer {
         CIP36.initialize("rUSD", "rUSD");
-        underwriteManager = IUnderwriteManager(_underwriteManager);
-        registry = INetworkRegistry(_registry);
-        protocolRoles = IProtocolRoles(_protocolRoles);
-        feeManager = IFeeManager(_feeManager);
+        creditManager = _creditManager;
+        networkRoles = INetworkRoles(_networkRoles);
+        feeManager = INetworkFeeManager(_feeManager);
     }
 
     /*
@@ -77,7 +72,8 @@ contract RUSDV3 is CIP36 {
             balanceOf(_to),
             super.creditBalanceOf(_to));
     }
-
+    
+    // may not be necessary because to override this funciton because onlyAuthorized is already overrided
     function setCreditLimit(address _member, uint256 _limit) public override onlyAuthorized() {
         super.setCreditLimit(_member, _limit);
     }
@@ -90,9 +86,8 @@ contract RUSDV3 is CIP36 {
         }
     }
     
-    function withdrawFeeToken() onlyOperator() external {
-        IERC20 token = IERC20(underwriteManager.getCollateralToken());
-        uint256 balance = token.balanceOf(address(this));
-        token.transfer(msg.sender, balance);
+    function getNetworkRoles() external override view returns (address) {
+        return address(networkRoles);
     }
+
 }

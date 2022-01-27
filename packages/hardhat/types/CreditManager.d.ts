@@ -19,7 +19,7 @@ import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
-interface UnderwriteManagerV3Interface extends ethers.utils.Interface {
+interface CreditManagerInterface extends ethers.utils.Interface {
   functions: {
     "calculateLTV(address,address)": FunctionFragment;
     "closeCreditLine(address,address)": FunctionFragment;
@@ -49,10 +49,10 @@ interface UnderwriteManagerV3Interface extends ethers.utils.Interface {
     "renounceOwnership()": FunctionFragment;
     "stakeCollateral(address,address,address,uint256)": FunctionFragment;
     "swapCreditLineUnderwriter(address,address,address)": FunctionFragment;
-    "totalCollateral()": FunctionFragment;
+    "totalStakedCollateral()": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
-    "unstakeAndWithdrawCollateral(address,address,uint256)": FunctionFragment;
-    "unstakeCollateral(address,address,uint256)": FunctionFragment;
+    "unstakeAndWithdrawCollateral(address,address,address,uint256)": FunctionFragment;
+    "unstakeCollateral(address,address,address,uint256)": FunctionFragment;
     "withdrawCollateral(uint256)": FunctionFragment;
   };
 
@@ -151,7 +151,7 @@ interface UnderwriteManagerV3Interface extends ethers.utils.Interface {
     values: [string, string, string]
   ): string;
   encodeFunctionData(
-    functionFragment: "totalCollateral",
+    functionFragment: "totalStakedCollateral",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -160,11 +160,11 @@ interface UnderwriteManagerV3Interface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "unstakeAndWithdrawCollateral",
-    values: [string, string, BigNumberish]
+    values: [string, string, string, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "unstakeCollateral",
-    values: [string, string, BigNumberish]
+    values: [string, string, string, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "withdrawCollateral",
@@ -260,7 +260,7 @@ interface UnderwriteManagerV3Interface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "totalCollateral",
+    functionFragment: "totalStakedCollateral",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -299,7 +299,7 @@ export type PausedEvent = TypedEvent<[string] & { account: string }>;
 
 export type UnpausedEvent = TypedEvent<[string] & { account: string }>;
 
-export class UnderwriteManagerV3 extends BaseContract {
+export class CreditManager extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
@@ -340,7 +340,7 @@ export class UnderwriteManagerV3 extends BaseContract {
     toBlock?: string | number | undefined
   ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
 
-  interface: UnderwriteManagerV3Interface;
+  interface: CreditManagerInterface;
 
   functions: {
     calculateLTV(
@@ -496,7 +496,7 @@ export class UnderwriteManagerV3 extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    totalCollateral(overrides?: CallOverrides): Promise<[BigNumber]>;
+    totalStakedCollateral(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     transferOwnership(
       newOwner: string,
@@ -506,6 +506,7 @@ export class UnderwriteManagerV3 extends BaseContract {
     unstakeAndWithdrawCollateral(
       _network: string,
       _counterparty: string,
+      _underwriter: string,
       _amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
@@ -513,6 +514,7 @@ export class UnderwriteManagerV3 extends BaseContract {
     unstakeCollateral(
       _network: string,
       _counterparty: string,
+      _underwriter: string,
       _amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
@@ -674,7 +676,7 @@ export class UnderwriteManagerV3 extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  totalCollateral(overrides?: CallOverrides): Promise<BigNumber>;
+  totalStakedCollateral(overrides?: CallOverrides): Promise<BigNumber>;
 
   transferOwnership(
     newOwner: string,
@@ -684,6 +686,7 @@ export class UnderwriteManagerV3 extends BaseContract {
   unstakeAndWithdrawCollateral(
     _network: string,
     _counterparty: string,
+    _underwriter: string,
     _amount: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
@@ -691,6 +694,7 @@ export class UnderwriteManagerV3 extends BaseContract {
   unstakeCollateral(
     _network: string,
     _counterparty: string,
+    _underwriter: string,
     _amount: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
@@ -850,7 +854,7 @@ export class UnderwriteManagerV3 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    totalCollateral(overrides?: CallOverrides): Promise<BigNumber>;
+    totalStakedCollateral(overrides?: CallOverrides): Promise<BigNumber>;
 
     transferOwnership(
       newOwner: string,
@@ -860,6 +864,7 @@ export class UnderwriteManagerV3 extends BaseContract {
     unstakeAndWithdrawCollateral(
       _network: string,
       _counterparty: string,
+      _underwriter: string,
       _amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
@@ -867,6 +872,7 @@ export class UnderwriteManagerV3 extends BaseContract {
     unstakeCollateral(
       _network: string,
       _counterparty: string,
+      _underwriter: string,
       _amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
@@ -1045,7 +1051,7 @@ export class UnderwriteManagerV3 extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    totalCollateral(overrides?: CallOverrides): Promise<BigNumber>;
+    totalStakedCollateral(overrides?: CallOverrides): Promise<BigNumber>;
 
     transferOwnership(
       newOwner: string,
@@ -1055,6 +1061,7 @@ export class UnderwriteManagerV3 extends BaseContract {
     unstakeAndWithdrawCollateral(
       _network: string,
       _counterparty: string,
+      _underwriter: string,
       _amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
@@ -1062,6 +1069,7 @@ export class UnderwriteManagerV3 extends BaseContract {
     unstakeCollateral(
       _network: string,
       _counterparty: string,
+      _underwriter: string,
       _amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
@@ -1217,7 +1225,9 @@ export class UnderwriteManagerV3 extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    totalCollateral(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    totalStakedCollateral(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
     transferOwnership(
       newOwner: string,
@@ -1227,6 +1237,7 @@ export class UnderwriteManagerV3 extends BaseContract {
     unstakeAndWithdrawCollateral(
       _network: string,
       _counterparty: string,
+      _underwriter: string,
       _amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
@@ -1234,6 +1245,7 @@ export class UnderwriteManagerV3 extends BaseContract {
     unstakeCollateral(
       _network: string,
       _counterparty: string,
+      _underwriter: string,
       _amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;

@@ -5,8 +5,10 @@ import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
 import "./interface/ICreditRequest.sol";
 import "./interface/IProtocolRoles.sol";
-import "./interface/IUnderwriteManager.sol";
+import "./interface/ICreditManager.sol";
 import "../Network/interface/ICIP36.sol";
+import "../Network/interface/INetworkToken.sol";
+import "../Network/interface/INetworkRoles.sol";
 
 contract CreditRequest is OwnableUpgradeable, PausableUpgradeable, ICreditRequest {
     /*
@@ -18,29 +20,20 @@ contract CreditRequest is OwnableUpgradeable, PausableUpgradeable, ICreditReques
      *  Storage
      */
     IProtocolRoles public roles;
-    IUnderwriteManager public underwriteManager;
+    ICreditManager public creditManager;
     // counterparty => Request
     mapping(address => mapping(address => CreditRequest)) public requests;
-    // network => member => ambassador
-    mapping(address => mapping(address => address)) membership;
-    // network => member => ambassador => invited
-    mapping(address => mapping(address => mapping(address => bool))) ambassadorInvites;
 
     /*
      *  Modifiers
      */
-    modifier onlyAmbassador() {
-        require(roles.isAmbassador(msg.sender), "CreditRequest: Caller must be an ambassador");
-        _;
-    }
-
-    modifier onlyUnderwriteManager() {
-        require(msg.sender == address(underwriteManager), "CreditRequest: Only callable by underwriteManager");
+    modifier onlyCreditManager() {
+        require(msg.sender == address(creditManager), "CreditRequest: Only callable by CreditManager contract");
         _;
     }
 
     modifier onlyOperator() {
-        require(roles.isOperator(msg.sender), "CreditRequest: Caller must be an operator");
+        require(roles.isProtocolOperator(msg.sender), "CreditRequest: Caller must be an operator");
         _;
     }
     
@@ -48,20 +41,21 @@ contract CreditRequest is OwnableUpgradeable, PausableUpgradeable, ICreditReques
      * External functions
      */
     /// @notice Contract initializer
-    /// @dev initializes the roles and UnderwriteManager interfaces
+    /// @dev initializes the roles and CreditManager interfaces
     /// @param _rolesAddress address of the ProtocolRoles contract
-    /// @param _underwriteManager address of the UnerwriteManager contract
-    function initialize(address _rolesAddress, address _underwriteManager) external initializer {
+    /// @param _creditManager address of the UnerwriteManager contract
+    function initialize(address _rolesAddress, address _creditManager) external initializer {
         roles = IProtocolRoles(_rolesAddress);
-        underwriteManager = IUnderwriteManager(_underwriteManager);
+        creditManager = ICreditManager(_creditManager);
         __Pausable_init();
         __Ownable_init();
     }
 
-    function createRequest(address _counterparty, uint256 _creditLimit, address _network) override external {
-        bool hasAccess = roles.isAmbassador(msg.sender) || msg.sender == _counterparty;
-        require(hasAccess, "CreditRequest: Caller must be an ambassador or counterparty");
-        require(membership[_network][_counterparty] == msg.sender, "CreditRequest: Caller is not counterparty ambassador");
+    function createRequest( address _network, address _counterparty, uint256 _creditLimit) public override {
+        INetworkRoles networkRoles = INetworkRoles(INetworkToken(_network).getNetworkRoles());
+        address ambassador = networkRoles.getMemberAmbassador(_counterparty);
+        bool hasAccess = msg.sender == _counterparty || msg.sender == ambassador;
+        require(hasAccess, "CreditRequest: Caller must be the counterparty's ambassador or the counterparty");
         require(requests[_network][_counterparty].creditLimit == 0, "CreditRequest: Request already exists");
         requests[_network][_counterparty] = CreditRequest(
             false,
@@ -71,20 +65,25 @@ contract CreditRequest is OwnableUpgradeable, PausableUpgradeable, ICreditReques
         );
     }
     
-    function acceptRequest(address _network, address _counterparty) override external onlyUnderwriteManager {
+    function acceptRequest(address _network, address _counterparty) external override onlyCreditManager {
         require(requests[_network][_counterparty].approved, "CreditRequest: request is not approved");
         CreditRequest storage request = requests[_network][_counterparty];
-        IUnderwriteManager.CreditLine memory creditLine = underwriteManager.getCreditLine(_network, _counterparty);
+        ICreditManager.CreditLine memory creditLine = creditManager.getCreditLine(_network, _counterparty);
         uint256 creditLimit = ICIP36(creditLine.network).creditLimitOf(_counterparty);
-        if (request.creditLimit == creditLimit) { // request to unstake 
+        if (request.creditLimit == creditLimit) { // unstake request 
             require(msg.sender != creditLine.underwriter, "Cannot accept unstake request");
-            underwriteManager.swapCreditLine(_network, _counterparty, msg.sender);
-        } if (request.creditLimit > creditLimit) { // request to extend
+            creditManager.swapCreditLineUnderwriter(_network, _counterparty, msg.sender);
+        } if (request.creditLimit > creditLimit) { // extend request
             require(msg.sender == creditLine.underwriter, "Unauthorized to extend credit line");
-            underwriteManager.extendCreditLine(_network, _counterparty, msg.sender, calculateRequestCollateral(_network, _counterparty), request.creditLimit);
-        } else {
+            creditManager.extendCreditLine(
+                _network, 
+                _counterparty, 
+                msg.sender, 
+                calculateRequestCollateral(_network, _counterparty), 
+                request.creditLimit);
+        } else { // new request 
             uint256 collateral = calculateRequestCollateral(_network, _counterparty);
-            underwriteManager.createCreditLine(
+            creditManager.createCreditLine(
                 _counterparty, 
                 msg.sender,
                 collateral,
@@ -93,47 +92,52 @@ contract CreditRequest is OwnableUpgradeable, PausableUpgradeable, ICreditReques
         }
     }
 
-    function approveRequest(address _network, address _counterparty) override external onlyOperator {
+    function approveRequest(address _network, address _counterparty) external override onlyOperator {
         require(!requests[_network][_counterparty].approved, "CreditRequest: request already approved");
         requests[_network][_counterparty].approved = true;
     }
 
-    function updateRequestLimit(address _network, address _counterparty, uint256 _creditLimit) override external {
+    function requestUnstake(address _network, address _counterparty) external {
+      ICreditManager.CreditLine memory creditLine = creditManager.getCreditLine(_network, _counterparty);
+      CreditRequest storage creditRequest = requests[_network][_counterparty];
+      uint256 creditLimit = ICIP36(creditLine.network).creditLimitOf(_counterparty);
+      if (creditRequest.creditLimit == creditLimit) {
+        revert("Unstake Request already exists");
+      } if (creditRequest.creditLimit > creditLimit) {
+        revert("Extension Request already exists");
+      } else {
+        createRequest(
+          creditLine.network,
+          _counterparty, 
+          creditLimit);
+      }
+    }
+
+    function updateRequestLimit(address _network, address _counterparty, uint256 _creditLimit) external override {
         require(requests[_network][_counterparty].creditLimit > 0, "CreditRequest: request does not exist");
-        require(requests[_network][_counterparty].ambassador == msg.sender || roles.isOperator(msg.sender), 
+        require(requests[_network][_counterparty].ambassador == msg.sender || roles.isProtocolOperator(msg.sender), 
             "CreditRequest: Unauthorized to update this request");
         requests[_network][_counterparty].creditLimit = _creditLimit;
     }
 
-    function deleteRequest(address _network, address _counterparty) override external {
-        require(requests[_network][_counterparty].ambassador == msg.sender || roles.isOperator(msg.sender), 
+    function deleteRequest(address _network, address _counterparty) external override {
+        require(requests[_network][_counterparty].ambassador == msg.sender || roles.isProtocolOperator(msg.sender), 
             "CreditRequest: Unauthorized to update this request");
         delete requests[_network][_counterparty];
     }
 
+    /*
+     * View functions
+     */
     function calculateRequestCollateral(address _network, address _counterparty) override public returns(uint256) {
         CreditRequest memory request = requests[_network][_counterparty];
         require (request.creditLimit > 0, "CreditRequest: Request does not exist");
-        uint256 creditLimitInCollateral = underwriteManager.convertNetworkToCollateral(request.network, request.creditLimit);
-        return (creditLimitInCollateral / underwriteManager.getMinLTV()) / MAX_PPM;
+        uint256 creditLimitInCollateral = creditManager.convertNetworkToCollateral(request.network, request.creditLimit);
+        return (creditLimitInCollateral / creditManager.getMinLTV()) / MAX_PPM;
     }
 
-    function getCreditRequest(address _network, address _counterparty) external view override returns(CreditRequest memory) {
+    function getCreditRequest(address _network, address _counterparty) external override view returns(CreditRequest memory) {
         return requests[_network][_counterparty];
-    }
-
-    function inviteCounterparty(address _network, address _counterparty) external override onlyAmbassador{
-        require(!ambassadorInvites[_network][_counterparty][msg.sender], "CreditRequest: Invite already exists");
-        ambassadorInvites[_network][_counterparty][msg.sender] = true;
-    }
-
-    function acceptAmbassadorInvitation(address _network, address _ambassador) external override { 
-        require(ambassadorInvites[_network][msg.sender][_ambassador], "CreditRequest: Invite does not exist");
-        membership[_network][msg.sender] = _ambassador;
-    }
-
-    function getAmbassador(address _network, address _counterparty) external override view returns(address) {
-        return membership[_network][_counterparty];
     }
 
     function isUnstaking(address _network, address _counterparty) external override view returns(bool) {

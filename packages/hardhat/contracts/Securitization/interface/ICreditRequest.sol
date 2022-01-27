@@ -21,13 +21,13 @@ interface ICreditRequest {
     /// @notice Creates a new request for the given address. 
     /// @dev this function initializes a new CreditRequest object with
     /// the caller as the ambassador, and approved as false
+    /// @param _network: the address of the CIP36 token for the new credit line
     /// @param _counterparty: the address of the account to be underwritten
     /// @param _creditLimit: the credit limit of the refered credit line
-    /// @param _network: the address of the CIP36 token for the new credit line
-    function createRequest(address _counterparty, uint256 _creditLimit, address _network) external;
+    function createRequest(address _network, address _counterparty, uint256 _creditLimit) external;
 
     /// @notice This function is only callable by underwriters. It will call
-    /// the relevant function within the underwriteManager contract to 
+    /// the relevant function within the creditManager contract to 
     /// update/create the refered CreditLine
     /// @dev This function will delete the request and create/update a
     /// CreditLine object in the UnderwriterManger contract. The caller
@@ -71,23 +71,6 @@ interface ICreditRequest {
     /// @param _counterparty the counterparty associated with a given credit request
     /// @return CreditRequest object for a given counterparty
     function getCreditRequest(address _network, address _counterparty) external view returns(CreditRequest memory);
-
-    /// @notice This function creates an ambassadorInvite for a given counterparty within a given network
-    /// @dev This function must be called by an address assigned the AMBASSADOR role
-    /// @param _network the address of the CIP36 token for the invitation
-    /// @param _counterparty the address of the counterparty to invite
-    function inviteCounterparty(address _network, address _counterparty) external;
-
-    /// @notice This function is called by network members to accept ambassador invitations
-    /// @param _network the address of the CIP36 token of the invitation
-    /// @param _ambassador the address of the ambassador to accept invite
-    function acceptAmbassadorInvitation(address _network, address _ambassador) external;
-
-    /// @notice This function returns the address of a counterparty's registered ambassador
-    /// @param _network the address of the relevant network
-    /// @param _counterparty the address of a counterparty to retreive an ambassador from
-    /// @return The address of the ambassador associated with the given counterparty
-    function getAmbassador(address _network, address _counterparty) external returns(address);
 
     function isUnstaking(address _network, address _networkAccount) external returns(bool);
 }

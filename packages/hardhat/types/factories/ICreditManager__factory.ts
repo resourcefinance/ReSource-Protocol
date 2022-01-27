@@ -5,9 +5,9 @@
 import { Contract, Signer, utils } from "ethers";
 import { Provider } from "@ethersproject/providers";
 import type {
-  IUnderwriteManager,
-  IUnderwriteManagerInterface,
-} from "../IUnderwriteManager";
+  ICreditManager,
+  ICreditManagerInterface,
+} from "../ICreditManager";
 
 const _abi = [
   {
@@ -169,7 +169,7 @@ const _abi = [
     inputs: [
       {
         internalType: "address",
-        name: "getCreditLine",
+        name: "_network",
         type: "address",
       },
       {
@@ -203,7 +203,7 @@ const _abi = [
             type: "uint256",
           },
         ],
-        internalType: "struct IUnderwriteManager.CreditLine",
+        internalType: "struct ICreditManager.CreditLine",
         name: "",
         type: "tuple",
       },
@@ -350,6 +350,11 @@ const _abi = [
         type: "address",
       },
       {
+        internalType: "address",
+        name: "_underwriter",
+        type: "address",
+      },
+      {
         internalType: "uint256",
         name: "_amount",
         type: "uint256",
@@ -362,15 +367,15 @@ const _abi = [
   },
 ];
 
-export class IUnderwriteManager__factory {
+export class ICreditManager__factory {
   static readonly abi = _abi;
-  static createInterface(): IUnderwriteManagerInterface {
-    return new utils.Interface(_abi) as IUnderwriteManagerInterface;
+  static createInterface(): ICreditManagerInterface {
+    return new utils.Interface(_abi) as ICreditManagerInterface;
   }
   static connect(
     address: string,
     signerOrProvider: Signer | Provider
-  ): IUnderwriteManager {
-    return new Contract(address, _abi, signerOrProvider) as IUnderwriteManager;
+  ): ICreditManager {
+    return new Contract(address, _abi, signerOrProvider) as ICreditManager;
   }
 }

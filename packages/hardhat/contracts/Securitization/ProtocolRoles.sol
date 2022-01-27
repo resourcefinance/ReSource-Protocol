@@ -15,18 +15,18 @@ contract ProtocolRoles is AccessControlUpgradeable, OwnableUpgradeable, IProtoco
      *  Modifiers
      */
 
-    modifier ambassadorExists(address ambassador) {
-        hasRole("AMBASSADOR", ambassador);
+    modifier underwriterExists(address _underwriter) {
+        require(hasRole("UNDERWRITER", _underwriter), "NetworkRoles: underwriter does not exist");
         _;
     }
 
-    modifier underwriterExists(address _underwriter) {
-        hasRole("UNDERWRITER", _underwriter);
+    modifier underwriterDoesNotExist(address _underwriter) {
+        require(!hasRole("UNDERWRITER", _underwriter), "NetworkRoles: underwriter already exists");
         _;
     }
 
     modifier networkExists(address _network) {
-        hasRole("NETWORK", _network);
+        require(hasRole("NETWORK", _network),"NetworkRoles: network does not exist" );
         _;
     }
 
@@ -38,34 +38,22 @@ contract ProtocolRoles is AccessControlUpgradeable, OwnableUpgradeable, IProtoco
     function initialize(address[] memory _operators, address _network) external initializer {
         __AccessControl_init();
         // create roles
-        _setupRole("DEFAULT_ADMIN_ROLE", msg.sender);
         _setupRole("OPERATOR", msg.sender);
-        _setupRole("AMBASSADOR", msg.sender);
         _setupRole("UNDERWRITER", msg.sender);
         _setupRole("NETWORK", _network);
         // configure roles hierarchy
-        _setRoleAdmin("OPERATOR", "DEFAULT_ADMIN_ROLE");
         _setRoleAdmin("UNDERWRITER", "OPERATOR");
         _setRoleAdmin("NETWORK", "OPERATOR");
-        _setRoleAdmin("AMBASSADOR", "NETWORK");
-
 
         for (uint256 j = 0; j < _operators.length; j++) {
             require(_operators[j] != address(0));
             grantRole("OPERATOR", _operators[j]);
         }
+        grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
     }
 
-
-    /// @dev Allows to revoke ambassador roll from given address. Transaction must to be sent by operator.
-    /// @param _ambassador Address of ambassador to be removed.
-    function revokeAmbassador(address _ambassador) external override onlyRole("OPERATOR") ambassadorExists(_ambassador) {
-        revokeRole("AMBASSADOR", _ambassador);
-    }
-
-    function grantAmbassador(address _ambassador) external override onlyRole("OPERATOR") {
-        require(!hasRole("AMBASSADOR", _ambassador) && _ambassador != address(0), "invalid ambassador");
-        grantRole("AMBASSADOR", _ambassador);
+    function grantUnderwriter(address _underwriter) external override onlyRole("OPERATOR") underwriterDoesNotExist(_underwriter) {
+        grantRole("UNDERWRITER", _underwriter);
     }
 
     /// @dev Allows to revoke underwriter roll from given address. Transaction must to be sent by operator.
@@ -83,20 +71,11 @@ contract ProtocolRoles is AccessControlUpgradeable, OwnableUpgradeable, IProtoco
         revokeRole("NETWORK", _network);
     }
 
-    function grantUnderwriter(address _ambassador) external override onlyRole("OPERATOR") {
-        require(!hasRole("AMBASSADOR", _ambassador) && _ambassador != address(0), "invalid operator");
-        grantRole("AMBASSADOR", _ambassador);
-    }
-    
-    function isAmbassador(address _ambassador) external view override returns(bool) {
-        return hasRole("AMBASSADOR", _ambassador) || hasRole("OPERATOR", _ambassador);
-    }
-
     function isUnderwriter(address _underwriter) external view override returns(bool) {
         return hasRole("UNDERWRITER", _underwriter) || hasRole("OPERATOR", _underwriter);
     }
     
-    function isOperator(address _operator) external view override returns(bool) {
+    function isProtocolOperator(address _operator) external view override returns(bool) {
         return hasRole("OPERATOR", _operator);
     }
 

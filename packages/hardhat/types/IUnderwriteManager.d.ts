@@ -33,7 +33,7 @@ interface IUnderwriteManagerInterface extends ethers.utils.Interface {
     "isCreditLineExpired(address,address)": FunctionFragment;
     "isValidLTV(address,address)": FunctionFragment;
     "renewCreditLine(address,address)": FunctionFragment;
-    "swapCreditLine(address,address,address)": FunctionFragment;
+    "swapCreditLineUnderwriter(address,address,address)": FunctionFragment;
     "unstakeCollateral(address,address,uint256)": FunctionFragment;
   };
 
@@ -83,7 +83,7 @@ interface IUnderwriteManagerInterface extends ethers.utils.Interface {
     values: [string, string]
   ): string;
   encodeFunctionData(
-    functionFragment: "swapCreditLine",
+    functionFragment: "swapCreditLineUnderwriter",
     values: [string, string, string]
   ): string;
   encodeFunctionData(
@@ -134,7 +134,7 @@ interface IUnderwriteManagerInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "swapCreditLine",
+    functionFragment: "swapCreditLineUnderwriter",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -265,7 +265,7 @@ export class IUnderwriteManager extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    swapCreditLine(
+    swapCreditLineUnderwriter(
       _network: string,
       _counterparty: string,
       _underwriter: string,
@@ -356,7 +356,7 @@ export class IUnderwriteManager extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  swapCreditLine(
+  swapCreditLineUnderwriter(
     _network: string,
     _counterparty: string,
     _underwriter: string,
@@ -450,7 +450,7 @@ export class IUnderwriteManager extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    swapCreditLine(
+    swapCreditLineUnderwriter(
       _network: string,
       _counterparty: string,
       _underwriter: string,
@@ -544,7 +544,7 @@ export class IUnderwriteManager extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    swapCreditLine(
+    swapCreditLineUnderwriter(
       _network: string,
       _counterparty: string,
       _underwriter: string,
@@ -636,7 +636,7 @@ export class IUnderwriteManager extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    swapCreditLine(
+    swapCreditLineUnderwriter(
       _network: string,
       _counterparty: string,
       _underwriter: string,

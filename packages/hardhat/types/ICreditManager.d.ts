@@ -19,161 +19,133 @@ import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
-interface CreditRequestInterface extends ethers.utils.Interface {
+interface ICreditManagerInterface extends ethers.utils.Interface {
   functions: {
-    "acceptRequest(address,address)": FunctionFragment;
-    "approveRequest(address,address)": FunctionFragment;
-    "calculateRequestCollateral(address,address)": FunctionFragment;
-    "createRequest(address,address,uint256)": FunctionFragment;
-    "creditManager()": FunctionFragment;
-    "deleteRequest(address,address)": FunctionFragment;
-    "getCreditRequest(address,address)": FunctionFragment;
-    "initialize(address,address)": FunctionFragment;
-    "isUnstaking(address,address)": FunctionFragment;
-    "owner()": FunctionFragment;
-    "paused()": FunctionFragment;
-    "renounceOwnership()": FunctionFragment;
-    "requestUnstake(address,address)": FunctionFragment;
-    "requests(address,address)": FunctionFragment;
-    "roles()": FunctionFragment;
-    "transferOwnership(address)": FunctionFragment;
-    "updateRequestLimit(address,address,uint256)": FunctionFragment;
+    "calculateLTV(address,address)": FunctionFragment;
+    "convertNetworkToCollateral(address,uint256)": FunctionFragment;
+    "createCreditLine(address,address,uint256,uint256,address)": FunctionFragment;
+    "depositAndStakeCollateral(address,address,address,uint256)": FunctionFragment;
+    "extendCreditLine(address,address,address,uint256,uint256)": FunctionFragment;
+    "getCollateralToken()": FunctionFragment;
+    "getCreditLine(address,address)": FunctionFragment;
+    "getMinLTV()": FunctionFragment;
+    "getNeededCollateral(address,address)": FunctionFragment;
+    "isCreditLineExpired(address,address)": FunctionFragment;
+    "isValidLTV(address,address)": FunctionFragment;
+    "renewCreditLine(address,address)": FunctionFragment;
+    "swapCreditLineUnderwriter(address,address,address)": FunctionFragment;
+    "unstakeCollateral(address,address,address,uint256)": FunctionFragment;
   };
 
   encodeFunctionData(
-    functionFragment: "acceptRequest",
+    functionFragment: "calculateLTV",
     values: [string, string]
   ): string;
   encodeFunctionData(
-    functionFragment: "approveRequest",
-    values: [string, string]
+    functionFragment: "convertNetworkToCollateral",
+    values: [string, BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: "calculateRequestCollateral",
-    values: [string, string]
+    functionFragment: "createCreditLine",
+    values: [string, string, BigNumberish, BigNumberish, string]
   ): string;
   encodeFunctionData(
-    functionFragment: "createRequest",
-    values: [string, string, BigNumberish]
+    functionFragment: "depositAndStakeCollateral",
+    values: [string, string, string, BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: "creditManager",
+    functionFragment: "extendCreditLine",
+    values: [string, string, string, BigNumberish, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getCollateralToken",
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "deleteRequest",
+    functionFragment: "getCreditLine",
+    values: [string, string]
+  ): string;
+  encodeFunctionData(functionFragment: "getMinLTV", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "getNeededCollateral",
     values: [string, string]
   ): string;
   encodeFunctionData(
-    functionFragment: "getCreditRequest",
+    functionFragment: "isCreditLineExpired",
     values: [string, string]
   ): string;
   encodeFunctionData(
-    functionFragment: "initialize",
+    functionFragment: "isValidLTV",
     values: [string, string]
   ): string;
   encodeFunctionData(
-    functionFragment: "isUnstaking",
-    values: [string, string]
-  ): string;
-  encodeFunctionData(functionFragment: "owner", values?: undefined): string;
-  encodeFunctionData(functionFragment: "paused", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "renounceOwnership",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "requestUnstake",
+    functionFragment: "renewCreditLine",
     values: [string, string]
   ): string;
   encodeFunctionData(
-    functionFragment: "requests",
-    values: [string, string]
-  ): string;
-  encodeFunctionData(functionFragment: "roles", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "transferOwnership",
-    values: [string]
+    functionFragment: "swapCreditLineUnderwriter",
+    values: [string, string, string]
   ): string;
   encodeFunctionData(
-    functionFragment: "updateRequestLimit",
-    values: [string, string, BigNumberish]
+    functionFragment: "unstakeCollateral",
+    values: [string, string, string, BigNumberish]
   ): string;
 
   decodeFunctionResult(
-    functionFragment: "acceptRequest",
+    functionFragment: "calculateLTV",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "approveRequest",
+    functionFragment: "convertNetworkToCollateral",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "calculateRequestCollateral",
+    functionFragment: "createCreditLine",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "createRequest",
+    functionFragment: "depositAndStakeCollateral",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "creditManager",
+    functionFragment: "extendCreditLine",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "deleteRequest",
+    functionFragment: "getCollateralToken",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "getCreditRequest",
+    functionFragment: "getCreditLine",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "getMinLTV", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "isUnstaking",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "paused", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "renounceOwnership",
+    functionFragment: "getNeededCollateral",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "requestUnstake",
+    functionFragment: "isCreditLineExpired",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "requests", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "roles", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "isValidLTV", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "transferOwnership",
+    functionFragment: "renewCreditLine",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "updateRequestLimit",
+    functionFragment: "swapCreditLineUnderwriter",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "unstakeCollateral",
     data: BytesLike
   ): Result;
 
-  events: {
-    "OwnershipTransferred(address,address)": EventFragment;
-    "Paused(address)": EventFragment;
-    "Unpaused(address)": EventFragment;
-  };
-
-  getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "Paused"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "Unpaused"): EventFragment;
+  events: {};
 }
 
-export type OwnershipTransferredEvent = TypedEvent<
-  [string, string] & { previousOwner: string; newOwner: string }
->;
-
-export type PausedEvent = TypedEvent<[string] & { account: string }>;
-
-export type UnpausedEvent = TypedEvent<[string] & { account: string }>;
-
-export class CreditRequest extends BaseContract {
+export class ICreditManager extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
@@ -214,509 +186,472 @@ export class CreditRequest extends BaseContract {
     toBlock?: string | number | undefined
   ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
 
-  interface: CreditRequestInterface;
+  interface: ICreditManagerInterface;
 
   functions: {
-    acceptRequest(
+    calculateLTV(
       _network: string,
       _counterparty: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    approveRequest(
+    convertNetworkToCollateral(
       _network: string,
-      _counterparty: string,
+      _amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    calculateRequestCollateral(
-      _network: string,
+    createCreditLine(
       _counterparty: string,
+      _underwriter: string,
+      _collateral: BigNumberish,
+      _creditLimit: BigNumberish,
+      _network: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    createRequest(
+    depositAndStakeCollateral(
       _network: string,
       _counterparty: string,
+      _underwriter: string,
+      _amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    extendCreditLine(
+      _network: string,
+      _counterparty: string,
+      _underwriter: string,
+      _collateral: BigNumberish,
       _creditLimit: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    creditManager(overrides?: CallOverrides): Promise<[string]>;
+    getCollateralToken(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
 
-    deleteRequest(
+    getCreditLine(
       _network: string,
       _counterparty: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    getCreditRequest(
-      _network: string,
-      _counterparty: string,
-      overrides?: CallOverrides
-    ): Promise<
-      [
-        [boolean, string, string, BigNumber] & {
-          approved: boolean;
-          ambassador: string;
-          network: string;
-          creditLimit: BigNumber;
-        }
-      ]
-    >;
-
-    initialize(
-      _rolesAddress: string,
-      _creditManager: string,
+    getMinLTV(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    isUnstaking(
-      _network: string,
-      _counterparty: string,
-      overrides?: CallOverrides
-    ): Promise<[boolean]>;
-
-    owner(overrides?: CallOverrides): Promise<[string]>;
-
-    paused(overrides?: CallOverrides): Promise<[boolean]>;
-
-    renounceOwnership(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    requestUnstake(
+    getNeededCollateral(
       _network: string,
       _counterparty: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    requests(
-      arg0: string,
-      arg1: string,
-      overrides?: CallOverrides
-    ): Promise<
-      [boolean, string, string, BigNumber] & {
-        approved: boolean;
-        ambassador: string;
-        network: string;
-        creditLimit: BigNumber;
-      }
-    >;
-
-    roles(overrides?: CallOverrides): Promise<[string]>;
-
-    transferOwnership(
-      newOwner: string,
+    isCreditLineExpired(
+      _network: string,
+      _counterparty: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    updateRequestLimit(
+    isValidLTV(
       _network: string,
       _counterparty: string,
-      _creditLimit: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    renewCreditLine(
+      _network: string,
+      _counterparty: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    swapCreditLineUnderwriter(
+      _network: string,
+      _counterparty: string,
+      _underwriter: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    unstakeCollateral(
+      _network: string,
+      _counterparty: string,
+      _underwriter: string,
+      _amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
   };
 
-  acceptRequest(
+  calculateLTV(
     _network: string,
     _counterparty: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  approveRequest(
+  convertNetworkToCollateral(
     _network: string,
-    _counterparty: string,
+    _amount: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  calculateRequestCollateral(
-    _network: string,
+  createCreditLine(
     _counterparty: string,
+    _underwriter: string,
+    _collateral: BigNumberish,
+    _creditLimit: BigNumberish,
+    _network: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  createRequest(
+  depositAndStakeCollateral(
     _network: string,
     _counterparty: string,
+    _underwriter: string,
+    _amount: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  extendCreditLine(
+    _network: string,
+    _counterparty: string,
+    _underwriter: string,
+    _collateral: BigNumberish,
     _creditLimit: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  creditManager(overrides?: CallOverrides): Promise<string>;
+  getCollateralToken(
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
 
-  deleteRequest(
+  getCreditLine(
     _network: string,
     _counterparty: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  getCreditRequest(
-    _network: string,
-    _counterparty: string,
-    overrides?: CallOverrides
-  ): Promise<
-    [boolean, string, string, BigNumber] & {
-      approved: boolean;
-      ambassador: string;
-      network: string;
-      creditLimit: BigNumber;
-    }
-  >;
-
-  initialize(
-    _rolesAddress: string,
-    _creditManager: string,
+  getMinLTV(
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  isUnstaking(
-    _network: string,
-    _counterparty: string,
-    overrides?: CallOverrides
-  ): Promise<boolean>;
-
-  owner(overrides?: CallOverrides): Promise<string>;
-
-  paused(overrides?: CallOverrides): Promise<boolean>;
-
-  renounceOwnership(
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  requestUnstake(
+  getNeededCollateral(
     _network: string,
     _counterparty: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  requests(
-    arg0: string,
-    arg1: string,
-    overrides?: CallOverrides
-  ): Promise<
-    [boolean, string, string, BigNumber] & {
-      approved: boolean;
-      ambassador: string;
-      network: string;
-      creditLimit: BigNumber;
-    }
-  >;
-
-  roles(overrides?: CallOverrides): Promise<string>;
-
-  transferOwnership(
-    newOwner: string,
+  isCreditLineExpired(
+    _network: string,
+    _counterparty: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  updateRequestLimit(
+  isValidLTV(
     _network: string,
     _counterparty: string,
-    _creditLimit: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  renewCreditLine(
+    _network: string,
+    _counterparty: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  swapCreditLineUnderwriter(
+    _network: string,
+    _counterparty: string,
+    _underwriter: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  unstakeCollateral(
+    _network: string,
+    _counterparty: string,
+    _underwriter: string,
+    _amount: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   callStatic: {
-    acceptRequest(
-      _network: string,
-      _counterparty: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    approveRequest(
-      _network: string,
-      _counterparty: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    calculateRequestCollateral(
+    calculateLTV(
       _network: string,
       _counterparty: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    createRequest(
+    convertNetworkToCollateral(
+      _network: string,
+      _amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    createCreditLine(
+      _counterparty: string,
+      _underwriter: string,
+      _collateral: BigNumberish,
+      _creditLimit: BigNumberish,
+      _network: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    depositAndStakeCollateral(
       _network: string,
       _counterparty: string,
+      _underwriter: string,
+      _amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    extendCreditLine(
+      _network: string,
+      _counterparty: string,
+      _underwriter: string,
+      _collateral: BigNumberish,
       _creditLimit: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    creditManager(overrides?: CallOverrides): Promise<string>;
+    getCollateralToken(overrides?: CallOverrides): Promise<string>;
 
-    deleteRequest(
-      _network: string,
-      _counterparty: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    getCreditRequest(
+    getCreditLine(
       _network: string,
       _counterparty: string,
       overrides?: CallOverrides
     ): Promise<
-      [boolean, string, string, BigNumber] & {
-        approved: boolean;
-        ambassador: string;
+      [string, string, BigNumber, BigNumber] & {
+        underwriter: string;
         network: string;
-        creditLimit: BigNumber;
+        collateral: BigNumber;
+        issueDate: BigNumber;
       }
     >;
 
-    initialize(
-      _rolesAddress: string,
-      _creditManager: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    getMinLTV(overrides?: CallOverrides): Promise<BigNumber>;
 
-    isUnstaking(
+    getNeededCollateral(
+      _network: string,
+      _counterparty: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    isCreditLineExpired(
       _network: string,
       _counterparty: string,
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    owner(overrides?: CallOverrides): Promise<string>;
+    isValidLTV(
+      _network: string,
+      _counterparty: string,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
 
-    paused(overrides?: CallOverrides): Promise<boolean>;
-
-    renounceOwnership(overrides?: CallOverrides): Promise<void>;
-
-    requestUnstake(
+    renewCreditLine(
       _network: string,
       _counterparty: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    requests(
-      arg0: string,
-      arg1: string,
-      overrides?: CallOverrides
-    ): Promise<
-      [boolean, string, string, BigNumber] & {
-        approved: boolean;
-        ambassador: string;
-        network: string;
-        creditLimit: BigNumber;
-      }
-    >;
-
-    roles(overrides?: CallOverrides): Promise<string>;
-
-    transferOwnership(
-      newOwner: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    updateRequestLimit(
+    swapCreditLineUnderwriter(
       _network: string,
       _counterparty: string,
-      _creditLimit: BigNumberish,
+      _underwriter: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    unstakeCollateral(
+      _network: string,
+      _counterparty: string,
+      _underwriter: string,
+      _amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
   };
 
-  filters: {
-    "OwnershipTransferred(address,address)"(
-      previousOwner?: string | null,
-      newOwner?: string | null
-    ): TypedEventFilter<
-      [string, string],
-      { previousOwner: string; newOwner: string }
-    >;
-
-    OwnershipTransferred(
-      previousOwner?: string | null,
-      newOwner?: string | null
-    ): TypedEventFilter<
-      [string, string],
-      { previousOwner: string; newOwner: string }
-    >;
-
-    "Paused(address)"(
-      account?: null
-    ): TypedEventFilter<[string], { account: string }>;
-
-    Paused(account?: null): TypedEventFilter<[string], { account: string }>;
-
-    "Unpaused(address)"(
-      account?: null
-    ): TypedEventFilter<[string], { account: string }>;
-
-    Unpaused(account?: null): TypedEventFilter<[string], { account: string }>;
-  };
+  filters: {};
 
   estimateGas: {
-    acceptRequest(
+    calculateLTV(
       _network: string,
       _counterparty: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    approveRequest(
+    convertNetworkToCollateral(
       _network: string,
-      _counterparty: string,
+      _amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    calculateRequestCollateral(
-      _network: string,
+    createCreditLine(
       _counterparty: string,
+      _underwriter: string,
+      _collateral: BigNumberish,
+      _creditLimit: BigNumberish,
+      _network: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    createRequest(
+    depositAndStakeCollateral(
       _network: string,
       _counterparty: string,
+      _underwriter: string,
+      _amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    extendCreditLine(
+      _network: string,
+      _counterparty: string,
+      _underwriter: string,
+      _collateral: BigNumberish,
       _creditLimit: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    creditManager(overrides?: CallOverrides): Promise<BigNumber>;
+    getCollateralToken(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
 
-    deleteRequest(
+    getCreditLine(
       _network: string,
       _counterparty: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    getCreditRequest(
-      _network: string,
-      _counterparty: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    initialize(
-      _rolesAddress: string,
-      _creditManager: string,
+    getMinLTV(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    isUnstaking(
-      _network: string,
-      _counterparty: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    owner(overrides?: CallOverrides): Promise<BigNumber>;
-
-    paused(overrides?: CallOverrides): Promise<BigNumber>;
-
-    renounceOwnership(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    requestUnstake(
+    getNeededCollateral(
       _network: string,
       _counterparty: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    requests(
-      arg0: string,
-      arg1: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    roles(overrides?: CallOverrides): Promise<BigNumber>;
-
-    transferOwnership(
-      newOwner: string,
+    isCreditLineExpired(
+      _network: string,
+      _counterparty: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    updateRequestLimit(
+    isValidLTV(
       _network: string,
       _counterparty: string,
-      _creditLimit: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    renewCreditLine(
+      _network: string,
+      _counterparty: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    swapCreditLineUnderwriter(
+      _network: string,
+      _counterparty: string,
+      _underwriter: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    unstakeCollateral(
+      _network: string,
+      _counterparty: string,
+      _underwriter: string,
+      _amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    acceptRequest(
+    calculateLTV(
       _network: string,
       _counterparty: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    approveRequest(
+    convertNetworkToCollateral(
       _network: string,
-      _counterparty: string,
+      _amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    calculateRequestCollateral(
-      _network: string,
+    createCreditLine(
       _counterparty: string,
+      _underwriter: string,
+      _collateral: BigNumberish,
+      _creditLimit: BigNumberish,
+      _network: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    createRequest(
+    depositAndStakeCollateral(
       _network: string,
       _counterparty: string,
+      _underwriter: string,
+      _amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    extendCreditLine(
+      _network: string,
+      _counterparty: string,
+      _underwriter: string,
+      _collateral: BigNumberish,
       _creditLimit: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    creditManager(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    getCollateralToken(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
 
-    deleteRequest(
+    getCreditLine(
       _network: string,
       _counterparty: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    getCreditRequest(
-      _network: string,
-      _counterparty: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    initialize(
-      _rolesAddress: string,
-      _creditManager: string,
+    getMinLTV(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    isUnstaking(
-      _network: string,
-      _counterparty: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    paused(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    renounceOwnership(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    requestUnstake(
+    getNeededCollateral(
       _network: string,
       _counterparty: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    requests(
-      arg0: string,
-      arg1: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    roles(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    transferOwnership(
-      newOwner: string,
+    isCreditLineExpired(
+      _network: string,
+      _counterparty: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    updateRequestLimit(
+    isValidLTV(
       _network: string,
       _counterparty: string,
-      _creditLimit: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    renewCreditLine(
+      _network: string,
+      _counterparty: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    swapCreditLineUnderwriter(
+      _network: string,
+      _counterparty: string,
+      _underwriter: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    unstakeCollateral(
+      _network: string,
+      _counterparty: string,
+      _underwriter: string,
+      _amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
   };

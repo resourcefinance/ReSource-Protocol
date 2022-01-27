@@ -49,7 +49,7 @@ async function main(): Promise<void> {
         continue
       }
 
-      const amount = ethers.utils.parseEther(recipient.amount)
+      const amount = ethers.utils.parseEther(recipient.unlockedAmount)
 
       console.log("💵 Sending " + ethers.utils.formatEther(amount) + " SOURCE to " + address)
 

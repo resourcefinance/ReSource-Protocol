@@ -4,10 +4,11 @@ import {
   ProtocolRoles,
   PriceOracle,
   SourceToken,
-  UnderwriteManagerV3,
-  FeeManager,
+  CreditManager,
+  NetworkFeeManager,
+  UnderwriteFeeManager,
   IKeyWalletDeployer,
-  NetworkRegistryV3,
+  NetworkRoles,
   RUSDV3,
 } from "../../types"
 
@@ -15,11 +16,12 @@ export interface ProtocolContracts {
   protocolRoles: ProtocolRoles
   sourceToken: SourceToken
   priceOracle: PriceOracle
-  underwriteManager: UnderwriteManagerV3
+  creditManager: CreditManager
   creditRequest: CreditRequest
   walletDeployer: IKeyWalletDeployer
-  feeManager: FeeManager
-  networkRegistry: NetworkRegistryV3
+  networkFeeManager: NetworkFeeManager
+  underwriteFeeManager: UnderwriteFeeManager
+  networkRoles: NetworkRoles
   rUSD: RUSDV3
 }
 
@@ -32,58 +34,67 @@ export const deployPrtotocolAndNetwork = async () => {
     [],
     "0x0000000000000000000000000000000000000000",
   ])) as ProtocolRoles
-  // 2. deploy SOURCE
+
+  // 2. deploy NetworkRoles
+  const networkRolesFactory = await ethers.getContractFactory("NetworkRoles")
+  contracts.networkRegistry = (await upgrades.deployProxy(networkRolesFactory, [
+    [],
+    contracts.walletDeployer.address,
+  ])) as NetworkRoles
+
+  // 3. deploy SOURCE
   const SOURCEFactory = await ethers.getContractFactory("SourceToken")
   contracts.sourceToken = (await upgrades.deployProxy(SOURCEFactory, [
     ethers.utils.parseEther("100000000"),
     [],
   ])) as SourceToken
 
-  // // 3. deploy PriceOracle
+  // 4. deploy PriceOracle
   const priceOracleFactory = await ethers.getContractFactory("PriceOracle")
   contracts.priceOracle = (await priceOracleFactory.deploy(
     ethers.utils.parseEther("1"),
   )) as PriceOracle
 
-  // // 4. deploy UnderwriteManager
-  const underwriteManagerFactory = await ethers.getContractFactory("UnderwriteManagerV3")
-  contracts.underwriteManager = (await upgrades.deployProxy(underwriteManagerFactory, [
+  // 5. deploy CreditManager
+  const creditManagerFactory = await ethers.getContractFactory("CreditManager")
+  contracts.creditManager = (await upgrades.deployProxy(creditManagerFactory, [
     contracts.sourceToken.address,
     contracts.protocolRoles.address,
     contracts.priceOracle.address,
-  ])) as UnderwriteManagerV3
+  ])) as CreditManager
 
-  // // 5. deploy CreditRequest
+  // 6. deploy CreditRequest
   const creditRequestFactory = await ethers.getContractFactory("CreditRequest")
   contracts.creditRequest = (await upgrades.deployProxy(creditRequestFactory, [
     contracts.protocolRoles.address,
     contracts.underwriteManager.address,
   ])) as CreditRequest
 
-  // // 6. deploy walletDeployer
+  // 7. deploy walletDeployer
   const walletDeployerFactory = await ethers.getContractFactory("iKeyWalletDeployer")
   contracts.walletDeployer = (await upgrades.deployProxy(
     walletDeployerFactory,
     [],
   )) as IKeyWalletDeployer
 
-  // // 7. deploy FeeManager
-  const feeManagerFactory = await ethers.getContractFactory("FeeManager")
-  contracts.feeManager = (await upgrades.deployProxy(feeManagerFactory, [
+  // 8. deploy UnderwriteFeeManager
+  const underwriteFeeManagerFactory = await ethers.getContractFactory("UnderwriteFeeManager")
+  contracts.underwriteFeeManager = (await upgrades.deployProxy(underwriteFeeManagerFactory, [
     contracts.sourceToken.address,
     contracts.priceOracle.address,
     contracts.underwriteManager.address,
     contracts.protocolRoles.address,
-  ])) as FeeManager
+  ])) as UnderwriteFeeManager
 
-  // // 8. deploy NetworkRegistry
-  const networkRegistryFactory = await ethers.getContractFactory("NetworkRegistryV3")
-  contracts.networkRegistry = (await upgrades.deployProxy(networkRegistryFactory, [
-    contracts.protocolRoles.address,
-    contracts.walletDeployer.address,
-  ])) as NetworkRegistryV3
+  // 9. deploy NetworkFeeManager
+  const networkFeeManagerFactory = await ethers.getContractFactory("NetworkFeeManager")
+  contracts.networkFeeManager = (await upgrades.deployProxy(networkFeeManagerFactory, [
+    contracts.underwriteFeeManager.address,
+    200000,
+    0,
+  ])) as NetworkFeeManager
 
-  // // 9. deploy RUSD
+  // 10. deploy RUSD
   const RUSDFactory = await ethers.getContractFactory("RUSDV3")
   contracts.rUSD = (await upgrades.deployProxy(
     RUSDFactory,

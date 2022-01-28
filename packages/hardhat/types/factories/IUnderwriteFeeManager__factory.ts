@@ -46,11 +46,6 @@ const _abi = [
         name: "_network",
         type: "address",
       },
-      {
-        internalType: "address",
-        name: "_networkMember",
-        type: "address",
-      },
     ],
     name: "claimFees",
     outputs: [],

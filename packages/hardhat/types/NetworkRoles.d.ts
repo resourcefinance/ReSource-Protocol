@@ -42,6 +42,7 @@ interface NetworkRolesInterface extends ethers.utils.Interface {
     "revokeAmbassador(address)": FunctionFragment;
     "revokeRole(bytes32,address)": FunctionFragment;
     "supportsInterface(bytes4)": FunctionFragment;
+    "transferAmbassadorMember(address,address)": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
   };
 
@@ -124,6 +125,10 @@ interface NetworkRolesInterface extends ethers.utils.Interface {
     values: [BytesLike]
   ): string;
   encodeFunctionData(
+    functionFragment: "transferAmbassadorMember",
+    values: [string, string]
+  ): string;
+  encodeFunctionData(
     functionFragment: "transferOwnership",
     values: [string]
   ): string;
@@ -192,6 +197,10 @@ interface NetworkRolesInterface extends ethers.utils.Interface {
   decodeFunctionResult(functionFragment: "revokeRole", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "supportsInterface",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "transferAmbassadorMember",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -376,6 +385,12 @@ export class NetworkRoles extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
+    transferAmbassadorMember(
+      _member: string,
+      _ambassador: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     transferOwnership(
       newOwner: string,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -482,6 +497,12 @@ export class NetworkRoles extends BaseContract {
     overrides?: CallOverrides
   ): Promise<boolean>;
 
+  transferAmbassadorMember(
+    _member: string,
+    _ambassador: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   transferOwnership(
     newOwner: string,
     overrides?: Overrides & { from?: string | Promise<string> }
@@ -576,6 +597,12 @@ export class NetworkRoles extends BaseContract {
       interfaceId: BytesLike,
       overrides?: CallOverrides
     ): Promise<boolean>;
+
+    transferAmbassadorMember(
+      _member: string,
+      _ambassador: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     transferOwnership(
       newOwner: string,
@@ -759,6 +786,12 @@ export class NetworkRoles extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    transferAmbassadorMember(
+      _member: string,
+      _ambassador: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     transferOwnership(
       newOwner: string,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -872,6 +905,12 @@ export class NetworkRoles extends BaseContract {
     supportsInterface(
       interfaceId: BytesLike,
       overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    transferAmbassadorMember(
+      _member: string,
+      _ambassador: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     transferOwnership(

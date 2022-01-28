@@ -22,7 +22,7 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 interface UnderwriteFeeManagerInterface extends ethers.utils.Interface {
   functions: {
     "calculatePercentInCollateral(address,uint256,uint256)": FunctionFragment;
-    "claimFees(address,address)": FunctionFragment;
+    "claimFees(address)": FunctionFragment;
     "collateralToken()": FunctionFragment;
     "collectFees(address,address,uint256)": FunctionFragment;
     "creditManager()": FunctionFragment;
@@ -40,10 +40,7 @@ interface UnderwriteFeeManagerInterface extends ethers.utils.Interface {
     functionFragment: "calculatePercentInCollateral",
     values: [string, BigNumberish, BigNumberish]
   ): string;
-  encodeFunctionData(
-    functionFragment: "claimFees",
-    values: [string, string]
-  ): string;
+  encodeFunctionData(functionFragment: "claimFees", values: [string]): string;
   encodeFunctionData(
     functionFragment: "collateralToken",
     values?: undefined
@@ -194,7 +191,6 @@ export class UnderwriteFeeManager extends BaseContract {
 
     claimFees(
       _network: string,
-      _networkMember: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -246,7 +242,6 @@ export class UnderwriteFeeManager extends BaseContract {
 
   claimFees(
     _network: string,
-    _networkMember: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -296,11 +291,7 @@ export class UnderwriteFeeManager extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    claimFees(
-      _network: string,
-      _networkMember: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    claimFees(_network: string, overrides?: CallOverrides): Promise<void>;
 
     collateralToken(overrides?: CallOverrides): Promise<string>;
 
@@ -367,7 +358,6 @@ export class UnderwriteFeeManager extends BaseContract {
 
     claimFees(
       _network: string,
-      _networkMember: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -420,7 +410,6 @@ export class UnderwriteFeeManager extends BaseContract {
 
     claimFees(
       _network: string,
-      _networkMember: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 

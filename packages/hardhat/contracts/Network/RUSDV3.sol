@@ -19,15 +19,22 @@ contract RUSDV3 is CIP36, INetworkToken {
      *  Events
      */
     event BalanceUpdate(
-        address sender, 
-        address recipient, 
-        uint256 senderBalance, 
-        uint256 senderCreditBalance, 
-        uint256 recipientBalance, 
-        uint256 recipientCreditBalance);
+        address sender,
+        address recipient,
+        uint256 senderBalance,
+        uint256 senderCreditBalance,
+        uint256 recipientBalance,
+        uint256 recipientCreditBalance
+    );
 
     modifier onlyAuthorized() override {
-        require(msg.sender == creditManager || msg.sender == owner() || networkRoles.isNetworkOperator(msg.sender), "Unauthorized caller");
+        require(
+            msg.sender == creditManager ||
+                msg.sender == address(networkRoles) ||
+                msg.sender == owner() ||
+                networkRoles.isNetworkOperator(msg.sender),
+            "Unauthorized caller"
+        );
         _;
     }
 
@@ -63,31 +70,25 @@ contract RUSDV3 is CIP36, INetworkToken {
     ) internal override onlyRegistered(_from, _to) {
         feeManager.collectFees(address(this), _from, _amount);
         super._transfer(_from, _to, _amount);
-        
+
         emit BalanceUpdate(
             _from,
-            _to, 
-            balanceOf(_from), 
+            _to,
+            balanceOf(_from),
             super.creditBalanceOf(_from),
             balanceOf(_to),
-            super.creditBalanceOf(_to));
-    }
-    
-    // may not be necessary because to override this funciton because onlyAuthorized is already overrided
-    function setCreditLimit(address _member, uint256 _limit) public override onlyAuthorized() {
-        super.setCreditLimit(_member, _limit);
+            super.creditBalanceOf(_to)
+        );
     }
 
-    function bulkTransfer(address[] memory _to, uint256[] memory _values) public  
-    {
+    function bulkTransfer(address[] memory _to, uint256[] memory _values) public {
         require(_to.length == _values.length);
         for (uint256 i = 0; i < _to.length; i++) {
             _transfer(msg.sender, _to[i], _values[i]);
         }
     }
-    
-    function getNetworkRoles() external override view returns (address) {
+
+    function getNetworkRoles() external view override returns (address) {
         return address(networkRoles);
     }
-
 }

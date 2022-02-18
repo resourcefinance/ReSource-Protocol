@@ -14,16 +14,21 @@ const _abi = [
     inputs: [
       {
         internalType: "address",
-        name: "_network",
+        name: "_networkToken",
         type: "address",
       },
       {
-        internalType: "address",
-        name: "_counterparty",
-        type: "address",
+        internalType: "uint256",
+        name: "_percent",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "_amount",
+        type: "uint256",
       },
     ],
-    name: "calculateLTV",
+    name: "calculatePercentInCollateral",
     outputs: [
       {
         internalType: "uint256",
@@ -67,13 +72,8 @@ const _abi = [
       },
       {
         internalType: "address",
-        name: "_underwriter",
+        name: "_pool",
         type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "_collateral",
-        type: "uint256",
       },
       {
         internalType: "uint256",
@@ -102,44 +102,6 @@ const _abi = [
         internalType: "address",
         name: "_counterparty",
         type: "address",
-      },
-      {
-        internalType: "address",
-        name: "_underwriter",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "_amount",
-        type: "uint256",
-      },
-    ],
-    name: "depositAndStakeCollateral",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "_network",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "_counterparty",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "_underwriter",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "_collateral",
-        type: "uint256",
       },
       {
         internalType: "uint256",
@@ -184,18 +146,8 @@ const _abi = [
         components: [
           {
             internalType: "address",
-            name: "underwriter",
+            name: "creditPool",
             type: "address",
-          },
-          {
-            internalType: "address",
-            name: "network",
-            type: "address",
-          },
-          {
-            internalType: "uint256",
-            name: "collateral",
-            type: "uint256",
           },
           {
             internalType: "uint256",
@@ -206,6 +158,30 @@ const _abi = [
         internalType: "struct ICreditManager.CreditLine",
         name: "",
         type: "tuple",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_network",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "_counterparty",
+        type: "address",
+      },
+    ],
+    name: "getCreditLineUnderwriter",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
       },
     ],
     stateMutability: "nonpayable",
@@ -285,7 +261,7 @@ const _abi = [
         type: "address",
       },
     ],
-    name: "isValidLTV",
+    name: "isPoolValidLTV",
     outputs: [
       {
         internalType: "bool",
@@ -328,39 +304,11 @@ const _abi = [
       },
       {
         internalType: "address",
-        name: "_underwriter",
+        name: "_pool",
         type: "address",
       },
     ],
-    name: "swapCreditLineUnderwriter",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "_network",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "_counterparty",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "_underwriter",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "_amount",
-        type: "uint256",
-      },
-    ],
-    name: "unstakeCollateral",
+    name: "swapCreditLinePool",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",

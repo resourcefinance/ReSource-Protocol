@@ -27,6 +27,8 @@ interface RUSDV2Interface extends ethers.utils.Interface {
     "bulkTransfer(address[],uint256[])": FunctionFragment;
     "burn(uint256)": FunctionFragment;
     "burnFrom(address,uint256)": FunctionFragment;
+    "c_0x2805a3ab(bytes32)": FunctionFragment;
+    "c_0x94cdcc54(bytes32)": FunctionFragment;
     "creditBalanceOf(address)": FunctionFragment;
     "creditLimitLeftOf(address)": FunctionFragment;
     "creditLimitOf(address)": FunctionFragment;
@@ -70,6 +72,14 @@ interface RUSDV2Interface extends ethers.utils.Interface {
   encodeFunctionData(
     functionFragment: "burnFrom",
     values: [string, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "c_0x2805a3ab",
+    values: [BytesLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "c_0x94cdcc54",
+    values: [BytesLike]
   ): string;
   encodeFunctionData(
     functionFragment: "creditBalanceOf",
@@ -162,6 +172,14 @@ interface RUSDV2Interface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "burn", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "burnFrom", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "c_0x2805a3ab",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "c_0x94cdcc54",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "creditBalanceOf",
     data: BytesLike
@@ -384,6 +402,16 @@ export class RUSDV2 extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    c_0x2805a3ab(
+      c__0x2805a3ab: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<[void]>;
+
+    c_0x94cdcc54(
+      c__0x94cdcc54: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<[void]>;
+
     creditBalanceOf(
       _member: string,
       overrides?: CallOverrides
@@ -517,6 +545,16 @@ export class RUSDV2 extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  c_0x2805a3ab(
+    c__0x2805a3ab: BytesLike,
+    overrides?: CallOverrides
+  ): Promise<void>;
+
+  c_0x94cdcc54(
+    c__0x94cdcc54: BytesLike,
+    overrides?: CallOverrides
+  ): Promise<void>;
+
   creditBalanceOf(
     _member: string,
     overrides?: CallOverrides
@@ -641,6 +679,16 @@ export class RUSDV2 extends BaseContract {
     burnFrom(
       account: string,
       amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    c_0x2805a3ab(
+      c__0x2805a3ab: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    c_0x94cdcc54(
+      c__0x94cdcc54: BytesLike,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -930,6 +978,16 @@ export class RUSDV2 extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    c_0x2805a3ab(
+      c__0x2805a3ab: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    c_0x94cdcc54(
+      c__0x94cdcc54: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     creditBalanceOf(
       _member: string,
       overrides?: CallOverrides
@@ -1065,6 +1123,16 @@ export class RUSDV2 extends BaseContract {
       account: string,
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    c_0x2805a3ab(
+      c__0x2805a3ab: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    c_0x94cdcc54(
+      c__0x94cdcc54: BytesLike,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     creditBalanceOf(

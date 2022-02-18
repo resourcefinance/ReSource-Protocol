@@ -2,124 +2,133 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
+import "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 import "./interface/INetworkFeeManager.sol";
 import "./interface/INetworkRoles.sol";
-import "../Securitization/interface/IUnderwriteFeeManager.sol";
+import "../Credit/interface/ICreditFeeManager.sol";
+import "hardhat/console.sol";
 
 /// @title NetworkFeeManager - Allows Network Members to be added and removed by Network Operators.
 /// @author Bridger Zoske - <bridger@resourcenetwork.co>
 contract NetworkFeeManager is OwnableUpgradeable, INetworkFeeManager {
-    /*
-     *  Constants
-     */
-    uint32 private constant MAX_PPM = 1000000;
-    bytes32 private constant AMBASSADOR = "AMBASSADOR";
-    bytes32 private constant NETWORK = "NETWORK";
+    using SafeERC20Upgradeable for IERC20Upgradeable;
 
-    /*
-     *  Storage
-     */
-    IUnderwriteFeeManager public underwriteFeeManager;
+    /* ========== CONSTANTS ========== */
+
+    uint32 private constant MAX_PPM = 1000000;
+
+    /* ========== STATE VARIABLES ========== */
+
+    ICreditFeeManager public creditFeeManager;
     INetworkRoles public networkRoles;
-    IERC20 public collateralToken;
+    IERC20Upgradeable public collateralToken;
+    uint256 networkFeePercent; // determanistic
+    uint256 ambassadorFeePercent;
     uint256 totalFeePercent;
-    bytes32[] feeShares;
+    address network;
     mapping(address => uint256) accruedFees;
     mapping(address => uint256) rewards;
-    mapping(bytes32 => uint256) feeSharePercent;
-    mapping(bytes32 => address) feeShareAddress;
+
+    /* ========== INITIALIZER ========== */
 
     function initialize(
-        address _underwriteFeeManager,
+        address _creditFeeManager,
+        address _networkRoles,
         uint256 _totalFeePercent,
         uint256 _ambassadorFeePercent
     ) external virtual initializer {
         __Ownable_init();
-        underwriteFeeManager = IUnderwriteFeeManager(_underwriteFeeManager);
-        collateralToken = IERC20(underwriteFeeManager.getCollateralToken());
-        require(_ambassadorFeePercent <= MAX_PPM, "FeeManager: Total fee percent greater than 100");
+        creditFeeManager = ICreditFeeManager(_creditFeeManager);
+        networkRoles = INetworkRoles(_networkRoles);
+        collateralToken = IERC20Upgradeable(creditFeeManager.getCollateralToken());
+        require(
+            _ambassadorFeePercent <= MAX_PPM,
+            "NetworkFeeManager: Total fee percent greater than 100"
+        );
+        require(
+            _ambassadorFeePercent <= MAX_PPM,
+            "NetworkFeeManager: Total fee percent greater than 100"
+        );
         totalFeePercent = _totalFeePercent;
-        feeShares.push(AMBASSADOR);
-        feeShares.push(NETWORK);
-        feeSharePercent[AMBASSADOR] = _ambassadorFeePercent;
-        feeSharePercent[NETWORK] = MAX_PPM - _ambassadorFeePercent;
+        ambassadorFeePercent = _ambassadorFeePercent;
     }
+
+    /* ========== PUBLIC FUNCTIONS ========== */
 
     function collectFees(
         address _network,
         address _member,
         uint256 _transactionValue
-    ) external override {
-        uint256 totalFee = underwriteFeeManager.calculatePercentInCollateral(
+    ) external override onlyNetwork {
+        uint256 totalFee = creditFeeManager.calculatePercentInCollateral(
             _network,
             totalFeePercent,
             _transactionValue
         );
-        collateralToken.transferFrom(_member, address(this), totalFee);
+        collateralToken.safeTransferFrom(_member, address(this), totalFee);
         accruedFees[_member] += totalFee;
-        underwriteFeeManager.collectFees(_network, _member, _transactionValue);
+        creditFeeManager.collectFees(_network, _member, _transactionValue);
     }
 
-    function claimFees(address _member) external override {
+    function registerNetwork(address _network) external onlyNetworkOperator {
+        network = _network;
+    }
+
+    // TODO: batch claiming / moving
+    function claimAmbassadorFees(address _member) external override {
         moveFeesToRewards(_member);
-        collateralToken.transfer(msg.sender, rewards[msg.sender]);
+        collateralToken.safeTransfer(msg.sender, rewards[msg.sender]);
+        address ambassador = networkRoles.getMembershipAmbassador(_member);
+        rewards[ambassador] = 0;
     }
 
-    function moveFeesToRewards(address _member) private {
+    function claimNetworkFees(address _member) external override onlyNetworkOperator {
+        moveFeesToRewards(_member);
+        collateralToken.safeTransfer(msg.sender, rewards[address(this)]);
+        rewards[address(this)] = 0;
+    }
+
+    function moveFeesToRewards(address _member) public {
         uint256 totalFees = accruedFees[_member];
         if (totalFees == 0) {
             return;
         }
-        for (uint256 i = 0; i < feeShares.length; i++) {
-            uint256 sharePercent = feeSharePercent[feeShares[i]];
-            uint256 shareFee = (sharePercent * totalFees) / MAX_PPM;
-            address shareAddress = feeShareAddress[feeShares[i]];
-            if (feeShares[i] == AMBASSADOR) {
-                shareAddress = networkRoles.getMemberAmbassador(_member);
-            } else if (feeShares[i] == NETWORK) {
-                shareAddress = address(this);
-            }
-            rewards[shareAddress] = shareFee;
-        }
-    }
-
-    function updateFeeShare(bytes32 _feeShare, uint256 _feeSharePercent) public {
-        if (_feeSharePercent > feeSharePercent[_feeShare]) {
-            uint256 feeIncrease = _feeSharePercent - feeSharePercent[_feeShare];
-            require(feeIncrease <= feeSharePercent[NETWORK], "FeeManager: Invalid fee percent");
-            feeSharePercent[_feeShare] = _feeSharePercent;
-            feeSharePercent[NETWORK] -= feeIncrease;
+        // move ambassador fees
+        address ambassador = networkRoles.getMembershipAmbassador(_member);
+        uint256 ambassadorFee = (ambassadorFeePercent * totalFees) / MAX_PPM;
+        if (ambassador == address(0)) {
+            rewards[address(this)] += ambassadorFee;
         } else {
-            uint256 feeDecrease = feeSharePercent[_feeShare] - _feeSharePercent;
-            feeSharePercent[_feeShare] = _feeSharePercent;
-            feeSharePercent[NETWORK] += feeDecrease;
+            rewards[ambassador] += ambassadorFee;
         }
-        bool isNetworkShare = _feeShare == AMBASSADOR || _feeShare == NETWORK;
-        if (isNetworkShare) {
-            return;
-        }
-        if (_feeSharePercent == 0) {
-            // remove custom share
-            removeFeeShare(_feeShare);
-        } else if (feeSharePercent[_feeShare] == 0) {
-            // add new custom share
-            require(_feeSharePercent > 0, "FeeManager: Fee perecent must be greater than 0");
-            require(
-                _feeSharePercent <= feeSharePercent[NETWORK],
-                "FeeManager: Invalid fee percent"
-            );
-            feeShares.push(_feeShare);
-        }
+        // move network fees
+        uint256 networkFee = ((MAX_PPM - ambassadorFeePercent) * totalFees) / MAX_PPM;
+        rewards[address(this)] += networkFee;
+        accruedFees[_member] = 0;
     }
 
-    function removeFeeShare(bytes32 _feeShare) private {
-        for (uint256 i = 0; i < feeShares.length; i++) {
-            if (feeShares[i] == _feeShare) {
-                feeShares[i] = feeShares[feeShares.length - 1];
-                break;
-            }
-        }
-        feeShares.pop();
+    function updateAmbassadorFeePercent(uint256 _ambassadorFeePercent) public onlyNetworkOperator {
+        require(
+            _ambassadorFeePercent <= MAX_PPM,
+            "NetworkFeeManager: Total fee percent greater than 100"
+        );
+        ambassadorFeePercent = _ambassadorFeePercent;
+    }
+
+    /* ========== MODIFIERS ========== */
+
+    modifier onlyNetworkOperator() {
+        require(
+            networkRoles.isNetworkOperator(msg.sender),
+            "NetworkFeeManager: Caller is not network operator"
+        );
+        _;
+    }
+
+    modifier onlyNetwork() {
+        require(msg.sender == network, "NetworkFeeManager: Caller is not the network");
+        _;
     }
 }

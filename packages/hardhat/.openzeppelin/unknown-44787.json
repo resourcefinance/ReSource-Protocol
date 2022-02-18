@@ -284,6 +284,46 @@
       "address": "0x4eE03A8580210768Ec2a138906E12dCa776Ee416",
       "txHash": "0x95c85038ea38459541b69efae752c1284f1b0ce94ea55db580f09f242f36dc52",
       "kind": "transparent"
+    },
+    {
+      "address": "0xBd23Cf0a68a9d93e71a7469Af6Dc0c2036C78F1a",
+      "txHash": "0xd31da41a08660b5c270580550a0c8442ece660f6446c90a7248240f6d08f2ee4",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x7bDAD30323d6789b5FABAFc3114bF17B2D7bcD37",
+      "txHash": "0x98e6a16636bb24ada1374ace380f3658f08539a3ef0198146c77567e86a798f3",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x454acA2625ABBe6038B0Cd2375C54695470873bc",
+      "txHash": "0xcb6b06c812f5534c303d2792f0d765148cbae1723c52aad6d7959e3fc16b790f",
+      "kind": "transparent"
+    },
+    {
+      "address": "0xa10712F5f65F9F193B780242c5726ea6Dd61e292",
+      "txHash": "0x2a44b2d947598385599a0529f030596ee08d53da1a6da6702098c06dfddb3da1",
+      "kind": "transparent"
+    },
+    {
+      "address": "0xcE9444EDd99060B6973062039811f67bcDDC5Ede",
+      "txHash": "0x235e43df6a2eb0e28087f8f9a81b9a8aa3e5e891ead4e0e56b364941683d3594",
+      "kind": "transparent"
+    },
+    {
+      "address": "0xa098CBc99A59efF84A7C8457f4A45fc6a732559E",
+      "txHash": "0x8276fd1e93ade492d38deeb7844d0b24079dc1f0536cdc7eb6722463bf379f62",
+      "kind": "transparent"
+    },
+    {
+      "address": "0xC56Fc3469B0B3802E9E258158B808745b92c1662",
+      "txHash": "0xfbfa9f224707a97a630a000d96b64f040ec7ef4a7602403cff36056d5eb7e6ac",
+      "kind": "transparent"
+    },
+    {
+      "address": "0xd357C0Ca469e7e44a9B556A9c3EeBdC989dC9A89",
+      "txHash": "0x729fe2dad092513438dde74d3e4552331a7bb5d954f2d63e15c76307bdb2c27f",
+      "kind": "transparent"
     }
   ],
   "impls": {
@@ -1367,7 +1407,7 @@
           {
             "contract": "ERC20SOUL",
             "label": "locks",
-            "type": "t_mapping(t_address,t_struct(Lock)6243_storage)",
+            "type": "t_mapping(t_address,t_struct(Lock)9288_storage)",
             "src": "contracts/SOURCE/ERC20SOUL.sol:36"
           },
           {
@@ -1399,10 +1439,10 @@
           "t_bool": {
             "label": "bool"
           },
-          "t_mapping(t_address,t_struct(Lock)6243_storage)": {
+          "t_mapping(t_address,t_struct(Lock)9288_storage)": {
             "label": "mapping(address => struct ERC20SOUL.Lock)"
           },
-          "t_struct(Lock)6243_storage": {
+          "t_struct(Lock)9288_storage": {
             "label": "struct ERC20SOUL.Lock",
             "members": [
               {
@@ -1415,17 +1455,17 @@
               },
               {
                 "label": "schedules",
-                "type": "t_array(t_struct(Schedule)6248_storage)dyn_storage"
+                "type": "t_array(t_struct(Schedule)9293_storage)dyn_storage"
               }
             ]
           },
           "t_uint256": {
             "label": "uint256"
           },
-          "t_array(t_struct(Schedule)6248_storage)dyn_storage": {
+          "t_array(t_struct(Schedule)9293_storage)dyn_storage": {
             "label": "struct ERC20SOUL.Schedule[]"
           },
-          "t_struct(Schedule)6248_storage": {
+          "t_struct(Schedule)9293_storage": {
             "label": "struct ERC20SOUL.Schedule",
             "members": [
               {
@@ -1723,7 +1763,7 @@
           {
             "contract": "ERC20SOUL",
             "label": "locks",
-            "type": "t_mapping(t_address,t_struct(Lock)946_storage)",
+            "type": "t_mapping(t_address,t_struct(Lock)9288_storage)",
             "src": "contracts/SOURCE/ERC20SOUL.sol:36"
           },
           {
@@ -1755,10 +1795,10 @@
           "t_bool": {
             "label": "bool"
           },
-          "t_mapping(t_address,t_struct(Lock)946_storage)": {
+          "t_mapping(t_address,t_struct(Lock)9288_storage)": {
             "label": "mapping(address => struct ERC20SOUL.Lock)"
           },
-          "t_struct(Lock)946_storage": {
+          "t_struct(Lock)9288_storage": {
             "label": "struct ERC20SOUL.Lock",
             "members": [
               {
@@ -1771,17 +1811,17 @@
               },
               {
                 "label": "schedules",
-                "type": "t_array(t_struct(Schedule)951_storage)dyn_storage"
+                "type": "t_array(t_struct(Schedule)9293_storage)dyn_storage"
               }
             ]
           },
           "t_uint256": {
             "label": "uint256"
           },
-          "t_array(t_struct(Schedule)951_storage)dyn_storage": {
+          "t_array(t_struct(Schedule)9293_storage)dyn_storage": {
             "label": "struct ERC20SOUL.Schedule[]"
           },
-          "t_struct(Schedule)951_storage": {
+          "t_struct(Schedule)9293_storage": {
             "label": "struct ERC20SOUL.Schedule",
             "members": [
               {
@@ -2317,6 +2357,133 @@
           },
           "t_array(t_uint256)45_storage": {
             "label": "uint256[45]"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]"
+          }
+        }
+      }
+    },
+    "a64babfd96cefc56c42c1da1a25db029228aeed1d5d2dfda69e169b037aa6d88": {
+      "address": "0x8B167272997dA7a1550c3ec7847d6b43a909A03d",
+      "txHash": "0x9dcb4cc20992fb8cb7aea17e601148ebd59651735a9e4f36d7ba090f6a734fd4",
+      "layout": {
+        "storage": [
+          {
+            "contract": "Initializable",
+            "label": "_initialized",
+            "type": "t_bool",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:21"
+          },
+          {
+            "contract": "Initializable",
+            "label": "_initializing",
+            "type": "t_bool",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:26"
+          },
+          {
+            "contract": "ContextUpgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)50_storage",
+            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:30"
+          },
+          {
+            "contract": "OwnableUpgradeable",
+            "label": "_owner",
+            "type": "t_address",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:21"
+          },
+          {
+            "contract": "OwnableUpgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)49_storage",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:77"
+          },
+          {
+            "contract": "UnderwriteManager",
+            "label": "collateralToken",
+            "type": "t_contract(IERC20)2908",
+            "src": "contracts/CIP36/UnderwriteManager.sol:23"
+          },
+          {
+            "contract": "UnderwriteManager",
+            "label": "creditLines",
+            "type": "t_mapping(t_address,t_mapping(t_address,t_struct(CreditLine)5701_storage))",
+            "src": "contracts/CIP36/UnderwriteManager.sol:26"
+          },
+          {
+            "contract": "UnderwriteManager",
+            "label": "networks",
+            "type": "t_mapping(t_address,t_bool)",
+            "src": "contracts/CIP36/UnderwriteManager.sol:27"
+          },
+          {
+            "contract": "UnderwriteManager",
+            "label": "underwriters",
+            "type": "t_mapping(t_address,t_address)",
+            "src": "contracts/CIP36/UnderwriteManager.sol:28"
+          },
+          {
+            "contract": "UnderwriteManager",
+            "label": "isActive",
+            "type": "t_bool",
+            "src": "contracts/CIP36/UnderwriteManager.sol:29"
+          },
+          {
+            "contract": "UnderwriteManager",
+            "label": "totalCollateral",
+            "type": "t_uint256",
+            "src": "contracts/CIP36/UnderwriteManager.sol:30"
+          }
+        ],
+        "types": {
+          "t_contract(IERC20)2908": {
+            "label": "contract IERC20"
+          },
+          "t_mapping(t_address,t_mapping(t_address,t_struct(CreditLine)5701_storage))": {
+            "label": "mapping(address => mapping(address => struct UnderwriteManager.CreditLine))"
+          },
+          "t_address": {
+            "label": "address"
+          },
+          "t_mapping(t_address,t_struct(CreditLine)5701_storage)": {
+            "label": "mapping(address => struct UnderwriteManager.CreditLine)"
+          },
+          "t_struct(CreditLine)5701_storage": {
+            "label": "struct UnderwriteManager.CreditLine",
+            "members": [
+              {
+                "label": "collateral",
+                "type": "t_uint256"
+              },
+              {
+                "label": "networkToken",
+                "type": "t_address"
+              },
+              {
+                "label": "issueDate",
+                "type": "t_uint256"
+              },
+              {
+                "label": "reward",
+                "type": "t_uint256"
+              }
+            ]
+          },
+          "t_uint256": {
+            "label": "uint256"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)"
+          },
+          "t_bool": {
+            "label": "bool"
+          },
+          "t_mapping(t_address,t_address)": {
+            "label": "mapping(address => address)"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]"
           },
           "t_array(t_uint256)50_storage": {
             "label": "uint256[50]"

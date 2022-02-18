@@ -15,7 +15,7 @@ const _abi = [
         type: "address",
       },
     ],
-    name: "getMemberAmbassador",
+    name: "getMembershipAmbassador",
     outputs: [
       {
         internalType: "address",

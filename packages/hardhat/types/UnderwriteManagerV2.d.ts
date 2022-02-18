@@ -24,6 +24,7 @@ interface UnderwriteManagerV2Interface extends ethers.utils.Interface {
     "MWEI()": FunctionFragment;
     "activate()": FunctionFragment;
     "addNetwork(address)": FunctionFragment;
+    "c_0x3bc3c9e1(bytes32)": FunctionFragment;
     "calculateCollateral(uint256)": FunctionFragment;
     "calculateCredit(uint256)": FunctionFragment;
     "claimRewards(address[])": FunctionFragment;
@@ -62,6 +63,10 @@ interface UnderwriteManagerV2Interface extends ethers.utils.Interface {
   encodeFunctionData(functionFragment: "MWEI", values?: undefined): string;
   encodeFunctionData(functionFragment: "activate", values?: undefined): string;
   encodeFunctionData(functionFragment: "addNetwork", values: [string]): string;
+  encodeFunctionData(
+    functionFragment: "c_0x3bc3c9e1",
+    values: [BytesLike]
+  ): string;
   encodeFunctionData(
     functionFragment: "calculateCollateral",
     values: [BigNumberish]
@@ -186,6 +191,10 @@ interface UnderwriteManagerV2Interface extends ethers.utils.Interface {
   decodeFunctionResult(functionFragment: "MWEI", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "activate", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "addNetwork", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "c_0x3bc3c9e1",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "calculateCollateral",
     data: BytesLike
@@ -598,6 +607,11 @@ export class UnderwriteManagerV2 extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    c_0x3bc3c9e1(
+      c__0x3bc3c9e1: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<[void]>;
+
     calculateCollateral(
       creditAmount: BigNumberish,
       overrides?: CallOverrides
@@ -753,6 +767,11 @@ export class UnderwriteManagerV2 extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  c_0x3bc3c9e1(
+    c__0x3bc3c9e1: BytesLike,
+    overrides?: CallOverrides
+  ): Promise<void>;
+
   calculateCollateral(
     creditAmount: BigNumberish,
     overrides?: CallOverrides
@@ -903,6 +922,11 @@ export class UnderwriteManagerV2 extends BaseContract {
 
     addNetwork(
       networkAddress: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    c_0x3bc3c9e1(
+      c__0x3bc3c9e1: BytesLike,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -1544,6 +1568,11 @@ export class UnderwriteManagerV2 extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    c_0x3bc3c9e1(
+      c__0x3bc3c9e1: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     calculateCollateral(
       creditAmount: BigNumberish,
       overrides?: CallOverrides
@@ -1687,6 +1716,11 @@ export class UnderwriteManagerV2 extends BaseContract {
     addNetwork(
       networkAddress: string,
       overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    c_0x3bc3c9e1(
+      c__0x3bc3c9e1: BytesLike,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     calculateCollateral(

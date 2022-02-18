@@ -20,14 +20,14 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface INetworkRolesInterface extends ethers.utils.Interface {
   functions: {
-    "getMemberAmbassador(address)": FunctionFragment;
+    "getMembershipAmbassador(address)": FunctionFragment;
     "isAmbassador(address)": FunctionFragment;
     "isMember(address)": FunctionFragment;
     "isNetworkOperator(address)": FunctionFragment;
   };
 
   encodeFunctionData(
-    functionFragment: "getMemberAmbassador",
+    functionFragment: "getMembershipAmbassador",
     values: [string]
   ): string;
   encodeFunctionData(
@@ -41,7 +41,7 @@ interface INetworkRolesInterface extends ethers.utils.Interface {
   ): string;
 
   decodeFunctionResult(
-    functionFragment: "getMemberAmbassador",
+    functionFragment: "getMembershipAmbassador",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -101,7 +101,7 @@ export class INetworkRoles extends BaseContract {
   interface: INetworkRolesInterface;
 
   functions: {
-    getMemberAmbassador(
+    getMembershipAmbassador(
       _member: string,
       overrides?: CallOverrides
     ): Promise<[string]>;
@@ -119,7 +119,7 @@ export class INetworkRoles extends BaseContract {
     ): Promise<[boolean]>;
   };
 
-  getMemberAmbassador(
+  getMembershipAmbassador(
     _member: string,
     overrides?: CallOverrides
   ): Promise<string>;
@@ -137,7 +137,7 @@ export class INetworkRoles extends BaseContract {
   ): Promise<boolean>;
 
   callStatic: {
-    getMemberAmbassador(
+    getMembershipAmbassador(
       _member: string,
       overrides?: CallOverrides
     ): Promise<string>;
@@ -158,7 +158,7 @@ export class INetworkRoles extends BaseContract {
   filters: {};
 
   estimateGas: {
-    getMemberAmbassador(
+    getMembershipAmbassador(
       _member: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
@@ -177,7 +177,7 @@ export class INetworkRoles extends BaseContract {
   };
 
   populateTransaction: {
-    getMemberAmbassador(
+    getMembershipAmbassador(
       _member: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;

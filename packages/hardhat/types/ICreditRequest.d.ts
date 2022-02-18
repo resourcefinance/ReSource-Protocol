@@ -21,26 +21,15 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface ICreditRequestInterface extends ethers.utils.Interface {
   functions: {
-    "acceptRequest(address,address)": FunctionFragment;
     "approveRequest(address,address)": FunctionFragment;
-    "calculateRequestCollateral(address,address)": FunctionFragment;
     "createRequest(address,address,uint256)": FunctionFragment;
     "deleteRequest(address,address)": FunctionFragment;
     "getCreditRequest(address,address)": FunctionFragment;
-    "isUnstaking(address,address)": FunctionFragment;
-    "updateRequestLimit(address,address,uint256)": FunctionFragment;
+    "updateRequestLimit(address,address,uint256,bool)": FunctionFragment;
   };
 
   encodeFunctionData(
-    functionFragment: "acceptRequest",
-    values: [string, string]
-  ): string;
-  encodeFunctionData(
     functionFragment: "approveRequest",
-    values: [string, string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "calculateRequestCollateral",
     values: [string, string]
   ): string;
   encodeFunctionData(
@@ -53,27 +42,15 @@ interface ICreditRequestInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "getCreditRequest",
-    values: [string, string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "isUnstaking",
     values: [string, string]
   ): string;
   encodeFunctionData(
     functionFragment: "updateRequestLimit",
-    values: [string, string, BigNumberish]
+    values: [string, string, BigNumberish, boolean]
   ): string;
 
   decodeFunctionResult(
-    functionFragment: "acceptRequest",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "approveRequest",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "calculateRequestCollateral",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -86,10 +63,6 @@ interface ICreditRequestInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "getCreditRequest",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "isUnstaking",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -144,19 +117,7 @@ export class ICreditRequest extends BaseContract {
   interface: ICreditRequestInterface;
 
   functions: {
-    acceptRequest(
-      _network: string,
-      _counterparty: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
     approveRequest(
-      _network: string,
-      _counterparty: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    calculateRequestCollateral(
       _network: string,
       _counterparty: string,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -181,42 +142,25 @@ export class ICreditRequest extends BaseContract {
       overrides?: CallOverrides
     ): Promise<
       [
-        [boolean, string, string, BigNumber] & {
+        [boolean, boolean, string, BigNumber] & {
           approved: boolean;
+          unstaking: boolean;
           ambassador: string;
-          network: string;
           creditLimit: BigNumber;
         }
       ]
     >;
 
-    isUnstaking(
-      _network: string,
-      _networkAccount: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
     updateRequestLimit(
       _network: string,
       _counterparty: string,
       _creditLimit: BigNumberish,
+      _approved: boolean,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
   };
 
-  acceptRequest(
-    _network: string,
-    _counterparty: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
   approveRequest(
-    _network: string,
-    _counterparty: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  calculateRequestCollateral(
     _network: string,
     _counterparty: string,
     overrides?: Overrides & { from?: string | Promise<string> }
@@ -240,45 +184,28 @@ export class ICreditRequest extends BaseContract {
     _counterparty: string,
     overrides?: CallOverrides
   ): Promise<
-    [boolean, string, string, BigNumber] & {
+    [boolean, boolean, string, BigNumber] & {
       approved: boolean;
+      unstaking: boolean;
       ambassador: string;
-      network: string;
       creditLimit: BigNumber;
     }
   >;
-
-  isUnstaking(
-    _network: string,
-    _networkAccount: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
 
   updateRequestLimit(
     _network: string,
     _counterparty: string,
     _creditLimit: BigNumberish,
+    _approved: boolean,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   callStatic: {
-    acceptRequest(
-      _network: string,
-      _counterparty: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
     approveRequest(
       _network: string,
       _counterparty: string,
       overrides?: CallOverrides
     ): Promise<void>;
-
-    calculateRequestCollateral(
-      _network: string,
-      _counterparty: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
 
     createRequest(
       _network: string,
@@ -298,24 +225,19 @@ export class ICreditRequest extends BaseContract {
       _counterparty: string,
       overrides?: CallOverrides
     ): Promise<
-      [boolean, string, string, BigNumber] & {
+      [boolean, boolean, string, BigNumber] & {
         approved: boolean;
+        unstaking: boolean;
         ambassador: string;
-        network: string;
         creditLimit: BigNumber;
       }
     >;
-
-    isUnstaking(
-      _network: string,
-      _networkAccount: string,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
 
     updateRequestLimit(
       _network: string,
       _counterparty: string,
       _creditLimit: BigNumberish,
+      _approved: boolean,
       overrides?: CallOverrides
     ): Promise<void>;
   };
@@ -323,19 +245,7 @@ export class ICreditRequest extends BaseContract {
   filters: {};
 
   estimateGas: {
-    acceptRequest(
-      _network: string,
-      _counterparty: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
     approveRequest(
-      _network: string,
-      _counterparty: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    calculateRequestCollateral(
       _network: string,
       _counterparty: string,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -360,34 +270,17 @@ export class ICreditRequest extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    isUnstaking(
-      _network: string,
-      _networkAccount: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
     updateRequestLimit(
       _network: string,
       _counterparty: string,
       _creditLimit: BigNumberish,
+      _approved: boolean,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    acceptRequest(
-      _network: string,
-      _counterparty: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
     approveRequest(
-      _network: string,
-      _counterparty: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    calculateRequestCollateral(
       _network: string,
       _counterparty: string,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -412,16 +305,11 @@ export class ICreditRequest extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    isUnstaking(
-      _network: string,
-      _networkAccount: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
     updateRequestLimit(
       _network: string,
       _counterparty: string,
       _creditLimit: BigNumberish,
+      _approved: boolean,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
   };

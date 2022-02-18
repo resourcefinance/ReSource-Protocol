@@ -21,17 +21,32 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface INetworkFeeManagerInterface extends ethers.utils.Interface {
   functions: {
-    "claimFees(address)": FunctionFragment;
+    "claimAmbassadorFees(address)": FunctionFragment;
+    "claimNetworkFees(address)": FunctionFragment;
     "collectFees(address,address,uint256)": FunctionFragment;
   };
 
-  encodeFunctionData(functionFragment: "claimFees", values: [string]): string;
+  encodeFunctionData(
+    functionFragment: "claimAmbassadorFees",
+    values: [string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "claimNetworkFees",
+    values: [string]
+  ): string;
   encodeFunctionData(
     functionFragment: "collectFees",
     values: [string, string, BigNumberish]
   ): string;
 
-  decodeFunctionResult(functionFragment: "claimFees", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "claimAmbassadorFees",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "claimNetworkFees",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "collectFees",
     data: BytesLike
@@ -84,7 +99,12 @@ export class INetworkFeeManager extends BaseContract {
   interface: INetworkFeeManagerInterface;
 
   functions: {
-    claimFees(
+    claimAmbassadorFees(
+      _member: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    claimNetworkFees(
       _member: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
@@ -97,7 +117,12 @@ export class INetworkFeeManager extends BaseContract {
     ): Promise<ContractTransaction>;
   };
 
-  claimFees(
+  claimAmbassadorFees(
+    _member: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  claimNetworkFees(
     _member: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
@@ -110,7 +135,12 @@ export class INetworkFeeManager extends BaseContract {
   ): Promise<ContractTransaction>;
 
   callStatic: {
-    claimFees(_member: string, overrides?: CallOverrides): Promise<void>;
+    claimAmbassadorFees(
+      _member: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    claimNetworkFees(_member: string, overrides?: CallOverrides): Promise<void>;
 
     collectFees(
       _network: string,
@@ -123,7 +153,12 @@ export class INetworkFeeManager extends BaseContract {
   filters: {};
 
   estimateGas: {
-    claimFees(
+    claimAmbassadorFees(
+      _member: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    claimNetworkFees(
       _member: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
@@ -137,7 +172,12 @@ export class INetworkFeeManager extends BaseContract {
   };
 
   populateTransaction: {
-    claimFees(
+    claimAmbassadorFees(
+      _member: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    claimNetworkFees(
       _member: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;

@@ -18,7 +18,20 @@ const _abi = [
         type: "address",
       },
     ],
-    name: "claimFees",
+    name: "claimAmbassadorFees",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_member",
+        type: "address",
+      },
+    ],
+    name: "claimNetworkFees",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",

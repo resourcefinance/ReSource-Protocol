@@ -21,35 +21,29 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface CreditRequestInterface extends ethers.utils.Interface {
   functions: {
-    "acceptRequest(address,address)": FunctionFragment;
+    "acceptRequest(address,address,address)": FunctionFragment;
     "approveRequest(address,address)": FunctionFragment;
-    "calculateRequestCollateral(address,address)": FunctionFragment;
     "createRequest(address,address,uint256)": FunctionFragment;
     "creditManager()": FunctionFragment;
+    "creditRoles()": FunctionFragment;
     "deleteRequest(address,address)": FunctionFragment;
     "getCreditRequest(address,address)": FunctionFragment;
     "initialize(address,address)": FunctionFragment;
-    "isUnstaking(address,address)": FunctionFragment;
     "owner()": FunctionFragment;
     "paused()": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "requestUnstake(address,address)": FunctionFragment;
     "requests(address,address)": FunctionFragment;
-    "roles()": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
-    "updateRequestLimit(address,address,uint256)": FunctionFragment;
+    "updateRequestLimit(address,address,uint256,bool)": FunctionFragment;
   };
 
   encodeFunctionData(
     functionFragment: "acceptRequest",
-    values: [string, string]
+    values: [string, string, string]
   ): string;
   encodeFunctionData(
     functionFragment: "approveRequest",
-    values: [string, string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "calculateRequestCollateral",
     values: [string, string]
   ): string;
   encodeFunctionData(
@@ -58,6 +52,10 @@ interface CreditRequestInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "creditManager",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "creditRoles",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -70,10 +68,6 @@ interface CreditRequestInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "initialize",
-    values: [string, string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "isUnstaking",
     values: [string, string]
   ): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
@@ -90,14 +84,13 @@ interface CreditRequestInterface extends ethers.utils.Interface {
     functionFragment: "requests",
     values: [string, string]
   ): string;
-  encodeFunctionData(functionFragment: "roles", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "transferOwnership",
     values: [string]
   ): string;
   encodeFunctionData(
     functionFragment: "updateRequestLimit",
-    values: [string, string, BigNumberish]
+    values: [string, string, BigNumberish, boolean]
   ): string;
 
   decodeFunctionResult(
@@ -109,15 +102,15 @@ interface CreditRequestInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "calculateRequestCollateral",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "createRequest",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
     functionFragment: "creditManager",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "creditRoles",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -129,10 +122,6 @@ interface CreditRequestInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "isUnstaking",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "paused", data: BytesLike): Result;
   decodeFunctionResult(
@@ -144,7 +133,6 @@ interface CreditRequestInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "requests", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "roles", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "transferOwnership",
     data: BytesLike
@@ -220,16 +208,11 @@ export class CreditRequest extends BaseContract {
     acceptRequest(
       _network: string,
       _counterparty: string,
+      _pool: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     approveRequest(
-      _network: string,
-      _counterparty: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    calculateRequestCollateral(
       _network: string,
       _counterparty: string,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -244,6 +227,8 @@ export class CreditRequest extends BaseContract {
 
     creditManager(overrides?: CallOverrides): Promise<[string]>;
 
+    creditRoles(overrides?: CallOverrides): Promise<[string]>;
+
     deleteRequest(
       _network: string,
       _counterparty: string,
@@ -256,26 +241,20 @@ export class CreditRequest extends BaseContract {
       overrides?: CallOverrides
     ): Promise<
       [
-        [boolean, string, string, BigNumber] & {
+        [boolean, boolean, string, BigNumber] & {
           approved: boolean;
+          unstaking: boolean;
           ambassador: string;
-          network: string;
           creditLimit: BigNumber;
         }
       ]
     >;
 
     initialize(
-      _rolesAddress: string,
+      _creditRoles: string,
       _creditManager: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
-
-    isUnstaking(
-      _network: string,
-      _counterparty: string,
-      overrides?: CallOverrides
-    ): Promise<[boolean]>;
 
     owner(overrides?: CallOverrides): Promise<[string]>;
 
@@ -296,15 +275,13 @@ export class CreditRequest extends BaseContract {
       arg1: string,
       overrides?: CallOverrides
     ): Promise<
-      [boolean, string, string, BigNumber] & {
+      [boolean, boolean, string, BigNumber] & {
         approved: boolean;
+        unstaking: boolean;
         ambassador: string;
-        network: string;
         creditLimit: BigNumber;
       }
     >;
-
-    roles(overrides?: CallOverrides): Promise<[string]>;
 
     transferOwnership(
       newOwner: string,
@@ -315,6 +292,7 @@ export class CreditRequest extends BaseContract {
       _network: string,
       _counterparty: string,
       _creditLimit: BigNumberish,
+      _approved: boolean,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
   };
@@ -322,16 +300,11 @@ export class CreditRequest extends BaseContract {
   acceptRequest(
     _network: string,
     _counterparty: string,
+    _pool: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   approveRequest(
-    _network: string,
-    _counterparty: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  calculateRequestCollateral(
     _network: string,
     _counterparty: string,
     overrides?: Overrides & { from?: string | Promise<string> }
@@ -346,6 +319,8 @@ export class CreditRequest extends BaseContract {
 
   creditManager(overrides?: CallOverrides): Promise<string>;
 
+  creditRoles(overrides?: CallOverrides): Promise<string>;
+
   deleteRequest(
     _network: string,
     _counterparty: string,
@@ -357,25 +332,19 @@ export class CreditRequest extends BaseContract {
     _counterparty: string,
     overrides?: CallOverrides
   ): Promise<
-    [boolean, string, string, BigNumber] & {
+    [boolean, boolean, string, BigNumber] & {
       approved: boolean;
+      unstaking: boolean;
       ambassador: string;
-      network: string;
       creditLimit: BigNumber;
     }
   >;
 
   initialize(
-    _rolesAddress: string,
+    _creditRoles: string,
     _creditManager: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
-
-  isUnstaking(
-    _network: string,
-    _counterparty: string,
-    overrides?: CallOverrides
-  ): Promise<boolean>;
 
   owner(overrides?: CallOverrides): Promise<string>;
 
@@ -396,15 +365,13 @@ export class CreditRequest extends BaseContract {
     arg1: string,
     overrides?: CallOverrides
   ): Promise<
-    [boolean, string, string, BigNumber] & {
+    [boolean, boolean, string, BigNumber] & {
       approved: boolean;
+      unstaking: boolean;
       ambassador: string;
-      network: string;
       creditLimit: BigNumber;
     }
   >;
-
-  roles(overrides?: CallOverrides): Promise<string>;
 
   transferOwnership(
     newOwner: string,
@@ -415,6 +382,7 @@ export class CreditRequest extends BaseContract {
     _network: string,
     _counterparty: string,
     _creditLimit: BigNumberish,
+    _approved: boolean,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -422,6 +390,7 @@ export class CreditRequest extends BaseContract {
     acceptRequest(
       _network: string,
       _counterparty: string,
+      _pool: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -431,12 +400,6 @@ export class CreditRequest extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    calculateRequestCollateral(
-      _network: string,
-      _counterparty: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
     createRequest(
       _network: string,
       _counterparty: string,
@@ -445,6 +408,8 @@ export class CreditRequest extends BaseContract {
     ): Promise<void>;
 
     creditManager(overrides?: CallOverrides): Promise<string>;
+
+    creditRoles(overrides?: CallOverrides): Promise<string>;
 
     deleteRequest(
       _network: string,
@@ -457,25 +422,19 @@ export class CreditRequest extends BaseContract {
       _counterparty: string,
       overrides?: CallOverrides
     ): Promise<
-      [boolean, string, string, BigNumber] & {
+      [boolean, boolean, string, BigNumber] & {
         approved: boolean;
+        unstaking: boolean;
         ambassador: string;
-        network: string;
         creditLimit: BigNumber;
       }
     >;
 
     initialize(
-      _rolesAddress: string,
+      _creditRoles: string,
       _creditManager: string,
       overrides?: CallOverrides
     ): Promise<void>;
-
-    isUnstaking(
-      _network: string,
-      _counterparty: string,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
 
     owner(overrides?: CallOverrides): Promise<string>;
 
@@ -494,15 +453,13 @@ export class CreditRequest extends BaseContract {
       arg1: string,
       overrides?: CallOverrides
     ): Promise<
-      [boolean, string, string, BigNumber] & {
+      [boolean, boolean, string, BigNumber] & {
         approved: boolean;
+        unstaking: boolean;
         ambassador: string;
-        network: string;
         creditLimit: BigNumber;
       }
     >;
-
-    roles(overrides?: CallOverrides): Promise<string>;
 
     transferOwnership(
       newOwner: string,
@@ -513,6 +470,7 @@ export class CreditRequest extends BaseContract {
       _network: string,
       _counterparty: string,
       _creditLimit: BigNumberish,
+      _approved: boolean,
       overrides?: CallOverrides
     ): Promise<void>;
   };
@@ -551,16 +509,11 @@ export class CreditRequest extends BaseContract {
     acceptRequest(
       _network: string,
       _counterparty: string,
+      _pool: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     approveRequest(
-      _network: string,
-      _counterparty: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    calculateRequestCollateral(
       _network: string,
       _counterparty: string,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -575,6 +528,8 @@ export class CreditRequest extends BaseContract {
 
     creditManager(overrides?: CallOverrides): Promise<BigNumber>;
 
+    creditRoles(overrides?: CallOverrides): Promise<BigNumber>;
+
     deleteRequest(
       _network: string,
       _counterparty: string,
@@ -588,15 +543,9 @@ export class CreditRequest extends BaseContract {
     ): Promise<BigNumber>;
 
     initialize(
-      _rolesAddress: string,
+      _creditRoles: string,
       _creditManager: string,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    isUnstaking(
-      _network: string,
-      _counterparty: string,
-      overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<BigNumber>;
@@ -619,8 +568,6 @@ export class CreditRequest extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    roles(overrides?: CallOverrides): Promise<BigNumber>;
-
     transferOwnership(
       newOwner: string,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -630,6 +577,7 @@ export class CreditRequest extends BaseContract {
       _network: string,
       _counterparty: string,
       _creditLimit: BigNumberish,
+      _approved: boolean,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
   };
@@ -638,16 +586,11 @@ export class CreditRequest extends BaseContract {
     acceptRequest(
       _network: string,
       _counterparty: string,
+      _pool: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     approveRequest(
-      _network: string,
-      _counterparty: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    calculateRequestCollateral(
       _network: string,
       _counterparty: string,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -662,6 +605,8 @@ export class CreditRequest extends BaseContract {
 
     creditManager(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    creditRoles(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     deleteRequest(
       _network: string,
       _counterparty: string,
@@ -675,15 +620,9 @@ export class CreditRequest extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     initialize(
-      _rolesAddress: string,
+      _creditRoles: string,
       _creditManager: string,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    isUnstaking(
-      _network: string,
-      _counterparty: string,
-      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
@@ -706,8 +645,6 @@ export class CreditRequest extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    roles(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     transferOwnership(
       newOwner: string,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -717,6 +654,7 @@ export class CreditRequest extends BaseContract {
       _network: string,
       _counterparty: string,
       _creditLimit: BigNumberish,
+      _approved: boolean,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
   };

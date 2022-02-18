@@ -22,28 +22,29 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 interface NetworkRolesInterface extends ethers.utils.Interface {
   functions: {
     "DEFAULT_ADMIN_ROLE()": FunctionFragment;
-    "acceptAmbassadorInvitation(address)": FunctionFragment;
-    "deployMemberWallet(address[],address[],address,uint256)": FunctionFragment;
-    "getMemberAmbassador(address)": FunctionFragment;
+    "acceptMembershipAmbassadorInvitation(address,address)": FunctionFragment;
+    "createMembershipAmbassadorInvite(address)": FunctionFragment;
+    "deployMemberWallet(address[],address[],address,address,address,uint256)": FunctionFragment;
+    "getMembershipAmbassador(address)": FunctionFragment;
     "getRoleAdmin(bytes32)": FunctionFragment;
-    "grantAmbassador(address)": FunctionFragment;
+    "grantAmbassador(address,uint256)": FunctionFragment;
     "grantOperator(address)": FunctionFragment;
     "grantRole(bytes32,address)": FunctionFragment;
     "hasRole(bytes32,address)": FunctionFragment;
     "initialize(address[],address)": FunctionFragment;
-    "inviteMember(address)": FunctionFragment;
     "isAmbassador(address)": FunctionFragment;
     "isMember(address)": FunctionFragment;
     "isNetworkOperator(address)": FunctionFragment;
     "owner()": FunctionFragment;
-    "removeOperator(address)": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "renounceRole(bytes32,address)": FunctionFragment;
     "revokeAmbassador(address)": FunctionFragment;
+    "revokeOperator(address)": FunctionFragment;
     "revokeRole(bytes32,address)": FunctionFragment;
     "supportsInterface(bytes4)": FunctionFragment;
-    "transferAmbassadorMember(address,address)": FunctionFragment;
+    "transferMembershipAmbassador(address,address)": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
+    "updateAmbassador(address,uint256)": FunctionFragment;
   };
 
   encodeFunctionData(
@@ -51,15 +52,19 @@ interface NetworkRolesInterface extends ethers.utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "acceptAmbassadorInvitation",
+    functionFragment: "acceptMembershipAmbassadorInvitation",
+    values: [string, string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "createMembershipAmbassadorInvite",
     values: [string]
   ): string;
   encodeFunctionData(
     functionFragment: "deployMemberWallet",
-    values: [string[], string[], string, BigNumberish]
+    values: [string[], string[], string, string, string, BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: "getMemberAmbassador",
+    functionFragment: "getMembershipAmbassador",
     values: [string]
   ): string;
   encodeFunctionData(
@@ -68,7 +73,7 @@ interface NetworkRolesInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "grantAmbassador",
-    values: [string]
+    values: [string, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "grantOperator",
@@ -87,10 +92,6 @@ interface NetworkRolesInterface extends ethers.utils.Interface {
     values: [string[], string]
   ): string;
   encodeFunctionData(
-    functionFragment: "inviteMember",
-    values: [string]
-  ): string;
-  encodeFunctionData(
     functionFragment: "isAmbassador",
     values: [string]
   ): string;
@@ -100,10 +101,6 @@ interface NetworkRolesInterface extends ethers.utils.Interface {
     values: [string]
   ): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "removeOperator",
-    values: [string]
-  ): string;
   encodeFunctionData(
     functionFragment: "renounceOwnership",
     values?: undefined
@@ -117,6 +114,10 @@ interface NetworkRolesInterface extends ethers.utils.Interface {
     values: [string]
   ): string;
   encodeFunctionData(
+    functionFragment: "revokeOperator",
+    values: [string]
+  ): string;
+  encodeFunctionData(
     functionFragment: "revokeRole",
     values: [BytesLike, string]
   ): string;
@@ -125,12 +126,16 @@ interface NetworkRolesInterface extends ethers.utils.Interface {
     values: [BytesLike]
   ): string;
   encodeFunctionData(
-    functionFragment: "transferAmbassadorMember",
+    functionFragment: "transferMembershipAmbassador",
     values: [string, string]
   ): string;
   encodeFunctionData(
     functionFragment: "transferOwnership",
     values: [string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "updateAmbassador",
+    values: [string, BigNumberish]
   ): string;
 
   decodeFunctionResult(
@@ -138,7 +143,11 @@ interface NetworkRolesInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "acceptAmbassadorInvitation",
+    functionFragment: "acceptMembershipAmbassadorInvitation",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "createMembershipAmbassadorInvite",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -146,7 +155,7 @@ interface NetworkRolesInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "getMemberAmbassador",
+    functionFragment: "getMembershipAmbassador",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -165,10 +174,6 @@ interface NetworkRolesInterface extends ethers.utils.Interface {
   decodeFunctionResult(functionFragment: "hasRole", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "inviteMember",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "isAmbassador",
     data: BytesLike
   ): Result;
@@ -178,10 +183,6 @@ interface NetworkRolesInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "removeOperator",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(
     functionFragment: "renounceOwnership",
     data: BytesLike
@@ -194,17 +195,25 @@ interface NetworkRolesInterface extends ethers.utils.Interface {
     functionFragment: "revokeAmbassador",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "revokeOperator",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "revokeRole", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "supportsInterface",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "transferAmbassadorMember",
+    functionFragment: "transferMembershipAmbassador",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
     functionFragment: "transferOwnership",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "updateAmbassador",
     data: BytesLike
   ): Result;
 
@@ -287,8 +296,14 @@ export class NetworkRoles extends BaseContract {
   functions: {
     DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<[string]>;
 
-    acceptAmbassadorInvitation(
+    acceptMembershipAmbassadorInvitation(
+      _network: string,
       _ambassador: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    createMembershipAmbassadorInvite(
+      _member: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -296,11 +311,13 @@ export class NetworkRoles extends BaseContract {
       _clients: string[],
       _guardians: string[],
       _coSigner: string,
+      _network: string,
+      _ambassador: string,
       _required: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    getMemberAmbassador(
+    getMembershipAmbassador(
       _member: string,
       overrides?: CallOverrides
     ): Promise<[string]>;
@@ -309,6 +326,7 @@ export class NetworkRoles extends BaseContract {
 
     grantAmbassador(
       _ambassador: string,
+      _creditAllowance: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -335,11 +353,6 @@ export class NetworkRoles extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    inviteMember(
-      _member: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
     isAmbassador(
       _ambassador: string,
       overrides?: CallOverrides
@@ -353,11 +366,6 @@ export class NetworkRoles extends BaseContract {
     ): Promise<[boolean]>;
 
     owner(overrides?: CallOverrides): Promise<[string]>;
-
-    removeOperator(
-      _operator: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
 
     renounceOwnership(
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -374,6 +382,11 @@ export class NetworkRoles extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    revokeOperator(
+      _operator: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     revokeRole(
       role: BytesLike,
       account: string,
@@ -385,7 +398,7 @@ export class NetworkRoles extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
-    transferAmbassadorMember(
+    transferMembershipAmbassador(
       _member: string,
       _ambassador: string,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -395,12 +408,24 @@ export class NetworkRoles extends BaseContract {
       newOwner: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
+
+    updateAmbassador(
+      _ambassador: string,
+      _creditAllowance: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
   };
 
   DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<string>;
 
-  acceptAmbassadorInvitation(
+  acceptMembershipAmbassadorInvitation(
+    _network: string,
     _ambassador: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  createMembershipAmbassadorInvite(
+    _member: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -408,11 +433,13 @@ export class NetworkRoles extends BaseContract {
     _clients: string[],
     _guardians: string[],
     _coSigner: string,
+    _network: string,
+    _ambassador: string,
     _required: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  getMemberAmbassador(
+  getMembershipAmbassador(
     _member: string,
     overrides?: CallOverrides
   ): Promise<string>;
@@ -421,6 +448,7 @@ export class NetworkRoles extends BaseContract {
 
   grantAmbassador(
     _ambassador: string,
+    _creditAllowance: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -447,11 +475,6 @@ export class NetworkRoles extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  inviteMember(
-    _member: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
   isAmbassador(
     _ambassador: string,
     overrides?: CallOverrides
@@ -465,11 +488,6 @@ export class NetworkRoles extends BaseContract {
   ): Promise<boolean>;
 
   owner(overrides?: CallOverrides): Promise<string>;
-
-  removeOperator(
-    _operator: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
 
   renounceOwnership(
     overrides?: Overrides & { from?: string | Promise<string> }
@@ -486,6 +504,11 @@ export class NetworkRoles extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  revokeOperator(
+    _operator: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   revokeRole(
     role: BytesLike,
     account: string,
@@ -497,7 +520,7 @@ export class NetworkRoles extends BaseContract {
     overrides?: CallOverrides
   ): Promise<boolean>;
 
-  transferAmbassadorMember(
+  transferMembershipAmbassador(
     _member: string,
     _ambassador: string,
     overrides?: Overrides & { from?: string | Promise<string> }
@@ -508,11 +531,23 @@ export class NetworkRoles extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  updateAmbassador(
+    _ambassador: string,
+    _creditAllowance: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   callStatic: {
     DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<string>;
 
-    acceptAmbassadorInvitation(
+    acceptMembershipAmbassadorInvitation(
+      _network: string,
       _ambassador: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    createMembershipAmbassadorInvite(
+      _member: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -520,11 +555,13 @@ export class NetworkRoles extends BaseContract {
       _clients: string[],
       _guardians: string[],
       _coSigner: string,
+      _network: string,
+      _ambassador: string,
       _required: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<void>;
+    ): Promise<string>;
 
-    getMemberAmbassador(
+    getMembershipAmbassador(
       _member: string,
       overrides?: CallOverrides
     ): Promise<string>;
@@ -533,6 +570,7 @@ export class NetworkRoles extends BaseContract {
 
     grantAmbassador(
       _ambassador: string,
+      _creditAllowance: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -556,8 +594,6 @@ export class NetworkRoles extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    inviteMember(_member: string, overrides?: CallOverrides): Promise<void>;
-
     isAmbassador(
       _ambassador: string,
       overrides?: CallOverrides
@@ -572,8 +608,6 @@ export class NetworkRoles extends BaseContract {
 
     owner(overrides?: CallOverrides): Promise<string>;
 
-    removeOperator(_operator: string, overrides?: CallOverrides): Promise<void>;
-
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
 
     renounceRole(
@@ -587,6 +621,8 @@ export class NetworkRoles extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    revokeOperator(_operator: string, overrides?: CallOverrides): Promise<void>;
+
     revokeRole(
       role: BytesLike,
       account: string,
@@ -598,7 +634,7 @@ export class NetworkRoles extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    transferAmbassadorMember(
+    transferMembershipAmbassador(
       _member: string,
       _ambassador: string,
       overrides?: CallOverrides
@@ -606,6 +642,12 @@ export class NetworkRoles extends BaseContract {
 
     transferOwnership(
       newOwner: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    updateAmbassador(
+      _ambassador: string,
+      _creditAllowance: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
   };
@@ -685,8 +727,14 @@ export class NetworkRoles extends BaseContract {
   estimateGas: {
     DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<BigNumber>;
 
-    acceptAmbassadorInvitation(
+    acceptMembershipAmbassadorInvitation(
+      _network: string,
       _ambassador: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    createMembershipAmbassadorInvite(
+      _member: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -694,11 +742,13 @@ export class NetworkRoles extends BaseContract {
       _clients: string[],
       _guardians: string[],
       _coSigner: string,
+      _network: string,
+      _ambassador: string,
       _required: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    getMemberAmbassador(
+    getMembershipAmbassador(
       _member: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
@@ -710,6 +760,7 @@ export class NetworkRoles extends BaseContract {
 
     grantAmbassador(
       _ambassador: string,
+      _creditAllowance: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -733,11 +784,6 @@ export class NetworkRoles extends BaseContract {
     initialize(
       _operators: string[],
       _walletDeployer: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    inviteMember(
-      _member: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -755,11 +801,6 @@ export class NetworkRoles extends BaseContract {
 
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
-    removeOperator(
-      _operator: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
     renounceOwnership(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
@@ -775,6 +816,11 @@ export class NetworkRoles extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    revokeOperator(
+      _operator: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     revokeRole(
       role: BytesLike,
       account: string,
@@ -786,7 +832,7 @@ export class NetworkRoles extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    transferAmbassadorMember(
+    transferMembershipAmbassador(
       _member: string,
       _ambassador: string,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -796,6 +842,12 @@ export class NetworkRoles extends BaseContract {
       newOwner: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
+
+    updateAmbassador(
+      _ambassador: string,
+      _creditAllowance: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
   };
 
   populateTransaction: {
@@ -803,8 +855,14 @@ export class NetworkRoles extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    acceptAmbassadorInvitation(
+    acceptMembershipAmbassadorInvitation(
+      _network: string,
       _ambassador: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    createMembershipAmbassadorInvite(
+      _member: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -812,11 +870,13 @@ export class NetworkRoles extends BaseContract {
       _clients: string[],
       _guardians: string[],
       _coSigner: string,
+      _network: string,
+      _ambassador: string,
       _required: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    getMemberAmbassador(
+    getMembershipAmbassador(
       _member: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
@@ -828,6 +888,7 @@ export class NetworkRoles extends BaseContract {
 
     grantAmbassador(
       _ambassador: string,
+      _creditAllowance: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -851,11 +912,6 @@ export class NetworkRoles extends BaseContract {
     initialize(
       _operators: string[],
       _walletDeployer: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    inviteMember(
-      _member: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -876,11 +932,6 @@ export class NetworkRoles extends BaseContract {
 
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    removeOperator(
-      _operator: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
     renounceOwnership(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
@@ -896,6 +947,11 @@ export class NetworkRoles extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
+    revokeOperator(
+      _operator: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
     revokeRole(
       role: BytesLike,
       account: string,
@@ -907,7 +963,7 @@ export class NetworkRoles extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    transferAmbassadorMember(
+    transferMembershipAmbassador(
       _member: string,
       _ambassador: string,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -915,6 +971,12 @@ export class NetworkRoles extends BaseContract {
 
     transferOwnership(
       newOwner: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    updateAmbassador(
+      _ambassador: string,
+      _creditAllowance: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
   };

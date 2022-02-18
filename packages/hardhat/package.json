@@ -19,7 +19,7 @@
     "mocha": "^8.4.0",
     "solhint": "^3.3.6",
     "solhint-plugin-prettier": "^0.0.5",
-    "solidity-coverage": "^0.7.17",
+    "solidity-coverage": "^0.7.20",
     "typechain": "^5.0.0"
   },
   "dependencies": {
@@ -47,9 +47,9 @@
   "scripts": {
     "chain": "yarn hardhat node --network hardhat --no-deploy",
     "fork": "yarn hardhat node --no-deploy --network hardhat --fork https://mainnet.infura.io/v3/460f40a260564ac4a4f4b3fffb032dad",
-    "coverage": "yarn hardhat coverage --solcoverjs ./.solcover.js --temp artifacts --testfiles \"./test/**/*.ts\"",
     "test": "yarn hardhat test --network hardhat",
     "compile": "yarn hardhat compile",
+    "coverage": "yarn hardhat coverage",
     "typechain": "yarn hardhat typechain",
     "deploy": "yarn hardhat deploy",
     "postdeploy": "yarn hardhat run scripts/publish.ts && yarn hardhat run scripts/setup-local.ts",

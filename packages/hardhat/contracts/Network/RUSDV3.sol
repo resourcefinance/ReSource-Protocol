@@ -56,8 +56,8 @@ contract RUSDV3 is CIP36, INetworkToken {
     ) external virtual initializer {
         CIP36.initialize("rUSD", "rUSD");
         creditManager = _creditManager;
-        networkRoles = INetworkRoles(_networkRoles);
         feeManager = INetworkFeeManager(_feeManager);
+        networkRoles = INetworkRoles(_networkRoles);
     }
 
     /*

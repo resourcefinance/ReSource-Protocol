@@ -23,50 +23,8 @@ const _abi = [
         type: "address",
       },
     ],
-    name: "acceptRequest",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "_network",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "_counterparty",
-        type: "address",
-      },
-    ],
     name: "approveRequest",
     outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "_network",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "_counterparty",
-        type: "address",
-      },
-    ],
-    name: "calculateRequestCollateral",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
     stateMutability: "nonpayable",
     type: "function",
   },
@@ -134,13 +92,13 @@ const _abi = [
             type: "bool",
           },
           {
-            internalType: "address",
-            name: "ambassador",
-            type: "address",
+            internalType: "bool",
+            name: "unstaking",
+            type: "bool",
           },
           {
             internalType: "address",
-            name: "network",
+            name: "ambassador",
             type: "address",
           },
           {
@@ -166,30 +124,6 @@ const _abi = [
       },
       {
         internalType: "address",
-        name: "_networkAccount",
-        type: "address",
-      },
-    ],
-    name: "isUnstaking",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "_network",
-        type: "address",
-      },
-      {
-        internalType: "address",
         name: "_counterparty",
         type: "address",
       },
@@ -197,6 +131,11 @@ const _abi = [
         internalType: "uint256",
         name: "_creditLimit",
         type: "uint256",
+      },
+      {
+        internalType: "bool",
+        name: "_approved",
+        type: "bool",
       },
     ],
     name: "updateRequestLimit",

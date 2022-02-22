@@ -18,9 +18,9 @@ const _abi = [
     name: "creditBalanceOf",
     outputs: [
       {
-        internalType: "address",
+        internalType: "uint256",
         name: "",
-        type: "address",
+        type: "uint256",
       },
     ],
     stateMutability: "view",

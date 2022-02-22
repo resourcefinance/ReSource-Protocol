@@ -257,7 +257,7 @@ contract UnderwriteManager is OwnableUpgradeable {
     /*
      * Private functions
      */
-    function calculateReward(uint256 txAmount) private pure returns (uint256) {
+    function calculateReward(uint256 txAmount) public pure returns (uint256) {
         return (txAmount / 100) * REWARD_PERCENT * MWEI;
     }
 

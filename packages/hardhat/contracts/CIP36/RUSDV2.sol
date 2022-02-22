@@ -2,7 +2,6 @@
 pragma solidity ^0.8.0;
 
 import "./CIP36.sol";
-import "./NetworkRegistry.sol";
 import "./UnderwriteManager.sol";
 import "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
@@ -39,7 +38,7 @@ contract RUSDV2 is CIP36 {
     /*
      *  Storage
      */
-    NetworkRegistry public registry;
+    // IProtocolRegistry public registry;
     UnderwriteManager public underwriteManager;
     address public operator;
 
@@ -60,7 +59,7 @@ contract RUSDV2 is CIP36 {
         address operatorAddress
     ) external virtual initializer {
         CIP36.initialize("rUSD", "rUSD");
-        registry = NetworkRegistry(registryAddress);
+        // registry = IProtocolRegistry(registryAddress);
         underwriteManager = UnderwriteManager(_underwriteManager);
         operator = operatorAddress;
         restrictionState = Restriction.REGISTERED;
@@ -109,14 +108,14 @@ contract RUSDV2 is CIP36 {
             return;
         }
         if (restrictionState == Restriction.REGISTERED) {
-            require(registry.isMember(_from), "Sender is not network member");
-            require(registry.isMember(_to), "Recipient is not network member");
+            // require(registry.isMember(_from), "Sender is not network member");
+            // require(registry.isMember(_to), "Recipient is not network member");
         }
         // if in positive restriction state, recipient is not in the registry and the sender's balance is negative
-        if (restrictionState == Restriction.POSITIVE && !registry.isMember(_to)) {
-            uint256 _balanceFrom = super.balanceOf(_from);
-            require(_balanceFrom - _amount >= 0, "Insufficient balance for non network member");
-        }
+        // if (restrictionState == Restriction.POSITIVE && !registry.isMember(_to)) {
+        //     uint256 _balanceFrom = super.balanceOf(_from);
+        //     require(_balanceFrom - _amount >= 0, "Insufficient balance for non network member");
+        // }
     }
 
     function restrictRegistered() external onlyOwner() {

@@ -3,7 +3,6 @@ pragma solidity ^0.8.0;
 import "./CIP36.sol"; // Create interface for CIP36
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "hardhat/console.sol";
 
 contract UnderwriteManagerV2 is OwnableUpgradeable {
     /*

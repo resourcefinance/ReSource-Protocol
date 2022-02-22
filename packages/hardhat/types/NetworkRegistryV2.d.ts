@@ -23,6 +23,7 @@ interface NetworkRegistryV2Interface extends ethers.utils.Interface {
   functions: {
     "addMembers(address[])": FunctionFragment;
     "addOperator(address)": FunctionFragment;
+    "c_0x2a4458bc(bytes32)": FunctionFragment;
     "deployWalletToRegistry(address[],address[],address,uint256)": FunctionFragment;
     "initialize(address[],address[],address)": FunctionFragment;
     "isMember(address)": FunctionFragment;
@@ -39,6 +40,10 @@ interface NetworkRegistryV2Interface extends ethers.utils.Interface {
     values: [string[]]
   ): string;
   encodeFunctionData(functionFragment: "addOperator", values: [string]): string;
+  encodeFunctionData(
+    functionFragment: "c_0x2a4458bc",
+    values: [BytesLike]
+  ): string;
   encodeFunctionData(
     functionFragment: "deployWalletToRegistry",
     values: [string[], string[], string, BigNumberish]
@@ -70,6 +75,10 @@ interface NetworkRegistryV2Interface extends ethers.utils.Interface {
   decodeFunctionResult(functionFragment: "addMembers", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "addOperator",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "c_0x2a4458bc",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -182,6 +191,11 @@ export class NetworkRegistryV2 extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    c_0x2a4458bc(
+      c__0x2a4458bc: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<[void]>;
+
     deployWalletToRegistry(
       clients: string[],
       guardians: string[],
@@ -233,6 +247,11 @@ export class NetworkRegistryV2 extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  c_0x2a4458bc(
+    c__0x2a4458bc: BytesLike,
+    overrides?: CallOverrides
+  ): Promise<void>;
+
   deployWalletToRegistry(
     clients: string[],
     guardians: string[],
@@ -277,6 +296,11 @@ export class NetworkRegistryV2 extends BaseContract {
     addMembers(_members: string[], overrides?: CallOverrides): Promise<void>;
 
     addOperator(operator: string, overrides?: CallOverrides): Promise<void>;
+
+    c_0x2a4458bc(
+      c__0x2a4458bc: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     deployWalletToRegistry(
       clients: string[],
@@ -380,6 +404,11 @@ export class NetworkRegistryV2 extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    c_0x2a4458bc(
+      c__0x2a4458bc: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     deployWalletToRegistry(
       clients: string[],
       guardians: string[],
@@ -430,6 +459,11 @@ export class NetworkRegistryV2 extends BaseContract {
     addOperator(
       operator: string,
       overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    c_0x2a4458bc(
+      c__0x2a4458bc: BytesLike,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     deployWalletToRegistry(

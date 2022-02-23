@@ -8,7 +8,7 @@ interface INetworkFeeManager {
         uint256 _transactionValue
     ) external;
 
-    function claimAmbassadorFees(address _member) external;
+    function claimAmbassadorFees(address[] memory _members) external;
 
-    function claimNetworkFees(address _member) external;
+    function claimNetworkFees(address[] memory _members) external;
 }

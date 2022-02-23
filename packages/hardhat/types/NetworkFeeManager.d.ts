@@ -21,13 +21,13 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface NetworkFeeManagerInterface extends ethers.utils.Interface {
   functions: {
-    "claimAmbassadorFees(address)": FunctionFragment;
-    "claimNetworkFees(address)": FunctionFragment;
+    "claimAmbassadorFees(address[])": FunctionFragment;
+    "claimNetworkFees(address[])": FunctionFragment;
     "collateralToken()": FunctionFragment;
     "collectFees(address,address,uint256)": FunctionFragment;
     "creditFeeManager()": FunctionFragment;
     "initialize(address,address,uint256,uint256)": FunctionFragment;
-    "moveFeesToRewards(address)": FunctionFragment;
+    "moveFeesToRewards(address[])": FunctionFragment;
     "networkRoles()": FunctionFragment;
     "owner()": FunctionFragment;
     "registerNetwork(address)": FunctionFragment;
@@ -38,11 +38,11 @@ interface NetworkFeeManagerInterface extends ethers.utils.Interface {
 
   encodeFunctionData(
     functionFragment: "claimAmbassadorFees",
-    values: [string]
+    values: [string[]]
   ): string;
   encodeFunctionData(
     functionFragment: "claimNetworkFees",
-    values: [string]
+    values: [string[]]
   ): string;
   encodeFunctionData(
     functionFragment: "collateralToken",
@@ -62,7 +62,7 @@ interface NetworkFeeManagerInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "moveFeesToRewards",
-    values: [string]
+    values: [string[]]
   ): string;
   encodeFunctionData(
     functionFragment: "networkRoles",
@@ -189,12 +189,12 @@ export class NetworkFeeManager extends BaseContract {
 
   functions: {
     claimAmbassadorFees(
-      _member: string,
+      _members: string[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     claimNetworkFees(
-      _member: string,
+      _members: string[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -218,7 +218,7 @@ export class NetworkFeeManager extends BaseContract {
     ): Promise<ContractTransaction>;
 
     moveFeesToRewards(
-      _member: string,
+      _members: string[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -247,12 +247,12 @@ export class NetworkFeeManager extends BaseContract {
   };
 
   claimAmbassadorFees(
-    _member: string,
+    _members: string[],
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   claimNetworkFees(
-    _member: string,
+    _members: string[],
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -276,7 +276,7 @@ export class NetworkFeeManager extends BaseContract {
   ): Promise<ContractTransaction>;
 
   moveFeesToRewards(
-    _member: string,
+    _members: string[],
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -305,11 +305,14 @@ export class NetworkFeeManager extends BaseContract {
 
   callStatic: {
     claimAmbassadorFees(
-      _member: string,
+      _members: string[],
       overrides?: CallOverrides
     ): Promise<void>;
 
-    claimNetworkFees(_member: string, overrides?: CallOverrides): Promise<void>;
+    claimNetworkFees(
+      _members: string[],
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     collateralToken(overrides?: CallOverrides): Promise<string>;
 
@@ -331,7 +334,7 @@ export class NetworkFeeManager extends BaseContract {
     ): Promise<void>;
 
     moveFeesToRewards(
-      _member: string,
+      _members: string[],
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -374,12 +377,12 @@ export class NetworkFeeManager extends BaseContract {
 
   estimateGas: {
     claimAmbassadorFees(
-      _member: string,
+      _members: string[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     claimNetworkFees(
-      _member: string,
+      _members: string[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -403,7 +406,7 @@ export class NetworkFeeManager extends BaseContract {
     ): Promise<BigNumber>;
 
     moveFeesToRewards(
-      _member: string,
+      _members: string[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -433,12 +436,12 @@ export class NetworkFeeManager extends BaseContract {
 
   populateTransaction: {
     claimAmbassadorFees(
-      _member: string,
+      _members: string[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     claimNetworkFees(
-      _member: string,
+      _members: string[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -462,7 +465,7 @@ export class NetworkFeeManager extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     moveFeesToRewards(
-      _member: string,
+      _members: string[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 

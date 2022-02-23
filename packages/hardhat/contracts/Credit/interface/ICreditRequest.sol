@@ -13,8 +13,7 @@ pragma solidity ^0.8.0;
 interface ICreditRequest {
     struct CreditRequest {
         bool approved;
-        bool unstaking; // may need to change to enum for upgrade path
-        address ambassador;
+        bool unstaking;
         uint256 creditLimit;
     }
 

@@ -21,18 +21,18 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface INetworkFeeManagerInterface extends ethers.utils.Interface {
   functions: {
-    "claimAmbassadorFees(address)": FunctionFragment;
-    "claimNetworkFees(address)": FunctionFragment;
+    "claimAmbassadorFees(address[])": FunctionFragment;
+    "claimNetworkFees(address[])": FunctionFragment;
     "collectFees(address,address,uint256)": FunctionFragment;
   };
 
   encodeFunctionData(
     functionFragment: "claimAmbassadorFees",
-    values: [string]
+    values: [string[]]
   ): string;
   encodeFunctionData(
     functionFragment: "claimNetworkFees",
-    values: [string]
+    values: [string[]]
   ): string;
   encodeFunctionData(
     functionFragment: "collectFees",
@@ -100,12 +100,12 @@ export class INetworkFeeManager extends BaseContract {
 
   functions: {
     claimAmbassadorFees(
-      _member: string,
+      _members: string[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     claimNetworkFees(
-      _member: string,
+      _members: string[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -118,12 +118,12 @@ export class INetworkFeeManager extends BaseContract {
   };
 
   claimAmbassadorFees(
-    _member: string,
+    _members: string[],
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   claimNetworkFees(
-    _member: string,
+    _members: string[],
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -136,11 +136,14 @@ export class INetworkFeeManager extends BaseContract {
 
   callStatic: {
     claimAmbassadorFees(
-      _member: string,
+      _members: string[],
       overrides?: CallOverrides
     ): Promise<void>;
 
-    claimNetworkFees(_member: string, overrides?: CallOverrides): Promise<void>;
+    claimNetworkFees(
+      _members: string[],
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     collectFees(
       _network: string,
@@ -154,12 +157,12 @@ export class INetworkFeeManager extends BaseContract {
 
   estimateGas: {
     claimAmbassadorFees(
-      _member: string,
+      _members: string[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     claimNetworkFees(
-      _member: string,
+      _members: string[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -173,12 +176,12 @@ export class INetworkFeeManager extends BaseContract {
 
   populateTransaction: {
     claimAmbassadorFees(
-      _member: string,
+      _members: string[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     claimNetworkFees(
-      _member: string,
+      _members: string[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 

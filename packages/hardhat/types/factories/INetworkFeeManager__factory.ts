@@ -13,9 +13,9 @@ const _abi = [
   {
     inputs: [
       {
-        internalType: "address",
-        name: "_member",
-        type: "address",
+        internalType: "address[]",
+        name: "_members",
+        type: "address[]",
       },
     ],
     name: "claimAmbassadorFees",
@@ -26,9 +26,9 @@ const _abi = [
   {
     inputs: [
       {
-        internalType: "address",
-        name: "_member",
-        type: "address",
+        internalType: "address[]",
+        name: "_members",
+        type: "address[]",
       },
     ],
     name: "claimNetworkFees",

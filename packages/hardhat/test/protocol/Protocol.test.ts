@@ -141,7 +141,7 @@ describe("CreditManager Tests", function() {
 
     // claim networkFees as ambassador
     await (
-      await contracts.networkFeeManager.connect(ambassador).claimAmbassadorFees(memberA.address)
+      await contracts.networkFeeManager.connect(ambassador).claimAmbassadorFees([memberA.address])
     ).wait()
 
     sourceBalance = ethers.utils.formatEther(
@@ -153,7 +153,7 @@ describe("CreditManager Tests", function() {
     await (await contracts.networkRoles.grantOperator(network.address)).wait()
 
     await (
-      await contracts.networkFeeManager.connect(network).claimNetworkFees(memberA.address)
+      await contracts.networkFeeManager.connect(network).claimNetworkFees([memberA.address])
     ).wait()
 
     sourceBalance = ethers.utils.formatEther(
@@ -165,7 +165,7 @@ describe("CreditManager Tests", function() {
     await (
       await contracts.creditFeeManager
         .connect(underwriter)
-        .claimUnderwriterFees(contracts.rUSD.address, memberA.address)
+        .claimUnderwriterFees(contracts.rUSD.address, [memberA.address])
     ).wait()
 
     sourceBalance = ethers.utils.formatEther(
@@ -178,7 +178,7 @@ describe("CreditManager Tests", function() {
     await (
       await contracts.creditFeeManager
         .connect(creditOperator)
-        .claimOperatorFees(contracts.rUSD.address, memberA.address)
+        .claimOperatorFees(contracts.rUSD.address, [memberA.address])
     ).wait()
 
     sourceBalance = ethers.utils.formatEther(

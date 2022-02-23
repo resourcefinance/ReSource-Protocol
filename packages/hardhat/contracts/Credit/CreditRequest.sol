@@ -125,8 +125,9 @@ contract CreditRequest is OwnableUpgradeable, PausableUpgradeable, ICreditReques
             requests[_network][_counterparty].creditLimit > 0,
             "CreditRequest: request does not exist"
         );
+        INetworkRoles networkRoles = INetworkRoles(INetworkToken(_network).getNetworkRoles());
         require(
-            requests[_network][_counterparty].ambassador == msg.sender ||
+            networkRoles.getMembershipAmbassador(_counterparty) == msg.sender ||
                 creditRoles.isCreditOperator(msg.sender),
             "CreditRequest: Unauthorized to update this request"
         );
@@ -136,8 +137,9 @@ contract CreditRequest is OwnableUpgradeable, PausableUpgradeable, ICreditReques
     }
 
     function deleteRequest(address _network, address _counterparty) external override {
+        INetworkRoles networkRoles = INetworkRoles(INetworkToken(_network).getNetworkRoles());
         require(
-            requests[_network][_counterparty].ambassador == msg.sender ||
+            networkRoles.getMembershipAmbassador(_counterparty) == msg.sender ||
                 creditRoles.isRequestOperator(msg.sender),
             "CreditRequest: Unauthorized to delete this request"
         );

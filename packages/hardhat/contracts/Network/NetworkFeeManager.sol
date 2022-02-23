@@ -76,37 +76,44 @@ contract NetworkFeeManager is OwnableUpgradeable, INetworkFeeManager {
         network = _network;
     }
 
-    // TODO: batch claiming / moving
-    function claimAmbassadorFees(address _member) external override {
-        moveFeesToRewards(_member);
+    function claimAmbassadorFees(address[] memory _members) external override {
+        moveFeesToRewards(_members);
+        if (rewards[msg.sender] == 0) {
+            return;
+        }
         collateralToken.safeTransfer(msg.sender, rewards[msg.sender]);
-        address ambassador = networkRoles.getMembershipAmbassador(_member);
-        rewards[ambassador] = 0;
+        rewards[msg.sender] = 0;
     }
 
-    function claimNetworkFees(address _member) external override onlyNetworkOperator {
-        moveFeesToRewards(_member);
+    function claimNetworkFees(address[] memory _members) external override onlyNetworkOperator {
+        moveFeesToRewards(_members);
+        if (rewards[address(this)] == 0) {
+            return;
+        }
         collateralToken.safeTransfer(msg.sender, rewards[address(this)]);
         rewards[address(this)] = 0;
     }
 
-    function moveFeesToRewards(address _member) public {
-        uint256 totalFees = accruedFees[_member];
-        if (totalFees == 0) {
-            return;
+    function moveFeesToRewards(address[] memory _members) public {
+        for (uint256 i = 0; i < _members.length; i++) {
+            uint256 totalFees = accruedFees[_members[i]];
+            if (totalFees == 0) {
+                continue;
+            }
+            // move ambassador fees
+            address ambassador = networkRoles.getMembershipAmbassador(_members[i]);
+            uint256 ambassadorFee = (ambassadorFeePercent * totalFees) / MAX_PPM;
+            if (ambassador == address(0)) {
+                rewards[address(this)] += ambassadorFee;
+            } else {
+                rewards[ambassador] += ambassadorFee;
+            }
+            // move network fees
+            uint256 networkFee = ((MAX_PPM - ambassadorFeePercent) * totalFees) / MAX_PPM;
+            rewards[address(this)] += networkFee;
+
+            accruedFees[_members[i]] = 0;
         }
-        // move ambassador fees
-        address ambassador = networkRoles.getMembershipAmbassador(_member);
-        uint256 ambassadorFee = (ambassadorFeePercent * totalFees) / MAX_PPM;
-        if (ambassador == address(0)) {
-            rewards[address(this)] += ambassadorFee;
-        } else {
-            rewards[ambassador] += ambassadorFee;
-        }
-        // move network fees
-        uint256 networkFee = ((MAX_PPM - ambassadorFeePercent) * totalFees) / MAX_PPM;
-        rewards[address(this)] += networkFee;
-        accruedFees[_member] = 0;
     }
 
     function updateAmbassadorFeePercent(uint256 _ambassadorFeePercent) public onlyNetworkOperator {

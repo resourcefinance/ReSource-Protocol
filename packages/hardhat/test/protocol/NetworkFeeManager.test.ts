@@ -83,7 +83,7 @@ describe("NetworkFeeManager Tests", function() {
       ethers.utils.parseEther("0.0"),
     )
     await (
-      await contracts.networkFeeManager.connect(ambassador).claimAmbassadorFees(member.address)
+      await contracts.networkFeeManager.connect(ambassador).claimAmbassadorFees([member.address])
     ).wait()
     expect(await contracts.sourceToken.balanceOf(ambassador.address)).to.equal(
       ethers.utils.parseEther("50.0"),
@@ -96,7 +96,7 @@ describe("NetworkFeeManager Tests", function() {
     )
 
     await (
-      await contracts.networkFeeManager.connect(networkOperator).claimNetworkFees(member.address)
+      await contracts.networkFeeManager.connect(networkOperator).claimNetworkFees([member.address])
     ).wait()
     expect(await contracts.sourceToken.balanceOf(networkOperator.address)).to.equal(
       ethers.utils.parseEther("50.0"),

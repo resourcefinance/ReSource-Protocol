@@ -23,7 +23,6 @@ interface NetworkRegistryInterface extends ethers.utils.Interface {
   functions: {
     "addMembers(address[])": FunctionFragment;
     "addOperator(address)": FunctionFragment;
-    "c_0x66cc5aa8(bytes32)": FunctionFragment;
     "deployNewWallet(address[],address[],address,uint256)": FunctionFragment;
     "getMembers()": FunctionFragment;
     "getOperators()": FunctionFragment;
@@ -44,10 +43,6 @@ interface NetworkRegistryInterface extends ethers.utils.Interface {
     values: [string[]]
   ): string;
   encodeFunctionData(functionFragment: "addOperator", values: [string]): string;
-  encodeFunctionData(
-    functionFragment: "c_0x66cc5aa8",
-    values: [BytesLike]
-  ): string;
   encodeFunctionData(
     functionFragment: "deployNewWallet",
     values: [string[], string[], string, BigNumberish]
@@ -95,10 +90,6 @@ interface NetworkRegistryInterface extends ethers.utils.Interface {
   decodeFunctionResult(functionFragment: "addMembers", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "addOperator",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "c_0x66cc5aa8",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -218,11 +209,6 @@ export class NetworkRegistry extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    c_0x66cc5aa8(
-      c__0x66cc5aa8: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<[void]>;
-
     deployNewWallet(
       _clients: string[],
       _guardians: string[],
@@ -282,11 +268,6 @@ export class NetworkRegistry extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  c_0x66cc5aa8(
-    c__0x66cc5aa8: BytesLike,
-    overrides?: CallOverrides
-  ): Promise<void>;
-
   deployNewWallet(
     _clients: string[],
     _guardians: string[],
@@ -339,11 +320,6 @@ export class NetworkRegistry extends BaseContract {
     addMembers(_members: string[], overrides?: CallOverrides): Promise<void>;
 
     addOperator(operator: string, overrides?: CallOverrides): Promise<void>;
-
-    c_0x66cc5aa8(
-      c__0x66cc5aa8: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<void>;
 
     deployNewWallet(
       _clients: string[],
@@ -455,11 +431,6 @@ export class NetworkRegistry extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    c_0x66cc5aa8(
-      c__0x66cc5aa8: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
     deployNewWallet(
       _clients: string[],
       _guardians: string[],
@@ -521,11 +492,6 @@ export class NetworkRegistry extends BaseContract {
     addOperator(
       operator: string,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    c_0x66cc5aa8(
-      c__0x66cc5aa8: BytesLike,
-      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     deployNewWallet(

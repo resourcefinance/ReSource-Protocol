@@ -2,6 +2,20 @@
 pragma solidity ^0.8.0;
 
 interface ICreditFeeManager {
+    event FeesCollected(address network, address member, uint256 totalFee);
+
+    event UnderwriterFeesClaimed(address underwriter, uint256 totalRewards);
+
+    event OperatorFeesClaimed(address operator, uint256 totalRewards);
+
+    event OperatorRewardsUpdated(uint256 totalRewards);
+
+    event UnderwriterRewardsUpdated(address underwriter, uint256 totalRewards);
+
+    event PoolRewardsUpdated(address underwriter, uint256 totalRewards);
+
+    event UnderwriterRewardsStaked(address underwriter, uint256 totalStaked);
+
     function collectFees(
         address _network,
         address _networkMember,

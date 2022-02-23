@@ -36,6 +36,7 @@ interface CreditRequestInterface extends ethers.utils.Interface {
     "requests(address,address)": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
     "updateRequestLimit(address,address,uint256,bool)": FunctionFragment;
+    "verifyCreditLineExpiration(address,address,uint256)": FunctionFragment;
   };
 
   encodeFunctionData(
@@ -92,6 +93,10 @@ interface CreditRequestInterface extends ethers.utils.Interface {
     functionFragment: "updateRequestLimit",
     values: [string, string, BigNumberish, boolean]
   ): string;
+  encodeFunctionData(
+    functionFragment: "verifyCreditLineExpiration",
+    values: [string, string, BigNumberish]
+  ): string;
 
   decodeFunctionResult(
     functionFragment: "acceptRequest",
@@ -141,17 +146,58 @@ interface CreditRequestInterface extends ethers.utils.Interface {
     functionFragment: "updateRequestLimit",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "verifyCreditLineExpiration",
+    data: BytesLike
+  ): Result;
 
   events: {
+    "CreditRequestApproved(address,address)": EventFragment;
+    "CreditRequestCreated(address,address,address,uint256,bool)": EventFragment;
+    "CreditRequestRemoved(address,address)": EventFragment;
+    "CreditRequestUpdated(address,address,uint256,bool)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
     "Paused(address)": EventFragment;
     "Unpaused(address)": EventFragment;
+    "UnstakeRequestCreated(address,address)": EventFragment;
   };
 
+  getEvent(nameOrSignatureOrTopic: "CreditRequestApproved"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "CreditRequestCreated"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "CreditRequestRemoved"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "CreditRequestUpdated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Paused"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Unpaused"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "UnstakeRequestCreated"): EventFragment;
 }
+
+export type CreditRequestApprovedEvent = TypedEvent<
+  [string, string] & { network: string; counterparty: string }
+>;
+
+export type CreditRequestCreatedEvent = TypedEvent<
+  [string, string, string, BigNumber, boolean] & {
+    network: string;
+    counterparty: string;
+    ambassador: string;
+    creditLimit: BigNumber;
+    approved: boolean;
+  }
+>;
+
+export type CreditRequestRemovedEvent = TypedEvent<
+  [string, string] & { network: string; counterparty: string }
+>;
+
+export type CreditRequestUpdatedEvent = TypedEvent<
+  [string, string, BigNumber, boolean] & {
+    network: string;
+    counterparty: string;
+    creditLimit: BigNumber;
+    approved: boolean;
+  }
+>;
 
 export type OwnershipTransferredEvent = TypedEvent<
   [string, string] & { previousOwner: string; newOwner: string }
@@ -160,6 +206,10 @@ export type OwnershipTransferredEvent = TypedEvent<
 export type PausedEvent = TypedEvent<[string] & { account: string }>;
 
 export type UnpausedEvent = TypedEvent<[string] & { account: string }>;
+
+export type UnstakeRequestCreatedEvent = TypedEvent<
+  [string, string] & { network: string; counterparty: string }
+>;
 
 export class CreditRequest extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -241,10 +291,9 @@ export class CreditRequest extends BaseContract {
       overrides?: CallOverrides
     ): Promise<
       [
-        [boolean, boolean, string, BigNumber] & {
+        [boolean, boolean, BigNumber] & {
           approved: boolean;
           unstaking: boolean;
-          ambassador: string;
           creditLimit: BigNumber;
         }
       ]
@@ -275,10 +324,9 @@ export class CreditRequest extends BaseContract {
       arg1: string,
       overrides?: CallOverrides
     ): Promise<
-      [boolean, boolean, string, BigNumber] & {
+      [boolean, boolean, BigNumber] & {
         approved: boolean;
         unstaking: boolean;
-        ambassador: string;
         creditLimit: BigNumber;
       }
     >;
@@ -293,6 +341,13 @@ export class CreditRequest extends BaseContract {
       _counterparty: string,
       _creditLimit: BigNumberish,
       _approved: boolean,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    verifyCreditLineExpiration(
+      _network: string,
+      _networkMember: string,
+      _transactionValue: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
   };
@@ -332,10 +387,9 @@ export class CreditRequest extends BaseContract {
     _counterparty: string,
     overrides?: CallOverrides
   ): Promise<
-    [boolean, boolean, string, BigNumber] & {
+    [boolean, boolean, BigNumber] & {
       approved: boolean;
       unstaking: boolean;
-      ambassador: string;
       creditLimit: BigNumber;
     }
   >;
@@ -365,10 +419,9 @@ export class CreditRequest extends BaseContract {
     arg1: string,
     overrides?: CallOverrides
   ): Promise<
-    [boolean, boolean, string, BigNumber] & {
+    [boolean, boolean, BigNumber] & {
       approved: boolean;
       unstaking: boolean;
-      ambassador: string;
       creditLimit: BigNumber;
     }
   >;
@@ -383,6 +436,13 @@ export class CreditRequest extends BaseContract {
     _counterparty: string,
     _creditLimit: BigNumberish,
     _approved: boolean,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  verifyCreditLineExpiration(
+    _network: string,
+    _networkMember: string,
+    _transactionValue: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -422,10 +482,9 @@ export class CreditRequest extends BaseContract {
       _counterparty: string,
       overrides?: CallOverrides
     ): Promise<
-      [boolean, boolean, string, BigNumber] & {
+      [boolean, boolean, BigNumber] & {
         approved: boolean;
         unstaking: boolean;
-        ambassador: string;
         creditLimit: BigNumber;
       }
     >;
@@ -453,10 +512,9 @@ export class CreditRequest extends BaseContract {
       arg1: string,
       overrides?: CallOverrides
     ): Promise<
-      [boolean, boolean, string, BigNumber] & {
+      [boolean, boolean, BigNumber] & {
         approved: boolean;
         unstaking: boolean;
-        ambassador: string;
         creditLimit: BigNumber;
       }
     >;
@@ -473,9 +531,112 @@ export class CreditRequest extends BaseContract {
       _approved: boolean,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    verifyCreditLineExpiration(
+      _network: string,
+      _networkMember: string,
+      _transactionValue: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
   };
 
   filters: {
+    "CreditRequestApproved(address,address)"(
+      network?: null,
+      counterparty?: null
+    ): TypedEventFilter<
+      [string, string],
+      { network: string; counterparty: string }
+    >;
+
+    CreditRequestApproved(
+      network?: null,
+      counterparty?: null
+    ): TypedEventFilter<
+      [string, string],
+      { network: string; counterparty: string }
+    >;
+
+    "CreditRequestCreated(address,address,address,uint256,bool)"(
+      network?: null,
+      counterparty?: null,
+      ambassador?: null,
+      creditLimit?: null,
+      approved?: null
+    ): TypedEventFilter<
+      [string, string, string, BigNumber, boolean],
+      {
+        network: string;
+        counterparty: string;
+        ambassador: string;
+        creditLimit: BigNumber;
+        approved: boolean;
+      }
+    >;
+
+    CreditRequestCreated(
+      network?: null,
+      counterparty?: null,
+      ambassador?: null,
+      creditLimit?: null,
+      approved?: null
+    ): TypedEventFilter<
+      [string, string, string, BigNumber, boolean],
+      {
+        network: string;
+        counterparty: string;
+        ambassador: string;
+        creditLimit: BigNumber;
+        approved: boolean;
+      }
+    >;
+
+    "CreditRequestRemoved(address,address)"(
+      network?: null,
+      counterparty?: null
+    ): TypedEventFilter<
+      [string, string],
+      { network: string; counterparty: string }
+    >;
+
+    CreditRequestRemoved(
+      network?: null,
+      counterparty?: null
+    ): TypedEventFilter<
+      [string, string],
+      { network: string; counterparty: string }
+    >;
+
+    "CreditRequestUpdated(address,address,uint256,bool)"(
+      network?: null,
+      counterparty?: null,
+      creditLimit?: null,
+      approved?: null
+    ): TypedEventFilter<
+      [string, string, BigNumber, boolean],
+      {
+        network: string;
+        counterparty: string;
+        creditLimit: BigNumber;
+        approved: boolean;
+      }
+    >;
+
+    CreditRequestUpdated(
+      network?: null,
+      counterparty?: null,
+      creditLimit?: null,
+      approved?: null
+    ): TypedEventFilter<
+      [string, string, BigNumber, boolean],
+      {
+        network: string;
+        counterparty: string;
+        creditLimit: BigNumber;
+        approved: boolean;
+      }
+    >;
+
     "OwnershipTransferred(address,address)"(
       previousOwner?: string | null,
       newOwner?: string | null
@@ -503,6 +664,22 @@ export class CreditRequest extends BaseContract {
     ): TypedEventFilter<[string], { account: string }>;
 
     Unpaused(account?: null): TypedEventFilter<[string], { account: string }>;
+
+    "UnstakeRequestCreated(address,address)"(
+      network?: null,
+      counterparty?: null
+    ): TypedEventFilter<
+      [string, string],
+      { network: string; counterparty: string }
+    >;
+
+    UnstakeRequestCreated(
+      network?: null,
+      counterparty?: null
+    ): TypedEventFilter<
+      [string, string],
+      { network: string; counterparty: string }
+    >;
   };
 
   estimateGas: {
@@ -580,6 +757,13 @@ export class CreditRequest extends BaseContract {
       _approved: boolean,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
+
+    verifyCreditLineExpiration(
+      _network: string,
+      _networkMember: string,
+      _transactionValue: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
   };
 
   populateTransaction: {
@@ -655,6 +839,13 @@ export class CreditRequest extends BaseContract {
       _counterparty: string,
       _creditLimit: BigNumberish,
       _approved: boolean,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    verifyCreditLineExpiration(
+      _network: string,
+      _networkMember: string,
+      _transactionValue: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
   };

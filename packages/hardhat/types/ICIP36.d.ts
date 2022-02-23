@@ -111,7 +111,7 @@ export class ICIP36 extends BaseContract {
     creditBalanceOf(
       _member: string,
       overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
+    ): Promise<[string]>;
 
     creditLimitLeftOf(
       _member: string,
@@ -130,10 +130,7 @@ export class ICIP36 extends BaseContract {
     ): Promise<ContractTransaction>;
   };
 
-  creditBalanceOf(
-    _member: string,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
+  creditBalanceOf(_member: string, overrides?: CallOverrides): Promise<string>;
 
   creditLimitLeftOf(
     _member: string,
@@ -152,7 +149,7 @@ export class ICIP36 extends BaseContract {
     creditBalanceOf(
       _member: string,
       overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    ): Promise<string>;
 
     creditLimitLeftOf(
       _member: string,

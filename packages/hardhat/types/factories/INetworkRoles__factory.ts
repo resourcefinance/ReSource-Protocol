@@ -8,6 +8,95 @@ import type { INetworkRoles, INetworkRolesInterface } from "../INetworkRoles";
 
 const _abi = [
   {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "address",
+        name: "ambassador",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "creditAllowance",
+        type: "uint256",
+      },
+    ],
+    name: "AmbassadorAdded",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "address",
+        name: "ambassador",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "creditAllowance",
+        type: "uint256",
+      },
+    ],
+    name: "AmbassadorAllowanceUpdated",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "address",
+        name: "ambassador",
+        type: "address",
+      },
+    ],
+    name: "AmbassadorRemoved",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "address",
+        name: "member",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "ambassador",
+        type: "address",
+      },
+    ],
+    name: "MemberAdded",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "address",
+        name: "member",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "ambassador",
+        type: "address",
+      },
+    ],
+    name: "MembershipAmbassadorUpdated",
+    type: "event",
+  },
+  {
     inputs: [
       {
         internalType: "address",

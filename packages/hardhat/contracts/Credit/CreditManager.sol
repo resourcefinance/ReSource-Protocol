@@ -57,10 +57,17 @@ contract CreditManager is OwnableUpgradeable, PausableUpgradeable, ICreditManage
         creditLines[_network][_counterparty] = CreditLine(_pool, block.timestamp);
         ICreditPool(_pool).increaseTotalCredit(_creditLimit);
         ICIP36(_network).setCreditLimit(_counterparty, _creditLimit);
+        emit CreditLineCreated(_network, _counterparty, _pool, _creditLimit);
     }
 
     function registerCreditPool(address _pool) external onlyOperator {
+        address underwriter = ICreditPool(_pool).getUnderwriter();
+        require(
+            creditRoles.isUnderwriter(underwriter),
+            "CreditManager: pool underwriter is invalid"
+        );
         pools[_pool] = true;
+        emit CreditPoolAdded(_pool, underwriter);
     }
 
     function extendCreditLine(
@@ -73,6 +80,7 @@ contract CreditManager is OwnableUpgradeable, PausableUpgradeable, ICreditManage
         CreditLine storage creditLine = creditLines[_network][_counterparty];
         ICreditPool(creditLine.creditPool).increaseTotalCredit(_creditLimit - curCreditLimit);
         ICIP36(_network).setCreditLimit(_counterparty, _creditLimit);
+        emit CreditLineLimitUpdated(_network, _counterparty, _creditLimit);
     }
 
     function swapCreditLinePool(
@@ -82,6 +90,7 @@ contract CreditManager is OwnableUpgradeable, PausableUpgradeable, ICreditManage
     ) external override onlyOperator {
         CreditLine storage creditLine = creditLines[_network][_counterparty];
         creditLine.creditPool = _pool;
+        emit CreditLinePoolUpdated(_network, _counterparty, _pool);
     }
 
     function closeCreditLine(address _network, address _counterparty) external {
@@ -104,6 +113,7 @@ contract CreditManager is OwnableUpgradeable, PausableUpgradeable, ICreditManage
         );
         delete creditLines[_network][_counterparty];
         ICIP36(_network).setCreditLimit(_counterparty, 0);
+        emit CreditLineRemoved(_network, _counterparty);
     }
 
     function renewCreditLine(address _network, address _counterparty)
@@ -112,6 +122,7 @@ contract CreditManager is OwnableUpgradeable, PausableUpgradeable, ICreditManage
         onlyOperator
     {
         creditLines[_network][_counterparty].issueDate = block.timestamp;
+        emit CreditLineRenewed(_network, _counterparty, block.timestamp);
     }
 
     /* ========== VIEWS ========== */

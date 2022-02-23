@@ -134,11 +134,41 @@ interface NetworkFeeManagerInterface extends ethers.utils.Interface {
   ): Result;
 
   events: {
+    "AmbassadorFeesClaimed(address,uint256)": EventFragment;
+    "AmbassadorRewardsUpdated(address,uint256)": EventFragment;
+    "FeesCollected(address,uint256)": EventFragment;
+    "NetworkFeesClaimed(address,uint256)": EventFragment;
+    "NetworkRewardsUpdated(uint256)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
   };
 
+  getEvent(nameOrSignatureOrTopic: "AmbassadorFeesClaimed"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "AmbassadorRewardsUpdated"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "FeesCollected"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "NetworkFeesClaimed"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "NetworkRewardsUpdated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
 }
+
+export type AmbassadorFeesClaimedEvent = TypedEvent<
+  [string, BigNumber] & { ambassador: string; totalRewards: BigNumber }
+>;
+
+export type AmbassadorRewardsUpdatedEvent = TypedEvent<
+  [string, BigNumber] & { ambassador: string; totalRewards: BigNumber }
+>;
+
+export type FeesCollectedEvent = TypedEvent<
+  [string, BigNumber] & { member: string; totalFee: BigNumber }
+>;
+
+export type NetworkFeesClaimedEvent = TypedEvent<
+  [string, BigNumber] & { operator: string; totalRewards: BigNumber }
+>;
+
+export type NetworkRewardsUpdatedEvent = TypedEvent<
+  [BigNumber] & { totalRewards: BigNumber }
+>;
 
 export type OwnershipTransferredEvent = TypedEvent<
   [string, string] & { previousOwner: string; newOwner: string }
@@ -358,6 +388,78 @@ export class NetworkFeeManager extends BaseContract {
   };
 
   filters: {
+    "AmbassadorFeesClaimed(address,uint256)"(
+      ambassador?: null,
+      totalRewards?: null
+    ): TypedEventFilter<
+      [string, BigNumber],
+      { ambassador: string; totalRewards: BigNumber }
+    >;
+
+    AmbassadorFeesClaimed(
+      ambassador?: null,
+      totalRewards?: null
+    ): TypedEventFilter<
+      [string, BigNumber],
+      { ambassador: string; totalRewards: BigNumber }
+    >;
+
+    "AmbassadorRewardsUpdated(address,uint256)"(
+      ambassador?: null,
+      totalRewards?: null
+    ): TypedEventFilter<
+      [string, BigNumber],
+      { ambassador: string; totalRewards: BigNumber }
+    >;
+
+    AmbassadorRewardsUpdated(
+      ambassador?: null,
+      totalRewards?: null
+    ): TypedEventFilter<
+      [string, BigNumber],
+      { ambassador: string; totalRewards: BigNumber }
+    >;
+
+    "FeesCollected(address,uint256)"(
+      member?: null,
+      totalFee?: null
+    ): TypedEventFilter<
+      [string, BigNumber],
+      { member: string; totalFee: BigNumber }
+    >;
+
+    FeesCollected(
+      member?: null,
+      totalFee?: null
+    ): TypedEventFilter<
+      [string, BigNumber],
+      { member: string; totalFee: BigNumber }
+    >;
+
+    "NetworkFeesClaimed(address,uint256)"(
+      operator?: null,
+      totalRewards?: null
+    ): TypedEventFilter<
+      [string, BigNumber],
+      { operator: string; totalRewards: BigNumber }
+    >;
+
+    NetworkFeesClaimed(
+      operator?: null,
+      totalRewards?: null
+    ): TypedEventFilter<
+      [string, BigNumber],
+      { operator: string; totalRewards: BigNumber }
+    >;
+
+    "NetworkRewardsUpdated(uint256)"(
+      totalRewards?: null
+    ): TypedEventFilter<[BigNumber], { totalRewards: BigNumber }>;
+
+    NetworkRewardsUpdated(
+      totalRewards?: null
+    ): TypedEventFilter<[BigNumber], { totalRewards: BigNumber }>;
+
     "OwnershipTransferred(address,address)"(
       previousOwner?: string | null,
       newOwner?: string | null

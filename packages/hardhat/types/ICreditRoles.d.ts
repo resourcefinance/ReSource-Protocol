@@ -109,8 +109,22 @@ interface ICreditRolesInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
 
-  events: {};
+  events: {
+    "UnderwriterAdded(address)": EventFragment;
+    "UnderwriterRemoved(address)": EventFragment;
+  };
+
+  getEvent(nameOrSignatureOrTopic: "UnderwriterAdded"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "UnderwriterRemoved"): EventFragment;
 }
+
+export type UnderwriterAddedEvent = TypedEvent<
+  [string] & { underwriter: string }
+>;
+
+export type UnderwriterRemovedEvent = TypedEvent<
+  [string] & { underwriter: string }
+>;
 
 export class ICreditRoles extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -294,7 +308,23 @@ export class ICreditRoles extends BaseContract {
     ): Promise<void>;
   };
 
-  filters: {};
+  filters: {
+    "UnderwriterAdded(address)"(
+      underwriter?: null
+    ): TypedEventFilter<[string], { underwriter: string }>;
+
+    UnderwriterAdded(
+      underwriter?: null
+    ): TypedEventFilter<[string], { underwriter: string }>;
+
+    "UnderwriterRemoved(address)"(
+      underwriter?: null
+    ): TypedEventFilter<[string], { underwriter: string }>;
+
+    UnderwriterRemoved(
+      underwriter?: null
+    ): TypedEventFilter<[string], { underwriter: string }>;
+  };
 
   estimateGas: {
     grantNetwork(

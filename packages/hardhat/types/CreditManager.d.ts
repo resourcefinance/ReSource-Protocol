@@ -248,15 +248,68 @@ interface CreditManagerInterface extends ethers.utils.Interface {
   ): Result;
 
   events: {
+    "CreditLineCreated(address,address,address,uint256)": EventFragment;
+    "CreditLineLimitUpdated(address,address,uint256)": EventFragment;
+    "CreditLinePoolUpdated(address,address,address)": EventFragment;
+    "CreditLineRemoved(address,address)": EventFragment;
+    "CreditLineRenewed(address,address,uint256)": EventFragment;
+    "CreditPoolAdded(address,address)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
     "Paused(address)": EventFragment;
     "Unpaused(address)": EventFragment;
   };
 
+  getEvent(nameOrSignatureOrTopic: "CreditLineCreated"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "CreditLineLimitUpdated"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "CreditLinePoolUpdated"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "CreditLineRemoved"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "CreditLineRenewed"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "CreditPoolAdded"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Paused"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Unpaused"): EventFragment;
 }
+
+export type CreditLineCreatedEvent = TypedEvent<
+  [string, string, string, BigNumber] & {
+    network: string;
+    counterparty: string;
+    pool: string;
+    creditLimit: BigNumber;
+  }
+>;
+
+export type CreditLineLimitUpdatedEvent = TypedEvent<
+  [string, string, BigNumber] & {
+    network: string;
+    counterparty: string;
+    creditLimit: BigNumber;
+  }
+>;
+
+export type CreditLinePoolUpdatedEvent = TypedEvent<
+  [string, string, string] & {
+    network: string;
+    counterparty: string;
+    pool: string;
+  }
+>;
+
+export type CreditLineRemovedEvent = TypedEvent<
+  [string, string] & { network: string; counterparty: string }
+>;
+
+export type CreditLineRenewedEvent = TypedEvent<
+  [string, string, BigNumber] & {
+    network: string;
+    counterparty: string;
+    expiration: BigNumber;
+  }
+>;
+
+export type CreditPoolAddedEvent = TypedEvent<
+  [string, string] & { pool: string; underwriter: string }
+>;
 
 export type OwnershipTransferredEvent = TypedEvent<
   [string, string] & { previousOwner: string; newOwner: string }
@@ -717,6 +770,122 @@ export class CreditManager extends BaseContract {
   };
 
   filters: {
+    "CreditLineCreated(address,address,address,uint256)"(
+      network?: null,
+      counterparty?: null,
+      pool?: null,
+      creditLimit?: null
+    ): TypedEventFilter<
+      [string, string, string, BigNumber],
+      {
+        network: string;
+        counterparty: string;
+        pool: string;
+        creditLimit: BigNumber;
+      }
+    >;
+
+    CreditLineCreated(
+      network?: null,
+      counterparty?: null,
+      pool?: null,
+      creditLimit?: null
+    ): TypedEventFilter<
+      [string, string, string, BigNumber],
+      {
+        network: string;
+        counterparty: string;
+        pool: string;
+        creditLimit: BigNumber;
+      }
+    >;
+
+    "CreditLineLimitUpdated(address,address,uint256)"(
+      network?: null,
+      counterparty?: null,
+      creditLimit?: null
+    ): TypedEventFilter<
+      [string, string, BigNumber],
+      { network: string; counterparty: string; creditLimit: BigNumber }
+    >;
+
+    CreditLineLimitUpdated(
+      network?: null,
+      counterparty?: null,
+      creditLimit?: null
+    ): TypedEventFilter<
+      [string, string, BigNumber],
+      { network: string; counterparty: string; creditLimit: BigNumber }
+    >;
+
+    "CreditLinePoolUpdated(address,address,address)"(
+      network?: null,
+      counterparty?: null,
+      pool?: null
+    ): TypedEventFilter<
+      [string, string, string],
+      { network: string; counterparty: string; pool: string }
+    >;
+
+    CreditLinePoolUpdated(
+      network?: null,
+      counterparty?: null,
+      pool?: null
+    ): TypedEventFilter<
+      [string, string, string],
+      { network: string; counterparty: string; pool: string }
+    >;
+
+    "CreditLineRemoved(address,address)"(
+      network?: null,
+      counterparty?: null
+    ): TypedEventFilter<
+      [string, string],
+      { network: string; counterparty: string }
+    >;
+
+    CreditLineRemoved(
+      network?: null,
+      counterparty?: null
+    ): TypedEventFilter<
+      [string, string],
+      { network: string; counterparty: string }
+    >;
+
+    "CreditLineRenewed(address,address,uint256)"(
+      network?: null,
+      counterparty?: null,
+      expiration?: null
+    ): TypedEventFilter<
+      [string, string, BigNumber],
+      { network: string; counterparty: string; expiration: BigNumber }
+    >;
+
+    CreditLineRenewed(
+      network?: null,
+      counterparty?: null,
+      expiration?: null
+    ): TypedEventFilter<
+      [string, string, BigNumber],
+      { network: string; counterparty: string; expiration: BigNumber }
+    >;
+
+    "CreditPoolAdded(address,address)"(
+      pool?: null,
+      underwriter?: null
+    ): TypedEventFilter<
+      [string, string],
+      { pool: string; underwriter: string }
+    >;
+
+    CreditPoolAdded(
+      pool?: null,
+      underwriter?: null
+    ): TypedEventFilter<
+      [string, string],
+      { pool: string; underwriter: string }
+    >;
+
     "OwnershipTransferred(address,address)"(
       previousOwner?: string | null,
       newOwner?: string | null

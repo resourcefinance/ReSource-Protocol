@@ -5,10 +5,6 @@ import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol"
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "./interface/ICreditRoles.sol";
 
-/// @title This contract
-/// @author Bridger Zoske - <bridger@resourcenetwork.co>
-/// @notice Explain to an end user what this does
-/// @dev Explain to a developer any extra details
 contract CreditRoles is AccessControlUpgradeable, OwnableUpgradeable, ICreditRoles {
     /* ========== INITIALIZER ========== */
 
@@ -51,6 +47,7 @@ contract CreditRoles is AccessControlUpgradeable, OwnableUpgradeable, ICreditRol
         underwriterDoesNotExist(_underwriter)
     {
         grantRole("UNDERWRITER", _underwriter);
+        emit UnderwriterAdded(_underwriter);
     }
 
     function revokeUnderwriter(address _underwriter)
@@ -60,6 +57,7 @@ contract CreditRoles is AccessControlUpgradeable, OwnableUpgradeable, ICreditRol
         underwriterExists(_underwriter)
     {
         revokeRole("UNDERWRITER", _underwriter);
+        emit UnderwriterRemoved(_underwriter);
     }
 
     function grantNetwork(address _network) external override onlyRole("OPERATOR") {

@@ -213,12 +213,16 @@ interface CreditRolesInterface extends ethers.utils.Interface {
     "RoleAdminChanged(bytes32,bytes32,bytes32)": EventFragment;
     "RoleGranted(bytes32,address,address)": EventFragment;
     "RoleRevoked(bytes32,address,address)": EventFragment;
+    "UnderwriterAdded(address)": EventFragment;
+    "UnderwriterRemoved(address)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RoleAdminChanged"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RoleGranted"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RoleRevoked"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "UnderwriterAdded"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "UnderwriterRemoved"): EventFragment;
 }
 
 export type OwnershipTransferredEvent = TypedEvent<
@@ -239,6 +243,14 @@ export type RoleGrantedEvent = TypedEvent<
 
 export type RoleRevokedEvent = TypedEvent<
   [string, string, string] & { role: string; account: string; sender: string }
+>;
+
+export type UnderwriterAddedEvent = TypedEvent<
+  [string] & { underwriter: string }
+>;
+
+export type UnderwriterRemovedEvent = TypedEvent<
+  [string] & { underwriter: string }
 >;
 
 export class CreditRoles extends BaseContract {
@@ -659,6 +671,22 @@ export class CreditRoles extends BaseContract {
       [string, string, string],
       { role: string; account: string; sender: string }
     >;
+
+    "UnderwriterAdded(address)"(
+      underwriter?: null
+    ): TypedEventFilter<[string], { underwriter: string }>;
+
+    UnderwriterAdded(
+      underwriter?: null
+    ): TypedEventFilter<[string], { underwriter: string }>;
+
+    "UnderwriterRemoved(address)"(
+      underwriter?: null
+    ): TypedEventFilter<[string], { underwriter: string }>;
+
+    UnderwriterRemoved(
+      underwriter?: null
+    ): TypedEventFilter<[string], { underwriter: string }>;
   };
 
   estimateGas: {

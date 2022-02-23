@@ -11,6 +11,150 @@ import type {
 
 const _abi = [
   {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "address",
+        name: "network",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "counterparty",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "pool",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "creditLimit",
+        type: "uint256",
+      },
+    ],
+    name: "CreditLineCreated",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "address",
+        name: "network",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "counterparty",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "creditLimit",
+        type: "uint256",
+      },
+    ],
+    name: "CreditLineLimitUpdated",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "address",
+        name: "network",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "counterparty",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "pool",
+        type: "address",
+      },
+    ],
+    name: "CreditLinePoolUpdated",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "address",
+        name: "network",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "counterparty",
+        type: "address",
+      },
+    ],
+    name: "CreditLineRemoved",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "address",
+        name: "network",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "counterparty",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "expiration",
+        type: "uint256",
+      },
+    ],
+    name: "CreditLineRenewed",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "address",
+        name: "pool",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "underwriter",
+        type: "address",
+      },
+    ],
+    name: "CreditPoolAdded",
+    type: "event",
+  },
+  {
     inputs: [
       {
         internalType: "address",

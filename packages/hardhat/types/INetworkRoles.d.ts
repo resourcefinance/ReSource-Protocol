@@ -54,8 +54,42 @@ interface INetworkRolesInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
 
-  events: {};
+  events: {
+    "AmbassadorAdded(address,uint256)": EventFragment;
+    "AmbassadorAllowanceUpdated(address,uint256)": EventFragment;
+    "AmbassadorRemoved(address)": EventFragment;
+    "MemberAdded(address,address)": EventFragment;
+    "MembershipAmbassadorUpdated(address,address)": EventFragment;
+  };
+
+  getEvent(nameOrSignatureOrTopic: "AmbassadorAdded"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "AmbassadorAllowanceUpdated"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "AmbassadorRemoved"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "MemberAdded"): EventFragment;
+  getEvent(
+    nameOrSignatureOrTopic: "MembershipAmbassadorUpdated"
+  ): EventFragment;
 }
+
+export type AmbassadorAddedEvent = TypedEvent<
+  [string, BigNumber] & { ambassador: string; creditAllowance: BigNumber }
+>;
+
+export type AmbassadorAllowanceUpdatedEvent = TypedEvent<
+  [string, BigNumber] & { ambassador: string; creditAllowance: BigNumber }
+>;
+
+export type AmbassadorRemovedEvent = TypedEvent<
+  [string] & { ambassador: string }
+>;
+
+export type MemberAddedEvent = TypedEvent<
+  [string, string] & { member: string; ambassador: string }
+>;
+
+export type MembershipAmbassadorUpdatedEvent = TypedEvent<
+  [string, string] & { member: string; ambassador: string }
+>;
 
 export class INetworkRoles extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -155,7 +189,79 @@ export class INetworkRoles extends BaseContract {
     ): Promise<boolean>;
   };
 
-  filters: {};
+  filters: {
+    "AmbassadorAdded(address,uint256)"(
+      ambassador?: null,
+      creditAllowance?: null
+    ): TypedEventFilter<
+      [string, BigNumber],
+      { ambassador: string; creditAllowance: BigNumber }
+    >;
+
+    AmbassadorAdded(
+      ambassador?: null,
+      creditAllowance?: null
+    ): TypedEventFilter<
+      [string, BigNumber],
+      { ambassador: string; creditAllowance: BigNumber }
+    >;
+
+    "AmbassadorAllowanceUpdated(address,uint256)"(
+      ambassador?: null,
+      creditAllowance?: null
+    ): TypedEventFilter<
+      [string, BigNumber],
+      { ambassador: string; creditAllowance: BigNumber }
+    >;
+
+    AmbassadorAllowanceUpdated(
+      ambassador?: null,
+      creditAllowance?: null
+    ): TypedEventFilter<
+      [string, BigNumber],
+      { ambassador: string; creditAllowance: BigNumber }
+    >;
+
+    "AmbassadorRemoved(address)"(
+      ambassador?: null
+    ): TypedEventFilter<[string], { ambassador: string }>;
+
+    AmbassadorRemoved(
+      ambassador?: null
+    ): TypedEventFilter<[string], { ambassador: string }>;
+
+    "MemberAdded(address,address)"(
+      member?: null,
+      ambassador?: null
+    ): TypedEventFilter<
+      [string, string],
+      { member: string; ambassador: string }
+    >;
+
+    MemberAdded(
+      member?: null,
+      ambassador?: null
+    ): TypedEventFilter<
+      [string, string],
+      { member: string; ambassador: string }
+    >;
+
+    "MembershipAmbassadorUpdated(address,address)"(
+      member?: null,
+      ambassador?: null
+    ): TypedEventFilter<
+      [string, string],
+      { member: string; ambassador: string }
+    >;
+
+    MembershipAmbassadorUpdated(
+      member?: null,
+      ambassador?: null
+    ): TypedEventFilter<
+      [string, string],
+      { member: string; ambassador: string }
+    >;
+  };
 
   estimateGas: {
     getMembershipAmbassador(

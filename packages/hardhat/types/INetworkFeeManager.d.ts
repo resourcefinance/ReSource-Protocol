@@ -52,8 +52,40 @@ interface INetworkFeeManagerInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
 
-  events: {};
+  events: {
+    "AmbassadorFeesClaimed(address,uint256)": EventFragment;
+    "AmbassadorRewardsUpdated(address,uint256)": EventFragment;
+    "FeesCollected(address,uint256)": EventFragment;
+    "NetworkFeesClaimed(address,uint256)": EventFragment;
+    "NetworkRewardsUpdated(uint256)": EventFragment;
+  };
+
+  getEvent(nameOrSignatureOrTopic: "AmbassadorFeesClaimed"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "AmbassadorRewardsUpdated"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "FeesCollected"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "NetworkFeesClaimed"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "NetworkRewardsUpdated"): EventFragment;
 }
+
+export type AmbassadorFeesClaimedEvent = TypedEvent<
+  [string, BigNumber] & { ambassador: string; totalRewards: BigNumber }
+>;
+
+export type AmbassadorRewardsUpdatedEvent = TypedEvent<
+  [string, BigNumber] & { ambassador: string; totalRewards: BigNumber }
+>;
+
+export type FeesCollectedEvent = TypedEvent<
+  [string, BigNumber] & { member: string; totalFee: BigNumber }
+>;
+
+export type NetworkFeesClaimedEvent = TypedEvent<
+  [string, BigNumber] & { operator: string; totalRewards: BigNumber }
+>;
+
+export type NetworkRewardsUpdatedEvent = TypedEvent<
+  [BigNumber] & { totalRewards: BigNumber }
+>;
 
 export class INetworkFeeManager extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -153,7 +185,79 @@ export class INetworkFeeManager extends BaseContract {
     ): Promise<void>;
   };
 
-  filters: {};
+  filters: {
+    "AmbassadorFeesClaimed(address,uint256)"(
+      ambassador?: null,
+      totalRewards?: null
+    ): TypedEventFilter<
+      [string, BigNumber],
+      { ambassador: string; totalRewards: BigNumber }
+    >;
+
+    AmbassadorFeesClaimed(
+      ambassador?: null,
+      totalRewards?: null
+    ): TypedEventFilter<
+      [string, BigNumber],
+      { ambassador: string; totalRewards: BigNumber }
+    >;
+
+    "AmbassadorRewardsUpdated(address,uint256)"(
+      ambassador?: null,
+      totalRewards?: null
+    ): TypedEventFilter<
+      [string, BigNumber],
+      { ambassador: string; totalRewards: BigNumber }
+    >;
+
+    AmbassadorRewardsUpdated(
+      ambassador?: null,
+      totalRewards?: null
+    ): TypedEventFilter<
+      [string, BigNumber],
+      { ambassador: string; totalRewards: BigNumber }
+    >;
+
+    "FeesCollected(address,uint256)"(
+      member?: null,
+      totalFee?: null
+    ): TypedEventFilter<
+      [string, BigNumber],
+      { member: string; totalFee: BigNumber }
+    >;
+
+    FeesCollected(
+      member?: null,
+      totalFee?: null
+    ): TypedEventFilter<
+      [string, BigNumber],
+      { member: string; totalFee: BigNumber }
+    >;
+
+    "NetworkFeesClaimed(address,uint256)"(
+      operator?: null,
+      totalRewards?: null
+    ): TypedEventFilter<
+      [string, BigNumber],
+      { operator: string; totalRewards: BigNumber }
+    >;
+
+    NetworkFeesClaimed(
+      operator?: null,
+      totalRewards?: null
+    ): TypedEventFilter<
+      [string, BigNumber],
+      { operator: string; totalRewards: BigNumber }
+    >;
+
+    "NetworkRewardsUpdated(uint256)"(
+      totalRewards?: null
+    ): TypedEventFilter<[BigNumber], { totalRewards: BigNumber }>;
+
+    NetworkRewardsUpdated(
+      totalRewards?: null
+    ): TypedEventFilter<[BigNumber], { totalRewards: BigNumber }>;
+  };
 
   estimateGas: {
     claimAmbassadorFees(

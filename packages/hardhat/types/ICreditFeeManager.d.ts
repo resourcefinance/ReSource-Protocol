@@ -52,8 +52,56 @@ interface ICreditFeeManagerInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
 
-  events: {};
+  events: {
+    "FeesCollected(address,address,uint256)": EventFragment;
+    "OperatorFeesClaimed(address,uint256)": EventFragment;
+    "OperatorRewardsUpdated(uint256)": EventFragment;
+    "PoolRewardsUpdated(address,uint256)": EventFragment;
+    "UnderwriterFeesClaimed(address,uint256)": EventFragment;
+    "UnderwriterRewardsStaked(address,uint256)": EventFragment;
+    "UnderwriterRewardsUpdated(address,uint256)": EventFragment;
+  };
+
+  getEvent(nameOrSignatureOrTopic: "FeesCollected"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "OperatorFeesClaimed"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "OperatorRewardsUpdated"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "PoolRewardsUpdated"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "UnderwriterFeesClaimed"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "UnderwriterRewardsStaked"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "UnderwriterRewardsUpdated"): EventFragment;
 }
+
+export type FeesCollectedEvent = TypedEvent<
+  [string, string, BigNumber] & {
+    network: string;
+    member: string;
+    totalFee: BigNumber;
+  }
+>;
+
+export type OperatorFeesClaimedEvent = TypedEvent<
+  [string, BigNumber] & { operator: string; totalRewards: BigNumber }
+>;
+
+export type OperatorRewardsUpdatedEvent = TypedEvent<
+  [BigNumber] & { totalRewards: BigNumber }
+>;
+
+export type PoolRewardsUpdatedEvent = TypedEvent<
+  [string, BigNumber] & { underwriter: string; totalRewards: BigNumber }
+>;
+
+export type UnderwriterFeesClaimedEvent = TypedEvent<
+  [string, BigNumber] & { underwriter: string; totalRewards: BigNumber }
+>;
+
+export type UnderwriterRewardsStakedEvent = TypedEvent<
+  [string, BigNumber] & { underwriter: string; totalStaked: BigNumber }
+>;
+
+export type UnderwriterRewardsUpdatedEvent = TypedEvent<
+  [string, BigNumber] & { underwriter: string; totalRewards: BigNumber }
+>;
 
 export class ICreditFeeManager extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -154,7 +202,113 @@ export class ICreditFeeManager extends BaseContract {
     getCollateralToken(overrides?: CallOverrides): Promise<string>;
   };
 
-  filters: {};
+  filters: {
+    "FeesCollected(address,address,uint256)"(
+      network?: null,
+      member?: null,
+      totalFee?: null
+    ): TypedEventFilter<
+      [string, string, BigNumber],
+      { network: string; member: string; totalFee: BigNumber }
+    >;
+
+    FeesCollected(
+      network?: null,
+      member?: null,
+      totalFee?: null
+    ): TypedEventFilter<
+      [string, string, BigNumber],
+      { network: string; member: string; totalFee: BigNumber }
+    >;
+
+    "OperatorFeesClaimed(address,uint256)"(
+      operator?: null,
+      totalRewards?: null
+    ): TypedEventFilter<
+      [string, BigNumber],
+      { operator: string; totalRewards: BigNumber }
+    >;
+
+    OperatorFeesClaimed(
+      operator?: null,
+      totalRewards?: null
+    ): TypedEventFilter<
+      [string, BigNumber],
+      { operator: string; totalRewards: BigNumber }
+    >;
+
+    "OperatorRewardsUpdated(uint256)"(
+      totalRewards?: null
+    ): TypedEventFilter<[BigNumber], { totalRewards: BigNumber }>;
+
+    OperatorRewardsUpdated(
+      totalRewards?: null
+    ): TypedEventFilter<[BigNumber], { totalRewards: BigNumber }>;
+
+    "PoolRewardsUpdated(address,uint256)"(
+      underwriter?: null,
+      totalRewards?: null
+    ): TypedEventFilter<
+      [string, BigNumber],
+      { underwriter: string; totalRewards: BigNumber }
+    >;
+
+    PoolRewardsUpdated(
+      underwriter?: null,
+      totalRewards?: null
+    ): TypedEventFilter<
+      [string, BigNumber],
+      { underwriter: string; totalRewards: BigNumber }
+    >;
+
+    "UnderwriterFeesClaimed(address,uint256)"(
+      underwriter?: null,
+      totalRewards?: null
+    ): TypedEventFilter<
+      [string, BigNumber],
+      { underwriter: string; totalRewards: BigNumber }
+    >;
+
+    UnderwriterFeesClaimed(
+      underwriter?: null,
+      totalRewards?: null
+    ): TypedEventFilter<
+      [string, BigNumber],
+      { underwriter: string; totalRewards: BigNumber }
+    >;
+
+    "UnderwriterRewardsStaked(address,uint256)"(
+      underwriter?: null,
+      totalStaked?: null
+    ): TypedEventFilter<
+      [string, BigNumber],
+      { underwriter: string; totalStaked: BigNumber }
+    >;
+
+    UnderwriterRewardsStaked(
+      underwriter?: null,
+      totalStaked?: null
+    ): TypedEventFilter<
+      [string, BigNumber],
+      { underwriter: string; totalStaked: BigNumber }
+    >;
+
+    "UnderwriterRewardsUpdated(address,uint256)"(
+      underwriter?: null,
+      totalRewards?: null
+    ): TypedEventFilter<
+      [string, BigNumber],
+      { underwriter: string; totalRewards: BigNumber }
+    >;
+
+    UnderwriterRewardsUpdated(
+      underwriter?: null,
+      totalRewards?: null
+    ): TypedEventFilter<
+      [string, BigNumber],
+      { underwriter: string; totalRewards: BigNumber }
+    >;
+  };
 
   estimateGas: {
     calculatePercentInCollateral(

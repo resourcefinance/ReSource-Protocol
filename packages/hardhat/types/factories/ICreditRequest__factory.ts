@@ -11,6 +11,131 @@ import type {
 
 const _abi = [
   {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "address",
+        name: "network",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "counterparty",
+        type: "address",
+      },
+    ],
+    name: "CreditRequestApproved",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "address",
+        name: "network",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "counterparty",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "ambassador",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "creditLimit",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "bool",
+        name: "approved",
+        type: "bool",
+      },
+    ],
+    name: "CreditRequestCreated",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "address",
+        name: "network",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "counterparty",
+        type: "address",
+      },
+    ],
+    name: "CreditRequestRemoved",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "address",
+        name: "network",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "counterparty",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "creditLimit",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "bool",
+        name: "approved",
+        type: "bool",
+      },
+    ],
+    name: "CreditRequestUpdated",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "address",
+        name: "network",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "counterparty",
+        type: "address",
+      },
+    ],
+    name: "UnstakeRequestCreated",
+    type: "event",
+  },
+  {
     inputs: [
       {
         internalType: "address",
@@ -97,11 +222,6 @@ const _abi = [
             type: "bool",
           },
           {
-            internalType: "address",
-            name: "ambassador",
-            type: "address",
-          },
-          {
             internalType: "uint256",
             name: "creditLimit",
             type: "uint256",
@@ -139,6 +259,29 @@ const _abi = [
       },
     ],
     name: "updateRequestLimit",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_network",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "_networkMember",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "_transactionValue",
+        type: "uint256",
+      },
+    ],
+    name: "verifyCreditLineExpiration",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",

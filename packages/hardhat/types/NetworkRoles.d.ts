@@ -218,17 +218,49 @@ interface NetworkRolesInterface extends ethers.utils.Interface {
   ): Result;
 
   events: {
+    "AmbassadorAdded(address,uint256)": EventFragment;
+    "AmbassadorAllowanceUpdated(address,uint256)": EventFragment;
+    "AmbassadorRemoved(address)": EventFragment;
+    "MemberAdded(address,address)": EventFragment;
+    "MembershipAmbassadorUpdated(address,address)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
     "RoleAdminChanged(bytes32,bytes32,bytes32)": EventFragment;
     "RoleGranted(bytes32,address,address)": EventFragment;
     "RoleRevoked(bytes32,address,address)": EventFragment;
   };
 
+  getEvent(nameOrSignatureOrTopic: "AmbassadorAdded"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "AmbassadorAllowanceUpdated"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "AmbassadorRemoved"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "MemberAdded"): EventFragment;
+  getEvent(
+    nameOrSignatureOrTopic: "MembershipAmbassadorUpdated"
+  ): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RoleAdminChanged"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RoleGranted"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RoleRevoked"): EventFragment;
 }
+
+export type AmbassadorAddedEvent = TypedEvent<
+  [string, BigNumber] & { ambassador: string; creditAllowance: BigNumber }
+>;
+
+export type AmbassadorAllowanceUpdatedEvent = TypedEvent<
+  [string, BigNumber] & { ambassador: string; creditAllowance: BigNumber }
+>;
+
+export type AmbassadorRemovedEvent = TypedEvent<
+  [string] & { ambassador: string }
+>;
+
+export type MemberAddedEvent = TypedEvent<
+  [string, string] & { member: string; ambassador: string }
+>;
+
+export type MembershipAmbassadorUpdatedEvent = TypedEvent<
+  [string, string] & { member: string; ambassador: string }
+>;
 
 export type OwnershipTransferredEvent = TypedEvent<
   [string, string] & { previousOwner: string; newOwner: string }
@@ -653,6 +685,78 @@ export class NetworkRoles extends BaseContract {
   };
 
   filters: {
+    "AmbassadorAdded(address,uint256)"(
+      ambassador?: null,
+      creditAllowance?: null
+    ): TypedEventFilter<
+      [string, BigNumber],
+      { ambassador: string; creditAllowance: BigNumber }
+    >;
+
+    AmbassadorAdded(
+      ambassador?: null,
+      creditAllowance?: null
+    ): TypedEventFilter<
+      [string, BigNumber],
+      { ambassador: string; creditAllowance: BigNumber }
+    >;
+
+    "AmbassadorAllowanceUpdated(address,uint256)"(
+      ambassador?: null,
+      creditAllowance?: null
+    ): TypedEventFilter<
+      [string, BigNumber],
+      { ambassador: string; creditAllowance: BigNumber }
+    >;
+
+    AmbassadorAllowanceUpdated(
+      ambassador?: null,
+      creditAllowance?: null
+    ): TypedEventFilter<
+      [string, BigNumber],
+      { ambassador: string; creditAllowance: BigNumber }
+    >;
+
+    "AmbassadorRemoved(address)"(
+      ambassador?: null
+    ): TypedEventFilter<[string], { ambassador: string }>;
+
+    AmbassadorRemoved(
+      ambassador?: null
+    ): TypedEventFilter<[string], { ambassador: string }>;
+
+    "MemberAdded(address,address)"(
+      member?: null,
+      ambassador?: null
+    ): TypedEventFilter<
+      [string, string],
+      { member: string; ambassador: string }
+    >;
+
+    MemberAdded(
+      member?: null,
+      ambassador?: null
+    ): TypedEventFilter<
+      [string, string],
+      { member: string; ambassador: string }
+    >;
+
+    "MembershipAmbassadorUpdated(address,address)"(
+      member?: null,
+      ambassador?: null
+    ): TypedEventFilter<
+      [string, string],
+      { member: string; ambassador: string }
+    >;
+
+    MembershipAmbassadorUpdated(
+      member?: null,
+      ambassador?: null
+    ): TypedEventFilter<
+      [string, string],
+      { member: string; ambassador: string }
+    >;
+
     "OwnershipTransferred(address,address)"(
       previousOwner?: string | null,
       newOwner?: string | null

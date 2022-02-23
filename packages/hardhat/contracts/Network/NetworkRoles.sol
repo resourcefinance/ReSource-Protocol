@@ -8,8 +8,6 @@ import "./interface/INetworkRoles.sol";
 import "./interface/ICIP36.sol";
 import "hardhat/console.sol";
 
-/// @title NetworkRegistry - Allows Network Members to be added and removed by Network Operators.
-/// @author Bridger Zoske - <bridger@resourcenetwork.co>
 contract NetworkRoles is AccessControlUpgradeable, OwnableUpgradeable, INetworkRoles {
     /* ========== STATE VARIABLES ========== */
 
@@ -41,10 +39,13 @@ contract NetworkRoles is AccessControlUpgradeable, OwnableUpgradeable, INetworkR
         }
     }
 
+    /* ========== PUBLIC FUNCTIONS ========== */
+
     function createMembershipAmbassadorInvite(address _member) external onlyAmbassador {
         require(!memberInvited[_member][msg.sender], "NetworkRoles: Invite already exists");
         memberInvited[_member][msg.sender] = true;
         grantRole("MEMBER", _member);
+        emit MemberAdded(_member, address(0));
     }
 
     function acceptMembershipAmbassadorInvitation(address _network, address _ambassador) external {
@@ -52,10 +53,9 @@ contract NetworkRoles is AccessControlUpgradeable, OwnableUpgradeable, INetworkR
         membershipAmbassador[msg.sender] = _ambassador;
         delete memberInvited[msg.sender][_ambassador];
         ICIP36(_network).setCreditLimit(msg.sender, creditAllowance[_ambassador]);
+        emit MembershipAmbassadorUpdated(msg.sender, _ambassador);
     }
 
-    /// @dev Allows operator to add a new member. Transaction has to be sent by an operator wallet.
-    /// @param _ambassador Addresses of new ambassador.
     function grantAmbassador(address _ambassador, uint256 _creditAllowance)
         external
         onlyNetworkOperator
@@ -64,6 +64,7 @@ contract NetworkRoles is AccessControlUpgradeable, OwnableUpgradeable, INetworkR
     {
         grantRole("AMBASSADOR", _ambassador);
         creditAllowance[_ambassador] = _creditAllowance;
+        emit AmbassadorAdded(_ambassador, _creditAllowance);
     }
 
     function updateAmbassador(address _ambassador, uint256 _creditAllowance)
@@ -72,10 +73,9 @@ contract NetworkRoles is AccessControlUpgradeable, OwnableUpgradeable, INetworkR
         ambassadorExists(_ambassador)
     {
         creditAllowance[_ambassador] = _creditAllowance;
+        emit AmbassadorAllowanceUpdated(_ambassador, _creditAllowance);
     }
 
-    /// @dev Allows to remove a member. Transaction has to be sent by operator.
-    /// @param _ambassador Address of ambassador.
     function revokeAmbassador(address _ambassador)
         external
         onlyNetworkOperator
@@ -83,6 +83,7 @@ contract NetworkRoles is AccessControlUpgradeable, OwnableUpgradeable, INetworkR
         notNull(_ambassador)
     {
         revokeRole("AMBASSADOR", _ambassador);
+        emit AmbassadorRemoved(_ambassador);
     }
 
     function transferMembershipAmbassador(address _member, address _ambassador)
@@ -101,10 +102,9 @@ contract NetworkRoles is AccessControlUpgradeable, OwnableUpgradeable, INetworkR
             );
         }
         membershipAmbassador[_member] = _ambassador;
+        emit MembershipAmbassadorUpdated(_member, _ambassador);
     }
 
-    /// @dev Allows to add a new operator. Transaction has to be sent by an operator wallet.
-    /// @param _operator Address of new operator.
     function grantOperator(address _operator)
         external
         operatorDoesNotExist(_operator)
@@ -114,12 +114,28 @@ contract NetworkRoles is AccessControlUpgradeable, OwnableUpgradeable, INetworkR
         grantRole("OPERATOR", _operator);
     }
 
-    /// @dev Allows to remove a operator. Transaction has to be sent by operator.
-    /// @param _operator Address of operator.
     function revokeOperator(address _operator) external onlyAdmin {
         require(_operator != owner(), "can't remove owner operator");
         revokeRole("OPERATOR", _operator);
     }
+
+    function deployMemberWallet(
+        address[] memory _clients,
+        address[] memory _guardians,
+        address _coSigner,
+        address _network,
+        address _ambassador,
+        uint256 _required
+    ) public onlyAmbassador returns (address) {
+        address newWallet = walletDeployer.deployWallet(_clients, _guardians, _coSigner, _required);
+        membershipAmbassador[newWallet] = _ambassador;
+        ICIP36(_network).setCreditLimit(newWallet, creditAllowance[_ambassador]);
+        grantRole("MEMBER", newWallet);
+        emit MemberAdded(newWallet, _ambassador);
+        return newWallet;
+    }
+
+    /* ========== VIEWS ========== */
 
     function isMember(address _member) external view override returns (bool) {
         return hasRole("MEMBER", _member);
@@ -135,21 +151,6 @@ contract NetworkRoles is AccessControlUpgradeable, OwnableUpgradeable, INetworkR
 
     function isNetworkOperator(address _operator) public view override returns (bool) {
         return hasRole("OPERATOR", _operator);
-    }
-
-    function deployMemberWallet(
-        address[] memory _clients,
-        address[] memory _guardians,
-        address _coSigner,
-        address _network,
-        address _ambassador,
-        uint256 _required
-    ) public onlyAmbassador returns (address) {
-        address newWallet = walletDeployer.deployWallet(_clients, _guardians, _coSigner, _required);
-        membershipAmbassador[newWallet] = _ambassador;
-        ICIP36(_network).setCreditLimit(newWallet, creditAllowance[_ambassador]);
-        grantRole("MEMBER", newWallet);
-        return newWallet;
     }
 
     /* ========== MODIFIERS ========== */

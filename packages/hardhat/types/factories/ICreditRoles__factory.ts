@@ -8,6 +8,32 @@ import type { ICreditRoles, ICreditRolesInterface } from "../ICreditRoles";
 
 const _abi = [
   {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "address",
+        name: "underwriter",
+        type: "address",
+      },
+    ],
+    name: "UnderwriterAdded",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "address",
+        name: "underwriter",
+        type: "address",
+      },
+    ],
+    name: "UnderwriterRemoved",
+    type: "event",
+  },
+  {
     inputs: [
       {
         internalType: "address",

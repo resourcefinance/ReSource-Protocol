@@ -3,13 +3,13 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
 import "./interface/ICreditRequest.sol";
 import "./interface/ICreditRoles.sol";
 import "./interface/ICreditManager.sol";
 import "../Network/interface/ICIP36.sol";
 import "../Network/interface/INetworkToken.sol";
 import "../Network/interface/INetworkRoles.sol";
-import "hardhat/console.sol";
 
 contract CreditRequest is OwnableUpgradeable, PausableUpgradeable, ICreditRequest {
     /* ========== CONSTANTS ========== */
@@ -57,12 +57,9 @@ contract CreditRequest is OwnableUpgradeable, PausableUpgradeable, ICreditReques
             creditBalance <= _creditLimit,
             "CreditRequest: provided credit limit is less than current limit"
         );
-        requests[_network][_counterparty] = CreditRequest(
-            creditRoles.isRequestOperator(msg.sender),
-            false,
-            msg.sender,
-            _creditLimit
-        );
+        bool approved = creditRoles.isRequestOperator(msg.sender);
+        requests[_network][_counterparty] = CreditRequest(approved, false, _creditLimit);
+        emit CreditRequestCreated(_network, _counterparty, msg.sender, _creditLimit, approved);
     }
 
     function approveRequest(address _network, address _counterparty)
@@ -75,6 +72,7 @@ contract CreditRequest is OwnableUpgradeable, PausableUpgradeable, ICreditReques
             "CreditRequest: request already approved"
         );
         requests[_network][_counterparty].approved = true;
+        emit CreditRequestApproved(_network, _counterparty);
     }
 
     function acceptRequest(
@@ -99,6 +97,7 @@ contract CreditRequest is OwnableUpgradeable, PausableUpgradeable, ICreditReques
             require(msg.sender == underwriter, "Unauthorized to extend credit line");
             creditManager.extendCreditLine(_network, _counterparty, request.creditLimit);
         }
+        emit CreditRequestRemoved(_network, _counterparty);
         delete requests[_network][_counterparty];
     }
 
@@ -109,10 +108,9 @@ contract CreditRequest is OwnableUpgradeable, PausableUpgradeable, ICreditReques
             "CreditRequest: Sender must be counterparty's underwriter"
         );
         CreditRequest storage creditRequest = requests[_network][_counterparty];
-        if (creditRequest.unstaking) {
-            revert("Unstake Request already exists");
-        }
-        requests[_network][_counterparty] = CreditRequest(true, true, address(0), 0);
+        require(!creditRequest.unstaking, "CreditRequest: Unstake Request already exists");
+        requests[_network][_counterparty] = CreditRequest(true, true, 0);
+        emit UnstakeRequestCreated(_network, _counterparty);
     }
 
     function updateRequestLimit(
@@ -128,12 +126,13 @@ contract CreditRequest is OwnableUpgradeable, PausableUpgradeable, ICreditReques
         INetworkRoles networkRoles = INetworkRoles(INetworkToken(_network).getNetworkRoles());
         require(
             networkRoles.getMembershipAmbassador(_counterparty) == msg.sender ||
-                creditRoles.isCreditOperator(msg.sender),
+                creditRoles.isRequestOperator(msg.sender),
             "CreditRequest: Unauthorized to update this request"
         );
         CreditRequest storage creditRequest = requests[_network][_counterparty];
         creditRequest.creditLimit = _creditLimit;
         creditRequest.approved = _approved;
+        emit CreditRequestUpdated(_network, _counterparty, _creditLimit, _approved);
     }
 
     function deleteRequest(address _network, address _counterparty) external override {
@@ -144,17 +143,36 @@ contract CreditRequest is OwnableUpgradeable, PausableUpgradeable, ICreditReques
             "CreditRequest: Unauthorized to delete this request"
         );
         delete requests[_network][_counterparty];
+        emit CreditRequestRemoved(_network, _counterparty);
     }
 
     /* ========== VIEWS ========== */
 
     function getCreditRequest(address _network, address _counterparty)
-        external
+        public
         view
         override
         returns (CreditRequest memory)
     {
         return requests[_network][_counterparty];
+    }
+
+    function verifyCreditLineExpiration(
+        address _network,
+        address _networkMember,
+        uint256 _transactionValue
+    ) external override {
+        bool creditLineExpired = creditManager.isCreditLineExpired(_network, _networkMember);
+        uint256 senderBalance = IERC20Upgradeable(_network).balanceOf(_networkMember);
+        bool usingCreditBalance = _transactionValue > senderBalance;
+
+        if (usingCreditBalance && creditLineExpired) {
+            require(
+                !getCreditRequest(_network, _networkMember).unstaking,
+                "CreditFeeManager: CreditLine is expired"
+            );
+            creditManager.renewCreditLine(_network, _networkMember);
+        }
     }
 
     /* ========== MODIFIERS ========== */

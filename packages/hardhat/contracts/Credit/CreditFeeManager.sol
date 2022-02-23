@@ -63,10 +63,9 @@ contract CreditFeeManager is ICreditFeeManager, OwnableUpgradeable {
             _transactionValue
         );
         collateralToken.safeTransferFrom(_networkMember, address(this), creditFee);
-
-        verifyCreditLineExpiration(_network, _networkMember, _transactionValue);
-
+        creditRequest.verifyCreditLineExpiration(_network, _networkMember, _transactionValue);
         accruedFees[_network][_networkMember] = creditFee;
+        emit FeesCollected(_network, _networkMember, creditFee);
     }
 
     function claimUnderwriterFees(address _network, address[] memory _networkMembers)
@@ -74,10 +73,9 @@ contract CreditFeeManager is ICreditFeeManager, OwnableUpgradeable {
         onlyUnderwriter
     {
         moveFeesToRewards(_network, _networkMembers);
-        if (rewards[msg.sender] == 0) {
-            return;
-        }
+        if (rewards[msg.sender] == 0) return;
         collateralToken.safeTransfer(msg.sender, rewards[msg.sender]);
+        emit UnderwriterFeesClaimed(msg.sender, rewards[msg.sender]);
         rewards[msg.sender] = 0;
     }
 
@@ -87,6 +85,7 @@ contract CreditFeeManager is ICreditFeeManager, OwnableUpgradeable {
     {
         moveFeesToRewards(_network, _networkMembers);
         collateralToken.safeTransfer(msg.sender, rewards[address(this)]);
+        emit OperatorFeesClaimed(msg.sender, rewards[address(this)]);
         rewards[address(this)] = 0;
     }
 
@@ -100,6 +99,7 @@ contract CreditFeeManager is ICreditFeeManager, OwnableUpgradeable {
             );
             if (underwriter == address(0)) {
                 rewards[address(this)] += fees;
+                emit OperatorRewardsUpdated(rewards[address(this)]);
                 return;
             }
             address pool = creditManager.getCreditLine(_network, _networkMembers[i]).creditPool;
@@ -149,24 +149,6 @@ contract CreditFeeManager is ICreditFeeManager, OwnableUpgradeable {
 
     /* ========== PRIVATE ========== */
 
-    function verifyCreditLineExpiration(
-        address _network,
-        address _networkMember,
-        uint256 _transactionValue
-    ) private {
-        bool creditLineExpired = creditManager.isCreditLineExpired(_network, _networkMember);
-        uint256 senderBalance = IERC20Upgradeable(_network).balanceOf(_networkMember);
-        bool usingCreditBalance = _transactionValue > senderBalance;
-
-        if (usingCreditBalance && creditLineExpired) {
-            require(
-                !creditRequest.getCreditRequest(_network, _networkMember).unstaking,
-                "CreditFeeManager: CreditLine is expired"
-            );
-            creditManager.renewCreditLine(_network, _networkMember);
-        }
-    }
-
     function stakeNeededCollateralInPool(
         address _network,
         address _networkMember,
@@ -174,17 +156,17 @@ contract CreditFeeManager is ICreditFeeManager, OwnableUpgradeable {
         address underwriter,
         uint256 creditFee
     ) private returns (uint256) {
-        if (creditManager.isPoolValidLTV(_network, pool)) {
-            return creditFee;
-        }
+        if (creditManager.isPoolValidLTV(_network, pool)) return creditFee;
         uint256 neededCollateral = creditManager.getNeededCollateral(_network, _networkMember);
         if (neededCollateral > creditFee) {
             collateralToken.safeTransfer(underwriter, creditFee);
             ICreditPool(pool).stakeFor(underwriter, creditFee);
+            emit UnderwriterRewardsStaked(underwriter, creditFee);
             creditFee = 0;
         } else {
             collateralToken.safeTransfer(underwriter, neededCollateral);
             ICreditPool(pool).stakeFor(underwriter, neededCollateral);
+            emit UnderwriterRewardsStaked(underwriter, neededCollateral);
             creditFee -= neededCollateral;
         }
         return creditFee;
@@ -202,7 +184,9 @@ contract CreditFeeManager is ICreditFeeManager, OwnableUpgradeable {
         uint256 underwriterFee = (underwriterPercent * _fee) / MAX_PPM;
         uint256 poolFee = _fee - underwriterFee;
         ICreditPool(_pool).notifyRewardAmount(address(collateralToken), poolFee);
+        emit PoolRewardsUpdated(_underwriter, poolFee);
         rewards[_underwriter] += underwriterFee;
+        emit UnderwriterRewardsUpdated(_underwriter, underwriterFee);
     }
 
     /* ========== MODIFIERS ========== */

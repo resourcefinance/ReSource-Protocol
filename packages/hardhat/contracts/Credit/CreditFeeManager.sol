@@ -72,7 +72,7 @@ contract CreditFeeManager is ICreditFeeManager, OwnableUpgradeable {
         external
         onlyUnderwriter
     {
-        moveFeesToRewards(_network, _networkMembers);
+        splitFees(_network, _networkMembers);
         if (rewards[msg.sender] == 0) return;
         collateralToken.safeTransfer(msg.sender, rewards[msg.sender]);
         emit UnderwriterFeesClaimed(msg.sender, rewards[msg.sender]);
@@ -83,13 +83,13 @@ contract CreditFeeManager is ICreditFeeManager, OwnableUpgradeable {
         external
         onlyCreditOperator
     {
-        moveFeesToRewards(_network, _networkMembers);
+        splitFees(_network, _networkMembers);
         collateralToken.safeTransfer(msg.sender, rewards[address(this)]);
         emit OperatorFeesClaimed(msg.sender, rewards[address(this)]);
         rewards[address(this)] = 0;
     }
 
-    function moveFeesToRewards(address _network, address[] memory _networkMembers) public {
+    function splitFees(address _network, address[] memory _networkMembers) public {
         for (uint256 i = 0; i < _networkMembers.length; i++) {
             uint256 fees = accruedFees[_network][_networkMembers[i]];
             accruedFees[_network][_networkMembers[i]] = 0;
@@ -112,6 +112,19 @@ contract CreditFeeManager is ICreditFeeManager, OwnableUpgradeable {
             );
             splitFeeWithPool(_network, _networkMembers[i], underwriter, pool, leftoverFee);
         }
+    }
+
+    function recoverERC20(address tokenAddress, uint256 tokenAmount) external onlyOwner {
+        require(tokenAddress != address(collateralToken), "Cannot withdraw staking token");
+        IERC20Upgradeable(tokenAddress).safeTransfer(owner(), tokenAmount);
+    }
+
+    function updateUnderwriterFeePercent(uint256 _feePercent) external onlyCreditOperator {
+        require(
+            _feePercent <= MAX_PPM && _feePercent >= 0,
+            "CreditFeeManager: invalid fee percent"
+        );
+        underwriterFeePercent = _feePercent;
     }
 
     /* ========== VIEWS ========== */
@@ -139,12 +152,14 @@ contract CreditFeeManager is ICreditFeeManager, OwnableUpgradeable {
         return (totalCollateral / underwriterCollateral) * MAX_PPM;
     }
 
-    function updateUnderwriterFeePercent(uint256 _feePercent) external onlyCreditOperator {
-        require(
-            _feePercent <= MAX_PPM && _feePercent >= 0,
-            "CreditFeeManager: invalid fee percent"
-        );
-        underwriterFeePercent = _feePercent;
+    function getAccruedFees(address[] memory _members, address _network)
+        external
+        view
+        returns (uint256 totalFees)
+    {
+        for (uint256 i = 0; i < _members.length; i++) {
+            totalFees += accruedFees[_network][_members[i]];
+        }
     }
 
     /* ========== PRIVATE ========== */

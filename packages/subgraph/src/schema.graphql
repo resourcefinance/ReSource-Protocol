@@ -2,6 +2,8 @@ type NetworkMember @entity {
   id: ID!
   ambassador: Ambassador!
   creditRequests: [CreditRequest]! @derivedFrom(field: "networkMember")
+  creditLine: CreditLine! @derivedFrom(field: "networkMember")
+  sourceBalance: BigInt!
 }
 
 type Ambassador @entity {
@@ -20,9 +22,13 @@ type Underwriter @entity {
 type CreditLine @entity {
   id: ID!
   pool: CreditPool!
+  networkMember: NetworkMember
   network: bytes!
   issueDate: BigInt!
   acitve: Boolean!
+  creditLimit: BigInt!
+  creditBalance: BigInt!
+  balance: BigInt!
 }
 
 type CreditPool @entity {
@@ -30,6 +36,8 @@ type CreditPool @entity {
   underwriter: Underwriter!
   creditLines: [CreditLine]! @derivedFrom(field: "pool")
   totalCredit: BigInt!
+  totalCollateral: BigInt!
+  active: Boolean!
 }
 
 type CreditRequest @entity {

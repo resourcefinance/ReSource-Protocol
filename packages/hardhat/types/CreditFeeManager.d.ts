@@ -29,13 +29,15 @@ interface CreditFeeManagerInterface extends ethers.utils.Interface {
     "creditManager()": FunctionFragment;
     "creditRequest()": FunctionFragment;
     "creditRoles()": FunctionFragment;
+    "getAccruedFees(address[],address)": FunctionFragment;
     "getCollateralToken()": FunctionFragment;
     "getUnderwriterPoolStakePercent(address,address)": FunctionFragment;
     "initialize(address,address,address,address,uint256)": FunctionFragment;
-    "moveFeesToRewards(address,address[])": FunctionFragment;
     "owner()": FunctionFragment;
     "priceOracle()": FunctionFragment;
+    "recoverERC20(address,uint256)": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
+    "splitFees(address,address[])": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
     "underwriterFeePercent()": FunctionFragment;
     "updateUnderwriterFeePercent(uint256)": FunctionFragment;
@@ -74,6 +76,10 @@ interface CreditFeeManagerInterface extends ethers.utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
+    functionFragment: "getAccruedFees",
+    values: [string[], string]
+  ): string;
+  encodeFunctionData(
     functionFragment: "getCollateralToken",
     values?: undefined
   ): string;
@@ -85,18 +91,22 @@ interface CreditFeeManagerInterface extends ethers.utils.Interface {
     functionFragment: "initialize",
     values: [string, string, string, string, BigNumberish]
   ): string;
-  encodeFunctionData(
-    functionFragment: "moveFeesToRewards",
-    values: [string, string[]]
-  ): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "priceOracle",
     values?: undefined
   ): string;
   encodeFunctionData(
+    functionFragment: "recoverERC20",
+    values: [string, BigNumberish]
+  ): string;
+  encodeFunctionData(
     functionFragment: "renounceOwnership",
     values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "splitFees",
+    values: [string, string[]]
   ): string;
   encodeFunctionData(
     functionFragment: "transferOwnership",
@@ -144,6 +154,10 @@ interface CreditFeeManagerInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "getAccruedFees",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "getCollateralToken",
     data: BytesLike
   ): Result;
@@ -152,19 +166,20 @@ interface CreditFeeManagerInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "moveFeesToRewards",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "priceOracle",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "recoverERC20",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "renounceOwnership",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "splitFees", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "transferOwnership",
     data: BytesLike
@@ -313,6 +328,12 @@ export class CreditFeeManager extends BaseContract {
 
     creditRoles(overrides?: CallOverrides): Promise<[string]>;
 
+    getAccruedFees(
+      _members: string[],
+      _network: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber] & { totalFees: BigNumber }>;
+
     getCollateralToken(overrides?: CallOverrides): Promise<[string]>;
 
     getUnderwriterPoolStakePercent(
@@ -330,17 +351,23 @@ export class CreditFeeManager extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    moveFeesToRewards(
-      _network: string,
-      _networkMembers: string[],
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
     owner(overrides?: CallOverrides): Promise<[string]>;
 
     priceOracle(overrides?: CallOverrides): Promise<[string]>;
 
+    recoverERC20(
+      tokenAddress: string,
+      tokenAmount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     renounceOwnership(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    splitFees(
+      _network: string,
+      _networkMembers: string[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -391,6 +418,12 @@ export class CreditFeeManager extends BaseContract {
 
   creditRoles(overrides?: CallOverrides): Promise<string>;
 
+  getAccruedFees(
+    _members: string[],
+    _network: string,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
   getCollateralToken(overrides?: CallOverrides): Promise<string>;
 
   getUnderwriterPoolStakePercent(
@@ -408,17 +441,23 @@ export class CreditFeeManager extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  moveFeesToRewards(
-    _network: string,
-    _networkMembers: string[],
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
   owner(overrides?: CallOverrides): Promise<string>;
 
   priceOracle(overrides?: CallOverrides): Promise<string>;
 
+  recoverERC20(
+    tokenAddress: string,
+    tokenAmount: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   renounceOwnership(
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  splitFees(
+    _network: string,
+    _networkMembers: string[],
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -469,6 +508,12 @@ export class CreditFeeManager extends BaseContract {
 
     creditRoles(overrides?: CallOverrides): Promise<string>;
 
+    getAccruedFees(
+      _members: string[],
+      _network: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     getCollateralToken(overrides?: CallOverrides): Promise<string>;
 
     getUnderwriterPoolStakePercent(
@@ -486,17 +531,23 @@ export class CreditFeeManager extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    moveFeesToRewards(
-      _network: string,
-      _networkMembers: string[],
-      overrides?: CallOverrides
-    ): Promise<void>;
-
     owner(overrides?: CallOverrides): Promise<string>;
 
     priceOracle(overrides?: CallOverrides): Promise<string>;
 
+    recoverERC20(
+      tokenAddress: string,
+      tokenAmount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
+
+    splitFees(
+      _network: string,
+      _networkMembers: string[],
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     transferOwnership(
       newOwner: string,
@@ -670,6 +721,12 @@ export class CreditFeeManager extends BaseContract {
 
     creditRoles(overrides?: CallOverrides): Promise<BigNumber>;
 
+    getAccruedFees(
+      _members: string[],
+      _network: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     getCollateralToken(overrides?: CallOverrides): Promise<BigNumber>;
 
     getUnderwriterPoolStakePercent(
@@ -687,17 +744,23 @@ export class CreditFeeManager extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    moveFeesToRewards(
-      _network: string,
-      _networkMembers: string[],
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
     priceOracle(overrides?: CallOverrides): Promise<BigNumber>;
 
+    recoverERC20(
+      tokenAddress: string,
+      tokenAmount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     renounceOwnership(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    splitFees(
+      _network: string,
+      _networkMembers: string[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -749,6 +812,12 @@ export class CreditFeeManager extends BaseContract {
 
     creditRoles(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    getAccruedFees(
+      _members: string[],
+      _network: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     getCollateralToken(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
@@ -768,17 +837,23 @@ export class CreditFeeManager extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    moveFeesToRewards(
-      _network: string,
-      _networkMembers: string[],
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     priceOracle(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    recoverERC20(
+      tokenAddress: string,
+      tokenAmount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
     renounceOwnership(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    splitFees(
+      _network: string,
+      _networkMembers: string[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 

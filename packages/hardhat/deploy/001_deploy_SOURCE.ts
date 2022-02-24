@@ -4,8 +4,6 @@ import { deployProxyAndSave } from "../utils/utils"
 import { deployments, ethers } from "hardhat"
 
 const func: DeployFunction = async function(hardhat: HardhatRuntimeEnvironment) {
-  const { relaySigner } = await hardhat.getNamedAccounts()
-
   // sourceToken deploy
   const sourceTokenAbi = (await hardhat.artifacts.readArtifact("SourceToken")).abi
   const sourceTokenArgs = [hardhat.ethers.utils.parseEther("100000000"), []]

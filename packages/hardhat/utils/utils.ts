@@ -32,7 +32,7 @@ export const tryWithGas = async (
 
 export const deployProxyAndSave = async (
   name: string,
-  args: any[],
+  args: any,
   hardhat: HardhatRuntimeEnvironment,
   abi,
   deployOptions?: DeployOptions,

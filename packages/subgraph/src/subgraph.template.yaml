@@ -3,35 +3,6 @@ schema:
   file: ./src/schema.graphql
 dataSources:
   - kind: ethereum/contract
-    name: UnderwriteManager
-    network: "{{network}}"
-    source:
-      address: "{{UnderwriteManagerAddress}}"
-      abi: UnderwriteManager
-      startBlock: {{UnderwriteManagerStartBlock}}
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.4
-      language: wasm/assemblyscript
-      entities:
-        - CreditLine
-        - Underwriter
-      abis:
-        - name: UnderwriteManager
-          file: ./abis/UnderwriteManager.json
-      eventHandlers:
-        - event: NewCreditLine((address,address,(uint256,address,uint256,uint256),uint256))
-          handler: handleNewCreditLine
-        - event: ExtendCreditLine((address,address,(uint256,address,uint256,uint256),uint256),uint256)
-          handler: handleExtendCreditLine
-        - event: CreditLineReward((address,address,(uint256,address,uint256,uint256)))
-          handler: handleCreditLineReward
-        - event: CreditLineRewardClaimed(address,address[],uint256[],uint256)
-          handler: handleCreditLineRewardClaimed
-        - event: CreditLineWithdrawal((address,address,(uint256,address,uint256,uint256),uint256))
-          handler: handleCreditLineWithdrawal
-      file: ./src/mapping/UnderwriteManager/index.ts
-  - kind: ethereum/contract
     name: RUSD
     network: "{{network}}"
     source:
@@ -44,6 +15,7 @@ dataSources:
       language: wasm/assemblyscript
       entities:
         - CreditLine
+        - NetworkMember
       abis:
         - name: RUSD
           file: ./abis/RUSD.json
@@ -52,12 +24,32 @@ dataSources:
           handler: handleRUSDBalanceUpdate
       file: ./src/mapping/RUSD/index.ts
   - kind: ethereum/contract
-    name: ReSourceToken
+    name: SourceToken
     network: "{{network}}"
     source:
-      address: "{{ReSourceTokenAddress}}"
-      abi: ReSourceToken
-      startBlock: {{ReSourceTokenStartBlock}}
+      address: "{{SourceTokenAddress}}"
+      abi: SourceToken
+      startBlock: {{SourceTokenStartBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - NetworkMember
+      abis:
+        - name: SourceToken
+          file: ./abis/SourceToken.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleSourceBalanceUpdate
+      file: ./src/mapping/SourceToken/index.ts
+  - kind: ethereum/contract
+    name: NetworkFeeManager
+    network: "{{network}}"
+    source:
+      address: "{{NetworkFeeManagerAddress}}"
+      abi: NetworkFeeManager
+      startBlock: {{NetworkFeeManagerStartBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -65,9 +57,154 @@ dataSources:
       entities:
         - CreditLine
       abis:
-        - name: ReSourceToken
-          file: ./abis/ReSourceToken.json
+        - name: NetworkFeeManager
+          file: ./abis/NetworkFeeManager.json
       eventHandlers:
-        - event: Transfer(indexed address,indexed address,uint256)
-          handler: handleSourceBalanceUpdate
-      file: ./src/mapping/ReSourceToken/index.ts
+        - event: FeesCollected(address,uint256)
+          handler: handleNetworkFeesCollected
+        - event: AmbassadorFeesClaimed(address,uint256)
+          handler: handleAmbassadorFeesClaimed
+        - event: NetworkFeesClaimed(address,uint256)
+          handler: handleNetworkFeesClaimed
+        - event: AmbassadorRewardsUpdated(address,uint256)
+          handler: handleNetworkRewardsUpdated
+      file: ./src/mapping/NetworkFeeManager/index.ts
+  - kind: ethereum/contract
+    name: NetworkRoles
+    network: "{{network}}"
+    source:
+      address: "{{NetworkRolesAddress}}"
+      abi: NetworkRoles
+      startBlock: {{NetworkRolesStartBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - CreditLine
+      abis:
+        - name: NetworkRoles
+          file: ./abis/NetworkRoles.json
+      eventHandlers:
+        - event: MemberAdded(address,address)
+          handler: handleMemberAdded
+        - event: MembershipAmbassadorUpdated(address,address)
+          handler: handleMembershipAmbassadorUpdated
+        - event: AmbassadorAdded(address,uint256)
+          handler: handleAmbassadorAdded
+        - event: AmbassadorAllowanceUpdated(address,uint256)
+          handler: handleAmbassadorAllowanceUpdated
+        - event: AmbassadorRemoved(addressambassador)
+          handler: handleAmbassadorRemoved
+      file: ./src/mapping/NetworkRoles/index.ts
+
+  - kind: ethereum/contract
+    name: CreditFeeManager
+    network: "{{network}}"
+    source:
+      address: "{{CreditFeeManagerAddress}}"
+      abi: CreditFeeManager
+      startBlock: {{CreditFeeManagerStartBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - CreditLine
+      abis:
+        - name: CreditFeeManager
+          file: ./abis/CreditFeeManager.json
+      eventHandlers:
+        - event: FeesCollected(address,address,uint256)
+          handler: handleFeesCollected
+        - event: UnderwriterFeesClaimed(address,uint256)
+          handler: handleUnderwriterFeesClaimed
+        - event: OperatorFeesClaimed(address,uint256)
+          handler: handleOperatorFeesClaimed
+        - event: OperatorRewardsUpdated(uint256)
+          handler: handleOperatorRewardsUpdated
+        - event: UnderwriterRewardsUpdated(address,uint256)
+          handler: handleUnderwriterRewardsUpdated
+        - event: PoolRewardsUpdated(address,uint256)
+          handler: handlePoolRewardsUpdated
+        - event: UnderwriterRewardsStaked(address,uint256)
+          handler: handleUnderwriterRewardsStaked
+      file: ./src/mapping/CreditFeeManager/index.ts
+  - kind: ethereum/contract
+    name: CreditManager
+    network: "{{network}}"
+    source:
+      address: "{{CreditManagerAddress}}"
+      abi: CreditManager
+      startBlock: {{CreditManagerStartBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - CreditLine
+      abis:
+        - name: CreditManager
+          file: ./abis/CreditManager.json
+      eventHandlers:
+        - event: CreditPoolAdded(address,address)
+          handler: handleCreditPoolAdded
+        - event: CreditLineLimitUpdated(address,address,uint256)
+          handler: handleCreditLineLimitUpdated
+        - event: CreditLinePoolUpdated(address,address,address)
+          handler: handleCreditLinePoolUpdated
+        - event: CreditLineRemoved(address,address)
+          handler: handleCreditLineRemoved
+        - event: CreditLineRenewed(address,address,uint256)
+          handler: handleCreditLineRenewed
+      file: ./src/mapping/CreditManager/index.ts
+  - kind: ethereum/contract
+    name: CreditRequest
+    network: "{{network}}"
+    source:
+      address: "{{CreditRequestAddress}}"
+      abi: CreditRequest
+      startBlock: {{CreditRequestStartBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - CreditLine
+      abis:
+        - name: CreditRequest
+          file: ./abis/CreditRequest.json
+      eventHandlers:
+        - event: CreditRequestCreated(address,address,address,uint256,bool)
+          handler: handleCreditRequestCreated
+        - event: CreditRequestApproved(address,address)
+          handler: handleCreditRequestApproved
+        - event: CreditRequestUpdated(address,address,uint256,bool)
+          handler: handleCreditRequestUpdated
+        - event: CreditRequestRemoved(address,address)
+          handler: handleCreditRequestRemoved
+        - event: UnstakeRequestCreated(address,address)
+          handler: handleUnstakeRequestCreated
+      file: ./src/mapping/CreditRequest/index.ts
+  - kind: ethereum/contract
+    name: CreditRoles
+    network: "{{network}}"
+    source:
+      address: "{{CreditRolesAddress}}"
+      abi: CreditRoles
+      startBlock: {{CreditRolesStartBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - CreditLine
+      abis:
+        - name: CreditRoles
+          file: ./abis/CreditRoles.json
+      eventHandlers:
+        - event: UnderwriterAdded(address)
+          handler: handleUnderwriterAdded
+        - event: UnderwriterRemoved(address)
+          handler: handleUnderwriterRemoved
+      file: ./src/mapping/CreditRoles/index.ts

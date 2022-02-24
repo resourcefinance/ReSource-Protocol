@@ -77,7 +77,7 @@ contract NetworkFeeManager is OwnableUpgradeable, INetworkFeeManager {
     }
 
     function claimAmbassadorFees(address[] memory _members) external override {
-        moveFeesToRewards(_members);
+        splitFees(_members);
         if (rewards[msg.sender] == 0) return;
         collateralToken.safeTransfer(msg.sender, rewards[msg.sender]);
         emit AmbassadorFeesClaimed(msg.sender, rewards[msg.sender]);
@@ -85,14 +85,14 @@ contract NetworkFeeManager is OwnableUpgradeable, INetworkFeeManager {
     }
 
     function claimNetworkFees(address[] memory _members) external override onlyNetworkOperator {
-        moveFeesToRewards(_members);
+        splitFees(_members);
         if (rewards[address(this)] == 0) return;
         collateralToken.safeTransfer(msg.sender, rewards[address(this)]);
         emit NetworkFeesClaimed(msg.sender, rewards[address(this)]);
         rewards[address(this)] = 0;
     }
 
-    function moveFeesToRewards(address[] memory _members) public {
+    function splitFees(address[] memory _members) public {
         for (uint256 i = 0; i < _members.length; i++) {
             uint256 totalFees = accruedFees[_members[i]];
             if (totalFees == 0) continue;
@@ -120,6 +120,37 @@ contract NetworkFeeManager is OwnableUpgradeable, INetworkFeeManager {
             "NetworkFeeManager: Total fee percent greater than 100"
         );
         ambassadorFeePercent = _ambassadorFeePercent;
+    }
+
+    function recoverERC20(address tokenAddress, uint256 tokenAmount) external onlyOwner {
+        require(tokenAddress != address(collateralToken), "Cannot withdraw staking token");
+        IERC20Upgradeable(tokenAddress).safeTransfer(owner(), tokenAmount);
+    }
+
+    /* ========== VIEWS ========== */
+
+    function calculateAmbassadorRewards(address[] memory _members)
+        external
+        view
+        returns (uint256 totalRewards)
+    {
+        for (uint256 i = 0; i < _members.length; i++) {
+            uint256 totalFees = accruedFees[_members[i]];
+            if (totalFees == 0) continue;
+            totalRewards += (ambassadorFeePercent * totalFees) / MAX_PPM;
+        }
+    }
+
+    function calculateNetworkRewards(address[] memory _members)
+        external
+        view
+        returns (uint256 totalRewards)
+    {
+        for (uint256 i = 0; i < _members.length; i++) {
+            uint256 totalFees = accruedFees[_members[i]];
+            if (totalFees == 0) continue;
+            totalRewards += ((MAX_PPM - ambassadorFeePercent) * totalFees) / MAX_PPM;
+        }
     }
 
     /* ========== MODIFIERS ========== */

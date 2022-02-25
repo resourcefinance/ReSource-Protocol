@@ -29,7 +29,7 @@ describe("CreditPool & Rewards Tests", function() {
     contracts = await protocolFactory.deployDefault(underwriter.address)
   })
 
-  it("Add and notify single reward to pool", async function() {
+  it("Adds and notifies a single reward to pool", async function() {
     await (
       await contracts.sourceToken.transfer(underwriter.address, ethers.utils.parseEther("1000"))
     ).wait()
@@ -62,7 +62,7 @@ describe("CreditPool & Rewards Tests", function() {
     expect(rewardAdded.event).to.equal("RewardAdded")
   })
 
-  it("Add and notify multiple rewards to pool", async function() {
+  it("Adds and notifies multiple rewards to pool", async function() {
     const ERC20Factory = await ethers.getContractFactory("MockERC20")
     const MockERC20 = (await ERC20Factory.deploy(ethers.utils.parseEther("100000000"))) as MockERC20
 
@@ -119,7 +119,7 @@ describe("CreditPool & Rewards Tests", function() {
     expect(rewardAdded).to.have.lengthOf(2)
   })
 
-  it("Approve and Stake into pool", async function() {
+  it("Approves and stakes into pool", async function() {
     await (
       await contracts.sourceToken.transfer(underwriter.address, ethers.utils.parseEther("100000"))
     ).wait()
@@ -166,4 +166,71 @@ describe("CreditPool & Rewards Tests", function() {
     expect(finalSeedBal).to.equal(seedToken.sub(poolToken))
     expect(postPoolBal).to.equal(poolToken)
   })
+
+  it("Accrues rewards after staking", async function() {
+    await (
+      await contracts.sourceToken.transfer(underwriter.address, ethers.utils.parseEther("1000"))
+    ).wait()
+
+    await (
+      await contracts.creditPool
+        .connect(underwriter)
+        .addReward(contracts.sourceToken.address, underwriter.address, 3600)
+    ).wait()
+
+    await (
+      await contracts.sourceToken
+        .connect(underwriter)
+        .approve(contracts.creditPool.address, ethers.constants.MaxUint256)
+    ).wait()
+
+    await (
+      await contracts.creditPool
+        .connect(underwriter)
+        .notifyRewardAmount(contracts.sourceToken.address, ethers.utils.parseEther("100"))
+    ).wait()
+
+    await (
+      await contracts.sourceToken.transfer(member.address, ethers.utils.parseEther("10000"))
+    ).wait()
+    await (
+      await contracts.sourceToken
+        .connect(member)
+        .approve(contracts.creditPool.address, ethers.constants.MaxUint256)
+    ).wait()
+
+    const earnedBefore = await contracts.creditPool.earned(
+      member.address,
+      contracts.sourceToken.address
+    )
+
+    expect(earnedBefore).to.be.equal(0)
+
+    await (await contracts.creditPool.connect(member).stake(ethers.utils.parseEther("1000"))).wait()
+
+    const timeBefore = await getTimestamp()
+    await advanceTime(3600)
+    const timeAfter = await getTimestamp()
+
+    expect(timeAfter - timeBefore).to.equal(3600)
+
+    const earnedAfter = await contracts.creditPool.earned(
+      member.address,
+      contracts.sourceToken.address
+    )
+
+    expect(earnedAfter).to.be.above(0)
+  })
 })
+
+async function getTimestamp() {
+  return (await ethers.provider.getBlock("latest")).timestamp
+}
+
+async function setBlocktime(newTimestamp) {
+  await ethers.provider.send("evm_mine", [newTimestamp])
+}
+
+async function advanceTime(seconds) {
+  setBlocktime((await getTimestamp()) + seconds)
+}

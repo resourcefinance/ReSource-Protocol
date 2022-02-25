@@ -32,6 +32,7 @@ contract CreditPool is
         uint256 lastUpdateTime;
         uint256 rewardPerTokenStored;
     }
+
     IERC20Upgradeable public stakingToken;
     ICreditRoles private creditRoles;
     mapping(address => Reward) public rewardData;
@@ -64,14 +65,18 @@ contract CreditPool is
         address _rewardsToken,
         address _rewardsDistributor,
         uint256 _rewardsDuration
-    ) public onlyOwner {
+    ) public onlyOwnerOrUnderwriter {
         require(rewardData[_rewardsToken].rewardsDuration == 0);
+
         rewardTokens.push(_rewardsToken);
         rewardData[_rewardsToken].rewardsDistributor = _rewardsDistributor;
         rewardData[_rewardsToken].rewardsDuration = _rewardsDuration;
     }
 
     /* ========== VIEWS ========== */
+    function viewMapping(address _rewardsToken) public view returns (Reward memory) {
+        return rewardData[_rewardsToken];
+    }
 
     function totalSupply() external view override returns (uint256) {
         return _totalSupply;
@@ -204,6 +209,7 @@ contract CreditPool is
         rewardData[_rewardsToken].periodFinish = block.timestamp.add(
             rewardData[_rewardsToken].rewardsDuration
         );
+
         emit RewardAdded(reward);
     }
 
@@ -267,6 +273,14 @@ contract CreditPool is
 
     modifier onlyOperator() {
         require(creditRoles.isCreditOperator(msg.sender), "CreditPool: Caller must be an operator");
+        _;
+    }
+
+    modifier onlyOwnerOrUnderwriter() {
+        require(
+            msg.sender == owner() || creditRoles.isUnderwriter(msg.sender),
+            "CreditPool: Caller must be an underwriter"
+        );
         _;
     }
 

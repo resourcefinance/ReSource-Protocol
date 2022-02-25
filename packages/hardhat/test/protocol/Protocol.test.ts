@@ -126,9 +126,11 @@ describe("CreditManager Tests", function() {
         .approve(contracts.creditFeeManager.address, ethers.constants.MaxUint256)
     ).wait()
 
-    await await contracts.sourceToken
-      .connect(underwriter)
-      .approve(contracts.creditPool.address, ethers.constants.MaxUint256)
+    await (
+      await contracts.sourceToken
+        .connect(underwriter)
+        .approve(contracts.creditPool.address, ethers.constants.MaxUint256)
+    ).wait()
 
     await (
       await contracts.rUSD

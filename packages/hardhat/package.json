@@ -38,6 +38,8 @@
     "hardhat": "2.6.0",
     "hardhat-deploy": "^0.8.11",
     "node-watch": "^0.7.0",
+    "prettier": "^2.5.1",
+    "prettier-plugin-solidity": "^1.0.0-beta.19",
     "qrcode-terminal": "^0.12.0",
     "ramda": "^0.27.1",
     "ts-node": "^10.2.1",

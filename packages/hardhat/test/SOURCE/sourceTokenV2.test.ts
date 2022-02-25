@@ -3,11 +3,11 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/dist/src/signers"
 import { expect } from "chai"
 import chai from "chai"
 import { solidity } from "ethereum-waffle"
-import { SourceTokenV2 } from "../types/SourceTokenV2"
+import { SourceTokenV2 } from "../../types/SourceTokenV2"
 
 chai.use(solidity)
 
-describe("ReSourcetoken Tests", function() {
+describe("ReSourceToken Tests", function() {
   let deployer: SignerWithAddress
   let memberA: SignerWithAddress
   let memberB: SignerWithAddress

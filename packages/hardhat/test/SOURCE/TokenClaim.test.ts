@@ -1,12 +1,10 @@
-import { ethers, upgrades, deployments } from "hardhat"
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/dist/src/signers"
-import { expect } from "chai"
-import chai from "chai"
+import chai, { expect } from "chai"
 import { solidity } from "ethereum-waffle"
-import { SourceToken } from "../types"
-import { TokenClaim } from "../types/TokenClaim"
-import { SourceTokenV2 } from "../types/SourceTokenV2"
-import { parseEther } from "ethers/lib/utils"
+import { ethers, upgrades } from "hardhat"
+
+import { SourceTokenV2 } from "../../types/SourceTokenV2"
+import { TokenClaim } from "../../types/TokenClaim"
 
 chai.use(solidity)
 

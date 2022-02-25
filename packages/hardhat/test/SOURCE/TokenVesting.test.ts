@@ -3,7 +3,7 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/dist/src/signers"
 import { expect } from "chai"
 import chai from "chai"
 import { solidity } from "ethereum-waffle"
-import { TokenVesting, SourceToken } from "../types"
+import { TokenVesting, SourceToken } from "../../types"
 
 chai.use(solidity)
 

@@ -4,7 +4,7 @@ import { solidity } from "ethereum-waffle"
 import { ethers, upgrades } from "hardhat"
 
 import { MockERC20 } from "../../types"
-import { RewardAddedEvent } from "../../types/CreditPool"
+import { RewardAddedEvent, WithdrawnEvent } from "../../types/CreditPool"
 import { ProtocolContracts, protocolFactory } from "./protocolFactory"
 
 chai.use(solidity)
@@ -220,6 +220,70 @@ describe("CreditPool & Rewards Tests", function() {
     )
 
     expect(earnedAfter).to.be.above(0)
+  })
+
+  it("Claims & withdraws rewards after staking", async function() {
+    await (
+      await contracts.sourceToken.transfer(underwriter.address, ethers.utils.parseEther("1000"))
+    ).wait()
+
+    await (
+      await contracts.creditPool
+        .connect(underwriter)
+        .addReward(contracts.sourceToken.address, underwriter.address, 3600)
+    ).wait()
+
+    await (
+      await contracts.sourceToken
+        .connect(underwriter)
+        .approve(contracts.creditPool.address, ethers.constants.MaxUint256)
+    ).wait()
+
+    await (
+      await contracts.creditPool
+        .connect(underwriter)
+        .notifyRewardAmount(contracts.sourceToken.address, ethers.utils.parseEther("100"))
+    ).wait()
+
+    await (
+      await contracts.sourceToken.transfer(member.address, ethers.utils.parseEther("10000"))
+    ).wait()
+    await (
+      await contracts.sourceToken
+        .connect(member)
+        .approve(contracts.creditPool.address, ethers.constants.MaxUint256)
+    ).wait()
+
+    const earnedBefore = await contracts.creditPool.earned(
+      member.address,
+      contracts.sourceToken.address
+    )
+
+    await (await contracts.creditPool.connect(member).stake(ethers.utils.parseEther("1000"))).wait()
+
+    await advanceTime(3600)
+
+    const earnedAfter = await contracts.creditPool.earned(
+      member.address,
+      contracts.sourceToken.address
+    )
+
+    expect(earnedAfter.gt(earnedBefore)).to.be.true
+
+    const balanceBeforeExit = await contracts.creditPool.balanceOf(member.address)
+    expect(balanceBeforeExit).to.be.above(ethers.utils.parseEther("0.0"))
+
+    await (await contracts.creditPool.connect(member).exit()).wait()
+
+    const withdrawn = (
+      await contracts.creditPool.queryFilter(contracts.creditPool.filters.Withdrawn())
+    )[0] as WithdrawnEvent
+
+    expect(withdrawn).to.exist
+    expect(withdrawn.event).to.equal("Withdrawn")
+
+    const balanceAfterExit = await contracts.creditPool.balanceOf(member.address)
+    expect(balanceAfterExit).to.be.equal(ethers.utils.parseEther("0.0"))
   })
 })
 

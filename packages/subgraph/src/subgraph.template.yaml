@@ -61,7 +61,7 @@ dataSources:
           file: ./abis/NetworkFeeManager.json
       eventHandlers:
         - event: FeesCollected(address,uint256)
-          handler: handleNetworkFeesCollected
+          handler: handleFeesCollected
         - event: AmbassadorFeesClaimed(address,uint256)
           handler: handleAmbassadorFeesClaimed
         - event: NetworkFeesClaimed(address,uint256)
@@ -94,7 +94,7 @@ dataSources:
           handler: handleAmbassadorAdded
         - event: AmbassadorAllowanceUpdated(address,uint256)
           handler: handleAmbassadorAllowanceUpdated
-        - event: AmbassadorRemoved(addressambassador)
+        - event: AmbassadorRemoved(address)
           handler: handleAmbassadorRemoved
       file: ./src/mapping/NetworkRoles/index.ts
 
@@ -123,8 +123,6 @@ dataSources:
           handler: handleOperatorFeesClaimed
         - event: OperatorRewardsUpdated(uint256)
           handler: handleOperatorRewardsUpdated
-        - event: UnderwriterRewardsUpdated(address,uint256)
-          handler: handleUnderwriterRewardsUpdated
         - event: PoolRewardsUpdated(address,uint256)
           handler: handlePoolRewardsUpdated
         - event: UnderwriterRewardsStaked(address,uint256)
@@ -157,6 +155,8 @@ dataSources:
           handler: handleCreditLineRemoved
         - event: CreditLineRenewed(address,address,uint256)
           handler: handleCreditLineRenewed
+        - event: CreditLineCreated(address,address,address,uint256,uint256)
+          handler: handleCreditLineCreated
       file: ./src/mapping/CreditManager/index.ts
   - kind: ethereum/contract
     name: CreditRequest

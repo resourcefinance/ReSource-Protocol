@@ -37,6 +37,12 @@ const _abi = [
         name: "creditLimit",
         type: "uint256",
       },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "timestamp",
+        type: "uint256",
+      },
     ],
     name: "CreditLineCreated",
     type: "event",
@@ -128,7 +134,7 @@ const _abi = [
       {
         indexed: false,
         internalType: "uint256",
-        name: "expiration",
+        name: "timestamp",
         type: "uint256",
       },
     ],

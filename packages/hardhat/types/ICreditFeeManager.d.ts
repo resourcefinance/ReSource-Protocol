@@ -59,7 +59,6 @@ interface ICreditFeeManagerInterface extends ethers.utils.Interface {
     "PoolRewardsUpdated(address,uint256)": EventFragment;
     "UnderwriterFeesClaimed(address,uint256)": EventFragment;
     "UnderwriterRewardsStaked(address,uint256)": EventFragment;
-    "UnderwriterRewardsUpdated(address,uint256)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "FeesCollected"): EventFragment;
@@ -68,7 +67,6 @@ interface ICreditFeeManagerInterface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: "PoolRewardsUpdated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "UnderwriterFeesClaimed"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "UnderwriterRewardsStaked"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "UnderwriterRewardsUpdated"): EventFragment;
 }
 
 export type FeesCollectedEvent = TypedEvent<
@@ -97,10 +95,6 @@ export type UnderwriterFeesClaimedEvent = TypedEvent<
 
 export type UnderwriterRewardsStakedEvent = TypedEvent<
   [string, BigNumber] & { underwriter: string; totalStaked: BigNumber }
->;
-
-export type UnderwriterRewardsUpdatedEvent = TypedEvent<
-  [string, BigNumber] & { underwriter: string; totalRewards: BigNumber }
 >;
 
 export class ICreditFeeManager extends BaseContract {
@@ -291,22 +285,6 @@ export class ICreditFeeManager extends BaseContract {
     ): TypedEventFilter<
       [string, BigNumber],
       { underwriter: string; totalStaked: BigNumber }
-    >;
-
-    "UnderwriterRewardsUpdated(address,uint256)"(
-      underwriter?: null,
-      totalRewards?: null
-    ): TypedEventFilter<
-      [string, BigNumber],
-      { underwriter: string; totalRewards: BigNumber }
-    >;
-
-    UnderwriterRewardsUpdated(
-      underwriter?: null,
-      totalRewards?: null
-    ): TypedEventFilter<
-      [string, BigNumber],
-      { underwriter: string; totalRewards: BigNumber }
     >;
   };
 

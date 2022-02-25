@@ -23,7 +23,7 @@ type CreditLine @entity {
   id: ID!
   pool: CreditPool!
   networkMember: NetworkMember
-  network: bytes!
+  network: Bytes!
   issueDate: BigInt!
   acitve: Boolean!
   creditLimit: BigInt!

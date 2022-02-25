@@ -161,24 +161,12 @@ describe("CreditManager Tests", function() {
     )
     expect(sourceBalance).to.equal("50.0")
 
-    // try claim creditFees as underwriter
-    await (
-      await contracts.creditFeeManager
-        .connect(underwriter)
-        .claimUnderwriterFees(contracts.rUSD.address, [memberA.address])
-    ).wait()
-
-    sourceBalance = ethers.utils.formatEther(
-      await contracts.sourceToken.balanceOf(underwriter.address),
-    )
-    expect(sourceBalance).to.equal("0.0")
-
     // try claim creditFees as creditOperator
     await (await contracts.creditRoles.grantOperator(creditOperator.address)).wait()
     await (
       await contracts.creditFeeManager
         .connect(creditOperator)
-        .claimOperatorFees(contracts.rUSD.address, [memberA.address])
+        .distributeFees(contracts.rUSD.address, [memberA.address])
     ).wait()
 
     sourceBalance = ethers.utils.formatEther(

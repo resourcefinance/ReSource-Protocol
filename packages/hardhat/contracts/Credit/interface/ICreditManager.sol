@@ -11,7 +11,8 @@ interface ICreditManager {
         address network,
         address counterparty,
         address pool,
-        uint256 creditLimit
+        uint256 creditLimit,
+        uint256 timestamp
     );
 
     event CreditPoolAdded(address pool, address underwriter);
@@ -22,7 +23,7 @@ interface ICreditManager {
 
     event CreditLineRemoved(address network, address counterparty);
 
-    event CreditLineRenewed(address network, address counterparty, uint256 expiration);
+    event CreditLineRenewed(address network, address counterparty, uint256 timestamp);
 
     function createCreditLine(
         address _counterparty,

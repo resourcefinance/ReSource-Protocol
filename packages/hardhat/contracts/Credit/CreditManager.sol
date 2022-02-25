@@ -57,7 +57,7 @@ contract CreditManager is OwnableUpgradeable, PausableUpgradeable, ICreditManage
         creditLines[_network][_counterparty] = CreditLine(_pool, block.timestamp);
         ICreditPool(_pool).increaseTotalCredit(_creditLimit);
         ICIP36(_network).setCreditLimit(_counterparty, _creditLimit);
-        emit CreditLineCreated(_network, _counterparty, _pool, _creditLimit);
+        emit CreditLineCreated(_network, _counterparty, _pool, _creditLimit, block.timestamp);
     }
 
     function registerCreditPool(address _pool) external onlyOperator {

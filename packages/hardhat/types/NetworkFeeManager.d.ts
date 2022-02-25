@@ -28,13 +28,13 @@ interface NetworkFeeManagerInterface extends ethers.utils.Interface {
     "collateralToken()": FunctionFragment;
     "collectFees(address,address,uint256)": FunctionFragment;
     "creditFeeManager()": FunctionFragment;
+    "distributeFees(address[])": FunctionFragment;
     "initialize(address,address,uint256,uint256)": FunctionFragment;
     "networkRoles()": FunctionFragment;
     "owner()": FunctionFragment;
     "recoverERC20(address,uint256)": FunctionFragment;
     "registerNetwork(address)": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
-    "splitFees(address[])": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
     "updateAmbassadorFeePercent(uint256)": FunctionFragment;
   };
@@ -68,6 +68,10 @@ interface NetworkFeeManagerInterface extends ethers.utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
+    functionFragment: "distributeFees",
+    values: [string[]]
+  ): string;
+  encodeFunctionData(
     functionFragment: "initialize",
     values: [string, string, BigNumberish, BigNumberish]
   ): string;
@@ -88,7 +92,6 @@ interface NetworkFeeManagerInterface extends ethers.utils.Interface {
     functionFragment: "renounceOwnership",
     values?: undefined
   ): string;
-  encodeFunctionData(functionFragment: "splitFees", values: [string[]]): string;
   encodeFunctionData(
     functionFragment: "transferOwnership",
     values: [string]
@@ -126,6 +129,10 @@ interface NetworkFeeManagerInterface extends ethers.utils.Interface {
     functionFragment: "creditFeeManager",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "distributeFees",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "networkRoles",
@@ -144,7 +151,6 @@ interface NetworkFeeManagerInterface extends ethers.utils.Interface {
     functionFragment: "renounceOwnership",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "splitFees", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "transferOwnership",
     data: BytesLike
@@ -270,6 +276,11 @@ export class NetworkFeeManager extends BaseContract {
 
     creditFeeManager(overrides?: CallOverrides): Promise<[string]>;
 
+    distributeFees(
+      _members: string[],
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     initialize(
       _creditFeeManager: string,
       _networkRoles: string,
@@ -294,11 +305,6 @@ export class NetworkFeeManager extends BaseContract {
     ): Promise<ContractTransaction>;
 
     renounceOwnership(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    splitFees(
-      _members: string[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -344,6 +350,11 @@ export class NetworkFeeManager extends BaseContract {
 
   creditFeeManager(overrides?: CallOverrides): Promise<string>;
 
+  distributeFees(
+    _members: string[],
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   initialize(
     _creditFeeManager: string,
     _networkRoles: string,
@@ -368,11 +379,6 @@ export class NetworkFeeManager extends BaseContract {
   ): Promise<ContractTransaction>;
 
   renounceOwnership(
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  splitFees(
-    _members: string[],
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -418,6 +424,11 @@ export class NetworkFeeManager extends BaseContract {
 
     creditFeeManager(overrides?: CallOverrides): Promise<string>;
 
+    distributeFees(
+      _members: string[],
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     initialize(
       _creditFeeManager: string,
       _networkRoles: string,
@@ -439,8 +450,6 @@ export class NetworkFeeManager extends BaseContract {
     registerNetwork(_network: string, overrides?: CallOverrides): Promise<void>;
 
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
-
-    splitFees(_members: string[], overrides?: CallOverrides): Promise<void>;
 
     transferOwnership(
       newOwner: string,
@@ -575,6 +584,11 @@ export class NetworkFeeManager extends BaseContract {
 
     creditFeeManager(overrides?: CallOverrides): Promise<BigNumber>;
 
+    distributeFees(
+      _members: string[],
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     initialize(
       _creditFeeManager: string,
       _networkRoles: string,
@@ -599,11 +613,6 @@ export class NetworkFeeManager extends BaseContract {
     ): Promise<BigNumber>;
 
     renounceOwnership(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    splitFees(
-      _members: string[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -650,6 +659,11 @@ export class NetworkFeeManager extends BaseContract {
 
     creditFeeManager(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    distributeFees(
+      _members: string[],
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
     initialize(
       _creditFeeManager: string,
       _networkRoles: string,
@@ -674,11 +688,6 @@ export class NetworkFeeManager extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     renounceOwnership(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    splitFees(
-      _members: string[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 

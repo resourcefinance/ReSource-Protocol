@@ -10,8 +10,6 @@ interface ICreditFeeManager {
 
     event OperatorRewardsUpdated(uint256 totalRewards);
 
-    event UnderwriterRewardsUpdated(address underwriter, uint256 totalRewards);
-
     event PoolRewardsUpdated(address underwriter, uint256 totalRewards);
 
     event UnderwriterRewardsStaked(address underwriter, uint256 totalStaked);

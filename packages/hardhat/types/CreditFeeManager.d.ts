@@ -22,13 +22,12 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 interface CreditFeeManagerInterface extends ethers.utils.Interface {
   functions: {
     "calculatePercentInCollateral(address,uint256,uint256)": FunctionFragment;
-    "claimOperatorFees(address,address[])": FunctionFragment;
-    "claimUnderwriterFees(address,address[])": FunctionFragment;
     "collateralToken()": FunctionFragment;
     "collectFees(address,address,uint256)": FunctionFragment;
     "creditManager()": FunctionFragment;
     "creditRequest()": FunctionFragment;
     "creditRoles()": FunctionFragment;
+    "distributeFees(address,address[])": FunctionFragment;
     "getAccruedFees(address[],address)": FunctionFragment;
     "getCollateralToken()": FunctionFragment;
     "getUnderwriterPoolStakePercent(address,address)": FunctionFragment;
@@ -37,7 +36,6 @@ interface CreditFeeManagerInterface extends ethers.utils.Interface {
     "priceOracle()": FunctionFragment;
     "recoverERC20(address,uint256)": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
-    "splitFees(address,address[])": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
     "underwriterFeePercent()": FunctionFragment;
     "updateUnderwriterFeePercent(uint256)": FunctionFragment;
@@ -46,14 +44,6 @@ interface CreditFeeManagerInterface extends ethers.utils.Interface {
   encodeFunctionData(
     functionFragment: "calculatePercentInCollateral",
     values: [string, BigNumberish, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "claimOperatorFees",
-    values: [string, string[]]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "claimUnderwriterFees",
-    values: [string, string[]]
   ): string;
   encodeFunctionData(
     functionFragment: "collateralToken",
@@ -74,6 +64,10 @@ interface CreditFeeManagerInterface extends ethers.utils.Interface {
   encodeFunctionData(
     functionFragment: "creditRoles",
     values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "distributeFees",
+    values: [string, string[]]
   ): string;
   encodeFunctionData(
     functionFragment: "getAccruedFees",
@@ -105,10 +99,6 @@ interface CreditFeeManagerInterface extends ethers.utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "splitFees",
-    values: [string, string[]]
-  ): string;
-  encodeFunctionData(
     functionFragment: "transferOwnership",
     values: [string]
   ): string;
@@ -123,14 +113,6 @@ interface CreditFeeManagerInterface extends ethers.utils.Interface {
 
   decodeFunctionResult(
     functionFragment: "calculatePercentInCollateral",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "claimOperatorFees",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "claimUnderwriterFees",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -151,6 +133,10 @@ interface CreditFeeManagerInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "creditRoles",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "distributeFees",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -179,7 +165,6 @@ interface CreditFeeManagerInterface extends ethers.utils.Interface {
     functionFragment: "renounceOwnership",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "splitFees", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "transferOwnership",
     data: BytesLike
@@ -201,7 +186,6 @@ interface CreditFeeManagerInterface extends ethers.utils.Interface {
     "PoolRewardsUpdated(address,uint256)": EventFragment;
     "UnderwriterFeesClaimed(address,uint256)": EventFragment;
     "UnderwriterRewardsStaked(address,uint256)": EventFragment;
-    "UnderwriterRewardsUpdated(address,uint256)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "FeesCollected"): EventFragment;
@@ -211,7 +195,6 @@ interface CreditFeeManagerInterface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: "PoolRewardsUpdated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "UnderwriterFeesClaimed"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "UnderwriterRewardsStaked"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "UnderwriterRewardsUpdated"): EventFragment;
 }
 
 export type FeesCollectedEvent = TypedEvent<
@@ -244,10 +227,6 @@ export type UnderwriterFeesClaimedEvent = TypedEvent<
 
 export type UnderwriterRewardsStakedEvent = TypedEvent<
   [string, BigNumber] & { underwriter: string; totalStaked: BigNumber }
->;
-
-export type UnderwriterRewardsUpdatedEvent = TypedEvent<
-  [string, BigNumber] & { underwriter: string; totalRewards: BigNumber }
 >;
 
 export class CreditFeeManager extends BaseContract {
@@ -301,18 +280,6 @@ export class CreditFeeManager extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    claimOperatorFees(
-      _network: string,
-      _networkMembers: string[],
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    claimUnderwriterFees(
-      _network: string,
-      _networkMembers: string[],
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
     collateralToken(overrides?: CallOverrides): Promise<[string]>;
 
     collectFees(
@@ -327,6 +294,12 @@ export class CreditFeeManager extends BaseContract {
     creditRequest(overrides?: CallOverrides): Promise<[string]>;
 
     creditRoles(overrides?: CallOverrides): Promise<[string]>;
+
+    distributeFees(
+      _network: string,
+      _networkMembers: string[],
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
 
     getAccruedFees(
       _members: string[],
@@ -365,12 +338,6 @@ export class CreditFeeManager extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    splitFees(
-      _network: string,
-      _networkMembers: string[],
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
     transferOwnership(
       newOwner: string,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -391,18 +358,6 @@ export class CreditFeeManager extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  claimOperatorFees(
-    _network: string,
-    _networkMembers: string[],
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  claimUnderwriterFees(
-    _network: string,
-    _networkMembers: string[],
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
   collateralToken(overrides?: CallOverrides): Promise<string>;
 
   collectFees(
@@ -417,6 +372,12 @@ export class CreditFeeManager extends BaseContract {
   creditRequest(overrides?: CallOverrides): Promise<string>;
 
   creditRoles(overrides?: CallOverrides): Promise<string>;
+
+  distributeFees(
+    _network: string,
+    _networkMembers: string[],
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
 
   getAccruedFees(
     _members: string[],
@@ -455,12 +416,6 @@ export class CreditFeeManager extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  splitFees(
-    _network: string,
-    _networkMembers: string[],
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
   transferOwnership(
     newOwner: string,
     overrides?: Overrides & { from?: string | Promise<string> }
@@ -481,18 +436,6 @@ export class CreditFeeManager extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    claimOperatorFees(
-      _network: string,
-      _networkMembers: string[],
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    claimUnderwriterFees(
-      _network: string,
-      _networkMembers: string[],
-      overrides?: CallOverrides
-    ): Promise<void>;
-
     collateralToken(overrides?: CallOverrides): Promise<string>;
 
     collectFees(
@@ -507,6 +450,12 @@ export class CreditFeeManager extends BaseContract {
     creditRequest(overrides?: CallOverrides): Promise<string>;
 
     creditRoles(overrides?: CallOverrides): Promise<string>;
+
+    distributeFees(
+      _network: string,
+      _networkMembers: string[],
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     getAccruedFees(
       _members: string[],
@@ -542,12 +491,6 @@ export class CreditFeeManager extends BaseContract {
     ): Promise<void>;
 
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
-
-    splitFees(
-      _network: string,
-      _networkMembers: string[],
-      overrides?: CallOverrides
-    ): Promise<void>;
 
     transferOwnership(
       newOwner: string,
@@ -668,22 +611,6 @@ export class CreditFeeManager extends BaseContract {
       [string, BigNumber],
       { underwriter: string; totalStaked: BigNumber }
     >;
-
-    "UnderwriterRewardsUpdated(address,uint256)"(
-      underwriter?: null,
-      totalRewards?: null
-    ): TypedEventFilter<
-      [string, BigNumber],
-      { underwriter: string; totalRewards: BigNumber }
-    >;
-
-    UnderwriterRewardsUpdated(
-      underwriter?: null,
-      totalRewards?: null
-    ): TypedEventFilter<
-      [string, BigNumber],
-      { underwriter: string; totalRewards: BigNumber }
-    >;
   };
 
   estimateGas: {
@@ -691,18 +618,6 @@ export class CreditFeeManager extends BaseContract {
       _networkToken: string,
       _percent: BigNumberish,
       _amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    claimOperatorFees(
-      _network: string,
-      _networkMembers: string[],
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    claimUnderwriterFees(
-      _network: string,
-      _networkMembers: string[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -720,6 +635,12 @@ export class CreditFeeManager extends BaseContract {
     creditRequest(overrides?: CallOverrides): Promise<BigNumber>;
 
     creditRoles(overrides?: CallOverrides): Promise<BigNumber>;
+
+    distributeFees(
+      _network: string,
+      _networkMembers: string[],
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
 
     getAccruedFees(
       _members: string[],
@@ -758,12 +679,6 @@ export class CreditFeeManager extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    splitFees(
-      _network: string,
-      _networkMembers: string[],
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
     transferOwnership(
       newOwner: string,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -785,18 +700,6 @@ export class CreditFeeManager extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    claimOperatorFees(
-      _network: string,
-      _networkMembers: string[],
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    claimUnderwriterFees(
-      _network: string,
-      _networkMembers: string[],
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
     collateralToken(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     collectFees(
@@ -811,6 +714,12 @@ export class CreditFeeManager extends BaseContract {
     creditRequest(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     creditRoles(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    distributeFees(
+      _network: string,
+      _networkMembers: string[],
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
 
     getAccruedFees(
       _members: string[],
@@ -848,12 +757,6 @@ export class CreditFeeManager extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     renounceOwnership(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    splitFees(
-      _network: string,
-      _networkMembers: string[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 

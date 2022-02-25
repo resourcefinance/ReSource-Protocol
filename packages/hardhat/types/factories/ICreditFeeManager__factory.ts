@@ -125,25 +125,6 @@ const _abi = [
     type: "event",
   },
   {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
-        internalType: "address",
-        name: "underwriter",
-        type: "address",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "totalRewards",
-        type: "uint256",
-      },
-    ],
-    name: "UnderwriterRewardsUpdated",
-    type: "event",
-  },
-  {
     inputs: [
       {
         internalType: "address",

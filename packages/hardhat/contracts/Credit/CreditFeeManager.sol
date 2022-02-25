@@ -26,7 +26,6 @@ contract CreditFeeManager is ICreditFeeManager, OwnableUpgradeable {
     ICreditRequest public creditRequest;
     uint256 public underwriterFeePercent;
     mapping(address => mapping(address => uint256)) accruedFees;
-    mapping(address => uint256) rewards;
 
     /* ========== INITIALIZER ========== */
 
@@ -68,28 +67,7 @@ contract CreditFeeManager is ICreditFeeManager, OwnableUpgradeable {
         emit FeesCollected(_network, _networkMember, creditFee);
     }
 
-    function claimUnderwriterFees(address _network, address[] memory _networkMembers)
-        external
-        onlyUnderwriter
-    {
-        splitFees(_network, _networkMembers);
-        if (rewards[msg.sender] == 0) return;
-        collateralToken.safeTransfer(msg.sender, rewards[msg.sender]);
-        emit UnderwriterFeesClaimed(msg.sender, rewards[msg.sender]);
-        rewards[msg.sender] = 0;
-    }
-
-    function claimOperatorFees(address _network, address[] memory _networkMembers)
-        external
-        onlyCreditOperator
-    {
-        splitFees(_network, _networkMembers);
-        collateralToken.safeTransfer(msg.sender, rewards[address(this)]);
-        emit OperatorFeesClaimed(msg.sender, rewards[address(this)]);
-        rewards[address(this)] = 0;
-    }
-
-    function splitFees(address _network, address[] memory _networkMembers) public {
+    function distributeFees(address _network, address[] memory _networkMembers) public {
         for (uint256 i = 0; i < _networkMembers.length; i++) {
             uint256 fees = accruedFees[_network][_networkMembers[i]];
             accruedFees[_network][_networkMembers[i]] = 0;
@@ -98,8 +76,6 @@ contract CreditFeeManager is ICreditFeeManager, OwnableUpgradeable {
                 _networkMembers[i]
             );
             if (underwriter == address(0)) {
-                rewards[address(this)] += fees;
-                emit OperatorRewardsUpdated(rewards[address(this)]);
                 return;
             }
             address pool = creditManager.getCreditLine(_network, _networkMembers[i]).creditPool;
@@ -110,13 +86,15 @@ contract CreditFeeManager is ICreditFeeManager, OwnableUpgradeable {
                 underwriter,
                 fees
             );
-            splitFeeWithPool(_network, _networkMembers[i], underwriter, pool, leftoverFee);
+            if (leftoverFee > 0) {
+                ICreditPool(pool).notifyRewardAmount(address(collateralToken), leftoverFee);
+                emit PoolRewardsUpdated(pool, leftoverFee);
+            }
         }
     }
 
-    function recoverERC20(address tokenAddress, uint256 tokenAmount) external onlyOwner {
-        require(tokenAddress != address(collateralToken), "Cannot withdraw staking token");
-        IERC20Upgradeable(tokenAddress).safeTransfer(owner(), tokenAmount);
+    function recoverERC20(address tokenAddress, uint256 tokenAmount) external onlyCreditOperator {
+        IERC20Upgradeable(tokenAddress).safeTransfer(msg.sender, tokenAmount);
     }
 
     function updateUnderwriterFeePercent(uint256 _feePercent) external onlyCreditOperator {
@@ -185,23 +163,6 @@ contract CreditFeeManager is ICreditFeeManager, OwnableUpgradeable {
             creditFee -= neededCollateral;
         }
         return creditFee;
-    }
-
-    function splitFeeWithPool(
-        address _network,
-        address _networkMember,
-        address _underwriter,
-        address _pool,
-        uint256 _fee
-    ) private {
-        if (_fee == 0) return;
-        uint256 underwriterPercent = getUnderwriterPoolStakePercent(_network, _networkMember);
-        uint256 underwriterFee = (underwriterPercent * _fee) / MAX_PPM;
-        uint256 poolFee = _fee - underwriterFee;
-        ICreditPool(_pool).notifyRewardAmount(address(collateralToken), poolFee);
-        emit PoolRewardsUpdated(_underwriter, poolFee);
-        rewards[_underwriter] += underwriterFee;
-        emit UnderwriterRewardsUpdated(_underwriter, underwriterFee);
     }
 
     /* ========== MODIFIERS ========== */

@@ -65,7 +65,10 @@ describe("CreditFeeManager Tests", function() {
     await (
       await contracts.creditFeeManager
         .connect(creditOpperator)
-        .claimOperatorFees(contracts.rUSD.address, [member.address])
+        .recoverERC20(
+          contracts.sourceToken.address,
+          await contracts.sourceToken.balanceOf(contracts.creditFeeManager.address),
+        )
     ).wait()
 
     expect(await contracts.sourceToken.balanceOf(creditOpperator.address)).to.equal(

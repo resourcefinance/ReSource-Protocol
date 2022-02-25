@@ -248,7 +248,7 @@ interface CreditManagerInterface extends ethers.utils.Interface {
   ): Result;
 
   events: {
-    "CreditLineCreated(address,address,address,uint256)": EventFragment;
+    "CreditLineCreated(address,address,address,uint256,uint256)": EventFragment;
     "CreditLineLimitUpdated(address,address,uint256)": EventFragment;
     "CreditLinePoolUpdated(address,address,address)": EventFragment;
     "CreditLineRemoved(address,address)": EventFragment;
@@ -271,11 +271,12 @@ interface CreditManagerInterface extends ethers.utils.Interface {
 }
 
 export type CreditLineCreatedEvent = TypedEvent<
-  [string, string, string, BigNumber] & {
+  [string, string, string, BigNumber, BigNumber] & {
     network: string;
     counterparty: string;
     pool: string;
     creditLimit: BigNumber;
+    timestamp: BigNumber;
   }
 >;
 
@@ -303,7 +304,7 @@ export type CreditLineRenewedEvent = TypedEvent<
   [string, string, BigNumber] & {
     network: string;
     counterparty: string;
-    expiration: BigNumber;
+    timestamp: BigNumber;
   }
 >;
 
@@ -770,18 +771,20 @@ export class CreditManager extends BaseContract {
   };
 
   filters: {
-    "CreditLineCreated(address,address,address,uint256)"(
+    "CreditLineCreated(address,address,address,uint256,uint256)"(
       network?: null,
       counterparty?: null,
       pool?: null,
-      creditLimit?: null
+      creditLimit?: null,
+      timestamp?: null
     ): TypedEventFilter<
-      [string, string, string, BigNumber],
+      [string, string, string, BigNumber, BigNumber],
       {
         network: string;
         counterparty: string;
         pool: string;
         creditLimit: BigNumber;
+        timestamp: BigNumber;
       }
     >;
 
@@ -789,14 +792,16 @@ export class CreditManager extends BaseContract {
       network?: null,
       counterparty?: null,
       pool?: null,
-      creditLimit?: null
+      creditLimit?: null,
+      timestamp?: null
     ): TypedEventFilter<
-      [string, string, string, BigNumber],
+      [string, string, string, BigNumber, BigNumber],
       {
         network: string;
         counterparty: string;
         pool: string;
         creditLimit: BigNumber;
+        timestamp: BigNumber;
       }
     >;
 
@@ -855,19 +860,19 @@ export class CreditManager extends BaseContract {
     "CreditLineRenewed(address,address,uint256)"(
       network?: null,
       counterparty?: null,
-      expiration?: null
+      timestamp?: null
     ): TypedEventFilter<
       [string, string, BigNumber],
-      { network: string; counterparty: string; expiration: BigNumber }
+      { network: string; counterparty: string; timestamp: BigNumber }
     >;
 
     CreditLineRenewed(
       network?: null,
       counterparty?: null,
-      expiration?: null
+      timestamp?: null
     ): TypedEventFilter<
       [string, string, BigNumber],
-      { network: string; counterparty: string; expiration: BigNumber }
+      { network: string; counterparty: string; timestamp: BigNumber }
     >;
 
     "CreditPoolAdded(address,address)"(

@@ -77,7 +77,7 @@ contract NetworkFeeManager is OwnableUpgradeable, INetworkFeeManager {
     }
 
     function claimAmbassadorFees(address[] memory _members) external override {
-        splitFees(_members);
+        distributeFees(_members);
         if (rewards[msg.sender] == 0) return;
         collateralToken.safeTransfer(msg.sender, rewards[msg.sender]);
         emit AmbassadorFeesClaimed(msg.sender, rewards[msg.sender]);
@@ -85,14 +85,14 @@ contract NetworkFeeManager is OwnableUpgradeable, INetworkFeeManager {
     }
 
     function claimNetworkFees(address[] memory _members) external override onlyNetworkOperator {
-        splitFees(_members);
+        distributeFees(_members);
         if (rewards[address(this)] == 0) return;
         collateralToken.safeTransfer(msg.sender, rewards[address(this)]);
         emit NetworkFeesClaimed(msg.sender, rewards[address(this)]);
         rewards[address(this)] = 0;
     }
 
-    function splitFees(address[] memory _members) public {
+    function distributeFees(address[] memory _members) public {
         for (uint256 i = 0; i < _members.length; i++) {
             uint256 totalFees = accruedFees[_members[i]];
             if (totalFees == 0) continue;
@@ -122,7 +122,7 @@ contract NetworkFeeManager is OwnableUpgradeable, INetworkFeeManager {
         ambassadorFeePercent = _ambassadorFeePercent;
     }
 
-    function recoverERC20(address tokenAddress, uint256 tokenAmount) external onlyOwner {
+    function recoverERC20(address tokenAddress, uint256 tokenAmount) external onlyNetworkOperator {
         require(tokenAddress != address(collateralToken), "Cannot withdraw staking token");
         IERC20Upgradeable(tokenAddress).safeTransfer(owner(), tokenAmount);
     }

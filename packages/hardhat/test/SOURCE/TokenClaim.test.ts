@@ -1,10 +1,10 @@
-import { ethers, upgrades, deployments } from "hardhat"
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/dist/src/signers"
-import { expect } from "chai"
-import chai from "chai"
+import chai, { expect } from "chai"
 import { solidity } from "ethereum-waffle"
-import { parseEther } from "ethers/lib/utils"
-import { SourceTokenV2, TokenClaim } from "../../types"
+import { ethers, upgrades } from "hardhat"
+
+import { SourceTokenV2 } from "../../types/SourceTokenV2"
+import { TokenClaim } from "../../types/TokenClaim"
 
 chai.use(solidity)
 
@@ -35,7 +35,7 @@ describe("TokenClaim Tests", function() {
     const tokenClaimFactory = await ethers.getContractFactory("TokenClaim")
 
     tokenClaim = (await upgrades.deployProxy(tokenClaimFactory, [sourceToken.address])).connect(
-      deployer,
+      deployer
     ) as TokenClaim
 
     expect(sourceToken.address).to.properAddress
@@ -48,7 +48,7 @@ describe("TokenClaim Tests", function() {
     ).wait()
 
     expect(ethers.utils.formatEther(await sourceToken.balanceOf(tokenClaim.address))).to.equal(
-      "1000000.0",
+      "1000000.0"
     )
     let withdrawable = ethers.utils.formatEther(await tokenClaim.getWithdrawableAmount())
     expect(withdrawable).to.equal("1000000.0")
@@ -84,10 +84,10 @@ describe("TokenClaim Tests", function() {
     await (await tokenClaim.connect(beneficiaryA).claim()).wait()
 
     expect(ethers.utils.formatEther(await sourceToken.balanceOf(beneficiaryA.address))).to.equal(
-      "50000.0",
+      "50000.0"
     )
     expect(
-      ethers.utils.formatEther(await sourceToken.lockedBalanceOf(beneficiaryA.address)),
+      ethers.utils.formatEther(await sourceToken.lockedBalanceOf(beneficiaryA.address))
     ).to.equal("50000.0")
     expect((await tokenClaim.claims(beneficiaryA.address)).released).to.be.true
     let withdrawable = ethers.utils.formatEther(await tokenClaim.getWithdrawableAmount())
@@ -118,10 +118,10 @@ describe("TokenClaim Tests", function() {
     await (await tokenClaim.connect(beneficiaryA).claim()).wait()
 
     expect(ethers.utils.formatEther(await sourceToken.balanceOf(beneficiaryA.address))).to.equal(
-      "75000.0",
+      "75000.0"
     )
     expect(
-      ethers.utils.formatEther(await sourceToken.lockedBalanceOf(beneficiaryA.address)),
+      ethers.utils.formatEther(await sourceToken.lockedBalanceOf(beneficiaryA.address))
     ).to.equal("50000.0")
     expect((await tokenClaim.claims(beneficiaryA.address)).released).to.be.true
     let withdrawable = ethers.utils.formatEther(await tokenClaim.getWithdrawableAmount())
@@ -160,10 +160,10 @@ describe("TokenClaim Tests", function() {
     await (await tokenClaim.connect(beneficiaryA).claim()).wait()
 
     expect(ethers.utils.formatEther(await sourceToken.balanceOf(beneficiaryA.address))).to.equal(
-      "75000.0",
+      "75000.0"
     )
     expect(
-      ethers.utils.formatEther(await sourceToken.lockedBalanceOf(beneficiaryA.address)),
+      ethers.utils.formatEther(await sourceToken.lockedBalanceOf(beneficiaryA.address))
     ).to.equal("75000.0")
     expect((await tokenClaim.claims(beneficiaryA.address)).released).to.be.true
     let withdrawable = ethers.utils.formatEther(await tokenClaim.getWithdrawableAmount())
@@ -205,10 +205,10 @@ describe("TokenClaim Tests", function() {
     expect(withdrawable).to.equal("850000.0")
 
     expect(ethers.utils.formatEther(await sourceToken.balanceOf(beneficiaryB.address))).to.equal(
-      "0.0",
+      "0.0"
     )
     expect(
-      ethers.utils.formatEther(await sourceToken.lockedBalanceOf(beneficiaryB.address)),
+      ethers.utils.formatEther(await sourceToken.lockedBalanceOf(beneficiaryB.address))
     ).to.equal("0.0")
 
     await expect(tokenClaim.connect(beneficiaryB).claim()).to.be.reverted

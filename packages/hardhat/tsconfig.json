@@ -19,8 +19,9 @@
     "artifacts/**/*.json",
     "scripts/**/*",
     "tasks/**/*",
-    "./test",
+    "test/**/*",
     "types/**/*",
     "deploy/**/*"
   ]
 }
+

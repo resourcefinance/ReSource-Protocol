@@ -271,7 +271,7 @@ task("account", "Get balance informations for the deployment account.", async (_
     //console.log(config.networks[n],n)
     try {
       let provider = new ethers.providers.JsonRpcProvider(
-        (config.networks[n] as HttpNetworkUserConfig).url,
+        (config.networks[n] as HttpNetworkUserConfig).url
       )
       let balance = await provider.getBalance(address)
       console.log(" -- " + n + " --  -- -- 📡 ")
@@ -307,7 +307,7 @@ task("blockNumber", "Prints the block number", async (_, { ethers }) => {
 })
 
 task("balance", "Prints an account's balance")
-  .addPositionalParam("account", "The account's address")
+  .addParam("account", "The account's address")
   .setAction(async (taskArgs, { ethers }) => {
     const balance = await ethers.provider.getBalance(await addr(ethers, taskArgs.account))
     console.log(formatUnits(balance, "ether"), "ETH")
@@ -383,7 +383,7 @@ task("sendSource", "Send SOURCE")
     const tokenContract = new ethers.Contract(
       ReSourceTokenAddress,
       SourceTokenFactory.interface,
-      signer,
+      signer
     )
 
     try {

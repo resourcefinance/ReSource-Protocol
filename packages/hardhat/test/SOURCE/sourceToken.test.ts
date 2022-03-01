@@ -7,7 +7,7 @@ import { SourceToken } from "../../types/SourceToken"
 
 chai.use(solidity)
 
-describe("ReSourcetoken Tests", function() {
+describe("ReSourceToken Tests", function() {
   let deployer: SignerWithAddress
   let memberA: SignerWithAddress
   let memberB: SignerWithAddress

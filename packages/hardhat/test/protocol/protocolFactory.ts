@@ -11,11 +11,13 @@ import {
   IKeyWalletDeployer,
   NetworkRoles,
   RUSDV3,
+  SourceTokenV2,
+  SourceTokenV2__factory,
 } from "../../types"
 
 export interface ProtocolContracts {
   creditRoles: CreditRoles
-  sourceToken: SourceToken
+  sourceToken: SourceTokenV2
   priceOracle: PriceOracle
   creditManager: CreditManager
   creditRequest: CreditRequest
@@ -49,12 +51,17 @@ export const protocolFactory = {
       contracts.walletDeployer.address,
     ])) as NetworkRoles
 
-    // 4. deploy SOURCE
+    // 4. deploy & upgrade SOURCE
     const SOURCEFactory = await ethers.getContractFactory("SourceToken")
-    contracts.sourceToken = (await upgrades.deployProxy(SOURCEFactory, [
+    const sourceToken = (await upgrades.deployProxy(SOURCEFactory, [
       ethers.utils.parseEther("100000000"),
       [],
     ])) as SourceToken
+    const SourceTokenV2 = await ethers.getContractFactory("SourceTokenV2")
+
+    contracts.sourceToken = (await upgrades.upgradeProxy(sourceToken.address, SourceTokenV2, {
+      call: "upgradeV2",
+    })) as SourceTokenV2
 
     // 5. deploy PriceOracle
     const priceOracleFactory = await ethers.getContractFactory("PriceOracle")

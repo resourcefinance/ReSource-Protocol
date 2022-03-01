@@ -1176,13 +1176,13 @@
           {
             "contract": "TokenClaim",
             "label": "_token",
-            "type": "t_contract(IERC20SOUL)7854",
+            "type": "t_contract(IERC20SOUL)15210",
             "src": "contracts/SOURCE/TokenClaim.sol:23"
           },
           {
             "contract": "TokenClaim",
             "label": "claims",
-            "type": "t_mapping(t_address,t_struct(Claim)7993_storage)",
+            "type": "t_mapping(t_address,t_struct(Claim)15293_storage)",
             "src": "contracts/SOURCE/TokenClaim.sol:24"
           },
           {
@@ -1193,16 +1193,16 @@
           }
         ],
         "types": {
-          "t_contract(IERC20SOUL)7854": {
+          "t_contract(IERC20SOUL)15210": {
             "label": "contract IERC20SOUL"
           },
-          "t_mapping(t_address,t_struct(Claim)7993_storage)": {
+          "t_mapping(t_address,t_struct(Claim)15293_storage)": {
             "label": "mapping(address => struct TokenClaim.Claim)"
           },
           "t_address": {
             "label": "address"
           },
-          "t_struct(Claim)7993_storage": {
+          "t_struct(Claim)15293_storage": {
             "label": "struct TokenClaim.Claim",
             "members": [
               {
@@ -1211,7 +1211,7 @@
               },
               {
                 "label": "lock",
-                "type": "t_struct(Lock)7747_storage"
+                "type": "t_struct(Lock)15103_storage"
               },
               {
                 "label": "released",
@@ -1222,7 +1222,7 @@
           "t_uint256": {
             "label": "uint256"
           },
-          "t_struct(Lock)7747_storage": {
+          "t_struct(Lock)15103_storage": {
             "label": "struct IERC20SOUL.Lock",
             "members": [
               {
@@ -1235,17 +1235,158 @@
               },
               {
                 "label": "schedules",
-                "type": "t_array(t_struct(Schedule)7752_storage)dyn_storage"
+                "type": "t_array(t_struct(Schedule)15108_storage)dyn_storage"
               }
             ]
           },
           "t_bool": {
             "label": "bool"
           },
-          "t_array(t_struct(Schedule)7752_storage)dyn_storage": {
+          "t_array(t_struct(Schedule)15108_storage)dyn_storage": {
             "label": "struct IERC20SOUL.Schedule[]"
           },
-          "t_struct(Schedule)7752_storage": {
+          "t_struct(Schedule)15108_storage": {
+            "label": "struct IERC20SOUL.Schedule",
+            "members": [
+              {
+                "label": "amount",
+                "type": "t_uint256"
+              },
+              {
+                "label": "expirationBlock",
+                "type": "t_uint256"
+              }
+            ]
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]"
+          }
+        }
+      }
+    },
+    "faacb9ccb76c8feb790a391d3b123e159361b917daad4546006111f3b544f6de": {
+      "address": "0x355cB6f0Ce0E72d88592Bf1De6F9a40E922714DC",
+      "txHash": "0x00c197d4a65e16d207bc7aa1c33626c5b2f4a460d92918b96375d3d29a48abd4",
+      "layout": {
+        "storage": [
+          {
+            "contract": "Initializable",
+            "label": "_initialized",
+            "type": "t_bool",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:21"
+          },
+          {
+            "contract": "Initializable",
+            "label": "_initializing",
+            "type": "t_bool",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:26"
+          },
+          {
+            "contract": "ContextUpgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)50_storage",
+            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:30"
+          },
+          {
+            "contract": "OwnableUpgradeable",
+            "label": "_owner",
+            "type": "t_address",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:21"
+          },
+          {
+            "contract": "OwnableUpgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)49_storage",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:77"
+          },
+          {
+            "contract": "ReentrancyGuardUpgradeable",
+            "label": "_status",
+            "type": "t_uint256",
+            "src": "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol:37"
+          },
+          {
+            "contract": "ReentrancyGuardUpgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)49_storage",
+            "src": "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol:67"
+          },
+          {
+            "contract": "TokenClaimV2",
+            "label": "_token",
+            "type": "t_contract(IERC20SOUL)15210",
+            "src": "contracts/SOURCE/TokenClaimV2.sol:22"
+          },
+          {
+            "contract": "TokenClaimV2",
+            "label": "claims",
+            "type": "t_mapping(t_address,t_struct(Claim)15828_storage)",
+            "src": "contracts/SOURCE/TokenClaimV2.sol:23"
+          },
+          {
+            "contract": "TokenClaimV2",
+            "label": "totalClaimable",
+            "type": "t_uint256",
+            "src": "contracts/SOURCE/TokenClaimV2.sol:24"
+          }
+        ],
+        "types": {
+          "t_contract(IERC20SOUL)15210": {
+            "label": "contract IERC20SOUL"
+          },
+          "t_mapping(t_address,t_struct(Claim)15828_storage)": {
+            "label": "mapping(address => struct TokenClaimV2.Claim)"
+          },
+          "t_address": {
+            "label": "address"
+          },
+          "t_struct(Claim)15828_storage": {
+            "label": "struct TokenClaimV2.Claim",
+            "members": [
+              {
+                "label": "unlockedAmount",
+                "type": "t_uint256"
+              },
+              {
+                "label": "lock",
+                "type": "t_struct(Lock)15103_storage"
+              },
+              {
+                "label": "released",
+                "type": "t_bool"
+              }
+            ]
+          },
+          "t_uint256": {
+            "label": "uint256"
+          },
+          "t_struct(Lock)15103_storage": {
+            "label": "struct IERC20SOUL.Lock",
+            "members": [
+              {
+                "label": "totalAmount",
+                "type": "t_uint256"
+              },
+              {
+                "label": "amountStaked",
+                "type": "t_uint256"
+              },
+              {
+                "label": "schedules",
+                "type": "t_array(t_struct(Schedule)15108_storage)dyn_storage"
+              }
+            ]
+          },
+          "t_bool": {
+            "label": "bool"
+          },
+          "t_array(t_struct(Schedule)15108_storage)dyn_storage": {
+            "label": "struct IERC20SOUL.Schedule[]"
+          },
+          "t_struct(Schedule)15108_storage": {
             "label": "struct IERC20SOUL.Schedule",
             "members": [
               {

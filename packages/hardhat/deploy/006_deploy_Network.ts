@@ -63,8 +63,6 @@ const func: DeployFunction = async function(hardhat: HardhatRuntimeEnvironment) 
   const rUSDAddress = await deployProxyAndSave("RUSDV3", rUSDArgs, hardhat, rUSDAbi, {
     initializer: "initializeRUSD",
   })
-
-  await (await networkFeeManager.registerNetwork(rUSDAddress)).wait()
 }
 export default func
 func.tags = ["NETWORK"]

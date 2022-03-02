@@ -1,5 +1,5 @@
 import { upgrades, ethers, network } from "hardhat"
-import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/dist/src/signers"
+import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers"
 import { expect } from "chai"
 import chai from "chai"
 import { solidity } from "ethereum-waffle"
@@ -8,13 +8,13 @@ import { SourceToken, SourceTokenV2, TokenClaim } from "../../types"
 
 chai.use(solidity)
 
-describe("CreditFeeManager Tests", function() {
+describe("CreditFeeManager Tests", function () {
   let deployer: SignerWithAddress
   let beneficiary: SignerWithAddress
   let sourceToken: SourceTokenV2
   let tokenClaim: TokenClaim
 
-  this.beforeEach(async function() {
+  this.beforeEach(async function () {
     const accounts = await ethers.getSigners()
     deployer = accounts[0]
     beneficiary = accounts[1]
@@ -38,7 +38,7 @@ describe("CreditFeeManager Tests", function() {
     ).wait()
   })
 
-  it("Create a claim with one schedule for beneficiary and claim", async function() {
+  it("Create a claim with one schedule for beneficiary and claim", async function () {
     const now = await (await ethers.provider.getBlock("latest")).timestamp
 
     await tokenClaim.addClaim(beneficiary.address, ethers.utils.parseEther("50000"), {
@@ -69,14 +69,14 @@ describe("CreditFeeManager Tests", function() {
     await (await tokenClaim.connect(beneficiary).claim()).wait()
 
     expect(ethers.utils.formatEther(await sourceToken.balanceOf(beneficiary.address))).to.equal(
-      "100000.0",
+      "100000.0"
     )
     expect(
-      ethers.utils.formatEther(await sourceToken.lockedBalanceOf(beneficiary.address)),
+      ethers.utils.formatEther(await sourceToken.lockedBalanceOf(beneficiary.address))
     ).to.equal("0.0")
   })
 
-  it("Create a claim with multiple schedules for beneficiary and claim before expiration", async function() {
+  it("Create a claim with multiple schedules for beneficiary and claim before expiration", async function () {
     const now = await (await ethers.provider.getBlock("latest")).timestamp
 
     await tokenClaim.addClaim(beneficiary.address, ethers.utils.parseEther("50000"), {
@@ -112,14 +112,14 @@ describe("CreditFeeManager Tests", function() {
     await (await tokenClaim.connect(beneficiary).claim()).wait()
 
     expect(ethers.utils.formatEther(await sourceToken.balanceOf(beneficiary.address))).to.equal(
-      "50000.0",
+      "50000.0"
     )
     expect(
-      ethers.utils.formatEther(await sourceToken.lockedBalanceOf(beneficiary.address)),
+      ethers.utils.formatEther(await sourceToken.lockedBalanceOf(beneficiary.address))
     ).to.equal("150000.0")
   })
 
-  it("Create a claim with multiple schedules for beneficiary and claim in the middle of expiration", async function() {
+  it("Create a claim with multiple schedules for beneficiary and claim in the middle of expiration", async function () {
     const now = await (await ethers.provider.getBlock("latest")).timestamp
 
     await tokenClaim.addClaim(beneficiary.address, ethers.utils.parseEther("50000"), {
@@ -158,14 +158,14 @@ describe("CreditFeeManager Tests", function() {
     await (await tokenClaim.connect(beneficiary).claim()).wait()
 
     expect(ethers.utils.formatEther(await sourceToken.balanceOf(beneficiary.address))).to.equal(
-      "100000.0",
+      "100000.0"
     )
     expect(
-      ethers.utils.formatEther(await sourceToken.lockedBalanceOf(beneficiary.address)),
+      ethers.utils.formatEther(await sourceToken.lockedBalanceOf(beneficiary.address))
     ).to.equal("100000.0")
   })
 
-  it("Create a claim with multiple schedules for beneficiary and claim at end of expiration", async function() {
+  it("Create a claim with multiple schedules for beneficiary and claim at end of expiration", async function () {
     const now = await (await ethers.provider.getBlock("latest")).timestamp
 
     await tokenClaim.addClaim(beneficiary.address, ethers.utils.parseEther("50000"), {
@@ -204,14 +204,14 @@ describe("CreditFeeManager Tests", function() {
     await (await tokenClaim.connect(beneficiary).claim()).wait()
 
     expect(ethers.utils.formatEther(await sourceToken.balanceOf(beneficiary.address))).to.equal(
-      "200000.0",
+      "200000.0"
     )
     expect(
-      ethers.utils.formatEther(await sourceToken.lockedBalanceOf(beneficiary.address)),
+      ethers.utils.formatEther(await sourceToken.lockedBalanceOf(beneficiary.address))
     ).to.equal("0.0")
   })
 
-  it("Create a claim with multiple schedules for beneficiary and claim at end of expiration", async function() {
+  it("Create a claim with multiple schedules for beneficiary and claim at end of expiration", async function () {
     const now = await (await ethers.provider.getBlock("latest")).timestamp
 
     await tokenClaim.addClaim(beneficiary.address, ethers.utils.parseEther("50000"), {
@@ -250,10 +250,10 @@ describe("CreditFeeManager Tests", function() {
     await (await tokenClaim.connect(beneficiary).claim()).wait()
 
     expect(ethers.utils.formatEther(await sourceToken.balanceOf(beneficiary.address))).to.equal(
-      "150000.0",
+      "150000.0"
     )
     expect(
-      ethers.utils.formatEther(await sourceToken.lockedBalanceOf(beneficiary.address)),
+      ethers.utils.formatEther(await sourceToken.lockedBalanceOf(beneficiary.address))
     ).to.equal("50000.0")
   })
 })

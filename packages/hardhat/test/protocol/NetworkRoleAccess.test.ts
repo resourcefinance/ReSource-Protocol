@@ -1,5 +1,5 @@
 import { upgrades, ethers, network } from "hardhat"
-import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/dist/src/signers"
+import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers"
 import { expect } from "chai"
 import chai from "chai"
 import { solidity } from "ethereum-waffle"
@@ -7,7 +7,7 @@ import { protocolFactory, ProtocolContracts } from "./protocolFactory"
 
 chai.use(solidity)
 
-describe("NetworkAccess Test", function() {
+describe("NetworkAccess Test", function () {
   let deployer: SignerWithAddress
   let contracts: ProtocolContracts
   let underwriter: SignerWithAddress
@@ -16,7 +16,7 @@ describe("NetworkAccess Test", function() {
   let newMember: SignerWithAddress
 
   // deploy protocol
-  this.beforeEach(async function() {
+  this.beforeEach(async function () {
     const accounts = await ethers.getSigners()
     deployer = accounts[0]
     underwriter = accounts[1]
@@ -26,21 +26,21 @@ describe("NetworkAccess Test", function() {
     contracts = await protocolFactory.deployDefault(underwriter.address)
   })
 
-  it("Grant and revoke Operator Role", async function() {
+  it("Grant and revoke Operator Role", async function () {
     await (await contracts.networkRoles.grantOperator(networkOperator.address)).wait()
     expect(await contracts.networkRoles.isNetworkOperator(networkOperator.address)).to.equal(true)
     await (await contracts.networkRoles.revokeOperator(networkOperator.address)).wait()
     expect(await contracts.networkRoles.isNetworkOperator(networkOperator.address)).to.equal(false)
   })
 
-  it("Grant and revoke Ambassadorship role", async function() {
+  it("Grant and revoke Ambassadorship role", async function () {
     await (await contracts.networkRoles.grantAmbassador(ambassador.address, 0)).wait()
     expect(await contracts.networkRoles.isAmbassador(ambassador.address)).to.equal(true)
     await (await contracts.networkRoles.revokeAmbassador(ambassador.address)).wait()
     expect(await contracts.networkRoles.isAmbassador(ambassador.address)).to.equal(false)
   })
 
-  it("Deploy a valid Member wallet from ambassador", async function() {
+  it("Deploy a valid Member wallet from ambassador", async function () {
     // grant ambassador role
     await (await contracts.networkRoles.grantAmbassador(ambassador.address, 0)).wait()
     expect(await contracts.networkRoles.isAmbassador(ambassador.address)).to.equal(true)
@@ -55,7 +55,7 @@ describe("NetworkAccess Test", function() {
             ethers.Wallet.createRandom().address,
             contracts.rUSD.address,
             ambassador.address,
-            2,
+            2
           )
       ).wait()
     ).events?.find((ev) => ev.event === "RoleGranted")?.args?.account
@@ -64,7 +64,7 @@ describe("NetworkAccess Test", function() {
     expect(await contracts.networkRoles.isMember(deployedWallet)).to.equal(true)
   })
 
-  it("Invite and accept Member wallet from ambassador", async function() {
+  it("Invite and accept Member wallet from ambassador", async function () {
     // grant ambassador role
     await (await contracts.networkRoles.grantAmbassador(ambassador.address, 0)).wait()
     expect(await contracts.networkRoles.isAmbassador(ambassador.address)).to.equal(true)
@@ -82,11 +82,11 @@ describe("NetworkAccess Test", function() {
         .acceptMembershipAmbassadorInvitation(contracts.rUSD.address, ambassador.address)
     ).wait()
     expect(await contracts.networkRoles.getMembershipAmbassador(newMember.address)).to.equal(
-      ambassador.address,
+      ambassador.address
     )
   })
 
-  it("Transfer ambassador's membership to another ambassador", async function() {
+  it("Transfer ambassador's membership to another ambassador", async function () {
     // grant ambassador role
     await (await contracts.networkRoles.grantAmbassador(ambassador.address, 0)).wait()
     expect(await contracts.networkRoles.isAmbassador(ambassador.address)).to.equal(true)
@@ -104,7 +104,7 @@ describe("NetworkAccess Test", function() {
         .acceptMembershipAmbassadorInvitation(contracts.rUSD.address, ambassador.address)
     ).wait()
     expect(await contracts.networkRoles.getMembershipAmbassador(newMember.address)).to.equal(
-      ambassador.address,
+      ambassador.address
     )
 
     const ambassador2 = ethers.Wallet.createRandom()
@@ -113,10 +113,10 @@ describe("NetworkAccess Test", function() {
 
     await await contracts.networkRoles.transferMembershipAmbassador(
       newMember.address,
-      ambassador2.address,
+      ambassador2.address
     )
     expect(await contracts.networkRoles.getMembershipAmbassador(newMember.address)).to.equal(
-      ambassador2.address,
+      ambassador2.address
     )
   })
 })

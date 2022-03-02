@@ -23,18 +23,17 @@ interface NetworkFeeManagerInterface extends ethers.utils.Interface {
   functions: {
     "calculateAmbassadorRewards(address[])": FunctionFragment;
     "calculateNetworkRewards(address[])": FunctionFragment;
-    "claimAmbassadorFees(address[])": FunctionFragment;
-    "claimNetworkFees(address[])": FunctionFragment;
-    "collateralToken()": FunctionFragment;
-    "collectFees(address,address,uint256)": FunctionFragment;
+    "claimRewards(address[])": FunctionFragment;
+    "collectFees(address,uint256)": FunctionFragment;
     "creditFeeManager()": FunctionFragment;
     "distributeFees(address[])": FunctionFragment;
+    "feeToken()": FunctionFragment;
     "initialize(address,address,uint256,uint256)": FunctionFragment;
     "networkRoles()": FunctionFragment;
     "owner()": FunctionFragment;
     "recoverERC20(address,uint256)": FunctionFragment;
-    "registerNetwork(address)": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
+    "setNetwork(address)": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
     "updateAmbassadorFeePercent(uint256)": FunctionFragment;
   };
@@ -48,20 +47,12 @@ interface NetworkFeeManagerInterface extends ethers.utils.Interface {
     values: [string[]]
   ): string;
   encodeFunctionData(
-    functionFragment: "claimAmbassadorFees",
+    functionFragment: "claimRewards",
     values: [string[]]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "claimNetworkFees",
-    values: [string[]]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "collateralToken",
-    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "collectFees",
-    values: [string, string, BigNumberish]
+    values: [string, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "creditFeeManager",
@@ -71,6 +62,7 @@ interface NetworkFeeManagerInterface extends ethers.utils.Interface {
     functionFragment: "distributeFees",
     values: [string[]]
   ): string;
+  encodeFunctionData(functionFragment: "feeToken", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "initialize",
     values: [string, string, BigNumberish, BigNumberish]
@@ -85,13 +77,10 @@ interface NetworkFeeManagerInterface extends ethers.utils.Interface {
     values: [string, BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: "registerNetwork",
-    values: [string]
-  ): string;
-  encodeFunctionData(
     functionFragment: "renounceOwnership",
     values?: undefined
   ): string;
+  encodeFunctionData(functionFragment: "setNetwork", values: [string]): string;
   encodeFunctionData(
     functionFragment: "transferOwnership",
     values: [string]
@@ -110,15 +99,7 @@ interface NetworkFeeManagerInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "claimAmbassadorFees",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "claimNetworkFees",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "collateralToken",
+    functionFragment: "claimRewards",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -133,6 +114,7 @@ interface NetworkFeeManagerInterface extends ethers.utils.Interface {
     functionFragment: "distributeFees",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "feeToken", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "networkRoles",
@@ -144,13 +126,10 @@ interface NetworkFeeManagerInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "registerNetwork",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "renounceOwnership",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "setNetwork", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "transferOwnership",
     data: BytesLike
@@ -161,25 +140,19 @@ interface NetworkFeeManagerInterface extends ethers.utils.Interface {
   ): Result;
 
   events: {
-    "AmbassadorFeesClaimed(address,uint256)": EventFragment;
     "AmbassadorRewardsUpdated(address,uint256)": EventFragment;
     "FeesCollected(address,uint256)": EventFragment;
-    "NetworkFeesClaimed(address,uint256)": EventFragment;
     "NetworkRewardsUpdated(uint256)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
+    "RewardsClaimed(address,uint256)": EventFragment;
   };
 
-  getEvent(nameOrSignatureOrTopic: "AmbassadorFeesClaimed"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "AmbassadorRewardsUpdated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "FeesCollected"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "NetworkFeesClaimed"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "NetworkRewardsUpdated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "RewardsClaimed"): EventFragment;
 }
-
-export type AmbassadorFeesClaimedEvent = TypedEvent<
-  [string, BigNumber] & { ambassador: string; totalRewards: BigNumber }
->;
 
 export type AmbassadorRewardsUpdatedEvent = TypedEvent<
   [string, BigNumber] & { ambassador: string; totalRewards: BigNumber }
@@ -189,16 +162,16 @@ export type FeesCollectedEvent = TypedEvent<
   [string, BigNumber] & { member: string; totalFee: BigNumber }
 >;
 
-export type NetworkFeesClaimedEvent = TypedEvent<
-  [string, BigNumber] & { operator: string; totalRewards: BigNumber }
->;
-
 export type NetworkRewardsUpdatedEvent = TypedEvent<
   [BigNumber] & { totalRewards: BigNumber }
 >;
 
 export type OwnershipTransferredEvent = TypedEvent<
   [string, string] & { previousOwner: string; newOwner: string }
+>;
+
+export type RewardsClaimedEvent = TypedEvent<
+  [string, BigNumber] & { claimer: string; totalRewards: BigNumber }
 >;
 
 export class NetworkFeeManager extends BaseContract {
@@ -255,22 +228,14 @@ export class NetworkFeeManager extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber] & { totalRewards: BigNumber }>;
 
-    claimAmbassadorFees(
+    claimRewards(
       _members: string[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
-
-    claimNetworkFees(
-      _members: string[],
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    collateralToken(overrides?: CallOverrides): Promise<[string]>;
 
     collectFees(
-      _network: string,
       _member: string,
-      _transactionValue: BigNumberish,
+      _transactionAmount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -280,6 +245,8 @@ export class NetworkFeeManager extends BaseContract {
       _members: string[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
+
+    feeToken(overrides?: CallOverrides): Promise<[string]>;
 
     initialize(
       _creditFeeManager: string,
@@ -299,12 +266,12 @@ export class NetworkFeeManager extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    registerNetwork(
-      _network: string,
+    renounceOwnership(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    renounceOwnership(
+    setNetwork(
+      _network: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -329,22 +296,14 @@ export class NetworkFeeManager extends BaseContract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
-  claimAmbassadorFees(
+  claimRewards(
     _members: string[],
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
-
-  claimNetworkFees(
-    _members: string[],
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  collateralToken(overrides?: CallOverrides): Promise<string>;
 
   collectFees(
-    _network: string,
     _member: string,
-    _transactionValue: BigNumberish,
+    _transactionAmount: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -354,6 +313,8 @@ export class NetworkFeeManager extends BaseContract {
     _members: string[],
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
+
+  feeToken(overrides?: CallOverrides): Promise<string>;
 
   initialize(
     _creditFeeManager: string,
@@ -373,12 +334,12 @@ export class NetworkFeeManager extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  registerNetwork(
-    _network: string,
+  renounceOwnership(
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  renounceOwnership(
+  setNetwork(
+    _network: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -403,22 +364,11 @@ export class NetworkFeeManager extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    claimAmbassadorFees(
-      _members: string[],
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    claimNetworkFees(
-      _members: string[],
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    collateralToken(overrides?: CallOverrides): Promise<string>;
+    claimRewards(_members: string[], overrides?: CallOverrides): Promise<void>;
 
     collectFees(
-      _network: string,
       _member: string,
-      _transactionValue: BigNumberish,
+      _transactionAmount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -428,6 +378,8 @@ export class NetworkFeeManager extends BaseContract {
       _members: string[],
       overrides?: CallOverrides
     ): Promise<void>;
+
+    feeToken(overrides?: CallOverrides): Promise<string>;
 
     initialize(
       _creditFeeManager: string,
@@ -447,9 +399,9 @@ export class NetworkFeeManager extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    registerNetwork(_network: string, overrides?: CallOverrides): Promise<void>;
-
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
+
+    setNetwork(_network: string, overrides?: CallOverrides): Promise<void>;
 
     transferOwnership(
       newOwner: string,
@@ -463,22 +415,6 @@ export class NetworkFeeManager extends BaseContract {
   };
 
   filters: {
-    "AmbassadorFeesClaimed(address,uint256)"(
-      ambassador?: null,
-      totalRewards?: null
-    ): TypedEventFilter<
-      [string, BigNumber],
-      { ambassador: string; totalRewards: BigNumber }
-    >;
-
-    AmbassadorFeesClaimed(
-      ambassador?: null,
-      totalRewards?: null
-    ): TypedEventFilter<
-      [string, BigNumber],
-      { ambassador: string; totalRewards: BigNumber }
-    >;
-
     "AmbassadorRewardsUpdated(address,uint256)"(
       ambassador?: null,
       totalRewards?: null
@@ -511,22 +447,6 @@ export class NetworkFeeManager extends BaseContract {
       { member: string; totalFee: BigNumber }
     >;
 
-    "NetworkFeesClaimed(address,uint256)"(
-      operator?: null,
-      totalRewards?: null
-    ): TypedEventFilter<
-      [string, BigNumber],
-      { operator: string; totalRewards: BigNumber }
-    >;
-
-    NetworkFeesClaimed(
-      operator?: null,
-      totalRewards?: null
-    ): TypedEventFilter<
-      [string, BigNumber],
-      { operator: string; totalRewards: BigNumber }
-    >;
-
     "NetworkRewardsUpdated(uint256)"(
       totalRewards?: null
     ): TypedEventFilter<[BigNumber], { totalRewards: BigNumber }>;
@@ -550,6 +470,22 @@ export class NetworkFeeManager extends BaseContract {
       [string, string],
       { previousOwner: string; newOwner: string }
     >;
+
+    "RewardsClaimed(address,uint256)"(
+      claimer?: null,
+      totalRewards?: null
+    ): TypedEventFilter<
+      [string, BigNumber],
+      { claimer: string; totalRewards: BigNumber }
+    >;
+
+    RewardsClaimed(
+      claimer?: null,
+      totalRewards?: null
+    ): TypedEventFilter<
+      [string, BigNumber],
+      { claimer: string; totalRewards: BigNumber }
+    >;
   };
 
   estimateGas: {
@@ -563,22 +499,14 @@ export class NetworkFeeManager extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    claimAmbassadorFees(
+    claimRewards(
       _members: string[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
-
-    claimNetworkFees(
-      _members: string[],
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    collateralToken(overrides?: CallOverrides): Promise<BigNumber>;
 
     collectFees(
-      _network: string,
       _member: string,
-      _transactionValue: BigNumberish,
+      _transactionAmount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -588,6 +516,8 @@ export class NetworkFeeManager extends BaseContract {
       _members: string[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
+
+    feeToken(overrides?: CallOverrides): Promise<BigNumber>;
 
     initialize(
       _creditFeeManager: string,
@@ -607,12 +537,12 @@ export class NetworkFeeManager extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    registerNetwork(
-      _network: string,
+    renounceOwnership(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    renounceOwnership(
+    setNetwork(
+      _network: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -638,22 +568,14 @@ export class NetworkFeeManager extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    claimAmbassadorFees(
+    claimRewards(
       _members: string[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
-
-    claimNetworkFees(
-      _members: string[],
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    collateralToken(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     collectFees(
-      _network: string,
       _member: string,
-      _transactionValue: BigNumberish,
+      _transactionAmount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -663,6 +585,8 @@ export class NetworkFeeManager extends BaseContract {
       _members: string[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
+
+    feeToken(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     initialize(
       _creditFeeManager: string,
@@ -682,12 +606,12 @@ export class NetworkFeeManager extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    registerNetwork(
-      _network: string,
+    renounceOwnership(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    renounceOwnership(
+    setNetwork(
+      _network: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 

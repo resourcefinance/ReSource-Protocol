@@ -88,7 +88,7 @@ contract NetworkRoles is AccessControlUpgradeable, OwnableUpgradeable, INetworkR
     function transferMembershipAmbassador(address _member, address _ambassador)
         external
         memberExists(_member)
-        ownsMembership(_member)
+        canAlterMembership(_member)
     {
         require(
             _ambassador != msg.sender,
@@ -102,7 +102,7 @@ contract NetworkRoles is AccessControlUpgradeable, OwnableUpgradeable, INetworkR
     function dropMembership(address _member)
         external
         memberExists(_member)
-        ownsMembership(_member)
+        canAlterMembership(_member)
     {
         delete membershipAmbassador[_member];
         emit MembershipAmbassadorUpdated(_member, address(0));
@@ -216,11 +216,13 @@ contract NetworkRoles is AccessControlUpgradeable, OwnableUpgradeable, INetworkR
         _;
     }
 
-    modifier ownsMembership(address _member) {
-        bool canAlterMembership = isNetworkOperator(msg.sender) ||
-            membershipAmbassador[_member] == msg.sender ||
-            msg.sender == _member;
-        require(canAlterMembership, "NetworkRoles: Caller not authorized to alter membership");
+    modifier canAlterMembership(address _member) {
+        require(
+            isNetworkOperator(msg.sender) ||
+                membershipAmbassador[_member] == msg.sender ||
+                msg.sender == _member,
+            "NetworkRoles: Caller not authorized to alter membership"
+        );
         _;
     }
 }

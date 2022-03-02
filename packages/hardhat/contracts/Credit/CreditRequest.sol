@@ -36,13 +36,7 @@ contract CreditRequest is OwnableUpgradeable, PausableUpgradeable, ICreditReques
         address _network,
         address _counterparty,
         uint256 _creditLimit
-    ) public override {
-        bool hasAccess = ICIP36(_network).canIssueCredit(msg.sender) ||
-            creditRoles.isRequestOperator(msg.sender);
-        require(
-            hasAccess,
-            "CreditRequest: Caller must be the counterparty's ambassador or the counterparty"
-        );
+    ) public override onlyValidRequester(_network, _counterparty) {
         require(
             requests[_network][_counterparty].creditLimit == 0,
             "CreditRequest: Request already exists"
@@ -113,24 +107,22 @@ contract CreditRequest is OwnableUpgradeable, PausableUpgradeable, ICreditReques
         address _counterparty,
         uint256 _creditLimit,
         bool _approved
-    ) external override {
+    ) external override onlyValidRequester(_network, _counterparty) {
         require(
             requests[_network][_counterparty].creditLimit > 0,
             "CreditRequest: request does not exist"
         );
-        bool hasAccess = ICIP36(_network).canIssueCredit(msg.sender) ||
-            creditRoles.isRequestOperator(msg.sender);
-        require(hasAccess, "CreditRequest: Unauthorized to update this request");
         CreditRequest storage creditRequest = requests[_network][_counterparty];
         creditRequest.creditLimit = _creditLimit;
         creditRequest.approved = _approved;
         emit CreditRequestUpdated(_network, _counterparty, _creditLimit, _approved);
     }
 
-    function deleteRequest(address _network, address _counterparty) external override {
-        bool hasAccess = ICIP36(_network).canIssueCredit(msg.sender) ||
-            creditRoles.isRequestOperator(msg.sender);
-        require(hasAccess, "CreditRequest: Unauthorized to delete this request");
+    function deleteRequest(address _network, address _counterparty)
+        external
+        override
+        onlyValidRequester(_network, _counterparty)
+    {
         delete requests[_network][_counterparty];
         emit CreditRequestRemoved(_network, _counterparty);
     }
@@ -194,6 +186,16 @@ contract CreditRequest is OwnableUpgradeable, PausableUpgradeable, ICreditReques
         require(
             creditRoles.isUnderwriter(msg.sender),
             "CreditRequest: Caller must be an underwriter"
+        );
+        _;
+    }
+
+    modifier onlyValidRequester(address _network, address _counterparty) {
+        bool hasAccess = ICIP36(_network).canRequestCredit(msg.sender, _counterparty) ||
+            creditRoles.isRequestOperator(msg.sender);
+        require(
+            hasAccess,
+            "CreditRequest: Caller must be the counterparty's ambassador or the counterparty"
         );
         _;
     }

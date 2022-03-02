@@ -1,5 +1,5 @@
 import { upgrades, ethers, network } from "hardhat"
-import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/dist/src/signers"
+import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers"
 import { expect } from "chai"
 import chai from "chai"
 import { solidity } from "ethereum-waffle"
@@ -7,7 +7,7 @@ import { protocolFactory, ProtocolContracts } from "./protocolFactory"
 
 chai.use(solidity)
 
-describe("CreditRequest and CreditManager Tests", function() {
+describe("CreditRequest and CreditManager Tests", function () {
   let deployer: SignerWithAddress
   let contracts: ProtocolContracts
   let underwriter: SignerWithAddress
@@ -16,7 +16,7 @@ describe("CreditRequest and CreditManager Tests", function() {
   let ambassador: SignerWithAddress
   let member: SignerWithAddress
 
-  this.beforeEach(async function() {
+  this.beforeEach(async function () {
     const accounts = await ethers.getSigners()
     deployer = accounts[0]
     underwriter = accounts[1]
@@ -28,7 +28,7 @@ describe("CreditRequest and CreditManager Tests", function() {
     await (await contracts.creditRoles.grantNetwork(contracts.rUSD.address)).wait()
   })
 
-  it("Create, approve, and accept a new credit request as operator", async function() {
+  it("Create, approve, and accept a new credit request as operator", async function () {
     await (await contracts.creditRoles.grantRequestOperator(underwriter.address)).wait()
 
     await (
@@ -37,7 +37,7 @@ describe("CreditRequest and CreditManager Tests", function() {
         .createRequest(
           contracts.rUSD.address,
           member.address,
-          ethers.utils.parseUnits("100", "mwei"),
+          ethers.utils.parseUnits("100", "mwei")
         )
     ).wait()
 
@@ -49,19 +49,19 @@ describe("CreditRequest and CreditManager Tests", function() {
 
     const creditLimit = ethers.utils.formatUnits(
       await contracts.rUSD.creditLimitOf(member.address),
-      "mwei",
+      "mwei"
     )
 
     const poolCreditLimit = ethers.utils.formatUnits(
       await contracts.creditPool.getTotalCredit(),
-      "mwei",
+      "mwei"
     )
 
     expect(poolCreditLimit).to.equal("100.0")
     expect(creditLimit).to.equal("100.0")
   })
 
-  it("Update and accept a request", async function() {
+  it("Update and accept a request", async function () {
     await (await contracts.creditRoles.grantRequestOperator(underwriter.address)).wait()
 
     await (
@@ -70,7 +70,7 @@ describe("CreditRequest and CreditManager Tests", function() {
         .createRequest(
           contracts.rUSD.address,
           member.address,
-          ethers.utils.parseUnits("100", "mwei"),
+          ethers.utils.parseUnits("100", "mwei")
         )
     ).wait()
 
@@ -81,7 +81,7 @@ describe("CreditRequest and CreditManager Tests", function() {
           contracts.rUSD.address,
           member.address,
           ethers.utils.parseUnits("150", "mwei"),
-          true,
+          true
         )
     ).wait()
 
@@ -93,18 +93,18 @@ describe("CreditRequest and CreditManager Tests", function() {
 
     const creditLimit = ethers.utils.formatUnits(
       await contracts.rUSD.creditLimitOf(member.address),
-      "mwei",
+      "mwei"
     )
 
     const poolCreditLimit = ethers.utils.formatUnits(
       await contracts.creditPool.getTotalCredit(),
-      "mwei",
+      "mwei"
     )
     expect(poolCreditLimit).to.equal("150.0")
     expect(creditLimit).to.equal("150.0")
   })
 
-  it("Create request as member approve as request operator and accept as underwriter", async function() {
+  it("Create request as member approve as request operator and accept as underwriter", async function () {
     await (await contracts.creditRoles.grantRequestOperator(requestOpperator.address)).wait()
 
     await (
@@ -113,7 +113,7 @@ describe("CreditRequest and CreditManager Tests", function() {
         .createRequest(
           contracts.rUSD.address,
           member.address,
-          ethers.utils.parseUnits("100", "mwei"),
+          ethers.utils.parseUnits("100", "mwei")
         )
     ).wait()
 
@@ -131,12 +131,12 @@ describe("CreditRequest and CreditManager Tests", function() {
 
     const creditLimit = ethers.utils.formatUnits(
       await contracts.rUSD.creditLimitOf(member.address),
-      "mwei",
+      "mwei"
     )
 
     const poolCreditLimit = ethers.utils.formatUnits(
       await contracts.creditPool.getTotalCredit(),
-      "mwei",
+      "mwei"
     )
 
     expect(poolCreditLimit).to.equal("100.0")

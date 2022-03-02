@@ -1,5 +1,5 @@
 import { upgrades, ethers, network } from "hardhat"
-import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/dist/src/signers"
+import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers"
 import { expect } from "chai"
 import chai from "chai"
 import { solidity } from "ethereum-waffle"
@@ -7,7 +7,7 @@ import { ProtocolContracts, protocolFactory } from "./protocolFactory"
 
 chai.use(solidity)
 
-describe("CreditFeeManager Tests", function() {
+describe("CreditFeeManager Tests", function () {
   let deployer: SignerWithAddress
   let contracts: ProtocolContracts
   let underwriter: SignerWithAddress
@@ -16,7 +16,7 @@ describe("CreditFeeManager Tests", function() {
   let ambassador: SignerWithAddress
   let member: SignerWithAddress
 
-  this.beforeEach(async function() {
+  this.beforeEach(async function () {
     const accounts = await ethers.getSigners()
     deployer = accounts[0]
     underwriter = accounts[1]
@@ -27,13 +27,13 @@ describe("CreditFeeManager Tests", function() {
     contracts = await protocolFactory.deployDefault(underwriter.address)
   })
 
-  it("Collects and claim fees from member", async function() {
+  it("Collects and claim fees from member", async function () {
     await (
       await contracts.sourceToken.transfer(member.address, ethers.utils.parseEther("100"))
     ).wait()
 
     expect(await contracts.sourceToken.balanceOf(member.address)).to.equal(
-      ethers.utils.parseEther("100.0"),
+      ethers.utils.parseEther("100.0")
     )
 
     await (await contracts.creditRoles.grantNetwork(network.address)).wait()
@@ -48,18 +48,18 @@ describe("CreditFeeManager Tests", function() {
         .collectFees(
           contracts.rUSD.address,
           member.address,
-          ethers.utils.parseUnits("1000", "mwei"),
+          ethers.utils.parseUnits("1000", "mwei")
         )
     ).wait()
 
     expect(await contracts.sourceToken.balanceOf(member.address)).to.equal(
-      ethers.utils.parseEther("0.0"),
+      ethers.utils.parseEther("0.0")
     )
 
     await (await contracts.creditRoles.grantOperator(creditOpperator.address)).wait()
 
     expect(await contracts.sourceToken.balanceOf(creditOpperator.address)).to.equal(
-      ethers.utils.parseEther("0.0"),
+      ethers.utils.parseEther("0.0")
     )
 
     await (
@@ -67,22 +67,22 @@ describe("CreditFeeManager Tests", function() {
         .connect(creditOpperator)
         .recoverERC20(
           contracts.sourceToken.address,
-          await contracts.sourceToken.balanceOf(contracts.creditFeeManager.address),
+          await contracts.sourceToken.balanceOf(contracts.creditFeeManager.address)
         )
     ).wait()
 
     expect(await contracts.sourceToken.balanceOf(creditOpperator.address)).to.equal(
-      ethers.utils.parseEther("100.0"),
+      ethers.utils.parseEther("100.0")
     )
   })
 
-  it("Collecting reverts from insufficient source balance", async function() {
+  it("Collecting reverts from insufficient source balance", async function () {
     await (
       await contracts.sourceToken.transfer(member.address, ethers.utils.parseEther("99"))
     ).wait()
 
     expect(await contracts.sourceToken.balanceOf(member.address)).to.equal(
-      ethers.utils.parseEther("99.0"),
+      ethers.utils.parseEther("99.0")
     )
 
     await await contracts.sourceToken
@@ -95,8 +95,8 @@ describe("CreditFeeManager Tests", function() {
         .collectFees(
           contracts.rUSD.address,
           member.address,
-          ethers.utils.parseUnits("1000", "mwei"),
-        ),
+          ethers.utils.parseUnits("1000", "mwei")
+        )
     ).to.be.reverted
   })
 })

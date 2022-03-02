@@ -16,7 +16,6 @@ contract NetworkFeeManager is OwnableUpgradeable, INetworkFeeManager {
     using SafeERC20Upgradeable for IERC20Upgradeable;
 
     /* ========== CONSTANTS ========== */
-    // look into a percentage libarary for using MAX_PPM
     uint32 private constant MAX_PPM = 1000000;
 
     /* ========== STATE VARIABLES ========== */
@@ -160,7 +159,10 @@ contract NetworkFeeManager is OwnableUpgradeable, INetworkFeeManager {
     }
 
     modifier onlyNetwork() {
-        require(msg.sender == network, "NetworkFeeManager: Caller is not the network");
+        require(
+            msg.sender == network || networkRoles.isNetworkOperator(msg.sender),
+            "NetworkFeeManager: Caller is not the network"
+        );
         _;
     }
 }

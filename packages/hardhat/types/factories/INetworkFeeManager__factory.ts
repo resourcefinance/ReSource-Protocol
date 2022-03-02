@@ -26,25 +26,6 @@ const _abi = [
         type: "uint256",
       },
     ],
-    name: "AmbassadorFeesClaimed",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
-        internalType: "address",
-        name: "ambassador",
-        type: "address",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "totalRewards",
-        type: "uint256",
-      },
-    ],
     name: "AmbassadorRewardsUpdated",
     type: "event",
   },
@@ -72,25 +53,6 @@ const _abi = [
     inputs: [
       {
         indexed: false,
-        internalType: "address",
-        name: "operator",
-        type: "address",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "totalRewards",
-        type: "uint256",
-      },
-    ],
-    name: "NetworkFeesClaimed",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
         internalType: "uint256",
         name: "totalRewards",
         type: "uint256",
@@ -100,38 +62,26 @@ const _abi = [
     type: "event",
   },
   {
+    anonymous: false,
     inputs: [
       {
-        internalType: "address[]",
-        name: "_members",
-        type: "address[]",
-      },
-    ],
-    name: "claimAmbassadorFees",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address[]",
-        name: "_members",
-        type: "address[]",
-      },
-    ],
-    name: "claimNetworkFees",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
+        indexed: false,
         internalType: "address",
-        name: "_network",
+        name: "claimer",
         type: "address",
       },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "totalRewards",
+        type: "uint256",
+      },
+    ],
+    name: "RewardsClaimed",
+    type: "event",
+  },
+  {
+    inputs: [
       {
         internalType: "address",
         name: "_member",
@@ -144,6 +94,19 @@ const _abi = [
       },
     ],
     name: "collectFees",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_network",
+        type: "address",
+      },
+    ],
+    name: "setNetwork",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",

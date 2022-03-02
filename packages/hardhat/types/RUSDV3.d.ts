@@ -27,6 +27,7 @@ interface RUSDV3Interface extends ethers.utils.Interface {
     "bulkTransfer(address[],uint256[])": FunctionFragment;
     "burn(uint256)": FunctionFragment;
     "burnFrom(address,uint256)": FunctionFragment;
+    "canRequestCredit(address,address)": FunctionFragment;
     "creditBalanceOf(address)": FunctionFragment;
     "creditLimitLeftOf(address)": FunctionFragment;
     "creditLimitOf(address)": FunctionFragment;
@@ -34,7 +35,6 @@ interface RUSDV3Interface extends ethers.utils.Interface {
     "decimals()": FunctionFragment;
     "decreaseAllowance(address,uint256)": FunctionFragment;
     "feeManager()": FunctionFragment;
-    "getNetworkRoles()": FunctionFragment;
     "increaseAllowance(address,uint256)": FunctionFragment;
     "initialize(string,string)": FunctionFragment;
     "initializeRUSD(address,address,address)": FunctionFragment;
@@ -69,6 +69,10 @@ interface RUSDV3Interface extends ethers.utils.Interface {
     values: [string, BigNumberish]
   ): string;
   encodeFunctionData(
+    functionFragment: "canRequestCredit",
+    values: [string, string]
+  ): string;
+  encodeFunctionData(
     functionFragment: "creditBalanceOf",
     values: [string]
   ): string;
@@ -91,10 +95,6 @@ interface RUSDV3Interface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "feeManager",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getNetworkRoles",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -151,6 +151,10 @@ interface RUSDV3Interface extends ethers.utils.Interface {
   decodeFunctionResult(functionFragment: "burn", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "burnFrom", data: BytesLike): Result;
   decodeFunctionResult(
+    functionFragment: "canRequestCredit",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "creditBalanceOf",
     data: BytesLike
   ): Result;
@@ -172,10 +176,6 @@ interface RUSDV3Interface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "feeManager", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "getNetworkRoles",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(
     functionFragment: "increaseAllowance",
     data: BytesLike
@@ -335,6 +335,12 @@ export class RUSDV3 extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    canRequestCredit(
+      _requester: string,
+      _member: string,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
     creditBalanceOf(
       _member: string,
       overrides?: CallOverrides
@@ -361,8 +367,6 @@ export class RUSDV3 extends BaseContract {
     ): Promise<ContractTransaction>;
 
     feeManager(overrides?: CallOverrides): Promise<[string]>;
-
-    getNetworkRoles(overrides?: CallOverrides): Promise<[string]>;
 
     increaseAllowance(
       spender: string,
@@ -404,14 +408,14 @@ export class RUSDV3 extends BaseContract {
     totalSupply(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     transfer(
-      recipient: string,
+      to: string,
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     transferFrom(
-      sender: string,
-      recipient: string,
+      from: string,
+      to: string,
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
@@ -453,6 +457,12 @@ export class RUSDV3 extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  canRequestCredit(
+    _requester: string,
+    _member: string,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
+
   creditBalanceOf(
     _member: string,
     overrides?: CallOverrides
@@ -476,8 +486,6 @@ export class RUSDV3 extends BaseContract {
   ): Promise<ContractTransaction>;
 
   feeManager(overrides?: CallOverrides): Promise<string>;
-
-  getNetworkRoles(overrides?: CallOverrides): Promise<string>;
 
   increaseAllowance(
     spender: string,
@@ -519,14 +527,14 @@ export class RUSDV3 extends BaseContract {
   totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
   transfer(
-    recipient: string,
+    to: string,
     amount: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   transferFrom(
-    sender: string,
-    recipient: string,
+    from: string,
+    to: string,
     amount: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
@@ -565,6 +573,12 @@ export class RUSDV3 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    canRequestCredit(
+      _requester: string,
+      _member: string,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
     creditBalanceOf(
       _member: string,
       overrides?: CallOverrides
@@ -591,8 +605,6 @@ export class RUSDV3 extends BaseContract {
     ): Promise<boolean>;
 
     feeManager(overrides?: CallOverrides): Promise<string>;
-
-    getNetworkRoles(overrides?: CallOverrides): Promise<string>;
 
     increaseAllowance(
       spender: string,
@@ -632,14 +644,14 @@ export class RUSDV3 extends BaseContract {
     totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
     transfer(
-      recipient: string,
+      to: string,
       amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<boolean>;
 
     transferFrom(
-      sender: string,
-      recipient: string,
+      from: string,
+      to: string,
       amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<boolean>;
@@ -790,6 +802,12 @@ export class RUSDV3 extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    canRequestCredit(
+      _requester: string,
+      _member: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     creditBalanceOf(
       _member: string,
       overrides?: CallOverrides
@@ -816,8 +834,6 @@ export class RUSDV3 extends BaseContract {
     ): Promise<BigNumber>;
 
     feeManager(overrides?: CallOverrides): Promise<BigNumber>;
-
-    getNetworkRoles(overrides?: CallOverrides): Promise<BigNumber>;
 
     increaseAllowance(
       spender: string,
@@ -859,14 +875,14 @@ export class RUSDV3 extends BaseContract {
     totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
     transfer(
-      recipient: string,
+      to: string,
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     transferFrom(
-      sender: string,
-      recipient: string,
+      from: string,
+      to: string,
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
@@ -912,6 +928,12 @@ export class RUSDV3 extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
+    canRequestCredit(
+      _requester: string,
+      _member: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     creditBalanceOf(
       _member: string,
       overrides?: CallOverrides
@@ -938,8 +960,6 @@ export class RUSDV3 extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     feeManager(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    getNetworkRoles(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     increaseAllowance(
       spender: string,
@@ -981,14 +1001,14 @@ export class RUSDV3 extends BaseContract {
     totalSupply(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     transfer(
-      recipient: string,
+      to: string,
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     transferFrom(
-      sender: string,
-      recipient: string,
+      from: string,
+      to: string,
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;

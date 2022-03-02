@@ -41,7 +41,7 @@ export const protocolFactory = {
     const walletDeployerFactory = await ethers.getContractFactory("iKeyWalletDeployer")
     contracts.walletDeployer = (await upgrades.deployProxy(
       walletDeployerFactory,
-      [],
+      []
     )) as IKeyWalletDeployer
 
     // 3. deploy NetworkRoles
@@ -66,7 +66,7 @@ export const protocolFactory = {
     // 5. deploy PriceOracle
     const priceOracleFactory = await ethers.getContractFactory("PriceOracle")
     contracts.priceOracle = (await priceOracleFactory.deploy(
-      ethers.utils.parseEther("1"),
+      ethers.utils.parseEther("1")
     )) as PriceOracle
 
     // 6. deploy CreditManager
@@ -119,10 +119,10 @@ export const protocolFactory = {
       ],
       {
         initializer: "initializeRUSD",
-      },
+      }
     )) as RUSDV3
 
-    await (await contracts.networkFeeManager.registerNetwork(contracts.rUSD.address)).wait()
+    await (await contracts.networkFeeManager.setNetwork(contracts.rUSD.address)).wait()
 
     // 11. deploy a CreditPool
     const creditPoolFactory = await ethers.getContractFactory("CreditPool")

@@ -21,55 +21,34 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface INetworkFeeManagerInterface extends ethers.utils.Interface {
   functions: {
-    "claimAmbassadorFees(address[])": FunctionFragment;
-    "claimNetworkFees(address[])": FunctionFragment;
-    "collectFees(address,address,uint256)": FunctionFragment;
+    "collectFees(address,uint256)": FunctionFragment;
+    "setNetwork(address)": FunctionFragment;
   };
 
   encodeFunctionData(
-    functionFragment: "claimAmbassadorFees",
-    values: [string[]]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "claimNetworkFees",
-    values: [string[]]
-  ): string;
-  encodeFunctionData(
     functionFragment: "collectFees",
-    values: [string, string, BigNumberish]
+    values: [string, BigNumberish]
   ): string;
+  encodeFunctionData(functionFragment: "setNetwork", values: [string]): string;
 
   decodeFunctionResult(
-    functionFragment: "claimAmbassadorFees",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "claimNetworkFees",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "collectFees",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "setNetwork", data: BytesLike): Result;
 
   events: {
-    "AmbassadorFeesClaimed(address,uint256)": EventFragment;
     "AmbassadorRewardsUpdated(address,uint256)": EventFragment;
     "FeesCollected(address,uint256)": EventFragment;
-    "NetworkFeesClaimed(address,uint256)": EventFragment;
     "NetworkRewardsUpdated(uint256)": EventFragment;
+    "RewardsClaimed(address,uint256)": EventFragment;
   };
 
-  getEvent(nameOrSignatureOrTopic: "AmbassadorFeesClaimed"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "AmbassadorRewardsUpdated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "FeesCollected"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "NetworkFeesClaimed"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "NetworkRewardsUpdated"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "RewardsClaimed"): EventFragment;
 }
-
-export type AmbassadorFeesClaimedEvent = TypedEvent<
-  [string, BigNumber] & { ambassador: string; totalRewards: BigNumber }
->;
 
 export type AmbassadorRewardsUpdatedEvent = TypedEvent<
   [string, BigNumber] & { ambassador: string; totalRewards: BigNumber }
@@ -79,12 +58,12 @@ export type FeesCollectedEvent = TypedEvent<
   [string, BigNumber] & { member: string; totalFee: BigNumber }
 >;
 
-export type NetworkFeesClaimedEvent = TypedEvent<
-  [string, BigNumber] & { operator: string; totalRewards: BigNumber }
->;
-
 export type NetworkRewardsUpdatedEvent = TypedEvent<
   [BigNumber] & { totalRewards: BigNumber }
+>;
+
+export type RewardsClaimedEvent = TypedEvent<
+  [string, BigNumber] & { claimer: string; totalRewards: BigNumber }
 >;
 
 export class INetworkFeeManager extends BaseContract {
@@ -131,77 +110,40 @@ export class INetworkFeeManager extends BaseContract {
   interface: INetworkFeeManagerInterface;
 
   functions: {
-    claimAmbassadorFees(
-      _members: string[],
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    claimNetworkFees(
-      _members: string[],
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
     collectFees(
-      _network: string,
       _member: string,
       _transactionValue: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
+
+    setNetwork(
+      _network: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
   };
 
-  claimAmbassadorFees(
-    _members: string[],
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  claimNetworkFees(
-    _members: string[],
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
   collectFees(
-    _network: string,
     _member: string,
     _transactionValue: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  setNetwork(
+    _network: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   callStatic: {
-    claimAmbassadorFees(
-      _members: string[],
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    claimNetworkFees(
-      _members: string[],
-      overrides?: CallOverrides
-    ): Promise<void>;
-
     collectFees(
-      _network: string,
       _member: string,
       _transactionValue: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    setNetwork(_network: string, overrides?: CallOverrides): Promise<void>;
   };
 
   filters: {
-    "AmbassadorFeesClaimed(address,uint256)"(
-      ambassador?: null,
-      totalRewards?: null
-    ): TypedEventFilter<
-      [string, BigNumber],
-      { ambassador: string; totalRewards: BigNumber }
-    >;
-
-    AmbassadorFeesClaimed(
-      ambassador?: null,
-      totalRewards?: null
-    ): TypedEventFilter<
-      [string, BigNumber],
-      { ambassador: string; totalRewards: BigNumber }
-    >;
-
     "AmbassadorRewardsUpdated(address,uint256)"(
       ambassador?: null,
       totalRewards?: null
@@ -234,22 +176,6 @@ export class INetworkFeeManager extends BaseContract {
       { member: string; totalFee: BigNumber }
     >;
 
-    "NetworkFeesClaimed(address,uint256)"(
-      operator?: null,
-      totalRewards?: null
-    ): TypedEventFilter<
-      [string, BigNumber],
-      { operator: string; totalRewards: BigNumber }
-    >;
-
-    NetworkFeesClaimed(
-      operator?: null,
-      totalRewards?: null
-    ): TypedEventFilter<
-      [string, BigNumber],
-      { operator: string; totalRewards: BigNumber }
-    >;
-
     "NetworkRewardsUpdated(uint256)"(
       totalRewards?: null
     ): TypedEventFilter<[BigNumber], { totalRewards: BigNumber }>;
@@ -257,42 +183,46 @@ export class INetworkFeeManager extends BaseContract {
     NetworkRewardsUpdated(
       totalRewards?: null
     ): TypedEventFilter<[BigNumber], { totalRewards: BigNumber }>;
+
+    "RewardsClaimed(address,uint256)"(
+      claimer?: null,
+      totalRewards?: null
+    ): TypedEventFilter<
+      [string, BigNumber],
+      { claimer: string; totalRewards: BigNumber }
+    >;
+
+    RewardsClaimed(
+      claimer?: null,
+      totalRewards?: null
+    ): TypedEventFilter<
+      [string, BigNumber],
+      { claimer: string; totalRewards: BigNumber }
+    >;
   };
 
   estimateGas: {
-    claimAmbassadorFees(
-      _members: string[],
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    claimNetworkFees(
-      _members: string[],
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
     collectFees(
-      _network: string,
       _member: string,
       _transactionValue: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    setNetwork(
+      _network: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    claimAmbassadorFees(
-      _members: string[],
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    claimNetworkFees(
-      _members: string[],
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
     collectFees(
-      _network: string,
       _member: string,
       _transactionValue: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    setNetwork(
+      _network: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
   };

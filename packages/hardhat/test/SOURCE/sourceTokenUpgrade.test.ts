@@ -1,5 +1,5 @@
 import { upgrades, ethers, network } from "hardhat"
-import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/dist/src/signers"
+import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers"
 import { expect } from "chai"
 import chai from "chai"
 import { solidity } from "ethereum-waffle"
@@ -9,7 +9,7 @@ import { SourceTokenV2__factory } from "../../types"
 
 chai.use(solidity)
 
-describe("ReSourceToken Tests", function() {
+describe("ReSourceToken Tests", function () {
   let deployer: SignerWithAddress
   let memberA: SignerWithAddress
   let memberB: SignerWithAddress
@@ -17,7 +17,7 @@ describe("ReSourceToken Tests", function() {
   let sourceToken: SourceToken
   let sourceTokenV2: SourceTokenV2
 
-  before(async function() {
+  before(async function () {
     const accounts = await ethers.getSigners()
     deployer = accounts[0]
     memberA = accounts[1]
@@ -25,7 +25,7 @@ describe("ReSourceToken Tests", function() {
     stakingContract = accounts[6]
   })
 
-  it("Successfully deploys SourceToken V1", async function() {
+  it("Successfully deploys SourceToken V1", async function () {
     const reSourceTokenFactory = await ethers.getContractFactory("SourceToken")
     sourceToken = (await upgrades.deployProxy(reSourceTokenFactory, [
       ethers.utils.parseEther("100000000"),
@@ -43,7 +43,7 @@ describe("ReSourceToken Tests", function() {
   it("Successfully transfers token to memberA", async () => {
     await (await sourceToken.transfer(memberA.address, ethers.utils.parseEther("1000"))).wait()
     expect(ethers.utils.formatEther(await sourceToken.balanceOf(memberA.address))).to.equal(
-      "1000.0",
+      "1000.0"
     )
   })
 
@@ -60,11 +60,11 @@ describe("ReSourceToken Tests", function() {
             expirationBlock: now + 90000,
           },
         ],
-      }),
+      })
     ).to.emit(sourceToken, "LockedTransfer")
 
     expect(ethers.utils.formatEther(await sourceToken.balanceOf(memberB.address))).to.equal(
-      "1500000.0",
+      "1500000.0"
     )
   })
 
@@ -83,13 +83,13 @@ describe("ReSourceToken Tests", function() {
     expect(ethers.utils.formatEther(await sourceTokenV2.balanceOf(memberB.address))).to.equal("0.0")
 
     expect(ethers.utils.formatEther(await sourceTokenV2.lockedBalanceOf(memberB.address))).to.equal(
-      "1500000.0",
+      "1500000.0"
     )
 
     expect(ethers.utils.formatEther(await sourceToken.balanceOf(memberB.address))).to.equal("0.0")
 
     expect(ethers.utils.formatEther(await sourceToken.balanceOf(memberA.address))).to.equal(
-      "1000.0",
+      "1000.0"
     )
 
     expect(ethers.utils.formatEther(await sourceTokenV2.totalLocked())).to.equal("1500000.0")
@@ -98,9 +98,7 @@ describe("ReSourceToken Tests", function() {
     await ethers.provider.send("evm_mine", [])
 
     await expect(
-      sourceTokenV2
-        .connect(memberB)
-        .transfer(memberA.address, ethers.utils.parseEther("1500000.0")),
+      sourceTokenV2.connect(memberB).transfer(memberA.address, ethers.utils.parseEther("1500000.0"))
     ).to.emit(sourceTokenV2, "Transfer")
 
     expect(ethers.utils.formatEther(await sourceTokenV2.totalLocked())).to.equal("0.0")
@@ -123,14 +121,14 @@ describe("ReSourceToken Tests", function() {
             expirationBlock: now + 100000,
           },
         ],
-      }),
+      })
     ).to.emit(sourceToken, "LockedTransfer")
 
     expect(ethers.utils.formatEther(await sourceTokenV2.balanceOf(deployer.address))).to.equal(
-      "98489000.0",
+      "98489000.0"
     )
     expect(ethers.utils.formatEther(await sourceTokenV2.lockedBalanceOf(memberB.address))).to.equal(
-      "1000.0",
+      "1000.0"
     )
 
     expect(ethers.utils.formatEther(await sourceTokenV2.totalLocked())).to.equal("1000.0")
@@ -139,7 +137,7 @@ describe("ReSourceToken Tests", function() {
 
     expect(ethers.utils.formatEther(await sourceTokenV2.balanceOf(memberB.address))).to.equal("0.0")
     expect(ethers.utils.formatEther(await sourceTokenV2.balanceOf(deployer.address))).to.equal(
-      "98490000.0",
+      "98490000.0"
     )
     expect(ethers.utils.formatEther(await sourceTokenV2.totalLocked())).to.equal("0.0")
   })

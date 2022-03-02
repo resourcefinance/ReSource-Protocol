@@ -1,5 +1,5 @@
 import { upgrades, ethers, network } from "hardhat"
-import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/dist/src/signers"
+import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers"
 import { expect } from "chai"
 import chai from "chai"
 import { solidity } from "ethereum-waffle"
@@ -7,7 +7,7 @@ import { ProtocolContracts, protocolFactory } from "./protocolFactory"
 
 chai.use(solidity)
 
-describe("NetworkFeeManager Tests", function() {
+describe("NetworkFeeManager Tests", function () {
   let contracts: ProtocolContracts
   let deployer: SignerWithAddress
   let underwriter: SignerWithAddress
@@ -17,7 +17,7 @@ describe("NetworkFeeManager Tests", function() {
   let member: SignerWithAddress
 
   // deploy protocol
-  this.beforeEach(async function() {
+  this.beforeEach(async function () {
     const accounts = await ethers.getSigners()
     deployer = accounts[0]
     underwriter = accounts[1]
@@ -28,16 +28,16 @@ describe("NetworkFeeManager Tests", function() {
     contracts = await protocolFactory.deployDefault(underwriter.address)
   })
 
-  it("Collects and claim fees from member", async function() {
+  it("Collects and claim fees from member", async function () {
     await (
       await contracts.sourceToken.transfer(member.address, ethers.utils.parseEther("200"))
     ).wait()
 
     expect(await contracts.sourceToken.balanceOf(member.address)).to.equal(
-      ethers.utils.parseEther("200.0"),
+      ethers.utils.parseEther("200.0")
     )
 
-    await (await contracts.networkFeeManager.registerNetwork(network.address)).wait()
+    await (await contracts.networkRoles.grantOperator(network.address)).wait()
 
     await (
       await contracts.sourceToken
@@ -54,15 +54,11 @@ describe("NetworkFeeManager Tests", function() {
     await (
       await contracts.networkFeeManager
         .connect(network)
-        .collectFees(
-          contracts.rUSD.address,
-          member.address,
-          ethers.utils.parseUnits("1000", "mwei"),
-        )
+        .collectFees(member.address, ethers.utils.parseUnits("1000", "mwei"))
     ).wait()
 
     expect(await contracts.sourceToken.balanceOf(member.address)).to.equal(
-      ethers.utils.parseEther("0.0"),
+      ethers.utils.parseEther("0.0")
     )
 
     await (await contracts.networkRoles.grantAmbassador(ambassador.address, 0)).wait()
@@ -80,39 +76,39 @@ describe("NetworkFeeManager Tests", function() {
     ).wait()
 
     expect(await contracts.sourceToken.balanceOf(ambassador.address)).to.equal(
-      ethers.utils.parseEther("0.0"),
+      ethers.utils.parseEther("0.0")
     )
     await (
-      await contracts.networkFeeManager.connect(ambassador).claimAmbassadorFees([member.address])
+      await contracts.networkFeeManager.connect(ambassador).claimRewards([member.address])
     ).wait()
     expect(await contracts.sourceToken.balanceOf(ambassador.address)).to.equal(
-      ethers.utils.parseEther("50.0"),
+      ethers.utils.parseEther("50.0")
     )
     expect(await contracts.sourceToken.balanceOf(networkOperator.address)).to.equal(
-      ethers.utils.parseEther("0.0"),
+      ethers.utils.parseEther("0.0")
     )
     const balance = ethers.utils.formatEther(
-      await contracts.sourceToken.balanceOf(contracts.networkFeeManager.address),
+      await contracts.sourceToken.balanceOf(contracts.networkFeeManager.address)
     )
 
     await (
-      await contracts.networkFeeManager.connect(networkOperator).claimNetworkFees([member.address])
+      await contracts.networkFeeManager.connect(networkOperator).claimRewards([member.address])
     ).wait()
     expect(await contracts.sourceToken.balanceOf(networkOperator.address)).to.equal(
-      ethers.utils.parseEther("50.0"),
+      ethers.utils.parseEther("50.0")
     )
   })
 
-  it("Collecting reverts from insufficient source balance", async function() {
+  it("Collecting reverts from insufficient source balance", async function () {
     await (
       await contracts.sourceToken.transfer(member.address, ethers.utils.parseEther("199"))
     ).wait()
 
     expect(await contracts.sourceToken.balanceOf(member.address)).to.equal(
-      ethers.utils.parseEther("199.0"),
+      ethers.utils.parseEther("199.0")
     )
 
-    await (await contracts.networkFeeManager.registerNetwork(network.address)).wait()
+    await (await contracts.networkFeeManager.setNetwork(network.address)).wait()
 
     await (
       await contracts.sourceToken
@@ -129,11 +125,7 @@ describe("NetworkFeeManager Tests", function() {
     await expect(
       contracts.networkFeeManager
         .connect(network)
-        .collectFees(
-          contracts.rUSD.address,
-          member.address,
-          ethers.utils.parseUnits("1000", "mwei"),
-        ),
+        .collectFees(member.address, ethers.utils.parseUnits("1000", "mwei"))
     ).to.be.reverted
   })
 })

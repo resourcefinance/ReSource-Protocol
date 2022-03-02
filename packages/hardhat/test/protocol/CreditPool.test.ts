@@ -1,15 +1,14 @@
-import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/dist/src/signers"
+import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers"
 import chai, { expect } from "chai"
 import { solidity } from "ethereum-waffle"
 import { ethers, upgrades } from "hardhat"
-
 import { MockERC20 } from "../../types"
 import { RewardAddedEvent, WithdrawnEvent } from "../../types/CreditPool"
 import { ProtocolContracts, protocolFactory } from "./protocolFactory"
 
 chai.use(solidity)
 
-describe("CreditPool & Rewards Tests", function() {
+describe("CreditPool & Rewards Tests", function () {
   let deployer: SignerWithAddress
   let contracts: ProtocolContracts
   let underwriter: SignerWithAddress
@@ -18,7 +17,7 @@ describe("CreditPool & Rewards Tests", function() {
   let ambassador: SignerWithAddress
   let member: SignerWithAddress
 
-  this.beforeEach(async function() {
+  this.beforeEach(async function () {
     const accounts = await ethers.getSigners()
     deployer = accounts[0]
     underwriter = accounts[1]
@@ -29,7 +28,7 @@ describe("CreditPool & Rewards Tests", function() {
     contracts = await protocolFactory.deployDefault(underwriter.address)
   })
 
-  it("Adds and notifies a single reward to pool", async function() {
+  it("Adds and notifies a single reward to pool", async function () {
     await (
       await contracts.sourceToken.transfer(underwriter.address, ethers.utils.parseEther("1000"))
     ).wait()
@@ -62,7 +61,7 @@ describe("CreditPool & Rewards Tests", function() {
     expect(rewardAdded.event).to.equal("RewardAdded")
   })
 
-  it("Adds and notifies multiple rewards to pool", async function() {
+  it("Adds and notifies multiple rewards to pool", async function () {
     const ERC20Factory = await ethers.getContractFactory("MockERC20")
     const MockERC20 = (await ERC20Factory.deploy(ethers.utils.parseEther("100000000"))) as MockERC20
 
@@ -119,7 +118,7 @@ describe("CreditPool & Rewards Tests", function() {
     expect(rewardAdded).to.have.lengthOf(2)
   })
 
-  it("Approves and stakes into pool", async function() {
+  it("Approves and stakes into pool", async function () {
     await (
       await contracts.sourceToken.transfer(underwriter.address, ethers.utils.parseEther("100000"))
     ).wait()
@@ -167,7 +166,7 @@ describe("CreditPool & Rewards Tests", function() {
     expect(postPoolBal).to.equal(poolToken)
   })
 
-  it("Accrues rewards after staking", async function() {
+  it("Accrues rewards after staking", async function () {
     await (
       await contracts.sourceToken.transfer(underwriter.address, ethers.utils.parseEther("1000"))
     ).wait()
@@ -222,7 +221,7 @@ describe("CreditPool & Rewards Tests", function() {
     expect(earnedAfter).to.be.above(0)
   })
 
-  it("Claims & withdraws rewards after staking", async function() {
+  it("Claims & withdraws rewards after staking", async function () {
     await (
       await contracts.sourceToken.transfer(underwriter.address, ethers.utils.parseEther("1000"))
     ).wait()

@@ -31,10 +31,7 @@ function mnemonic() {
   const path = "./mnemonic.txt"
   if (fs.existsSync(path)) {
     try {
-      return fs
-        .readFileSync("./mnemonic.txt")
-        .toString()
-        .trim()
+      return fs.readFileSync("./mnemonic.txt").toString().trim()
     } catch (e) {
       console.log("Mnemonic: ", e)
     }
@@ -228,9 +225,7 @@ task("mineContractAddress", "Looks for a deployer account that will give leading
       let input_arr = [sender, nonce]
       let rlp_encoded = rlp.encode(input_arr)
 
-      let contract_address_long = keccak("keccak256")
-        .update(rlp_encoded)
-        .digest("hex")
+      let contract_address_long = keccak("keccak256").update(rlp_encoded).digest("hex")
 
       contract_address = contract_address_long.substring(24) //Trim the first 24 characters.
     }
@@ -246,10 +241,7 @@ task("mineContractAddress", "Looks for a deployer account that will give leading
 task("account", "Get balance informations for the deployment account.", async (_, { ethers }) => {
   const hdkey = require("ethereumjs-wallet/hdkey")
   const bip39 = require("bip39")
-  let mnemonic = fs
-    .readFileSync("./mnemonic.txt")
-    .toString()
-    .trim()
+  let mnemonic = fs.readFileSync("./mnemonic.txt").toString().trim()
   if (DEBUG) console.log("mnemonic", mnemonic)
   const seed = await bip39.mnemonicToSeed(mnemonic)
   if (DEBUG) console.log("seed", seed)

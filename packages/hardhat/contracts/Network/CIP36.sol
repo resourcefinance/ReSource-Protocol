@@ -52,7 +52,10 @@ contract CIP36 is OwnableUpgradeable, ERC20BurnableUpgradeable {
         emit CreditLimitUpdate(_member, _limit);
     }
 
-    function canIssueCredit(address _issuer) public virtual returns (bool) {
+    function canRequestCredit(
+        address, /*_requester*/
+        address /*_member*/
+    ) public virtual returns (bool) {
         return true;
     }
 

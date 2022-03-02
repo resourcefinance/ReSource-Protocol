@@ -1,4 +1,4 @@
-import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/dist/src/signers"
+import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers"
 import chai, { expect } from "chai"
 import { solidity } from "ethereum-waffle"
 import { ethers, upgrades } from "hardhat"
@@ -10,21 +10,21 @@ chai.use(solidity)
 
 const secondsInDay = 60 * 60 * 24
 
-describe("TokenClaim Tests", function() {
+describe("TokenClaim Tests", function () {
   let deployer: SignerWithAddress
   let beneficiaryA: SignerWithAddress
   let beneficiaryB: SignerWithAddress
   let sourceToken: SourceTokenV2
   let tokenClaim: TokenClaim
 
-  before(async function() {
+  before(async function () {
     const accounts = await ethers.getSigners()
     deployer = accounts[0]
     beneficiaryA = accounts[1]
     beneficiaryB = accounts[2]
   })
 
-  it("Deploys a SourceToken and TokenClaim contract", async function() {
+  it("Deploys a SourceToken and TokenClaim contract", async function () {
     const sourceTokenFactory = await ethers.getContractFactory("SourceTokenV2")
 
     sourceToken = (await upgrades.deployProxy(sourceTokenFactory, [
@@ -42,7 +42,7 @@ describe("TokenClaim Tests", function() {
     expect(tokenClaim.address).to.properAddress
   })
 
-  it("Funds TokenClaim contract", async function() {
+  it("Funds TokenClaim contract", async function () {
     await (
       await sourceToken.transfer(tokenClaim.address, ethers.utils.parseEther("1000000"))
     ).wait()
@@ -54,7 +54,7 @@ describe("TokenClaim Tests", function() {
     expect(withdrawable).to.equal("1000000.0")
   })
 
-  it("Creates locked and unlocked Claim in TokenClaim contract for beneficiaryA", async function() {
+  it("Creates locked and unlocked Claim in TokenClaim contract for beneficiaryA", async function () {
     const now = await (await ethers.provider.getBlock("latest")).timestamp
 
     await tokenClaim.addClaim(beneficiaryA.address, ethers.utils.parseEther("50000"), {
@@ -80,7 +80,7 @@ describe("TokenClaim Tests", function() {
     expect(totalClaimable).to.equal("100000.0")
   })
 
-  it("beneficiaryA claims tokens", async function() {
+  it("beneficiaryA claims tokens", async function () {
     await (await tokenClaim.connect(beneficiaryA).claim()).wait()
 
     expect(ethers.utils.formatEther(await sourceToken.balanceOf(beneficiaryA.address))).to.equal(
@@ -96,7 +96,7 @@ describe("TokenClaim Tests", function() {
     expect(totalClaimable).to.equal("0.0")
   })
 
-  it("Creates unlocked Claim in TokenClaim contract for beneficiaryA", async function() {
+  it("Creates unlocked Claim in TokenClaim contract for beneficiaryA", async function () {
     await tokenClaim.addClaim(beneficiaryA.address, ethers.utils.parseEther("25000"), {
       totalAmount: 0,
       amountStaked: 0,
@@ -114,7 +114,7 @@ describe("TokenClaim Tests", function() {
     expect(totalClaimable).to.equal("25000.0")
   })
 
-  it("beneficiaryA claims tokens ", async function() {
+  it("beneficiaryA claims tokens ", async function () {
     await (await tokenClaim.connect(beneficiaryA).claim()).wait()
 
     expect(ethers.utils.formatEther(await sourceToken.balanceOf(beneficiaryA.address))).to.equal(
@@ -130,7 +130,7 @@ describe("TokenClaim Tests", function() {
     expect(totalClaimable).to.equal("0.0")
   })
 
-  it("Creates locked Claim in TokenClaim contract for beneficiaryA", async function() {
+  it("Creates locked Claim in TokenClaim contract for beneficiaryA", async function () {
     const now = await (await ethers.provider.getBlock("latest")).timestamp
 
     await tokenClaim.addClaim(beneficiaryA.address, 0, {
@@ -156,7 +156,7 @@ describe("TokenClaim Tests", function() {
     expect(totalClaimable).to.equal("25000.0")
   })
 
-  it("beneficiaryA claims tokens ", async function() {
+  it("beneficiaryA claims tokens ", async function () {
     await (await tokenClaim.connect(beneficiaryA).claim()).wait()
 
     expect(ethers.utils.formatEther(await sourceToken.balanceOf(beneficiaryA.address))).to.equal(
@@ -172,7 +172,7 @@ describe("TokenClaim Tests", function() {
     expect(totalClaimable).to.equal("0.0")
   })
 
-  it("Creates Claim in TokenClaim contract for beneficiaryB", async function() {
+  it("Creates Claim in TokenClaim contract for beneficiaryB", async function () {
     const now = await (await ethers.provider.getBlock("latest")).timestamp
 
     await tokenClaim.addClaim(beneficiaryB.address, ethers.utils.parseEther("50000"), {
@@ -198,7 +198,7 @@ describe("TokenClaim Tests", function() {
     expect(totalClaimable).to.equal("100000.0")
   })
 
-  it("Revoke beneficiaryB claim", async function() {
+  it("Revoke beneficiaryB claim", async function () {
     await (await tokenClaim.revoke(beneficiaryB.address)).wait()
 
     let withdrawable = ethers.utils.formatEther(await tokenClaim.getWithdrawableAmount())
@@ -223,7 +223,7 @@ describe("TokenClaim Tests", function() {
     expect(totalClaimable).to.equal("0.0")
   })
 
-  it("Withdraw total amount from token claim contract", async function() {
+  it("Withdraw total amount from token claim contract", async function () {
     let withdrawable = ethers.utils.formatEther(await tokenClaim.getWithdrawableAmount())
     expect(withdrawable).to.equal("850000.0")
 

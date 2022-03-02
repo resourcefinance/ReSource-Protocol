@@ -5,6 +5,7 @@ import "./CIP36.sol";
 import "./interface/INetworkRoles.sol";
 import "./interface/INetworkFeeManager.sol";
 import "../iKeyWallet/IiKeyWalletDeployer.sol";
+import "hardhat/console.sol";
 
 contract RUSDV3 is CIP36 {
     /*
@@ -56,7 +57,6 @@ contract RUSDV3 is CIP36 {
         CIP36.initialize("rUSD", "rUSD");
         creditManager = _creditManager;
         feeManager = INetworkFeeManager(_feeManager);
-        feeManager.setNetwork(address(this));
         networkRoles = INetworkRoles(_networkRoles);
     }
 
@@ -88,8 +88,13 @@ contract RUSDV3 is CIP36 {
         }
     }
 
-    function canIssueCredit(address _issuer) public view override returns (bool) {
-        address ambassador = networkRoles.getMembershipAmbassador(_issuer);
-        return msg.sender == _issuer || msg.sender == ambassador;
+    function canRequestCredit(address _requester, address _member)
+        public
+        view
+        override
+        returns (bool)
+    {
+        address ambassador = networkRoles.getMembershipAmbassador(_member);
+        return _requester == _member || _requester == ambassador;
     }
 }

@@ -1,5 +1,5 @@
 import { upgrades, ethers, network } from "hardhat"
-import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/dist/src/signers"
+import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers"
 import { expect } from "chai"
 import chai from "chai"
 import { solidity } from "ethereum-waffle"
@@ -7,7 +7,7 @@ import { ProtocolContracts, protocolFactory } from "./protocolFactory"
 
 chai.use(solidity)
 
-describe("CreditManager Tests", function() {
+describe("Protocol Tests", function () {
   let deployer: SignerWithAddress
   let contracts: ProtocolContracts
   let underwriter: SignerWithAddress
@@ -18,7 +18,7 @@ describe("CreditManager Tests", function() {
   let memberB: SignerWithAddress
   let creditOperator: SignerWithAddress
 
-  this.beforeEach(async function() {
+  this.beforeEach(async function () {
     const accounts = await ethers.getSigners()
     deployer = accounts[0]
     underwriter = accounts[1]
@@ -32,12 +32,12 @@ describe("CreditManager Tests", function() {
     await (await contracts.creditRoles.grantNetwork(contracts.rUSD.address)).wait()
   })
 
-  it("create, use, and claim reward fees for credit line", async function() {
+  it("create, use, and claim reward fees for credit line", async function () {
     // Add two members as ambassador pre approved for 100
     await (
       await contracts.networkRoles.grantAmbassador(
         ambassador.address,
-        ethers.utils.parseUnits("100", "mwei"),
+        ethers.utils.parseUnits("100", "mwei")
       )
     ).wait()
 
@@ -65,7 +65,7 @@ describe("CreditManager Tests", function() {
 
     const creditLimitA = ethers.utils.formatUnits(
       await contracts.rUSD.creditLimitOf(memberA.address),
-      "mwei",
+      "mwei"
     )
     expect(creditLimitA).to.equal("100.0")
 
@@ -76,7 +76,7 @@ describe("CreditManager Tests", function() {
         .createRequest(
           contracts.rUSD.address,
           memberA.address,
-          ethers.utils.parseUnits("999", "mwei"),
+          ethers.utils.parseUnits("999", "mwei")
         )
     ).wait()
 
@@ -86,7 +86,7 @@ describe("CreditManager Tests", function() {
         contracts.rUSD.address,
         memberA.address,
         ethers.utils.parseUnits("1000", "mwei"),
-        true,
+        true
       )
     ).wait()
 
@@ -99,7 +99,7 @@ describe("CreditManager Tests", function() {
 
     const creditLimit = ethers.utils.formatUnits(
       await contracts.rUSD.creditLimitOf(memberA.address),
-      "mwei",
+      "mwei"
     )
 
     expect(creditLimit).to.equal("1000.0")
@@ -109,7 +109,7 @@ describe("CreditManager Tests", function() {
       await contracts.sourceToken.transfer(memberA.address, ethers.utils.parseEther("200"))
     ).wait()
     let sourceBalance = ethers.utils.formatEther(
-      await contracts.sourceToken.balanceOf(memberA.address),
+      await contracts.sourceToken.balanceOf(memberA.address)
     )
 
     expect(sourceBalance).to.equal("200.0")
@@ -143,11 +143,11 @@ describe("CreditManager Tests", function() {
 
     // claim networkFees as ambassador
     await (
-      await contracts.networkFeeManager.connect(ambassador).claimAmbassadorFees([memberA.address])
+      await contracts.networkFeeManager.connect(ambassador).claimRewards([memberA.address])
     ).wait()
 
     sourceBalance = ethers.utils.formatEther(
-      await contracts.sourceToken.balanceOf(ambassador.address),
+      await contracts.sourceToken.balanceOf(ambassador.address)
     )
     expect(sourceBalance).to.equal("50.0")
 
@@ -155,11 +155,11 @@ describe("CreditManager Tests", function() {
     await (await contracts.networkRoles.grantOperator(network.address)).wait()
 
     await (
-      await contracts.networkFeeManager.connect(network).claimNetworkFees([memberA.address])
+      await contracts.networkFeeManager.connect(network).claimRewards([memberA.address])
     ).wait()
 
     sourceBalance = ethers.utils.formatEther(
-      await contracts.sourceToken.balanceOf(ambassador.address),
+      await contracts.sourceToken.balanceOf(ambassador.address)
     )
     expect(sourceBalance).to.equal("50.0")
 
@@ -172,12 +172,12 @@ describe("CreditManager Tests", function() {
     ).wait()
 
     sourceBalance = ethers.utils.formatEther(
-      await contracts.sourceToken.balanceOf(creditOperator.address),
+      await contracts.sourceToken.balanceOf(creditOperator.address)
     )
     expect(sourceBalance).to.equal("0.0")
 
     sourceBalance = ethers.utils.formatEther(
-      await contracts.sourceToken.balanceOf(contracts.creditPool.address),
+      await contracts.sourceToken.balanceOf(contracts.creditPool.address)
     )
     expect(sourceBalance).to.equal("100.0")
   })

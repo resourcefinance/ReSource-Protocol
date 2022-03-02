@@ -16,14 +16,14 @@ contract NetworkFeeManager is OwnableUpgradeable, INetworkFeeManager {
     using SafeERC20Upgradeable for IERC20Upgradeable;
 
     /* ========== CONSTANTS ========== */
-
+    // look into a percentage libarary for using MAX_PPM
     uint32 private constant MAX_PPM = 1000000;
 
     /* ========== STATE VARIABLES ========== */
 
     ICreditFeeManager public creditFeeManager;
     INetworkRoles public networkRoles;
-    IERC20Upgradeable public collateralToken;
+    IERC20Upgradeable public feeToken;
     uint256 ambassadorFeePercent;
     uint256 totalFeePercent;
     address network;
@@ -41,7 +41,7 @@ contract NetworkFeeManager is OwnableUpgradeable, INetworkFeeManager {
         __Ownable_init();
         creditFeeManager = ICreditFeeManager(_creditFeeManager);
         networkRoles = INetworkRoles(_networkRoles);
-        collateralToken = IERC20Upgradeable(creditFeeManager.getCollateralToken());
+        feeToken = IERC20Upgradeable(creditFeeManager.getCollateralToken());
         require(
             _ambassadorFeePercent <= MAX_PPM,
             "NetworkFeeManager: Total fee percent greater than 100"
@@ -56,60 +56,52 @@ contract NetworkFeeManager is OwnableUpgradeable, INetworkFeeManager {
 
     /* ========== PUBLIC FUNCTIONS ========== */
 
-    function collectFees(
-        address _network,
-        address _member,
-        uint256 _transactionValue
-    ) external override onlyNetwork {
+    function collectFees(address _member, uint256 _transactionAmount)
+        external
+        override
+        onlyNetwork
+    {
         uint256 totalFee = creditFeeManager.calculatePercentInCollateral(
-            _network,
+            network,
             totalFeePercent,
-            _transactionValue
+            _transactionAmount
         );
-        collateralToken.safeTransferFrom(_member, address(this), totalFee);
+        feeToken.safeTransferFrom(_member, address(this), totalFee);
         accruedFees[_member] += totalFee;
-        creditFeeManager.collectFees(_network, _member, _transactionValue);
+        creditFeeManager.collectFees(network, _member, _transactionAmount);
         emit FeesCollected(_member, totalFee);
     }
 
-    function registerNetwork(address _network) external onlyNetworkOperator {
-        network = _network;
-    }
-
-    function claimAmbassadorFees(address[] memory _members) external override {
+    function claimRewards(address[] memory _members) external {
         distributeFees(_members);
-        if (rewards[msg.sender] == 0) return;
-        collateralToken.safeTransfer(msg.sender, rewards[msg.sender]);
-        emit AmbassadorFeesClaimed(msg.sender, rewards[msg.sender]);
-        rewards[msg.sender] = 0;
-    }
-
-    function claimNetworkFees(address[] memory _members) external override onlyNetworkOperator {
-        distributeFees(_members);
-        if (rewards[address(this)] == 0) return;
-        collateralToken.safeTransfer(msg.sender, rewards[address(this)]);
-        emit NetworkFeesClaimed(msg.sender, rewards[address(this)]);
-        rewards[address(this)] = 0;
+        if (networkRoles.isNetworkOperator(msg.sender)) {
+            feeToken.safeTransfer(msg.sender, rewards[address(this)]);
+            rewards[address(this)] = 0;
+        } else {
+            feeToken.safeTransfer(msg.sender, rewards[msg.sender]);
+            rewards[msg.sender] = 0;
+        }
+        emit RewardsClaimed(msg.sender, rewards[msg.sender]);
     }
 
     function distributeFees(address[] memory _members) public {
         for (uint256 i = 0; i < _members.length; i++) {
             uint256 totalFees = accruedFees[_members[i]];
             if (totalFees == 0) continue;
-            // move ambassador fees
+            // distribute ambassador fees
             address ambassador = networkRoles.getMembershipAmbassador(_members[i]);
             uint256 ambassadorFee = (ambassadorFeePercent * totalFees) / MAX_PPM;
+            // no ambassador for membership
             if (ambassador == address(0)) {
                 rewards[address(this)] += ambassadorFee;
             } else {
                 rewards[ambassador] += ambassadorFee;
             }
             emit AmbassadorRewardsUpdated(ambassador, rewards[ambassador]);
-            // move network fees
+            // distribute network fees
             uint256 networkFee = ((MAX_PPM - ambassadorFeePercent) * totalFees) / MAX_PPM;
             rewards[address(this)] += networkFee;
             emit NetworkRewardsUpdated(rewards[address(this)]);
-
             accruedFees[_members[i]] = 0;
         }
     }
@@ -123,8 +115,12 @@ contract NetworkFeeManager is OwnableUpgradeable, INetworkFeeManager {
     }
 
     function recoverERC20(address tokenAddress, uint256 tokenAmount) external onlyNetworkOperator {
-        require(tokenAddress != address(collateralToken), "Cannot withdraw staking token");
+        require(tokenAddress != address(feeToken), "Cannot withdraw staking token");
         IERC20Upgradeable(tokenAddress).safeTransfer(owner(), tokenAmount);
+    }
+
+    function setNetwork(address _network) external override onlyNetworkOperator {
+        network = _network;
     }
 
     /* ========== VIEWS ========== */

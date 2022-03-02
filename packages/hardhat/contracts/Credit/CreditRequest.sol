@@ -8,8 +8,6 @@ import "./interface/ICreditRequest.sol";
 import "./interface/ICreditRoles.sol";
 import "./interface/ICreditManager.sol";
 import "../Network/interface/ICIP36.sol";
-import "../Network/interface/INetworkToken.sol";
-import "../Network/interface/INetworkRoles.sol";
 
 contract CreditRequest is OwnableUpgradeable, PausableUpgradeable, ICreditRequest {
     /* ========== CONSTANTS ========== */
@@ -39,10 +37,7 @@ contract CreditRequest is OwnableUpgradeable, PausableUpgradeable, ICreditReques
         address _counterparty,
         uint256 _creditLimit
     ) public override {
-        INetworkRoles networkRoles = INetworkRoles(INetworkToken(_network).getNetworkRoles());
-        address ambassador = networkRoles.getMembershipAmbassador(_counterparty);
-        bool hasAccess = msg.sender == _counterparty ||
-            msg.sender == ambassador ||
+        bool hasAccess = ICIP36(_network).canIssueCredit(msg.sender) ||
             creditRoles.isRequestOperator(msg.sender);
         require(
             hasAccess,
@@ -123,12 +118,9 @@ contract CreditRequest is OwnableUpgradeable, PausableUpgradeable, ICreditReques
             requests[_network][_counterparty].creditLimit > 0,
             "CreditRequest: request does not exist"
         );
-        INetworkRoles networkRoles = INetworkRoles(INetworkToken(_network).getNetworkRoles());
-        require(
-            networkRoles.getMembershipAmbassador(_counterparty) == msg.sender ||
-                creditRoles.isRequestOperator(msg.sender),
-            "CreditRequest: Unauthorized to update this request"
-        );
+        bool hasAccess = ICIP36(_network).canIssueCredit(msg.sender) ||
+            creditRoles.isRequestOperator(msg.sender);
+        require(hasAccess, "CreditRequest: Unauthorized to update this request");
         CreditRequest storage creditRequest = requests[_network][_counterparty];
         creditRequest.creditLimit = _creditLimit;
         creditRequest.approved = _approved;
@@ -136,12 +128,9 @@ contract CreditRequest is OwnableUpgradeable, PausableUpgradeable, ICreditReques
     }
 
     function deleteRequest(address _network, address _counterparty) external override {
-        INetworkRoles networkRoles = INetworkRoles(INetworkToken(_network).getNetworkRoles());
-        require(
-            networkRoles.getMembershipAmbassador(_counterparty) == msg.sender ||
-                creditRoles.isRequestOperator(msg.sender),
-            "CreditRequest: Unauthorized to delete this request"
-        );
+        bool hasAccess = ICIP36(_network).canIssueCredit(msg.sender) ||
+            creditRoles.isRequestOperator(msg.sender);
+        require(hasAccess, "CreditRequest: Unauthorized to delete this request");
         delete requests[_network][_counterparty];
         emit CreditRequestRemoved(_network, _counterparty);
     }

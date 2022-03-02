@@ -5,9 +5,8 @@ import "./CIP36.sol";
 import "./interface/INetworkRoles.sol";
 import "./interface/INetworkFeeManager.sol";
 import "../iKeyWallet/IiKeyWalletDeployer.sol";
-import "./interface/INetworkToken.sol";
 
-contract RUSDV3 is CIP36, INetworkToken {
+contract RUSDV3 is CIP36 {
     /*
      *  Storage
      */
@@ -57,6 +56,7 @@ contract RUSDV3 is CIP36, INetworkToken {
         CIP36.initialize("rUSD", "rUSD");
         creditManager = _creditManager;
         feeManager = INetworkFeeManager(_feeManager);
+        feeManager.setNetwork(address(this));
         networkRoles = INetworkRoles(_networkRoles);
     }
 
@@ -68,7 +68,7 @@ contract RUSDV3 is CIP36, INetworkToken {
         address _to,
         uint256 _amount
     ) internal override onlyRegistered(_from, _to) {
-        feeManager.collectFees(address(this), _from, _amount);
+        feeManager.collectFees(_from, _amount);
         super._transfer(_from, _to, _amount);
 
         emit BalanceUpdate(
@@ -88,7 +88,8 @@ contract RUSDV3 is CIP36, INetworkToken {
         }
     }
 
-    function getNetworkRoles() external view override returns (address) {
-        return address(networkRoles);
+    function canIssueCredit(address _issuer) public view override returns (bool) {
+        address ambassador = networkRoles.getMembershipAmbassador(_issuer);
+        return msg.sender == _issuer || msg.sender == ambassador;
     }
 }

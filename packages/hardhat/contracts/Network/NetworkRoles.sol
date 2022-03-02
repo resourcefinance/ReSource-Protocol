@@ -16,8 +16,8 @@ contract NetworkRoles is AccessControlUpgradeable, OwnableUpgradeable, INetworkR
     mapping(address => address) membershipAmbassador;
     // member => ambassador => invited
     mapping(address => mapping(address => bool)) memberInvited;
-
-    mapping(address => uint256) creditAllowance;
+    // ambassador => allowance
+    mapping(address => uint256) ambassadorCreditAllowance;
 
     /* ========== INITIALIZER ========== */
 
@@ -52,28 +52,27 @@ contract NetworkRoles is AccessControlUpgradeable, OwnableUpgradeable, INetworkR
         require(memberInvited[msg.sender][_ambassador], "NetworkRoles: Invite does not exist");
         membershipAmbassador[msg.sender] = _ambassador;
         delete memberInvited[msg.sender][_ambassador];
-        ICIP36(_network).setCreditLimit(msg.sender, creditAllowance[_ambassador]);
+        ICIP36(_network).setCreditLimit(msg.sender, ambassadorCreditAllowance[_ambassador]);
         emit MembershipAmbassadorUpdated(msg.sender, _ambassador);
     }
 
-    function grantAmbassador(address _ambassador, uint256 _creditAllowance)
+    function grantAmbassador(address _ambassador, uint256 _ambassadorCreditAllowance)
         external
         onlyNetworkOperator
         ambassadorDoesNotExist(_ambassador)
         notNull(_ambassador)
     {
         grantRole("AMBASSADOR", _ambassador);
-        creditAllowance[_ambassador] = _creditAllowance;
-        emit AmbassadorAdded(_ambassador, _creditAllowance);
+        ambassadorCreditAllowance[_ambassador] = _ambassadorCreditAllowance;
+        emit AmbassadorAdded(_ambassador, _ambassadorCreditAllowance);
     }
 
-    function updateAmbassador(address _ambassador, uint256 _creditAllowance)
-        external
-        onlyNetworkOperator
-        ambassadorExists(_ambassador)
-    {
-        creditAllowance[_ambassador] = _creditAllowance;
-        emit AmbassadorAllowanceUpdated(_ambassador, _creditAllowance);
+    function updateAmbassadorCreditAllowance(
+        address _ambassador,
+        uint256 _ambassadorCreditAllowance
+    ) external onlyNetworkOperator ambassadorExists(_ambassador) {
+        ambassadorCreditAllowance[_ambassador] = _ambassadorCreditAllowance;
+        emit AmbassadorAllowanceUpdated(_ambassador, _ambassadorCreditAllowance);
     }
 
     function revokeAmbassador(address _ambassador)
@@ -89,20 +88,24 @@ contract NetworkRoles is AccessControlUpgradeable, OwnableUpgradeable, INetworkR
     function transferMembershipAmbassador(address _member, address _ambassador)
         external
         memberExists(_member)
+        ownsMembership(_member)
     {
         require(
             _ambassador != msg.sender,
             "NetworkRoles: Cannot transfer membership to caller address"
         );
         require(isAmbassador(_ambassador), "NetworkRoles: provided ambassador does not have role");
-        if (!isNetworkOperator(msg.sender)) {
-            require(
-                membershipAmbassador[_member] == msg.sender,
-                "NetworkRoles: Membership is not owned by caller"
-            );
-        }
         membershipAmbassador[_member] = _ambassador;
         emit MembershipAmbassadorUpdated(_member, _ambassador);
+    }
+
+    function dropMembership(address _member)
+        external
+        memberExists(_member)
+        ownsMembership(_member)
+    {
+        delete membershipAmbassador[_member];
+        emit MembershipAmbassadorUpdated(_member, address(0));
     }
 
     function grantOperator(address _operator)
@@ -129,7 +132,7 @@ contract NetworkRoles is AccessControlUpgradeable, OwnableUpgradeable, INetworkR
     ) public onlyAmbassador returns (address) {
         address newWallet = walletDeployer.deployWallet(_clients, _guardians, _coSigner, _required);
         membershipAmbassador[newWallet] = _ambassador;
-        ICIP36(_network).setCreditLimit(newWallet, creditAllowance[_ambassador]);
+        ICIP36(_network).setCreditLimit(newWallet, ambassadorCreditAllowance[_ambassador]);
         grantRole("MEMBER", newWallet);
         emit MemberAdded(newWallet, _ambassador);
         return newWallet;
@@ -210,6 +213,14 @@ contract NetworkRoles is AccessControlUpgradeable, OwnableUpgradeable, INetworkR
 
     modifier notNull(address _address) {
         require(_address != address(0), "invalid operator address");
+        _;
+    }
+
+    modifier ownsMembership(address _member) {
+        bool canAlterMembership = isNetworkOperator(msg.sender) ||
+            membershipAmbassador[_member] == msg.sender ||
+            msg.sender == _member;
+        require(canAlterMembership, "NetworkRoles: Caller not authorized to alter membership");
         _;
     }
 }

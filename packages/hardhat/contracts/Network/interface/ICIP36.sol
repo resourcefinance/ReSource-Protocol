@@ -9,4 +9,6 @@ interface ICIP36 {
     function creditLimitLeftOf(address _member) external view returns (uint256);
 
     function setCreditLimit(address _member, uint256 _limit) external;
+
+    function canIssueCredit(address _issuer) external returns (bool);
 }

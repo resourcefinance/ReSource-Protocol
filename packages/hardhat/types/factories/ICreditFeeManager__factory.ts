@@ -41,38 +41,6 @@ const _abi = [
       {
         indexed: false,
         internalType: "address",
-        name: "operator",
-        type: "address",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "totalRewards",
-        type: "uint256",
-      },
-    ],
-    name: "OperatorFeesClaimed",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "totalRewards",
-        type: "uint256",
-      },
-    ],
-    name: "OperatorRewardsUpdated",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
-        internalType: "address",
         name: "underwriter",
         type: "address",
       },
@@ -84,25 +52,6 @@ const _abi = [
       },
     ],
     name: "PoolRewardsUpdated",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
-        internalType: "address",
-        name: "underwriter",
-        type: "address",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "totalRewards",
-        type: "uint256",
-      },
-    ],
-    name: "UnderwriterFeesClaimed",
     type: "event",
   },
   {

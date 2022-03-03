@@ -61,7 +61,12 @@ contract CreditRequest is OwnableUpgradeable, PausableUpgradeable, ICreditReques
             "CreditRequest: request already approved"
         );
         requests[_network][_counterparty].approved = true;
-        emit CreditRequestApproved(_network, _counterparty);
+        emit CreditRequestUpdated(
+            _network,
+            _counterparty,
+            requests[_network][_counterparty].creditLimit,
+            true
+        );
     }
 
     function acceptRequest(

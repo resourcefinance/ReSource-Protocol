@@ -1,4 +1,3 @@
-export { handleCreditRequestApproved } from "./CreditRequestApproved"
 export { handleCreditRequestCreated } from "./CreditRequestCreated"
 export { handleCreditRequestRemoved } from "./CreditRequestRemoved"
 export { handleCreditRequestUpdated } from "./CreditRequestUpdated"

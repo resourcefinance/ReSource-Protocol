@@ -62,10 +62,8 @@ dataSources:
       eventHandlers:
         - event: FeesCollected(address,uint256)
           handler: handleFeesCollected
-        - event: AmbassadorFeesClaimed(address,uint256)
-          handler: handleAmbassadorFeesClaimed
-        - event: NetworkFeesClaimed(address,uint256)
-          handler: handleNetworkFeesClaimed
+        - event: RewardsClaimed(address,uint256)
+          handler: handleAmbassadorRewardsClaimed
         - event: AmbassadorRewardsUpdated(address,uint256)
           handler: handleNetworkRewardsUpdated
       file: ./src/mapping/NetworkFeeManager/index.ts
@@ -115,14 +113,6 @@ dataSources:
         - name: CreditFeeManager
           file: ./abis/CreditFeeManager.json
       eventHandlers:
-        - event: FeesCollected(address,address,uint256)
-          handler: handleFeesCollected
-        - event: UnderwriterFeesClaimed(address,uint256)
-          handler: handleUnderwriterFeesClaimed
-        - event: OperatorFeesClaimed(address,uint256)
-          handler: handleOperatorFeesClaimed
-        - event: OperatorRewardsUpdated(uint256)
-          handler: handleOperatorRewardsUpdated
         - event: PoolRewardsUpdated(address,uint256)
           handler: handlePoolRewardsUpdated
         - event: UnderwriterRewardsStaked(address,uint256)
@@ -177,8 +167,6 @@ dataSources:
       eventHandlers:
         - event: CreditRequestCreated(address,address,address,uint256,bool)
           handler: handleCreditRequestCreated
-        - event: CreditRequestApproved(address,address)
-          handler: handleCreditRequestApproved
         - event: CreditRequestUpdated(address,address,uint256,bool)
           handler: handleCreditRequestUpdated
         - event: CreditRequestRemoved(address,address)

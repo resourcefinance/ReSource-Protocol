@@ -54,18 +54,12 @@ interface ICreditFeeManagerInterface extends ethers.utils.Interface {
 
   events: {
     "FeesCollected(address,address,uint256)": EventFragment;
-    "OperatorFeesClaimed(address,uint256)": EventFragment;
-    "OperatorRewardsUpdated(uint256)": EventFragment;
     "PoolRewardsUpdated(address,uint256)": EventFragment;
-    "UnderwriterFeesClaimed(address,uint256)": EventFragment;
     "UnderwriterRewardsStaked(address,uint256)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "FeesCollected"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "OperatorFeesClaimed"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "OperatorRewardsUpdated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "PoolRewardsUpdated"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "UnderwriterFeesClaimed"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "UnderwriterRewardsStaked"): EventFragment;
 }
 
@@ -77,19 +71,7 @@ export type FeesCollectedEvent = TypedEvent<
   }
 >;
 
-export type OperatorFeesClaimedEvent = TypedEvent<
-  [string, BigNumber] & { operator: string; totalRewards: BigNumber }
->;
-
-export type OperatorRewardsUpdatedEvent = TypedEvent<
-  [BigNumber] & { totalRewards: BigNumber }
->;
-
 export type PoolRewardsUpdatedEvent = TypedEvent<
-  [string, BigNumber] & { underwriter: string; totalRewards: BigNumber }
->;
-
-export type UnderwriterFeesClaimedEvent = TypedEvent<
   [string, BigNumber] & { underwriter: string; totalRewards: BigNumber }
 >;
 
@@ -215,30 +197,6 @@ export class ICreditFeeManager extends BaseContract {
       { network: string; member: string; totalFee: BigNumber }
     >;
 
-    "OperatorFeesClaimed(address,uint256)"(
-      operator?: null,
-      totalRewards?: null
-    ): TypedEventFilter<
-      [string, BigNumber],
-      { operator: string; totalRewards: BigNumber }
-    >;
-
-    OperatorFeesClaimed(
-      operator?: null,
-      totalRewards?: null
-    ): TypedEventFilter<
-      [string, BigNumber],
-      { operator: string; totalRewards: BigNumber }
-    >;
-
-    "OperatorRewardsUpdated(uint256)"(
-      totalRewards?: null
-    ): TypedEventFilter<[BigNumber], { totalRewards: BigNumber }>;
-
-    OperatorRewardsUpdated(
-      totalRewards?: null
-    ): TypedEventFilter<[BigNumber], { totalRewards: BigNumber }>;
-
     "PoolRewardsUpdated(address,uint256)"(
       underwriter?: null,
       totalRewards?: null
@@ -248,22 +206,6 @@ export class ICreditFeeManager extends BaseContract {
     >;
 
     PoolRewardsUpdated(
-      underwriter?: null,
-      totalRewards?: null
-    ): TypedEventFilter<
-      [string, BigNumber],
-      { underwriter: string; totalRewards: BigNumber }
-    >;
-
-    "UnderwriterFeesClaimed(address,uint256)"(
-      underwriter?: null,
-      totalRewards?: null
-    ): TypedEventFilter<
-      [string, BigNumber],
-      { underwriter: string; totalRewards: BigNumber }
-    >;
-
-    UnderwriterFeesClaimed(
       underwriter?: null,
       totalRewards?: null
     ): TypedEventFilter<

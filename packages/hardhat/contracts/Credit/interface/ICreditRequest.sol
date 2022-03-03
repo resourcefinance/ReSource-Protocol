@@ -16,8 +16,6 @@ interface ICreditRequest {
         bool approved
     );
 
-    event CreditRequestApproved(address network, address counterparty);
-
     event CreditRequestUpdated(
         address network,
         address counterparty,

@@ -4,6 +4,7 @@ type NetworkMember @entity {
   creditRequests: [CreditRequest]! @derivedFrom(field: "networkMember")
   creditLine: CreditLine! @derivedFrom(field: "networkMember")
   sourceBalance: BigInt!
+  totalFeesAccrued: BigInt!
 }
 
 type Ambassador @entity {
@@ -49,7 +50,7 @@ type CreditRequest @entity {
 }
 
 enum RequestType {
-  New
-  Unstaking
-  Extension
+  new
+  unstaking
+  extension
 }

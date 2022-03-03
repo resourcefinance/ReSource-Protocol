@@ -7,12 +7,15 @@ export function handleCreditLineCreated(event: CreditLineCreated): void {
     return
   }
   let id = event.params.network.toHex() + "-" + event.params.counterparty.toHex()
-  let creditLine = new CreditLine(id)
-  creditLine.issueDate = event.params.timestamp
-  creditLine.pool = event.params.pool.toHex()
-  creditLine.network = event.params.network
-  creditLine.creditLimit = event.params.creditLimit
-  networkMember.creditLine = creditLine.id
-  networkMember.save()
-  creditLine.save()
+  let creditLine = CreditLine.load(id)
+  if (!creditLine) {
+    creditLine = new CreditLine(id)
+    creditLine.issueDate = event.params.timestamp
+    creditLine.pool = event.params.pool.toHex()
+    creditLine.network = event.params.network
+    creditLine.creditLimit = event.params.creditLimit
+    networkMember.creditLine = creditLine.id
+    networkMember.save()
+    creditLine.save()
+  }
 }

@@ -14,7 +14,7 @@ contract PriceOracle is IPriceOracle {
         price = _price;
     }
 
-    function getPrice() external view override returns (uint256) {
+    function getPriceInDollars() external view override returns (uint256) {
         return price;
     }
 }

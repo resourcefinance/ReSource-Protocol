@@ -95,6 +95,8 @@ contract CreditRequest is OwnableUpgradeable, PausableUpgradeable, ICreditReques
         delete requests[_network][_counterparty];
     }
 
+    //TODO: add the CreateAndAcceptRequest funciton
+
     function requestUnstake(address _network, address _counterparty) external {
         address underwriter = creditManager.getCreditLineUnderwriter(_network, _counterparty);
         require(

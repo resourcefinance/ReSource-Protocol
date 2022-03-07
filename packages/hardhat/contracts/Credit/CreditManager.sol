@@ -53,7 +53,7 @@ contract CreditManager is OwnableUpgradeable, PausableUpgradeable, ICreditManage
         address _pool,
         uint256 _creditLimit,
         address _network
-    ) external override onlyOperator onlyRegisteredNetwork(_network) {
+    ) external override onlyOperator onlyRegisteredNetwork(_network) onlyRegisteredPool(_pool) {
         creditLines[_network][_counterparty] = CreditLine(_pool, block.timestamp);
         ICreditPool(_pool).increaseTotalCredit(_creditLimit);
         ICIP36(_network).setCreditLimit(_counterparty, _creditLimit);
@@ -87,7 +87,7 @@ contract CreditManager is OwnableUpgradeable, PausableUpgradeable, ICreditManage
         address _network,
         address _counterparty,
         address _pool
-    ) external override onlyOperator {
+    ) external override onlyOperator onlyRegisteredPool(_pool) {
         CreditLine storage creditLine = creditLines[_network][_counterparty];
         creditLine.creditPool = _pool;
         emit CreditLinePoolUpdated(_network, _counterparty, _pool);
@@ -113,6 +113,9 @@ contract CreditManager is OwnableUpgradeable, PausableUpgradeable, ICreditManage
         );
         delete creditLines[_network][_counterparty];
         ICIP36(_network).setCreditLimit(_counterparty, 0);
+        ICreditPool(creditLine.creditPool).reduceTotalCredit(
+            ICIP36(_network).creditBalanceOf(_counterparty)
+        );
         emit CreditLineRemoved(_network, _counterparty);
     }
 
@@ -212,7 +215,9 @@ contract CreditManager is OwnableUpgradeable, PausableUpgradeable, ICreditManage
     {
         uint256 collateralDecimals = IERC20Metadata(address(collateralToken)).decimals();
         uint256 decimalConversion = collateralDecimals - IERC20Metadata(_network).decimals();
-        return ((_amount * 10**decimalConversion) / oracle.getPrice()) * 10**collateralDecimals;
+        return
+            ((_amount * 10**decimalConversion) / oracle.getPriceInDollars()) *
+            10**collateralDecimals;
     }
 
     /* ========== PRIVATE FUNCTIONS ========== */

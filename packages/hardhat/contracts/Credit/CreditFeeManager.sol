@@ -151,6 +151,9 @@ contract CreditFeeManager is ICreditFeeManager, OwnableUpgradeable {
     ) private returns (uint256) {
         if (creditManager.isPoolValidLTV(_network, pool)) return creditFee;
         uint256 neededCollateral = creditManager.getNeededCollateral(_network, _networkMember);
+        if (neededCollateral == 0) {
+            return creditFee;
+        }
         if (neededCollateral > creditFee) {
             collateralToken.safeTransfer(underwriter, creditFee);
             ICreditPool(pool).stakeFor(underwriter, creditFee);

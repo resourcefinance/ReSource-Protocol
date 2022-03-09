@@ -243,8 +243,8 @@ export class ICreditManager extends BaseContract {
       _networkToken: string,
       _percent: BigNumberish,
       _amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
 
     convertNetworkToCollateral(
       _network: string,
@@ -253,7 +253,7 @@ export class ICreditManager extends BaseContract {
     ): Promise<ContractTransaction>;
 
     createCreditLine(
-      _counterparty: string,
+      _networkMember: string,
       _pool: string,
       _creditLimit: BigNumberish,
       _network: string,
@@ -262,7 +262,7 @@ export class ICreditManager extends BaseContract {
 
     extendCreditLine(
       _network: string,
-      _counterparty: string,
+      _networkMember: string,
       _creditLimit: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
@@ -273,13 +273,13 @@ export class ICreditManager extends BaseContract {
 
     getCreditLine(
       _network: string,
-      _counterparty: string,
+      _networkMember: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     getCreditLineUnderwriter(
       _network: string,
-      _counterparty: string,
+      _networkMember: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -289,31 +289,31 @@ export class ICreditManager extends BaseContract {
 
     getNeededCollateral(
       _network: string,
-      _counterparty: string,
+      _networkMember: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     isCreditLineExpired(
       _network: string,
-      _counterparty: string,
+      _networkMember: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     isPoolValidLTV(
       _network: string,
-      _counterparty: string,
+      _networkMember: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     renewCreditLine(
       _network: string,
-      _counterparty: string,
+      _networkMember: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     swapCreditLinePool(
       _network: string,
-      _counterparty: string,
+      _networkMember: string,
       _pool: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
@@ -323,8 +323,8 @@ export class ICreditManager extends BaseContract {
     _networkToken: string,
     _percent: BigNumberish,
     _amount: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
 
   convertNetworkToCollateral(
     _network: string,
@@ -333,7 +333,7 @@ export class ICreditManager extends BaseContract {
   ): Promise<ContractTransaction>;
 
   createCreditLine(
-    _counterparty: string,
+    _networkMember: string,
     _pool: string,
     _creditLimit: BigNumberish,
     _network: string,
@@ -342,7 +342,7 @@ export class ICreditManager extends BaseContract {
 
   extendCreditLine(
     _network: string,
-    _counterparty: string,
+    _networkMember: string,
     _creditLimit: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
@@ -353,13 +353,13 @@ export class ICreditManager extends BaseContract {
 
   getCreditLine(
     _network: string,
-    _counterparty: string,
+    _networkMember: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   getCreditLineUnderwriter(
     _network: string,
-    _counterparty: string,
+    _networkMember: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -369,31 +369,31 @@ export class ICreditManager extends BaseContract {
 
   getNeededCollateral(
     _network: string,
-    _counterparty: string,
+    _networkMember: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   isCreditLineExpired(
     _network: string,
-    _counterparty: string,
+    _networkMember: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   isPoolValidLTV(
     _network: string,
-    _counterparty: string,
+    _networkMember: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   renewCreditLine(
     _network: string,
-    _counterparty: string,
+    _networkMember: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   swapCreditLinePool(
     _network: string,
-    _counterparty: string,
+    _networkMember: string,
     _pool: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
@@ -413,7 +413,7 @@ export class ICreditManager extends BaseContract {
     ): Promise<BigNumber>;
 
     createCreditLine(
-      _counterparty: string,
+      _networkMember: string,
       _pool: string,
       _creditLimit: BigNumberish,
       _network: string,
@@ -422,7 +422,7 @@ export class ICreditManager extends BaseContract {
 
     extendCreditLine(
       _network: string,
-      _counterparty: string,
+      _networkMember: string,
       _creditLimit: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
@@ -431,7 +431,7 @@ export class ICreditManager extends BaseContract {
 
     getCreditLine(
       _network: string,
-      _counterparty: string,
+      _networkMember: string,
       overrides?: CallOverrides
     ): Promise<
       [string, BigNumber] & { creditPool: string; issueDate: BigNumber }
@@ -439,7 +439,7 @@ export class ICreditManager extends BaseContract {
 
     getCreditLineUnderwriter(
       _network: string,
-      _counterparty: string,
+      _networkMember: string,
       overrides?: CallOverrides
     ): Promise<string>;
 
@@ -447,31 +447,31 @@ export class ICreditManager extends BaseContract {
 
     getNeededCollateral(
       _network: string,
-      _counterparty: string,
+      _networkMember: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     isCreditLineExpired(
       _network: string,
-      _counterparty: string,
+      _networkMember: string,
       overrides?: CallOverrides
     ): Promise<boolean>;
 
     isPoolValidLTV(
       _network: string,
-      _counterparty: string,
+      _networkMember: string,
       overrides?: CallOverrides
     ): Promise<boolean>;
 
     renewCreditLine(
       _network: string,
-      _counterparty: string,
+      _networkMember: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
     swapCreditLinePool(
       _network: string,
-      _counterparty: string,
+      _networkMember: string,
       _pool: string,
       overrides?: CallOverrides
     ): Promise<void>;
@@ -604,7 +604,7 @@ export class ICreditManager extends BaseContract {
       _networkToken: string,
       _percent: BigNumberish,
       _amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     convertNetworkToCollateral(
@@ -614,7 +614,7 @@ export class ICreditManager extends BaseContract {
     ): Promise<BigNumber>;
 
     createCreditLine(
-      _counterparty: string,
+      _networkMember: string,
       _pool: string,
       _creditLimit: BigNumberish,
       _network: string,
@@ -623,7 +623,7 @@ export class ICreditManager extends BaseContract {
 
     extendCreditLine(
       _network: string,
-      _counterparty: string,
+      _networkMember: string,
       _creditLimit: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
@@ -634,13 +634,13 @@ export class ICreditManager extends BaseContract {
 
     getCreditLine(
       _network: string,
-      _counterparty: string,
+      _networkMember: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     getCreditLineUnderwriter(
       _network: string,
-      _counterparty: string,
+      _networkMember: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -650,31 +650,31 @@ export class ICreditManager extends BaseContract {
 
     getNeededCollateral(
       _network: string,
-      _counterparty: string,
+      _networkMember: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     isCreditLineExpired(
       _network: string,
-      _counterparty: string,
+      _networkMember: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     isPoolValidLTV(
       _network: string,
-      _counterparty: string,
+      _networkMember: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     renewCreditLine(
       _network: string,
-      _counterparty: string,
+      _networkMember: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     swapCreditLinePool(
       _network: string,
-      _counterparty: string,
+      _networkMember: string,
       _pool: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
@@ -685,7 +685,7 @@ export class ICreditManager extends BaseContract {
       _networkToken: string,
       _percent: BigNumberish,
       _amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     convertNetworkToCollateral(
@@ -695,7 +695,7 @@ export class ICreditManager extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     createCreditLine(
-      _counterparty: string,
+      _networkMember: string,
       _pool: string,
       _creditLimit: BigNumberish,
       _network: string,
@@ -704,7 +704,7 @@ export class ICreditManager extends BaseContract {
 
     extendCreditLine(
       _network: string,
-      _counterparty: string,
+      _networkMember: string,
       _creditLimit: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
@@ -715,13 +715,13 @@ export class ICreditManager extends BaseContract {
 
     getCreditLine(
       _network: string,
-      _counterparty: string,
+      _networkMember: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     getCreditLineUnderwriter(
       _network: string,
-      _counterparty: string,
+      _networkMember: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -731,31 +731,31 @@ export class ICreditManager extends BaseContract {
 
     getNeededCollateral(
       _network: string,
-      _counterparty: string,
+      _networkMember: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     isCreditLineExpired(
       _network: string,
-      _counterparty: string,
+      _networkMember: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     isPoolValidLTV(
       _network: string,
-      _counterparty: string,
+      _networkMember: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     renewCreditLine(
       _network: string,
-      _counterparty: string,
+      _networkMember: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     swapCreditLinePool(
       _network: string,
-      _counterparty: string,
+      _networkMember: string,
       _pool: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;

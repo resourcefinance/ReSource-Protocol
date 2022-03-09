@@ -21,15 +21,10 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface ICreditFeeManagerInterface extends ethers.utils.Interface {
   functions: {
-    "calculatePercentInCollateral(address,uint256,uint256)": FunctionFragment;
     "collectFees(address,address,uint256)": FunctionFragment;
     "getCollateralToken()": FunctionFragment;
   };
 
-  encodeFunctionData(
-    functionFragment: "calculatePercentInCollateral",
-    values: [string, BigNumberish, BigNumberish]
-  ): string;
   encodeFunctionData(
     functionFragment: "collectFees",
     values: [string, string, BigNumberish]
@@ -39,10 +34,6 @@ interface ICreditFeeManagerInterface extends ethers.utils.Interface {
     values?: undefined
   ): string;
 
-  decodeFunctionResult(
-    functionFragment: "calculatePercentInCollateral",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(
     functionFragment: "collectFees",
     data: BytesLike
@@ -123,13 +114,6 @@ export class ICreditFeeManager extends BaseContract {
   interface: ICreditFeeManagerInterface;
 
   functions: {
-    calculatePercentInCollateral(
-      _networkToken: string,
-      _percent: BigNumberish,
-      _amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
     collectFees(
       _network: string,
       _networkMember: string,
@@ -141,13 +125,6 @@ export class ICreditFeeManager extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
   };
-
-  calculatePercentInCollateral(
-    _networkToken: string,
-    _percent: BigNumberish,
-    _amount: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
 
   collectFees(
     _network: string,
@@ -161,13 +138,6 @@ export class ICreditFeeManager extends BaseContract {
   ): Promise<ContractTransaction>;
 
   callStatic: {
-    calculatePercentInCollateral(
-      _networkToken: string,
-      _percent: BigNumberish,
-      _amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
     collectFees(
       _network: string,
       _networkMember: string,
@@ -231,13 +201,6 @@ export class ICreditFeeManager extends BaseContract {
   };
 
   estimateGas: {
-    calculatePercentInCollateral(
-      _networkToken: string,
-      _percent: BigNumberish,
-      _amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
     collectFees(
       _network: string,
       _networkMember: string,
@@ -251,13 +214,6 @@ export class ICreditFeeManager extends BaseContract {
   };
 
   populateTransaction: {
-    calculatePercentInCollateral(
-      _networkToken: string,
-      _percent: BigNumberish,
-      _amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
     collectFees(
       _network: string,
       _networkMember: string,

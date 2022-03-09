@@ -22,13 +22,15 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 interface NetworkFeeManagerInterface extends ethers.utils.Interface {
   functions: {
     "calculateAmbassadorRewards(address[])": FunctionFragment;
+    "calculateFees(uint256)": FunctionFragment;
     "calculateNetworkRewards(address[])": FunctionFragment;
     "claimRewards(address[])": FunctionFragment;
     "collectFees(address,uint256)": FunctionFragment;
     "creditFeeManager()": FunctionFragment;
+    "creditManager()": FunctionFragment;
     "distributeFees(address[])": FunctionFragment;
     "feeToken()": FunctionFragment;
-    "initialize(address,address,uint256,uint256)": FunctionFragment;
+    "initialize(address,address,address,uint256,uint256)": FunctionFragment;
     "networkRoles()": FunctionFragment;
     "owner()": FunctionFragment;
     "recoverERC20(address,uint256)": FunctionFragment;
@@ -41,6 +43,10 @@ interface NetworkFeeManagerInterface extends ethers.utils.Interface {
   encodeFunctionData(
     functionFragment: "calculateAmbassadorRewards",
     values: [string[]]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "calculateFees",
+    values: [BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "calculateNetworkRewards",
@@ -59,13 +65,17 @@ interface NetworkFeeManagerInterface extends ethers.utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
+    functionFragment: "creditManager",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "distributeFees",
     values: [string[]]
   ): string;
   encodeFunctionData(functionFragment: "feeToken", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "initialize",
-    values: [string, string, BigNumberish, BigNumberish]
+    values: [string, string, string, BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "networkRoles",
@@ -95,6 +105,10 @@ interface NetworkFeeManagerInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "calculateFees",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "calculateNetworkRewards",
     data: BytesLike
   ): Result;
@@ -108,6 +122,10 @@ interface NetworkFeeManagerInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "creditFeeManager",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "creditManager",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -223,6 +241,11 @@ export class NetworkFeeManager extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber] & { totalRewards: BigNumber }>;
 
+    calculateFees(
+      _transactionAmount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber] & { totalFee: BigNumber }>;
+
     calculateNetworkRewards(
       _members: string[],
       overrides?: CallOverrides
@@ -241,6 +264,8 @@ export class NetworkFeeManager extends BaseContract {
 
     creditFeeManager(overrides?: CallOverrides): Promise<[string]>;
 
+    creditManager(overrides?: CallOverrides): Promise<[string]>;
+
     distributeFees(
       _members: string[],
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -250,6 +275,7 @@ export class NetworkFeeManager extends BaseContract {
 
     initialize(
       _creditFeeManager: string,
+      _creditManager: string,
       _networkRoles: string,
       _totalFeePercent: BigNumberish,
       _ambassadorFeePercent: BigNumberish,
@@ -291,6 +317,11 @@ export class NetworkFeeManager extends BaseContract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
+  calculateFees(
+    _transactionAmount: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
   calculateNetworkRewards(
     _members: string[],
     overrides?: CallOverrides
@@ -309,6 +340,8 @@ export class NetworkFeeManager extends BaseContract {
 
   creditFeeManager(overrides?: CallOverrides): Promise<string>;
 
+  creditManager(overrides?: CallOverrides): Promise<string>;
+
   distributeFees(
     _members: string[],
     overrides?: Overrides & { from?: string | Promise<string> }
@@ -318,6 +351,7 @@ export class NetworkFeeManager extends BaseContract {
 
   initialize(
     _creditFeeManager: string,
+    _creditManager: string,
     _networkRoles: string,
     _totalFeePercent: BigNumberish,
     _ambassadorFeePercent: BigNumberish,
@@ -359,6 +393,11 @@ export class NetworkFeeManager extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    calculateFees(
+      _transactionAmount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     calculateNetworkRewards(
       _members: string[],
       overrides?: CallOverrides
@@ -374,6 +413,8 @@ export class NetworkFeeManager extends BaseContract {
 
     creditFeeManager(overrides?: CallOverrides): Promise<string>;
 
+    creditManager(overrides?: CallOverrides): Promise<string>;
+
     distributeFees(
       _members: string[],
       overrides?: CallOverrides
@@ -383,6 +424,7 @@ export class NetworkFeeManager extends BaseContract {
 
     initialize(
       _creditFeeManager: string,
+      _creditManager: string,
       _networkRoles: string,
       _totalFeePercent: BigNumberish,
       _ambassadorFeePercent: BigNumberish,
@@ -494,6 +536,11 @@ export class NetworkFeeManager extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    calculateFees(
+      _transactionAmount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     calculateNetworkRewards(
       _members: string[],
       overrides?: CallOverrides
@@ -512,6 +559,8 @@ export class NetworkFeeManager extends BaseContract {
 
     creditFeeManager(overrides?: CallOverrides): Promise<BigNumber>;
 
+    creditManager(overrides?: CallOverrides): Promise<BigNumber>;
+
     distributeFees(
       _members: string[],
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -521,6 +570,7 @@ export class NetworkFeeManager extends BaseContract {
 
     initialize(
       _creditFeeManager: string,
+      _creditManager: string,
       _networkRoles: string,
       _totalFeePercent: BigNumberish,
       _ambassadorFeePercent: BigNumberish,
@@ -563,6 +613,11 @@ export class NetworkFeeManager extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    calculateFees(
+      _transactionAmount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     calculateNetworkRewards(
       _members: string[],
       overrides?: CallOverrides
@@ -581,6 +636,8 @@ export class NetworkFeeManager extends BaseContract {
 
     creditFeeManager(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    creditManager(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     distributeFees(
       _members: string[],
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -590,6 +647,7 @@ export class NetworkFeeManager extends BaseContract {
 
     initialize(
       _creditFeeManager: string,
+      _creditManager: string,
       _networkRoles: string,
       _totalFeePercent: BigNumberish,
       _ambassadorFeePercent: BigNumberish,

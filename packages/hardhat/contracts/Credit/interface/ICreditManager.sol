@@ -26,7 +26,7 @@ interface ICreditManager {
     event CreditLineRenewed(address network, address counterparty, uint256 timestamp);
 
     function createCreditLine(
-        address _counterparty,
+        address _networkMember,
         address _pool,
         uint256 _creditLimit,
         address _network
@@ -36,27 +36,27 @@ interface ICreditManager {
 
     function getMinLTV() external returns (uint256);
 
-    function getCreditLine(address _network, address _counterparty)
+    function getCreditLine(address _network, address _networkMember)
         external
         returns (CreditLine memory);
 
-    function getCreditLineUnderwriter(address _network, address _counterparty)
+    function getCreditLineUnderwriter(address _network, address _networkMember)
         external
         returns (address);
 
-    function isPoolValidLTV(address _network, address _counterparty) external returns (bool);
+    function isPoolValidLTV(address _network, address _networkMember) external returns (bool);
 
-    function isCreditLineExpired(address _network, address _counterparty) external returns (bool);
+    function isCreditLineExpired(address _network, address _networkMember) external returns (bool);
 
     function swapCreditLinePool(
         address _network,
-        address _counterparty,
+        address _networkMember,
         address _pool
     ) external;
 
     function extendCreditLine(
         address _network,
-        address _counterparty,
+        address _networkMember,
         uint256 _creditLimit
     ) external;
 
@@ -64,9 +64,9 @@ interface ICreditManager {
         external
         returns (uint256);
 
-    function renewCreditLine(address _network, address _counterparty) external;
+    function renewCreditLine(address _network, address _networkMember) external;
 
-    function getNeededCollateral(address _network, address _counterparty)
+    function getNeededCollateral(address _network, address _networkMember)
         external
         returns (uint256);
 
@@ -74,5 +74,5 @@ interface ICreditManager {
         address _networkToken,
         uint256 _percent,
         uint256 _amount
-    ) external returns (uint256);
+    ) external view returns (uint256);
 }

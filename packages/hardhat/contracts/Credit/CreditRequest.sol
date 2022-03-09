@@ -34,115 +34,129 @@ contract CreditRequest is OwnableUpgradeable, PausableUpgradeable, ICreditReques
 
     function createRequest(
         address _network,
-        address _counterparty,
+        address _networkMember,
         uint256 _creditLimit
-    ) public override onlyValidRequester(_network, _counterparty) {
+    ) public override onlyValidRequester(_network, _networkMember) {
         require(
-            requests[_network][_counterparty].creditLimit == 0,
+            requests[_network][_networkMember].creditLimit == 0,
             "CreditRequest: Request already exists"
         );
-        uint256 creditBalance = ICIP36(_network).creditBalanceOf(_counterparty);
+        uint256 creditBalance = ICIP36(_network).creditBalanceOf(_networkMember);
         require(
             creditBalance <= _creditLimit,
             "CreditRequest: provided credit limit is less than current limit"
         );
         bool approved = creditRoles.isRequestOperator(msg.sender);
-        requests[_network][_counterparty] = CreditRequest(approved, false, _creditLimit);
-        emit CreditRequestCreated(_network, _counterparty, msg.sender, _creditLimit, approved);
+        requests[_network][_networkMember] = CreditRequest(approved, false, _creditLimit);
+        emit CreditRequestCreated(_network, _networkMember, msg.sender, _creditLimit, approved);
     }
 
-    function approveRequest(address _network, address _counterparty)
+    function approveRequest(address _network, address _networkMember)
         external
         override
         onlyRequestOperator
     {
         require(
-            !requests[_network][_counterparty].approved,
+            !requests[_network][_networkMember].approved,
             "CreditRequest: request already approved"
         );
-        requests[_network][_counterparty].approved = true;
+        requests[_network][_networkMember].approved = true;
         emit CreditRequestUpdated(
             _network,
-            _counterparty,
-            requests[_network][_counterparty].creditLimit,
+            _networkMember,
+            requests[_network][_networkMember].creditLimit,
             true
         );
     }
 
     function acceptRequest(
         address _network,
-        address _counterparty,
+        address _networkMember,
         address _pool
     ) external onlyUnderwriter {
         require(
-            requests[_network][_counterparty].approved,
+            requests[_network][_networkMember].approved,
             "CreditRequest: request is not approved"
         );
-        CreditRequest storage request = requests[_network][_counterparty];
-        uint256 curCreditLimit = ICIP36(_network).creditLimitOf(_counterparty);
-        address underwriter = creditManager.getCreditLineUnderwriter(_network, _counterparty);
+        CreditRequest storage request = requests[_network][_networkMember];
+        uint256 curCreditLimit = ICIP36(_network).creditLimitOf(_networkMember);
+        address underwriter = creditManager.getCreditLineUnderwriter(_network, _networkMember);
 
         if (underwriter == address(0)) {
-            creditManager.createCreditLine(_counterparty, _pool, request.creditLimit, _network);
+            creditManager.createCreditLine(_networkMember, _pool, request.creditLimit, _network);
         } else if (request.unstaking) {
             require(msg.sender != underwriter, "Cannot accept own unstake request");
-            creditManager.swapCreditLinePool(_network, _counterparty, _pool);
+            creditManager.swapCreditLinePool(_network, _networkMember, _pool);
         } else if (request.creditLimit > curCreditLimit) {
             require(msg.sender == underwriter, "Unauthorized to extend credit line");
-            creditManager.extendCreditLine(_network, _counterparty, request.creditLimit);
+            creditManager.extendCreditLine(_network, _networkMember, request.creditLimit);
         }
-        emit CreditRequestRemoved(_network, _counterparty);
-        delete requests[_network][_counterparty];
+        emit CreditRequestRemoved(_network, _networkMember);
+        delete requests[_network][_networkMember];
     }
 
-    //TODO: add the CreateAndAcceptRequest funciton
+    function createAndAcceptRequest(
+        address _network,
+        address _networkMember,
+        uint256 _creditLimit,
+        address _pool
+    ) external onlyUnderwriter onlyRequestOperator {
+        uint256 curCreditLimit = ICIP36(_network).creditLimitOf(_networkMember);
+        address underwriter = creditManager.getCreditLineUnderwriter(_network, _networkMember);
 
-    function requestUnstake(address _network, address _counterparty) external {
-        address underwriter = creditManager.getCreditLineUnderwriter(_network, _counterparty);
+        if (underwriter == address(0)) {
+            creditManager.createCreditLine(_networkMember, _pool, _creditLimit, _network);
+        } else if (_creditLimit > curCreditLimit) {
+            creditManager.extendCreditLine(_network, _networkMember, _creditLimit);
+        }
+    }
+
+    function requestUnstake(address _network, address _networkMember) external {
+        address underwriter = creditManager.getCreditLineUnderwriter(_network, _networkMember);
         require(
             msg.sender == underwriter,
             "CreditRequest: Sender must be counterparty's underwriter"
         );
-        CreditRequest storage creditRequest = requests[_network][_counterparty];
+        CreditRequest storage creditRequest = requests[_network][_networkMember];
         require(!creditRequest.unstaking, "CreditRequest: Unstake Request already exists");
-        requests[_network][_counterparty] = CreditRequest(true, true, 0);
-        emit UnstakeRequestCreated(_network, _counterparty);
+        requests[_network][_networkMember] = CreditRequest(true, true, 0);
+        emit UnstakeRequestCreated(_network, _networkMember);
     }
 
     function updateRequestLimit(
         address _network,
-        address _counterparty,
+        address _networkMember,
         uint256 _creditLimit,
         bool _approved
-    ) external override onlyValidRequester(_network, _counterparty) {
+    ) external override onlyValidRequester(_network, _networkMember) {
         require(
-            requests[_network][_counterparty].creditLimit > 0,
+            requests[_network][_networkMember].creditLimit > 0,
             "CreditRequest: request does not exist"
         );
-        CreditRequest storage creditRequest = requests[_network][_counterparty];
+        CreditRequest storage creditRequest = requests[_network][_networkMember];
         creditRequest.creditLimit = _creditLimit;
         creditRequest.approved = _approved;
-        emit CreditRequestUpdated(_network, _counterparty, _creditLimit, _approved);
+        emit CreditRequestUpdated(_network, _networkMember, _creditLimit, _approved);
     }
 
-    function deleteRequest(address _network, address _counterparty)
+    function deleteRequest(address _network, address _networkMember)
         external
         override
-        onlyValidRequester(_network, _counterparty)
+        onlyValidRequester(_network, _networkMember)
     {
-        delete requests[_network][_counterparty];
-        emit CreditRequestRemoved(_network, _counterparty);
+        delete requests[_network][_networkMember];
+        emit CreditRequestRemoved(_network, _networkMember);
     }
 
     /* ========== VIEWS ========== */
 
-    function getCreditRequest(address _network, address _counterparty)
+    function getCreditRequest(address _network, address _networkMember)
         public
         view
         override
         returns (CreditRequest memory)
     {
-        return requests[_network][_counterparty];
+        return requests[_network][_networkMember];
     }
 
     function verifyCreditLineExpiration(
@@ -197,8 +211,8 @@ contract CreditRequest is OwnableUpgradeable, PausableUpgradeable, ICreditReques
         _;
     }
 
-    modifier onlyValidRequester(address _network, address _counterparty) {
-        bool hasAccess = ICIP36(_network).canRequestCredit(msg.sender, _counterparty) ||
+    modifier onlyValidRequester(address _network, address _networkMember) {
+        bool hasAccess = ICIP36(_network).canRequestCredit(msg.sender, _networkMember) ||
             creditRoles.isRequestOperator(msg.sender);
         require(
             hasAccess,

@@ -7,7 +7,7 @@ import "./interface/INetworkFeeManager.sol";
 import "../iKeyWallet/IiKeyWalletDeployer.sol";
 import "hardhat/console.sol";
 
-contract RUSDV3 is CIP36 {
+contract RUSD is CIP36 {
     /*
      *  Storage
      */

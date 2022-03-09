@@ -5,7 +5,7 @@ import { ethers } from "hardhat"
 import { CreditRoles__factory } from "../types/factories/CreditRoles__factory"
 import { NetworkFeeManager__factory } from "../types/factories/NetworkFeeManager__factory"
 
-const func: DeployFunction = async function(hardhat: HardhatRuntimeEnvironment) {
+const func: DeployFunction = async function (hardhat: HardhatRuntimeEnvironment) {
   const accounts = await ethers.getSigners()
 
   let sourceTokenAddress = (await hardhat.deployments.getOrNull("SourceToken"))?.address
@@ -27,7 +27,7 @@ const func: DeployFunction = async function(hardhat: HardhatRuntimeEnvironment) 
     "iKeyWalletDeployer",
     walletDeployerArgs,
     hardhat,
-    walletDeployerAbi,
+    walletDeployerAbi
   )
 
   // 2. deploy NetworkRoles
@@ -37,7 +37,7 @@ const func: DeployFunction = async function(hardhat: HardhatRuntimeEnvironment) 
     "NetworkRoles",
     networkRolesArgs,
     hardhat,
-    networkRolesAbi,
+    networkRolesAbi
   )
 
   // 3. deploy NetworkFeeManager
@@ -47,20 +47,20 @@ const func: DeployFunction = async function(hardhat: HardhatRuntimeEnvironment) 
     "NetworkFeeManager",
     networkFeeManagerArgs,
     hardhat,
-    networkFeeManagerAbi,
+    networkFeeManagerAbi
   )
 
   const networkFeeManager = NetworkFeeManager__factory.connect(
     networkFeeManagerAddress,
-    accounts[0],
+    accounts[0]
   )
 
   await (await creditRoles.grantNetwork(networkFeeManagerAddress)).wait()
 
   // 4. deploy RUSD
   const rUSDArgs = [creditManagerAddress, networkFeeManagerAddress, networkRolesAddress]
-  const rUSDAbi = (await hardhat.artifacts.readArtifact("RUSDV3")).abi
-  const rUSDAddress = await deployProxyAndSave("RUSDV3", rUSDArgs, hardhat, rUSDAbi, {
+  const rUSDAbi = (await hardhat.artifacts.readArtifact("RUSD")).abi
+  const rUSDAddress = await deployProxyAndSave("RUSD", rUSDArgs, hardhat, rUSDAbi, {
     initializer: "initializeRUSD",
   })
 }

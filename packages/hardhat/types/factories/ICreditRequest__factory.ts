@@ -25,25 +25,6 @@ const _abi = [
         name: "counterparty",
         type: "address",
       },
-    ],
-    name: "CreditRequestApproved",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
-        internalType: "address",
-        name: "network",
-        type: "address",
-      },
-      {
-        indexed: false,
-        internalType: "address",
-        name: "counterparty",
-        type: "address",
-      },
       {
         indexed: false,
         internalType: "address",
@@ -144,7 +125,7 @@ const _abi = [
       },
       {
         internalType: "address",
-        name: "_counterparty",
+        name: "_networkMember",
         type: "address",
       },
     ],
@@ -162,7 +143,7 @@ const _abi = [
       },
       {
         internalType: "address",
-        name: "_counterparty",
+        name: "_networkMember",
         type: "address",
       },
       {
@@ -185,7 +166,7 @@ const _abi = [
       },
       {
         internalType: "address",
-        name: "_counterparty",
+        name: "_networkMember",
         type: "address",
       },
     ],
@@ -203,7 +184,7 @@ const _abi = [
       },
       {
         internalType: "address",
-        name: "_counterparty",
+        name: "_networkMember",
         type: "address",
       },
     ],
@@ -244,7 +225,7 @@ const _abi = [
       },
       {
         internalType: "address",
-        name: "_counterparty",
+        name: "_networkMember",
         type: "address",
       },
       {

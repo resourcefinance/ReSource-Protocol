@@ -12,6 +12,7 @@ contract NetworkRoles is AccessControlUpgradeable, OwnableUpgradeable, INetworkR
     /* ========== STATE VARIABLES ========== */
 
     IiKeyWalletDeployer private walletDeployer;
+    address network;
     // member => ambassador
     mapping(address => address) membershipAmbassador;
     // member => ambassador => invited
@@ -48,12 +49,19 @@ contract NetworkRoles is AccessControlUpgradeable, OwnableUpgradeable, INetworkR
         emit MemberAdded(_member, address(0));
     }
 
-    function acceptMembershipAmbassadorInvitation(address _network, address _ambassador) external {
+    function acceptMembershipAmbassadorInvitation(address _ambassador) external {
         require(memberInvited[msg.sender][_ambassador], "NetworkRoles: Invite does not exist");
         membershipAmbassador[msg.sender] = _ambassador;
         delete memberInvited[msg.sender][_ambassador];
-        ICIP36(_network).setCreditLimit(msg.sender, ambassadorCreditAllowance[_ambassador]);
+        ICIP36(network).setCreditLimit(msg.sender, ambassadorCreditAllowance[_ambassador]);
         emit MembershipAmbassadorUpdated(msg.sender, _ambassador);
+    }
+
+    function grantMember(address _member, address _ambassador) external onlyNetworkOperator {
+        membershipAmbassador[_member] = _ambassador;
+        grantRole("MEMBER", _member);
+        ICIP36(network).setCreditLimit(_member, ambassadorCreditAllowance[_ambassador]);
+        emit MembershipAmbassadorUpdated(_member, _ambassador);
     }
 
     function grantAmbassador(address _ambassador, uint256 _ambassadorCreditAllowance)
@@ -126,16 +134,19 @@ contract NetworkRoles is AccessControlUpgradeable, OwnableUpgradeable, INetworkR
         address[] memory _clients,
         address[] memory _guardians,
         address _coSigner,
-        address _network,
         address _ambassador,
         uint256 _required
     ) public onlyAmbassador returns (address) {
         address newWallet = walletDeployer.deployWallet(_clients, _guardians, _coSigner, _required);
         membershipAmbassador[newWallet] = _ambassador;
-        ICIP36(_network).setCreditLimit(newWallet, ambassadorCreditAllowance[_ambassador]);
+        ICIP36(network).setCreditLimit(newWallet, ambassadorCreditAllowance[_ambassador]);
         grantRole("MEMBER", newWallet);
         emit MemberAdded(newWallet, _ambassador);
         return newWallet;
+    }
+
+    function setNetwork(address _network) external onlyNetworkOperator {
+        network = _network;
     }
 
     /* ========== VIEWS ========== */

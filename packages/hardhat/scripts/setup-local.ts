@@ -1,16 +1,7 @@
 import { ethers, getNamedAccounts } from "hardhat"
-import { UnderwriteManager } from "../types/UnderwriteManager"
 import { parseEther } from "ethers/lib/utils"
 import { readFileSync } from "fs"
-import {
-  NetworkRegistry,
-  NetworkRegistry__factory,
-  RUSD,
-  RUSD__factory,
-  SourceTokenV2,
-  SourceToken__factory,
-  UnderwriteManager__factory,
-} from "../types"
+import { RUSD, RUSD__factory, SourceTokenV2, SourceToken__factory } from "../types"
 const fs = require("fs")
 
 const underwriteAbi = "./deployments/localhost/UnderwriteManager.json"

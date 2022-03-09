@@ -8,6 +8,7 @@ import "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 import "./interface/INetworkFeeManager.sol";
 import "./interface/INetworkRoles.sol";
 import "../Credit/interface/ICreditFeeManager.sol";
+import "../Credit/interface/ICreditManager.sol";
 import "hardhat/console.sol";
 
 /// @title NetworkFeeManager - Allows Network Members to be added and removed by Network Operators.
@@ -21,6 +22,7 @@ contract NetworkFeeManager is OwnableUpgradeable, INetworkFeeManager {
     /* ========== STATE VARIABLES ========== */
 
     ICreditFeeManager public creditFeeManager;
+    ICreditManager public creditManager;
     INetworkRoles public networkRoles;
     IERC20Upgradeable public feeToken;
     uint256 ambassadorFeePercent;
@@ -33,12 +35,14 @@ contract NetworkFeeManager is OwnableUpgradeable, INetworkFeeManager {
 
     function initialize(
         address _creditFeeManager,
+        address _creditManager,
         address _networkRoles,
         uint256 _totalFeePercent,
         uint256 _ambassadorFeePercent
     ) external virtual initializer {
         __Ownable_init();
         creditFeeManager = ICreditFeeManager(_creditFeeManager);
+        creditManager = ICreditManager(_creditManager);
         networkRoles = INetworkRoles(_networkRoles);
         feeToken = IERC20Upgradeable(creditFeeManager.getCollateralToken());
         require(
@@ -60,7 +64,7 @@ contract NetworkFeeManager is OwnableUpgradeable, INetworkFeeManager {
         override
         onlyNetwork
     {
-        uint256 totalFee = creditFeeManager.calculatePercentInCollateral(
+        uint256 totalFee = creditManager.calculatePercentInCollateral(
             network,
             totalFeePercent,
             _transactionAmount
@@ -123,6 +127,14 @@ contract NetworkFeeManager is OwnableUpgradeable, INetworkFeeManager {
     }
 
     /* ========== VIEWS ========== */
+
+    function calculateFees(uint256 _transactionAmount) external view returns (uint256 totalFee) {
+        totalFee = creditManager.calculatePercentInCollateral(
+            network,
+            totalFeePercent,
+            _transactionAmount
+        );
+    }
 
     function calculateAmbassadorRewards(address[] memory _members)
         external

@@ -15,10 +15,4 @@ interface ICreditFeeManager {
     ) external;
 
     function getCollateralToken() external returns (address);
-
-    function calculatePercentInCollateral(
-        address _networkToken,
-        uint256 _percent,
-        uint256 _amount
-    ) external returns (uint256);
 }

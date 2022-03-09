@@ -10,7 +10,7 @@ import {
   CreditFeeManager,
   IKeyWalletDeployer,
   NetworkRoles,
-  RUSDV3,
+  RUSD,
   SourceTokenV2,
   SourceTokenV2__factory,
 } from "../../types"
@@ -25,7 +25,7 @@ export interface ProtocolContracts {
   networkFeeManager: NetworkFeeManager
   creditFeeManager: CreditFeeManager
   networkRoles: NetworkRoles
-  rUSD: RUSDV3
+  rUSD: RUSD
   creditPool: CreditPool
 }
 
@@ -109,7 +109,7 @@ export const protocolFactory = {
     await (await contracts.creditRoles.grantNetwork(contracts.networkFeeManager.address)).wait()
 
     // 10. deploy RUSD
-    const RUSDFactory = await ethers.getContractFactory("RUSDV3")
+    const RUSDFactory = await ethers.getContractFactory("RUSD")
     contracts.rUSD = (await upgrades.deployProxy(
       RUSDFactory,
       [
@@ -120,7 +120,7 @@ export const protocolFactory = {
       {
         initializer: "initializeRUSD",
       }
-    )) as RUSDV3
+    )) as RUSD
 
     await (await contracts.networkFeeManager.setNetwork(contracts.rUSD.address)).wait()
 

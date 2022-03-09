@@ -29,22 +29,22 @@ interface ICreditRequest {
 
     function createRequest(
         address _network,
-        address _counterparty,
+        address _networkMember,
         uint256 _creditLimit
     ) external;
 
-    function approveRequest(address _network, address _counterparty) external;
+    function approveRequest(address _network, address _networkMember) external;
 
     function updateRequestLimit(
         address _network,
-        address _counterparty,
+        address _networkMember,
         uint256 _creditLimit,
         bool _approved
     ) external;
 
-    function deleteRequest(address _network, address _counterparty) external;
+    function deleteRequest(address _network, address _networkMember) external;
 
-    function getCreditRequest(address _network, address _counterparty)
+    function getCreditRequest(address _network, address _networkMember)
         external
         view
         returns (CreditRequest memory);

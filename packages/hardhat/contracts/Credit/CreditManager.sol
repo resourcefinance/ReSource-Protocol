@@ -49,15 +49,15 @@ contract CreditManager is OwnableUpgradeable, PausableUpgradeable, ICreditManage
     /* ========== PUBLIC FUNCTIONS ========== */
 
     function createCreditLine(
-        address _counterparty,
+        address _networkMember,
         address _pool,
         uint256 _creditLimit,
         address _network
     ) external override onlyOperator onlyRegisteredNetwork(_network) onlyRegisteredPool(_pool) {
-        creditLines[_network][_counterparty] = CreditLine(_pool, block.timestamp);
+        creditLines[_network][_networkMember] = CreditLine(_pool, block.timestamp);
         ICreditPool(_pool).increaseTotalCredit(_creditLimit);
-        ICIP36(_network).setCreditLimit(_counterparty, _creditLimit);
-        emit CreditLineCreated(_network, _counterparty, _pool, _creditLimit, block.timestamp);
+        ICIP36(_network).setCreditLimit(_networkMember, _creditLimit);
+        emit CreditLineCreated(_network, _networkMember, _pool, _creditLimit, block.timestamp);
     }
 
     function registerCreditPool(address _pool) external onlyOperator {
@@ -72,60 +72,60 @@ contract CreditManager is OwnableUpgradeable, PausableUpgradeable, ICreditManage
 
     function extendCreditLine(
         address _network,
-        address _counterparty,
+        address _networkMember,
         uint256 _creditLimit
     ) external override onlyOperator {
-        uint256 curCreditLimit = ICIP36(_network).creditLimitOf(_counterparty);
+        uint256 curCreditLimit = ICIP36(_network).creditLimitOf(_networkMember);
         require(curCreditLimit < _creditLimit, "CreditManager: Invalid credit limit");
-        CreditLine storage creditLine = creditLines[_network][_counterparty];
+        CreditLine storage creditLine = creditLines[_network][_networkMember];
         ICreditPool(creditLine.creditPool).increaseTotalCredit(_creditLimit - curCreditLimit);
-        ICIP36(_network).setCreditLimit(_counterparty, _creditLimit);
-        emit CreditLineLimitUpdated(_network, _counterparty, _creditLimit);
+        ICIP36(_network).setCreditLimit(_networkMember, _creditLimit);
+        emit CreditLineLimitUpdated(_network, _networkMember, _creditLimit);
     }
 
     function swapCreditLinePool(
         address _network,
-        address _counterparty,
+        address _networkMember,
         address _pool
     ) external override onlyOperator onlyRegisteredPool(_pool) {
-        CreditLine storage creditLine = creditLines[_network][_counterparty];
+        CreditLine storage creditLine = creditLines[_network][_networkMember];
         creditLine.creditPool = _pool;
-        emit CreditLinePoolUpdated(_network, _counterparty, _pool);
+        emit CreditLinePoolUpdated(_network, _networkMember, _pool);
     }
 
-    function closeCreditLine(address _network, address _counterparty) external {
-        CreditLine storage creditLine = creditLines[_network][_counterparty];
+    function closeCreditLine(address _network, address _networkMember) external {
+        CreditLine storage creditLine = creditLines[_network][_networkMember];
         address underwriter = ICreditPool(creditLine.creditPool).getUnderwriter();
         require(
-            underwriter == msg.sender || msg.sender == _counterparty,
+            underwriter == msg.sender || msg.sender == _networkMember,
             "CreditManager: caller is not underwriter or counterparty"
         );
         require(
-            isCreditLineExpired(_network, _counterparty),
+            isCreditLineExpired(_network, _networkMember),
             "CreditManager: Can't close active credit line"
         );
         require(
-            ICIP36(_network).creditBalanceOf(_counterparty) == 0,
+            ICIP36(_network).creditBalanceOf(_networkMember) == 0,
             "CreditManager: Line of Credit has outstanding balance"
         );
         ICreditPool(creditLine.creditPool).reduceTotalCredit(
-            ICIP36(_network).creditLimitOf(_counterparty)
+            ICIP36(_network).creditLimitOf(_networkMember)
         );
-        delete creditLines[_network][_counterparty];
-        ICIP36(_network).setCreditLimit(_counterparty, 0);
+        delete creditLines[_network][_networkMember];
+        ICIP36(_network).setCreditLimit(_networkMember, 0);
         ICreditPool(creditLine.creditPool).reduceTotalCredit(
-            ICIP36(_network).creditBalanceOf(_counterparty)
+            ICIP36(_network).creditBalanceOf(_networkMember)
         );
-        emit CreditLineRemoved(_network, _counterparty);
+        emit CreditLineRemoved(_network, _networkMember);
     }
 
-    function renewCreditLine(address _network, address _counterparty)
+    function renewCreditLine(address _network, address _networkMember)
         external
         override
         onlyOperator
     {
-        creditLines[_network][_counterparty].issueDate = block.timestamp;
-        emit CreditLineRenewed(_network, _counterparty, block.timestamp);
+        creditLines[_network][_networkMember].issueDate = block.timestamp;
+        emit CreditLineRenewed(_network, _networkMember, block.timestamp);
     }
 
     /* ========== VIEWS ========== */
@@ -155,13 +155,13 @@ contract CreditManager is OwnableUpgradeable, PausableUpgradeable, ICreditManage
         return ((_percent * collateralAmount) / MAX_PPM);
     }
 
-    function isCreditLineExpired(address _network, address _counterparty)
+    function isCreditLineExpired(address _network, address _networkMember)
         public
         view
         override
         returns (bool)
     {
-        CreditLine storage creditLine = creditLines[_network][_counterparty];
+        CreditLine storage creditLine = creditLines[_network][_networkMember];
         return creditLine.issueDate + creditLineExpiration >= block.timestamp;
     }
 
@@ -173,33 +173,33 @@ contract CreditManager is OwnableUpgradeable, PausableUpgradeable, ICreditManage
         return minLTV;
     }
 
-    function getCreditLine(address _network, address _counterparty)
+    function getCreditLine(address _network, address _networkMember)
         public
         view
         override
         returns (CreditLine memory)
     {
-        return creditLines[_network][_counterparty];
+        return creditLines[_network][_networkMember];
     }
 
-    function getCreditLineUnderwriter(address _network, address _counterparty)
+    function getCreditLineUnderwriter(address _network, address _networkMember)
         public
         view
         override
         returns (address)
     {
-        address pool = creditLines[_network][_counterparty].creditPool;
+        address pool = creditLines[_network][_networkMember].creditPool;
         if (pool == address(0)) return pool;
         return ICreditPool(pool).getUnderwriter();
     }
 
-    function getNeededCollateral(address _network, address _counterparty)
+    function getNeededCollateral(address _network, address _networkMember)
         external
         view
         override
         returns (uint256)
     {
-        address pool = creditLines[_network][_counterparty].creditPool;
+        address pool = creditLines[_network][_networkMember].creditPool;
         if (isPoolValidLTV(_network, pool)) return 0;
         uint256 totalCredit = ICreditPool(pool).getTotalCredit();
         uint256 creditInCollateral = convertNetworkToCollateral(_network, totalCredit);

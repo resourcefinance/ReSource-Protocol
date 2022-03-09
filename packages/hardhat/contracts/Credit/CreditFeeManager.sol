@@ -54,15 +54,15 @@ contract CreditFeeManager is ICreditFeeManager, OwnableUpgradeable {
     function collectFees(
         address _network,
         address _networkMember,
-        uint256 _transactionValue
+        uint256 _transactionAmount
     ) external override onlyNetwork {
-        uint256 creditFee = calculatePercentInCollateral(
+        uint256 creditFee = creditManager.calculatePercentInCollateral(
             _network,
             underwriterFeePercent,
-            _transactionValue
+            _transactionAmount
         );
         collateralToken.safeTransferFrom(_networkMember, address(this), creditFee);
-        creditRequest.verifyCreditLineExpiration(_network, _networkMember, _transactionValue);
+        creditRequest.verifyCreditLineExpiration(_network, _networkMember, _transactionAmount);
         accruedFees[_network][_networkMember] = creditFee;
         emit FeesCollected(_network, _networkMember, creditFee);
     }
@@ -107,16 +107,20 @@ contract CreditFeeManager is ICreditFeeManager, OwnableUpgradeable {
 
     /* ========== VIEWS ========== */
 
-    function getCollateralToken() external view override returns (address) {
-        return address(collateralToken);
+    function calculateFees(address _network, uint256 _transactionAmount)
+        external
+        view
+        returns (uint256 creditFee)
+    {
+        creditFee = creditManager.calculatePercentInCollateral(
+            _network,
+            underwriterFeePercent,
+            _transactionAmount
+        );
     }
 
-    function calculatePercentInCollateral(
-        address _networkToken,
-        uint256 _percent,
-        uint256 _amount
-    ) public override returns (uint256) {
-        return creditManager.calculatePercentInCollateral(_networkToken, _percent, _amount);
+    function getCollateralToken() external view override returns (address) {
+        return address(collateralToken);
     }
 
     function getUnderwriterPoolStakePercent(address _network, address _networkMember)

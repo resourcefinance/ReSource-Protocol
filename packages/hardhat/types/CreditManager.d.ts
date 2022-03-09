@@ -379,7 +379,7 @@ export class CreditManager extends BaseContract {
 
     closeCreditLine(
       _network: string,
-      _counterparty: string,
+      _networkMember: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -392,7 +392,7 @@ export class CreditManager extends BaseContract {
     ): Promise<[BigNumber]>;
 
     createCreditLine(
-      _counterparty: string,
+      _networkMember: string,
       _pool: string,
       _creditLimit: BigNumberish,
       _network: string,
@@ -413,7 +413,7 @@ export class CreditManager extends BaseContract {
 
     extendCreditLine(
       _network: string,
-      _counterparty: string,
+      _networkMember: string,
       _creditLimit: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
@@ -422,7 +422,7 @@ export class CreditManager extends BaseContract {
 
     getCreditLine(
       _network: string,
-      _counterparty: string,
+      _networkMember: string,
       overrides?: CallOverrides
     ): Promise<
       [[string, BigNumber] & { creditPool: string; issueDate: BigNumber }]
@@ -430,7 +430,7 @@ export class CreditManager extends BaseContract {
 
     getCreditLineUnderwriter(
       _network: string,
-      _counterparty: string,
+      _networkMember: string,
       overrides?: CallOverrides
     ): Promise<[string]>;
 
@@ -438,7 +438,7 @@ export class CreditManager extends BaseContract {
 
     getNeededCollateral(
       _network: string,
-      _counterparty: string,
+      _networkMember: string,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
@@ -451,7 +451,7 @@ export class CreditManager extends BaseContract {
 
     isCreditLineExpired(
       _network: string,
-      _counterparty: string,
+      _networkMember: string,
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
@@ -478,7 +478,7 @@ export class CreditManager extends BaseContract {
 
     renewCreditLine(
       _network: string,
-      _counterparty: string,
+      _networkMember: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -488,7 +488,7 @@ export class CreditManager extends BaseContract {
 
     swapCreditLinePool(
       _network: string,
-      _counterparty: string,
+      _networkMember: string,
       _pool: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
@@ -516,7 +516,7 @@ export class CreditManager extends BaseContract {
 
   closeCreditLine(
     _network: string,
-    _counterparty: string,
+    _networkMember: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -529,7 +529,7 @@ export class CreditManager extends BaseContract {
   ): Promise<BigNumber>;
 
   createCreditLine(
-    _counterparty: string,
+    _networkMember: string,
     _pool: string,
     _creditLimit: BigNumberish,
     _network: string,
@@ -550,7 +550,7 @@ export class CreditManager extends BaseContract {
 
   extendCreditLine(
     _network: string,
-    _counterparty: string,
+    _networkMember: string,
     _creditLimit: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
@@ -559,7 +559,7 @@ export class CreditManager extends BaseContract {
 
   getCreditLine(
     _network: string,
-    _counterparty: string,
+    _networkMember: string,
     overrides?: CallOverrides
   ): Promise<
     [string, BigNumber] & { creditPool: string; issueDate: BigNumber }
@@ -567,7 +567,7 @@ export class CreditManager extends BaseContract {
 
   getCreditLineUnderwriter(
     _network: string,
-    _counterparty: string,
+    _networkMember: string,
     overrides?: CallOverrides
   ): Promise<string>;
 
@@ -575,7 +575,7 @@ export class CreditManager extends BaseContract {
 
   getNeededCollateral(
     _network: string,
-    _counterparty: string,
+    _networkMember: string,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
@@ -588,7 +588,7 @@ export class CreditManager extends BaseContract {
 
   isCreditLineExpired(
     _network: string,
-    _counterparty: string,
+    _networkMember: string,
     overrides?: CallOverrides
   ): Promise<boolean>;
 
@@ -615,7 +615,7 @@ export class CreditManager extends BaseContract {
 
   renewCreditLine(
     _network: string,
-    _counterparty: string,
+    _networkMember: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -625,7 +625,7 @@ export class CreditManager extends BaseContract {
 
   swapCreditLinePool(
     _network: string,
-    _counterparty: string,
+    _networkMember: string,
     _pool: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
@@ -653,7 +653,7 @@ export class CreditManager extends BaseContract {
 
     closeCreditLine(
       _network: string,
-      _counterparty: string,
+      _networkMember: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -666,7 +666,7 @@ export class CreditManager extends BaseContract {
     ): Promise<BigNumber>;
 
     createCreditLine(
-      _counterparty: string,
+      _networkMember: string,
       _pool: string,
       _creditLimit: BigNumberish,
       _network: string,
@@ -687,7 +687,7 @@ export class CreditManager extends BaseContract {
 
     extendCreditLine(
       _network: string,
-      _counterparty: string,
+      _networkMember: string,
       _creditLimit: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
@@ -696,7 +696,7 @@ export class CreditManager extends BaseContract {
 
     getCreditLine(
       _network: string,
-      _counterparty: string,
+      _networkMember: string,
       overrides?: CallOverrides
     ): Promise<
       [string, BigNumber] & { creditPool: string; issueDate: BigNumber }
@@ -704,7 +704,7 @@ export class CreditManager extends BaseContract {
 
     getCreditLineUnderwriter(
       _network: string,
-      _counterparty: string,
+      _networkMember: string,
       overrides?: CallOverrides
     ): Promise<string>;
 
@@ -712,7 +712,7 @@ export class CreditManager extends BaseContract {
 
     getNeededCollateral(
       _network: string,
-      _counterparty: string,
+      _networkMember: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -725,7 +725,7 @@ export class CreditManager extends BaseContract {
 
     isCreditLineExpired(
       _network: string,
-      _counterparty: string,
+      _networkMember: string,
       overrides?: CallOverrides
     ): Promise<boolean>;
 
@@ -749,7 +749,7 @@ export class CreditManager extends BaseContract {
 
     renewCreditLine(
       _network: string,
-      _counterparty: string,
+      _networkMember: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -757,7 +757,7 @@ export class CreditManager extends BaseContract {
 
     swapCreditLinePool(
       _network: string,
-      _counterparty: string,
+      _networkMember: string,
       _pool: string,
       overrides?: CallOverrides
     ): Promise<void>;
@@ -936,7 +936,7 @@ export class CreditManager extends BaseContract {
 
     closeCreditLine(
       _network: string,
-      _counterparty: string,
+      _networkMember: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -949,7 +949,7 @@ export class CreditManager extends BaseContract {
     ): Promise<BigNumber>;
 
     createCreditLine(
-      _counterparty: string,
+      _networkMember: string,
       _pool: string,
       _creditLimit: BigNumberish,
       _network: string,
@@ -968,7 +968,7 @@ export class CreditManager extends BaseContract {
 
     extendCreditLine(
       _network: string,
-      _counterparty: string,
+      _networkMember: string,
       _creditLimit: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
@@ -977,13 +977,13 @@ export class CreditManager extends BaseContract {
 
     getCreditLine(
       _network: string,
-      _counterparty: string,
+      _networkMember: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     getCreditLineUnderwriter(
       _network: string,
-      _counterparty: string,
+      _networkMember: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -991,7 +991,7 @@ export class CreditManager extends BaseContract {
 
     getNeededCollateral(
       _network: string,
-      _counterparty: string,
+      _networkMember: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -1004,7 +1004,7 @@ export class CreditManager extends BaseContract {
 
     isCreditLineExpired(
       _network: string,
-      _counterparty: string,
+      _networkMember: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -1031,7 +1031,7 @@ export class CreditManager extends BaseContract {
 
     renewCreditLine(
       _network: string,
-      _counterparty: string,
+      _networkMember: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -1041,7 +1041,7 @@ export class CreditManager extends BaseContract {
 
     swapCreditLinePool(
       _network: string,
-      _counterparty: string,
+      _networkMember: string,
       _pool: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
@@ -1070,7 +1070,7 @@ export class CreditManager extends BaseContract {
 
     closeCreditLine(
       _network: string,
-      _counterparty: string,
+      _networkMember: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -1083,7 +1083,7 @@ export class CreditManager extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     createCreditLine(
-      _counterparty: string,
+      _networkMember: string,
       _pool: string,
       _creditLimit: BigNumberish,
       _network: string,
@@ -1104,7 +1104,7 @@ export class CreditManager extends BaseContract {
 
     extendCreditLine(
       _network: string,
-      _counterparty: string,
+      _networkMember: string,
       _creditLimit: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
@@ -1115,13 +1115,13 @@ export class CreditManager extends BaseContract {
 
     getCreditLine(
       _network: string,
-      _counterparty: string,
+      _networkMember: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     getCreditLineUnderwriter(
       _network: string,
-      _counterparty: string,
+      _networkMember: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -1129,7 +1129,7 @@ export class CreditManager extends BaseContract {
 
     getNeededCollateral(
       _network: string,
-      _counterparty: string,
+      _networkMember: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -1142,7 +1142,7 @@ export class CreditManager extends BaseContract {
 
     isCreditLineExpired(
       _network: string,
-      _counterparty: string,
+      _networkMember: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -1172,7 +1172,7 @@ export class CreditManager extends BaseContract {
 
     renewCreditLine(
       _network: string,
-      _counterparty: string,
+      _networkMember: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -1182,7 +1182,7 @@ export class CreditManager extends BaseContract {
 
     swapCreditLinePool(
       _network: string,
-      _counterparty: string,
+      _networkMember: string,
       _pool: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;

@@ -186,7 +186,7 @@ const _abi = [
         type: "uint256",
       },
     ],
-    stateMutability: "nonpayable",
+    stateMutability: "view",
     type: "function",
   },
   {
@@ -217,7 +217,7 @@ const _abi = [
     inputs: [
       {
         internalType: "address",
-        name: "_counterparty",
+        name: "_networkMember",
         type: "address",
       },
       {
@@ -250,7 +250,7 @@ const _abi = [
       },
       {
         internalType: "address",
-        name: "_counterparty",
+        name: "_networkMember",
         type: "address",
       },
       {
@@ -286,7 +286,7 @@ const _abi = [
       },
       {
         internalType: "address",
-        name: "_counterparty",
+        name: "_networkMember",
         type: "address",
       },
     ],
@@ -322,7 +322,7 @@ const _abi = [
       },
       {
         internalType: "address",
-        name: "_counterparty",
+        name: "_networkMember",
         type: "address",
       },
     ],
@@ -359,7 +359,7 @@ const _abi = [
       },
       {
         internalType: "address",
-        name: "_counterparty",
+        name: "_networkMember",
         type: "address",
       },
     ],
@@ -383,7 +383,7 @@ const _abi = [
       },
       {
         internalType: "address",
-        name: "_counterparty",
+        name: "_networkMember",
         type: "address",
       },
     ],
@@ -407,7 +407,7 @@ const _abi = [
       },
       {
         internalType: "address",
-        name: "_counterparty",
+        name: "_networkMember",
         type: "address",
       },
     ],
@@ -431,7 +431,7 @@ const _abi = [
       },
       {
         internalType: "address",
-        name: "_counterparty",
+        name: "_networkMember",
         type: "address",
       },
     ],
@@ -449,7 +449,7 @@ const _abi = [
       },
       {
         internalType: "address",
-        name: "_counterparty",
+        name: "_networkMember",
         type: "address",
       },
       {

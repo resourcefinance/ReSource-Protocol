@@ -77,35 +77,6 @@ const _abi = [
     inputs: [
       {
         internalType: "address",
-        name: "_networkToken",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "_percent",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "_amount",
-        type: "uint256",
-      },
-    ],
-    name: "calculatePercentInCollateral",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
         name: "_network",
         type: "address",
       },

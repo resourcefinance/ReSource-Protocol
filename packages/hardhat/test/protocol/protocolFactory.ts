@@ -101,6 +101,7 @@ export const protocolFactory = {
     const networkFeeManagerFactory = await ethers.getContractFactory("NetworkFeeManager")
     contracts.networkFeeManager = (await upgrades.deployProxy(networkFeeManagerFactory, [
       contracts.creditFeeManager.address,
+      contracts.creditManager.address,
       contracts.networkRoles.address,
       100000,
       500000,
@@ -123,6 +124,7 @@ export const protocolFactory = {
     )) as RUSD
 
     await (await contracts.networkFeeManager.setNetwork(contracts.rUSD.address)).wait()
+    await (await contracts.networkRoles.setNetwork(contracts.rUSD.address)).wait()
 
     // 11. deploy a CreditPool
     const creditPoolFactory = await ethers.getContractFactory("CreditPool")

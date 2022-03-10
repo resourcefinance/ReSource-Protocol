@@ -53,7 +53,6 @@ describe("NetworkAccess Test", function () {
             [ethers.Wallet.createRandom().address],
             [ethers.Wallet.createRandom().address],
             ethers.Wallet.createRandom().address,
-            contracts.rUSD.address,
             ambassador.address,
             2
           )
@@ -79,7 +78,7 @@ describe("NetworkAccess Test", function () {
     await (
       await contracts.networkRoles
         .connect(newMember)
-        .acceptMembershipAmbassadorInvitation(contracts.rUSD.address, ambassador.address)
+        .acceptMembershipAmbassadorInvitation(ambassador.address)
     ).wait()
     expect(await contracts.networkRoles.getMembershipAmbassador(newMember.address)).to.equal(
       ambassador.address
@@ -101,7 +100,7 @@ describe("NetworkAccess Test", function () {
     await (
       await contracts.networkRoles
         .connect(newMember)
-        .acceptMembershipAmbassadorInvitation(contracts.rUSD.address, ambassador.address)
+        .acceptMembershipAmbassadorInvitation(ambassador.address)
     ).wait()
     expect(await contracts.networkRoles.getMembershipAmbassador(newMember.address)).to.equal(
       ambassador.address

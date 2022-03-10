@@ -72,7 +72,7 @@ describe("NetworkFeeManager Tests", function () {
     await (
       await contracts.networkRoles
         .connect(member)
-        .acceptMembershipAmbassadorInvitation(contracts.rUSD.address, ambassador.address)
+        .acceptMembershipAmbassadorInvitation(ambassador.address)
     ).wait()
 
     expect(await contracts.sourceToken.balanceOf(ambassador.address)).to.equal(

@@ -6,7 +6,6 @@ import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol"
 import "../iKeyWallet/IiKeyWalletDeployer.sol";
 import "./interface/INetworkRoles.sol";
 import "./interface/ICIP36.sol";
-import "hardhat/console.sol";
 
 contract NetworkRoles is AccessControlUpgradeable, OwnableUpgradeable, INetworkRoles {
     /* ========== STATE VARIABLES ========== */
@@ -53,14 +52,18 @@ contract NetworkRoles is AccessControlUpgradeable, OwnableUpgradeable, INetworkR
         require(memberInvited[msg.sender][_ambassador], "NetworkRoles: Invite does not exist");
         membershipAmbassador[msg.sender] = _ambassador;
         delete memberInvited[msg.sender][_ambassador];
-        ICIP36(network).setCreditLimit(msg.sender, ambassadorCreditAllowance[_ambassador]);
+        if (ambassadorCreditAllowance[_ambassador] > 0) {
+            ICIP36(network).setCreditLimit(msg.sender, ambassadorCreditAllowance[_ambassador]);
+        }
         emit MembershipAmbassadorUpdated(msg.sender, _ambassador);
     }
 
     function grantMember(address _member, address _ambassador) external onlyNetworkOperator {
         membershipAmbassador[_member] = _ambassador;
         grantRole("MEMBER", _member);
-        ICIP36(network).setCreditLimit(_member, ambassadorCreditAllowance[_ambassador]);
+        if (ambassadorCreditAllowance[_ambassador] > 0) {
+            ICIP36(network).setCreditLimit(_member, ambassadorCreditAllowance[_ambassador]);
+        }
         emit MembershipAmbassadorUpdated(_member, _ambassador);
     }
 

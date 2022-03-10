@@ -49,7 +49,7 @@ describe("Protocol Tests", function () {
     await (
       await contracts.networkRoles
         .connect(memberA)
-        .acceptMembershipAmbassadorInvitation(contracts.rUSD.address, ambassador.address)
+        .acceptMembershipAmbassadorInvitation(ambassador.address)
     ).wait()
 
     await (
@@ -60,7 +60,7 @@ describe("Protocol Tests", function () {
     await (
       await contracts.networkRoles
         .connect(memberB)
-        .acceptMembershipAmbassadorInvitation(contracts.rUSD.address, ambassador.address)
+        .acceptMembershipAmbassadorInvitation(ambassador.address)
     ).wait()
 
     const creditLimitA = ethers.utils.formatUnits(

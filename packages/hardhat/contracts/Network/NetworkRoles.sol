@@ -139,7 +139,9 @@ contract NetworkRoles is AccessControlUpgradeable, OwnableUpgradeable, INetworkR
     ) public onlyAmbassador returns (address) {
         address newWallet = walletDeployer.deployWallet(_clients, _guardians, _coSigner, _required);
         membershipAmbassador[newWallet] = _ambassador;
-        ICIP36(network).setCreditLimit(newWallet, ambassadorCreditAllowance[_ambassador]);
+        if (ambassadorCreditAllowance[_ambassador] > 0) {
+            ICIP36(network).setCreditLimit(newWallet, ambassadorCreditAllowance[_ambassador]);
+        }
         grantRole("MEMBER", newWallet);
         emit MemberAdded(newWallet, _ambassador);
         return newWallet;

@@ -385,3 +385,34 @@ task("sendSource", "Send SOURCE")
       console.log(e)
     }
   })
+
+task("grantAmbassador", "grant ambassador")
+  .addParam("address", "Address to grant ambassadorship")
+  .addParam("allowance", "Ambassador credit allowance")
+  .setAction(async (taskArgs, { ethers, network }) => {
+    const deploymentPath = `./deployments/${network.name}/NetworkRoles.json`
+    const networkRolesDeployment = fs.readFileSync(deploymentPath).toString()
+    const networkRolesAddress = JSON.parse(networkRolesDeployment)["address"]
+
+    if (!networkRolesAddress) throw new Error("network roles not deployed on this network")
+
+    const ambassadorAddress = await addr(ethers, taskArgs.address)
+    const allowance = ethers.utils.parseUnits(taskArgs.allowance, "mwei")
+    debug(`Normalized to address: ${ambassadorAddress}`)
+    const signer = (await ethers.getSigners())[0]
+
+    const networkRolesFactory = await ethers.getContractFactory("NetworkRoles")
+
+    const networkRoles = new ethers.Contract(
+      networkRolesAddress,
+      networkRolesFactory.interface,
+      signer
+    )
+
+    try {
+      await (await networkRoles.grantAmbassador(ambassadorAddress, allowance)).wait()
+      console.log("Ambassador Granted")
+    } catch (e) {
+      console.log(e)
+    }
+  })

@@ -416,3 +416,90 @@ task("grantAmbassador", "grant ambassador")
       console.log(e)
     }
   })
+
+task("grantUnderwriter", "grant underwriter")
+  .addParam("address", "Address to grant underwriter")
+  .setAction(async (taskArgs, { ethers, network }) => {
+    const deploymentPath = `./deployments/${network.name}/CreditRoles.json`
+    const creditRolesDeployment = fs.readFileSync(deploymentPath).toString()
+    const creditRolesAddress = JSON.parse(creditRolesDeployment)["address"]
+
+    if (!creditRolesAddress) throw new Error("credit roles not deployed on this network")
+
+    const underwriterAddress = await addr(ethers, taskArgs.address)
+    debug(`Normalized to address: ${underwriterAddress}`)
+    const signer = (await ethers.getSigners())[0]
+
+    const creditRolesFactory = await ethers.getContractFactory("CreditRoles")
+
+    const creditRoles = new ethers.Contract(
+      creditRolesAddress,
+      creditRolesFactory.interface,
+      signer
+    )
+
+    try {
+      await (await creditRoles.grantUnderwriter(underwriterAddress)).wait()
+      console.log("Underwriter Granted")
+    } catch (e) {
+      console.log(e)
+    }
+  })
+
+task("grantRequestOperator", "grant request operator")
+  .addParam("address", "Address to grant request operator")
+  .setAction(async (taskArgs, { ethers, network }) => {
+    const deploymentPath = `./deployments/${network.name}/CreditRoles.json`
+    const creditRolesDeployment = fs.readFileSync(deploymentPath).toString()
+    const creditRolesAddress = JSON.parse(creditRolesDeployment)["address"]
+
+    if (!creditRolesAddress) throw new Error("credit roles not deployed on this network")
+
+    const requestAddress = await addr(ethers, taskArgs.address)
+    debug(`Normalized to address: ${requestAddress}`)
+    const signer = (await ethers.getSigners())[0]
+
+    const creditRolesFactory = await ethers.getContractFactory("CreditRoles")
+
+    const creditRoles = new ethers.Contract(
+      creditRolesAddress,
+      creditRolesFactory.interface,
+      signer
+    )
+
+    try {
+      await (await creditRoles.grantRequestOperator(requestAddress)).wait()
+      console.log("Request Operator Granted")
+    } catch (e) {
+      console.log(e)
+    }
+  })
+
+task("grantNetworkOperator", "grant request operator")
+  .addParam("address", "Address to grant request operator")
+  .setAction(async (taskArgs, { ethers, network }) => {
+    const deploymentPath = `./deployments/${network.name}/CreditRoles.json`
+    const creditRolesDeployment = fs.readFileSync(deploymentPath).toString()
+    const creditRolesAddress = JSON.parse(creditRolesDeployment)["address"]
+
+    if (!creditRolesAddress) throw new Error("credit roles not deployed on this network")
+
+    const requestAddress = await addr(ethers, taskArgs.address)
+    debug(`Normalized to address: ${requestAddress}`)
+    const signer = (await ethers.getSigners())[0]
+
+    const creditRolesFactory = await ethers.getContractFactory("CreditRoles")
+
+    const creditRoles = new ethers.Contract(
+      creditRolesAddress,
+      creditRolesFactory.interface,
+      signer
+    )
+
+    try {
+      await (await creditRoles.grantRequestOperator(requestAddress)).wait()
+      console.log("Request Operator Granted")
+    } catch (e) {
+      console.log(e)
+    }
+  })

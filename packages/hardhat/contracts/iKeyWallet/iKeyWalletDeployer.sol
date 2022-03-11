@@ -4,11 +4,7 @@ pragma solidity ^0.8.0;
 import "./iKeyMultiSig.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 
-/// @title MultiSigWalletRegistry - Allows owner to added and remove multiSigWallet contracts from the registry.
-/// @author Bridger Zoske - <bridger@resourcenetwork.co>
 contract iKeyWalletDeployer is OwnableUpgradeable {
-    event WalletDeployed(address multiSig);
-
     function initialize() external initializer {
         __Ownable_init();
     }

@@ -73,7 +73,9 @@ const func: DeployFunction = async function (hardhat: HardhatRuntimeEnvironment)
     initializer: "initializeRUSD",
   })
 
-  networkRoles.setNetwork(rUSDAddress)
+  await (await networkFeeManager.setNetwork(rUSDAddress)).wait()
+  await (await networkRoles.setNetwork(rUSDAddress)).wait()
+  await (await creditRoles.grantNetwork(rUSDAddress)).wait()
 }
 export default func
 func.tags = ["NETWORK"]

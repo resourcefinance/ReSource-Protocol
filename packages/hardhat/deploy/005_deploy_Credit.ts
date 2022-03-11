@@ -7,7 +7,7 @@ import { PriceOracle__factory } from "../types/factories/PriceOracle__factory"
 import { CreditManager__factory } from "../types/factories/CreditManager__factory"
 import { CreditRequest__factory, PriceOracle } from "../types"
 
-const func: DeployFunction = async function(hardhat: HardhatRuntimeEnvironment) {
+const func: DeployFunction = async function (hardhat: HardhatRuntimeEnvironment) {
   const accounts = await ethers.getSigners()
 
   let sourceTokenAddress = (await hardhat.deployments.getOrNull("SourceToken"))?.address
@@ -21,7 +21,7 @@ const func: DeployFunction = async function(hardhat: HardhatRuntimeEnvironment) 
     "CreditRoles",
     creditRolesArgs,
     hardhat,
-    creditRolesAbi,
+    creditRolesAbi
   )
   const creditRoles = CreditRoles__factory.connect(creditRolesAddress, accounts[0])
 
@@ -36,7 +36,7 @@ const func: DeployFunction = async function(hardhat: HardhatRuntimeEnvironment) 
     "CreditManager",
     creditManagerArgs,
     hardhat,
-    creditManagerAbi,
+    creditManagerAbi
   )
   const creditManager = CreditManager__factory.connect(creditManagerAddress, accounts[0])
 
@@ -47,9 +47,11 @@ const func: DeployFunction = async function(hardhat: HardhatRuntimeEnvironment) 
     "CreditRequest",
     creditRequestArgs,
     hardhat,
-    creditRequestAbi,
+    creditRequestAbi
   )
   const creditRequest = CreditRequest__factory.connect(creditRequestAddress, accounts[0])
+
+  creditRoles.grantOperator(creditRequest.address)
 
   // 5. deploy CreditFeeManager
   const creditFeeManagerArgs = [
@@ -69,10 +71,11 @@ const func: DeployFunction = async function(hardhat: HardhatRuntimeEnvironment) 
     "CreditPool",
     creditPoolArgs,
     hardhat,
-    creditPoolAbi,
+    creditPoolAbi
   )
 
   await (await creditManager.registerCreditPool(creditPoolAddress)).wait()
+  await (await creditRoles.grantOperator(creditManagerAddress)).wait()
 }
 export default func
 func.tags = ["CREDIT"]

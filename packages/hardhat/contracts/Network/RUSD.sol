@@ -1,13 +1,14 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
+import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
 import "./CIP36.sol";
 import "./interface/INetworkRoles.sol";
 import "./interface/INetworkFeeManager.sol";
 import "../iKeyWallet/IiKeyWalletDeployer.sol";
 import "hardhat/console.sol";
 
-contract RUSD is CIP36 {
+contract RUSD is CIP36, PausableUpgradeable {
     /*
      *  Storage
      */
@@ -58,6 +59,8 @@ contract RUSD is CIP36 {
         creditManager = _creditManager;
         feeManager = INetworkFeeManager(_feeManager);
         networkRoles = INetworkRoles(_networkRoles);
+        __Pausable_init();
+        _pause();
     }
 
     /*
@@ -68,7 +71,9 @@ contract RUSD is CIP36 {
         address _to,
         uint256 _amount
     ) internal override onlyRegistered(_from, _to) {
-        feeManager.collectFees(_from, _amount);
+        if (!paused()) {
+            feeManager.collectFees(_from, _amount);
+        }
         super._transfer(_from, _to, _amount);
 
         emit BalanceUpdate(
@@ -96,5 +101,13 @@ contract RUSD is CIP36 {
     {
         address ambassador = networkRoles.getMembershipAmbassador(_member);
         return _requester == _member || _requester == ambassador;
+    }
+
+    function pause() public onlyAuthorized {
+        _pause();
+    }
+
+    function unpause() public onlyAuthorized {
+        _unpause();
     }
 }

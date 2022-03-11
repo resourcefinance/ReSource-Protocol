@@ -63,18 +63,14 @@ interface IKeyWalletDeployerInterface extends ethers.utils.Interface {
 
   events: {
     "OwnershipTransferred(address,address)": EventFragment;
-    "WalletDeployed(address)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "WalletDeployed"): EventFragment;
 }
 
 export type OwnershipTransferredEvent = TypedEvent<
   [string, string] & { previousOwner: string; newOwner: string }
 >;
-
-export type WalletDeployedEvent = TypedEvent<[string] & { multiSig: string }>;
 
 export class IKeyWalletDeployer extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -204,14 +200,6 @@ export class IKeyWalletDeployer extends BaseContract {
       [string, string],
       { previousOwner: string; newOwner: string }
     >;
-
-    "WalletDeployed(address)"(
-      multiSig?: null
-    ): TypedEventFilter<[string], { multiSig: string }>;
-
-    WalletDeployed(
-      multiSig?: null
-    ): TypedEventFilter<[string], { multiSig: string }>;
   };
 
   estimateGas: {

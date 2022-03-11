@@ -147,7 +147,6 @@ contract CreditPool is
         require(amount > 0, "Cannot stake 0");
         _totalSupply = _totalSupply.add(amount);
         _balances[staker] = _balances[staker].add(amount);
-        console.log("balance of Staker: %s", stakingToken.balanceOf(staker));
         stakingToken.safeTransferFrom(staker, address(this), amount);
         emit Staked(staker, amount);
     }

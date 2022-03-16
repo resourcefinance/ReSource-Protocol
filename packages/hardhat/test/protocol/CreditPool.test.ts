@@ -2,7 +2,7 @@ import { BigNumber } from "@ethersproject/bignumber"
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers"
 import chai, { expect } from "chai"
 import { solidity } from "ethereum-waffle"
-import { formatEther } from "ethers/lib/utils"
+import { formatEther, parseEther } from "ethers/lib/utils"
 import { ethers } from "hardhat"
 import { MockERC20 } from "../../types"
 
@@ -285,6 +285,86 @@ describe("CreditPool & Rewards Tests", function() {
     expect(balanceAfterExit).to.be.equal(ethers.utils.parseEther("0.0"))
   })
 
+  it("Updates locks & balances", async function() {
+    await (
+      await contracts.sourceToken.transfer(underwriter.address, ethers.utils.parseEther("1000"))
+    ).wait()
+
+    await (
+      await contracts.sourceToken.transfer(member.address, ethers.utils.parseEther("2000"))
+    ).wait()
+
+    await (
+      await contracts.creditPool
+        .connect(underwriter)
+        .addReward(contracts.sourceToken.address, underwriter.address, 360)
+    ).wait()
+
+    expect(await contracts.creditPool.rewardTokens(0)).to.equal(contracts.sourceToken.address)
+
+    await (
+      await contracts.sourceToken
+        .connect(underwriter)
+        .approve(contracts.creditPool.address, ethers.constants.MaxUint256)
+    ).wait()
+
+    await (
+      await contracts.creditPool
+        .connect(underwriter)
+        .notifyRewardAmount(contracts.sourceToken.address, ethers.utils.parseEther("100"))
+    ).wait()
+
+    await (
+      await contracts.sourceToken
+        .connect(deployer)
+        .addStakeableContract(contracts.creditPool.address)
+    ).wait()
+
+    const schedule = {
+      startDate: "Monday Nov 21 2022 22:00:00 GMT-0800 (Pacific Standard Time)",
+      periods: 1,
+      monthsInPeriod: 1,
+    }
+
+    const locked = ethers.utils.parseEther("1000")
+    const parsed = getSchedule(
+      locked,
+      schedule.periods,
+      schedule.monthsInPeriod,
+      schedule.startDate
+    )
+
+    await (
+      await contracts.sourceToken.transferWithLock(member.address, {
+        totalAmount: locked,
+        amountStaked: 0,
+        schedules: parsed,
+      })
+    ).wait()
+
+    await (
+      await contracts.sourceToken
+        .connect(member)
+        .approve(contracts.creditPool.address, ethers.constants.MaxUint256)
+    ).wait()
+
+    const balBefore = await contracts.sourceToken.balanceOf(member.address)
+    const lockedbalBefore = await contracts.sourceToken.lockedBalanceOf(member.address)
+    expect(floorEth(balBefore)).to.be.equal(floorEth(parseEther("2000")))
+    expect(floorEth(lockedbalBefore)).to.be.equal(floorEth(parseEther("1000")))
+
+    const totalStaked = ethers.utils.parseEther("3000")
+    await (await contracts.creditPool.connect(member).stake(totalStaked)).wait()
+
+    const balAfter = await contracts.sourceToken.balanceOf(member.address)
+    const lockedbalAfter = await contracts.sourceToken.lockedBalanceOf(member.address)
+    expect(floorEth(balAfter)).to.be.equal(floorEth(parseEther("0")))
+    expect(floorEth(lockedbalAfter)).to.be.equal(floorEth(parseEther("0")))
+
+    // TODO stake half locked, then more, then withdraw, send more locked
+    // TODO unstake half, send more locked & unlocked, then withdraw full amount
+  })
+
   it("Ability to stake locked tokens", async function() {
     await (
       await contracts.sourceToken.transfer(underwriter.address, ethers.utils.parseEther("1000"))
@@ -339,7 +419,7 @@ describe("CreditPool & Rewards Tests", function() {
     )
 
     await (
-      await contracts.sourceToken.transferWithLock(recipient.address, {
+      await contracts.sourceToken.transferWithLock(member.address, {
         totalAmount: locked,
         amountStaked: 0,
         schedules: parsed,
@@ -353,7 +433,9 @@ describe("CreditPool & Rewards Tests", function() {
     ).wait()
 
     const lockedbalBefore = await contracts.sourceToken.lockedBalanceOf(member.address)
+
     await (await contracts.creditPool.connect(member).stake(lockedbalBefore)).wait()
+
     const totalSupply = formatEther(await contracts.creditPool.totalSupply())
     const amountStaked = formatEther(lockedbalBefore)
     expect(totalSupply).to.equal(amountStaked)

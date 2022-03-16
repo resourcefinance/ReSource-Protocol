@@ -12,13 +12,12 @@ import "hardhat-contract-sizer"
 
 import { utils } from "ethers"
 
-import { resolve } from "path"
-
 import { HardhatUserConfig, task } from "hardhat/config"
 import { HttpNetworkUserConfig } from "hardhat/types"
 
 import "./tasks/accounts"
 import "./tasks/clean"
+import "./tasks/rewards"
 
 const { isAddress, getAddress, formatUnits, parseUnits } = utils
 
@@ -31,7 +30,10 @@ function mnemonic() {
   const path = "./mnemonic.txt"
   if (fs.existsSync(path)) {
     try {
-      return fs.readFileSync("./mnemonic.txt").toString().trim()
+      return fs
+        .readFileSync("./mnemonic.txt")
+        .toString()
+        .trim()
     } catch (e) {
       console.log("Mnemonic: ", e)
     }
@@ -138,7 +140,7 @@ task("wallet", "Create a wallet (pk) link", async (_, { ethers }) => {
   const randomWallet = ethers.Wallet.createRandom()
   const privateKey = randomWallet._signingKey().privateKey
   console.log("🔐 WALLET Generated as " + randomWallet.address + "")
-  console.log("🔗 http://localhost:3000/pk#" + privateKey)
+  console.log("pk: " + privateKey)
 })
 
 task("fundedwallet", "Create a wallet (pk) link and fund it with deployer?")
@@ -225,7 +227,9 @@ task("mineContractAddress", "Looks for a deployer account that will give leading
       let input_arr = [sender, nonce]
       let rlp_encoded = rlp.encode(input_arr)
 
-      let contract_address_long = keccak("keccak256").update(rlp_encoded).digest("hex")
+      let contract_address_long = keccak("keccak256")
+        .update(rlp_encoded)
+        .digest("hex")
 
       contract_address = contract_address_long.substring(24) //Trim the first 24 characters.
     }
@@ -241,7 +245,10 @@ task("mineContractAddress", "Looks for a deployer account that will give leading
 task("account", "Get balance informations for the deployment account.", async (_, { ethers }) => {
   const hdkey = require("ethereumjs-wallet/hdkey")
   const bip39 = require("bip39")
-  let mnemonic = fs.readFileSync("./mnemonic.txt").toString().trim()
+  let mnemonic = fs
+    .readFileSync("./mnemonic.txt")
+    .toString()
+    .trim()
   if (DEBUG) console.log("mnemonic", mnemonic)
   const seed = await bip39.mnemonicToSeed(mnemonic)
   if (DEBUG) console.log("seed", seed)
@@ -335,22 +342,10 @@ task("send", "Send ETH")
     }
 
     const txRequest = {
+      value: parseUnits(taskArgs.amount ? taskArgs.amount : "0", "ether").toHexString(),
       from: await fromSigner.getAddress(),
       to,
-      value: parseUnits(taskArgs.amount ? taskArgs.amount : "0", "ether").toHexString(),
-      nonce: await fromSigner.getTransactionCount(),
-      gasPrice: parseUnits(taskArgs.gasPrice ? taskArgs.gasPrice : "1.001", "gwei").toHexString(),
-      gasLimit: taskArgs.gasLimit ? taskArgs.gasLimit : 24000,
-      chainId: network.config.chainId,
-      data: {},
     }
-
-    if (taskArgs.data !== undefined) {
-      txRequest.data = taskArgs.data
-      debug(`Adding data to payload: ${txRequest.data}`)
-    }
-    debug(utils.parseUnits(txRequest.gasPrice, "gwei") + " gwei")
-    debug(JSON.stringify(txRequest, null, 2))
 
     return send(fromSigner, txRequest)
   })

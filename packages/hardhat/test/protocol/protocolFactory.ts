@@ -1,4 +1,5 @@
 import { upgrades, ethers, network } from "hardhat"
+import { SourceTokenV3 } from "../../types/SourceTokenV3"
 import {
   CreditPool,
   CreditRequest,
@@ -17,7 +18,7 @@ import {
 
 export interface ProtocolContracts {
   creditRoles: CreditRoles
-  sourceToken: SourceTokenV2
+  sourceToken: SourceTokenV3
   priceOracle: PriceOracle
   creditManager: CreditManager
   creditRequest: CreditRequest
@@ -58,10 +59,15 @@ export const protocolFactory = {
       [],
     ])) as SourceToken
     const SourceTokenV2 = await ethers.getContractFactory("SourceTokenV2")
-
-    contracts.sourceToken = (await upgrades.upgradeProxy(sourceToken.address, SourceTokenV2, {
+    await upgrades.upgradeProxy(sourceToken.address, SourceTokenV2, {
       call: "upgradeV2",
-    })) as SourceTokenV2
+    })
+
+    const SourceTokenV3 = await ethers.getContractFactory("SourceTokenV3")
+    contracts.sourceToken = (await upgrades.upgradeProxy(
+      sourceToken.address,
+      SourceTokenV3
+    )) as SourceTokenV3
 
     // 5. deploy PriceOracle
     const priceOracleFactory = await ethers.getContractFactory("PriceOracle")

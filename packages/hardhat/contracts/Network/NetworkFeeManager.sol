@@ -128,12 +128,14 @@ contract NetworkFeeManager is OwnableUpgradeable, INetworkFeeManager {
 
     /* ========== VIEWS ========== */
 
-    function calculateFees(uint256 _transactionAmount) external view returns (uint256 totalFee) {
-        totalFee = creditManager.calculatePercentInCollateral(
+    function calculateFees(uint256 _transactionAmount) external view returns (uint256) {
+        uint256 networkFee = creditManager.calculatePercentInCollateral(
             network,
             totalFeePercent,
             _transactionAmount
         );
+
+        return creditFeeManager.calculateFees(network, _transactionAmount) + networkFee;
     }
 
     function calculateAmbassadorRewards(address[] memory _members)

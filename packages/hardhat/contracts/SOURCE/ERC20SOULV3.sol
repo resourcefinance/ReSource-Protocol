@@ -265,9 +265,9 @@ contract ERC20SOULV3 is ERC20Upgradeable, OwnableUpgradeable {
     }
 
     // WEB3 interface
-    function getLockSchedules(address owner) public view returns (Lock memory) {
+    function getLockSchedules(address owner) public view returns (Schedule[] memory) {
         Lock memory lock = locks[owner];
-        return lock;
+        return lock.schedules;
     }
 
     function balanceOf(address account) public view virtual override returns (uint256) {

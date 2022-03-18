@@ -74,9 +74,6 @@ contract CreditPool is
     }
 
     /* ========== VIEWS ========== */
-    function viewMapping(address _rewardsToken) public view returns (Reward memory) {
-        return rewardData[_rewardsToken];
-    }
 
     function totalSupply() external view override returns (uint256) {
         return _totalSupply;
@@ -231,12 +228,12 @@ contract CreditPool is
         emit RewardsDurationUpdated(_rewardsToken, rewardData[_rewardsToken].rewardsDuration);
     }
 
-    function reduceTotalCredit(uint256 _amountToAdd) external override onlyOperator {
-        totalCredit -= _amountToAdd;
+    function reduceTotalCredit(uint256 _amountToRemove) external override onlyOperator {
+        totalCredit -= _amountToRemove;
     }
 
-    function increaseTotalCredit(uint256 _amountToRemove) external override onlyOperator {
-        totalCredit += _amountToRemove;
+    function increaseTotalCredit(uint256 _amountToAdd) external override onlyOperator {
+        totalCredit += _amountToAdd;
     }
 
     function transferUnderwriter(address _underwriter) external {

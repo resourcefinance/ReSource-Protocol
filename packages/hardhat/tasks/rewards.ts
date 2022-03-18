@@ -38,16 +38,16 @@ task("reward", "Add reward to Credit Pool", async ({ amount }, { ethers, network
     const pool = new ethers.Contract(poolAddr, poolFactory.interface, signer) as CreditPool
 
     // Transfer tokens to signer
-    await (await MockERC20.transfer(signer.address, parseEther("10000000"))).wait()
+    await (await MockERC20.transfer(signer.address, reward)).wait()
     await (await source.transfer(signer.address, reward)).wait()
 
     // Add SOURCE rewwards
+    await (await pool.connect(signer).addReward(sourceAddr, signer.address, 30 * 86400)).wait()
+
+    // Add CELO rewwards
     await (
       await pool.connect(signer).addReward(MockERC20.address, signer.address, 30 * 86400)
     ).wait()
-
-    // Add CELO rewwards
-    await (await pool.connect(signer).addReward(source.address, signer.address, 30 * 86400)).wait()
 
     // Approve and notify the rewards
     await (
@@ -88,8 +88,8 @@ task("rewardBalance", "Get balance of credit pool")
 
       const balance = await pool.earned(account, sourceAddr)
 
-      console.log("rewards.ts -- formatEther(amount):", formatEther(balance))
-      console.log("rewards.ts -- rewardTokens:", await pool.rewardTokens(0))
+      console.log("earned:", formatEther(balance))
+      console.log("rewardToken:", await pool.rewardTokens(0))
       console.log("balanceOf: ", formatEther(await pool.balanceOf(account)))
     } catch (e) {
       console.log(e)
@@ -177,8 +177,31 @@ task("getLocks", "View locks", async ({ account }, { ethers, network }) => {
     const sourceFactory = await ethers.getContractFactory("SourceTokenV3")
     const source = new ethers.Contract(sourceAddr, sourceFactory.interface, signer) as SourceTokenV3
 
-    const locks = await source.getLockSchedules("0xf445947b68cE09f0c1e1C8010e880895DcF406da")
-    log("locks: ", formatEther((locks[1] as unknown) as BigNumber))
+    const locks = await source.getLockSchedules("0xAe021DFd84979719b69e616B0435EC86af87eFa5")
+    log("locks: ", locks)
+  } catch (e) {
+    console.log(e)
+  }
+})
+
+task("credit", "Update total credit", async ({ account }, { ethers, network }) => {
+  const poolDeploy = `./deployments/${network.name}/CreditPool.json`
+  const poolPath = fs.readFileSync(poolDeploy).toString()
+  const poolAddr = JSON.parse(poolPath)["address"]
+  const sourceDeploy = `./deployments/${network.name}/SourceTokenV3.json`
+  const sourcePath = fs.readFileSync(sourceDeploy).toString()
+  const sourceAddr = JSON.parse(sourcePath)["address"]
+
+  try {
+    const signer = (await ethers.getSigners())[0]
+    const poolFactory = await ethers.getContractFactory("CreditPool")
+    const pool = new ethers.Contract(poolAddr, poolFactory.interface, signer) as CreditPool
+
+    await (await pool.connect(signer).increaseTotalCredit(parseEther("15303"))).wait()
+
+    const credit = await pool.rewardData("0x0ae19295E37a31d4Ba9057d6d03db9E6C7D91D63")
+
+    log("credit: ", credit)
   } catch (e) {
     console.log(e)
   }
@@ -255,6 +278,8 @@ task("sendLocked", "Send locked SOURCE")
         schedule.monthsInPeriod,
         schedule.startDate
       )
+
+      console.log("rewards.ts -- parsed:", parsed)
 
       await (
         await source.transferWithLock(account, {

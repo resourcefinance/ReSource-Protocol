@@ -42,6 +42,12 @@ describe("CreditFeeManager Tests", function () {
       .connect(member)
       .approve(contracts.creditFeeManager.address, ethers.constants.MaxUint256)
 
+    const totalFees = ethers.utils.formatEther(
+      await contracts.networkFeeManager.calculateFees(ethers.utils.parseUnits("1000", "mwei"))
+    )
+
+    expect(totalFees).to.equal("200.0")
+
     await (
       await contracts.creditFeeManager
         .connect(network)

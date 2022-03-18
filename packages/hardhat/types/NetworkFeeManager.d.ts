@@ -244,7 +244,7 @@ export class NetworkFeeManager extends BaseContract {
     calculateFees(
       _transactionAmount: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<[BigNumber] & { totalFee: BigNumber }>;
+    ): Promise<[BigNumber]>;
 
     calculateNetworkRewards(
       _members: string[],

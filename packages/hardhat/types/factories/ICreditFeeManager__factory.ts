@@ -81,6 +81,30 @@ const _abi = [
         type: "address",
       },
       {
+        internalType: "uint256",
+        name: "_transactionAmount",
+        type: "uint256",
+      },
+    ],
+    name: "calculateFees",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "creditFee",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_network",
+        type: "address",
+      },
+      {
         internalType: "address",
         name: "_networkMember",
         type: "address",

@@ -110,6 +110,7 @@ contract CreditFeeManager is ICreditFeeManager, OwnableUpgradeable {
     function calculateFees(address _network, uint256 _transactionAmount)
         external
         view
+        override
         returns (uint256 creditFee)
     {
         creditFee = creditManager.calculatePercentInCollateral(

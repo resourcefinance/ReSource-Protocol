@@ -34,7 +34,7 @@ async function main(): Promise<void> {
   const sourceContract = new ethers.Contract(
     sourceTokenAddress,
     SourceToken__factory.createInterface(),
-    signer,
+    signer
   ) as SourceToken
 
   const addresses = recipients.recipients
@@ -55,11 +55,11 @@ async function main(): Promise<void> {
         lockedAmount,
         recipients.schedule.periods,
         recipients.schedule.monthsInPeriod,
-        recipients.schedule.startDate,
+        recipients.schedule.startDate
       )
 
       console.log(
-        "💵 Sending " + ethers.utils.formatEther(lockedAmount) + " locked SOURCE to " + address,
+        "💵 Sending " + ethers.utils.formatEther(lockedAmount) + " locked SOURCE to " + address
       )
 
       const tx = await (

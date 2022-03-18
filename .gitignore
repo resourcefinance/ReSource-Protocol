@@ -44,4 +44,4 @@ yarn-error.log*
 # Local Netlify folder
 .netlify
 
-.vscode/settings.json
+packages/hardhat/stake.ts

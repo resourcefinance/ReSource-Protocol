@@ -1,0 +1,10 @@
+{
+  "solidity.packageDefaultDependenciesDirectory": "packages/hardhat/node_modules",
+  "editor.formatOnSave": true,
+  "solidity.formatter": "prettier",
+  "[solidity]": {
+    "editor.defaultFormatter": "JuanBlanco.solidity"
+  },
+  "solidity.defaultCompiler": "localNodeModule",
+  "typescript.tsdk": "node_modules/typescript/lib"
+}

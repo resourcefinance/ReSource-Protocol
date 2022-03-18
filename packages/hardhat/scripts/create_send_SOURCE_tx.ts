@@ -1,46 +1,51 @@
 import { config, deployments, ethers } from "hardhat"
-import { SourceToken, SourceToken__factory } from "../types"
+import { SourceToken__factory } from "../types"
 
 async function main(): Promise<void> {
-  const senderAddress = "0x3987426f3C429214BC078750948461A2abe03ec7"
-  const address = "0x4400b73aD6a62b3d0096FB2AF9743D3F513De2c0"
-  const amount = "1000"
+  const senderAddress = "0x3DC674FAB7eB6e6B3925d02A3D3F566CdAe3354f"
+  const address = "0x2E8c10e4E7f213641C238a595D005EecA36f7F7A"
+  const amount = "25000"
 
   let sourceTokenAddress = (await deployments.getOrNull("SourceToken"))?.address
 
   if (!sourceTokenAddress) throw new Error("token not deployed on this network")
 
-  const tokenContract = new ethers.Contract(
+  const tokenContract = SourceToken__factory.connect(
     sourceTokenAddress,
-    SourceToken__factory.createInterface(),
-    new ethers.VoidSigner(senderAddress).connect(ethers.provider),
-  ) as SourceToken
+    new ethers.VoidSigner(senderAddress).connect(ethers.provider)
+  )
 
   try {
     const now = Date.parse(new Date().toString()) / 1000
     const day = 86405
     const halfDay = 43200
-    const tx = await tokenContract.populateTransaction.transferWithLock(address, {
-      totalAmount: ethers.utils.parseEther(amount),
-      amountStaked: 0,
-      schedules: [
-        {
-          amount: ethers.utils.parseEther(amount),
-          expirationBlock: now + day + halfDay,
-        },
-      ],
-    })
+    const tx = await tokenContract.populateTransaction.transfer(
+      address,
+      ethers.utils.parseEther(amount)
+    )
+    // const tx = await tokenContract.populateTransaction.transferWithLock(address, {
+    //   totalAmount: ethers.utils.parseEther(amount),
+    //   amountStaked: 0,
+    //   schedules: [
+    //     {
+    //       amount: ethers.utils.parseEther(amount),
+    //       expirationBlock: now + day + halfDay,
+    //     },
+    //   ],
+    // })
 
-    await tokenContract.estimateGas.transferWithLock(address, {
-      totalAmount: ethers.utils.parseEther(amount),
-      amountStaked: 0,
-      schedules: [
-        {
-          amount: ethers.utils.parseEther(amount),
-          expirationBlock: now + day * 7,
-        },
-      ],
-    })
+    // await tokenContract.estimateGas.transferWithLock(address, {
+    //   totalAmount: ethers.utils.parseEther(amount),
+    //   amountStaked: 0,
+    //   schedules: [
+    //     {
+    //       amount: ethers.utils.parseEther(amount),
+    //       expirationBlock: now + day * 7,
+    //     },
+    //   ],
+    // })
+
+    await tokenContract.estimateGas.transfer(address, ethers.utils.parseEther(amount))
 
     console.log("address: ", sourceTokenAddress)
     console.log("data: ", tx.data)

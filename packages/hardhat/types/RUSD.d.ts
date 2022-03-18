@@ -27,32 +27,30 @@ interface RUSDInterface extends ethers.utils.Interface {
     "bulkTransfer(address[],uint256[])": FunctionFragment;
     "burn(uint256)": FunctionFragment;
     "burnFrom(address,uint256)": FunctionFragment;
+    "canRequestCredit(address,address)": FunctionFragment;
     "creditBalanceOf(address)": FunctionFragment;
     "creditLimitLeftOf(address)": FunctionFragment;
     "creditLimitOf(address)": FunctionFragment;
+    "creditManager()": FunctionFragment;
     "decimals()": FunctionFragment;
     "decreaseAllowance(address,uint256)": FunctionFragment;
-    "freedom()": FunctionFragment;
+    "feeManager()": FunctionFragment;
     "increaseAllowance(address,uint256)": FunctionFragment;
     "initialize(string,string)": FunctionFragment;
-    "initializeRUSD(address,uint256,address,address)": FunctionFragment;
+    "initializeRUSD(address,address,address)": FunctionFragment;
     "name()": FunctionFragment;
-    "operator()": FunctionFragment;
+    "networkRoles()": FunctionFragment;
     "owner()": FunctionFragment;
-    "registry()": FunctionFragment;
+    "pause()": FunctionFragment;
+    "paused()": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
-    "restrictPositiveBalance()": FunctionFragment;
-    "restrictRegistered()": FunctionFragment;
-    "restrictionState()": FunctionFragment;
     "setCreditLimit(address,uint256)": FunctionFragment;
     "symbol()": FunctionFragment;
     "totalSupply()": FunctionFragment;
     "transfer(address,uint256)": FunctionFragment;
     "transferFrom(address,address,uint256)": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
-    "underwriteManager()": FunctionFragment;
-    "updateOperator(address)": FunctionFragment;
-    "updateRestrictionExpiration()": FunctionFragment;
+    "unpause()": FunctionFragment;
   };
 
   encodeFunctionData(
@@ -74,6 +72,10 @@ interface RUSDInterface extends ethers.utils.Interface {
     values: [string, BigNumberish]
   ): string;
   encodeFunctionData(
+    functionFragment: "canRequestCredit",
+    values: [string, string]
+  ): string;
+  encodeFunctionData(
     functionFragment: "creditBalanceOf",
     values: [string]
   ): string;
@@ -85,12 +87,19 @@ interface RUSDInterface extends ethers.utils.Interface {
     functionFragment: "creditLimitOf",
     values: [string]
   ): string;
+  encodeFunctionData(
+    functionFragment: "creditManager",
+    values?: undefined
+  ): string;
   encodeFunctionData(functionFragment: "decimals", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "decreaseAllowance",
     values: [string, BigNumberish]
   ): string;
-  encodeFunctionData(functionFragment: "freedom", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "feeManager",
+    values?: undefined
+  ): string;
   encodeFunctionData(
     functionFragment: "increaseAllowance",
     values: [string, BigNumberish]
@@ -101,26 +110,18 @@ interface RUSDInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "initializeRUSD",
-    values: [string, BigNumberish, string, string]
+    values: [string, string, string]
   ): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
-  encodeFunctionData(functionFragment: "operator", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "networkRoles",
+    values?: undefined
+  ): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
-  encodeFunctionData(functionFragment: "registry", values?: undefined): string;
+  encodeFunctionData(functionFragment: "pause", values?: undefined): string;
+  encodeFunctionData(functionFragment: "paused", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "renounceOwnership",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "restrictPositiveBalance",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "restrictRegistered",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "restrictionState",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -144,18 +145,7 @@ interface RUSDInterface extends ethers.utils.Interface {
     functionFragment: "transferOwnership",
     values: [string]
   ): string;
-  encodeFunctionData(
-    functionFragment: "underwriteManager",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "updateOperator",
-    values: [string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "updateRestrictionExpiration",
-    values?: undefined
-  ): string;
+  encodeFunctionData(functionFragment: "unpause", values?: undefined): string;
 
   decodeFunctionResult(functionFragment: "allowance", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
@@ -166,6 +156,10 @@ interface RUSDInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "burn", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "burnFrom", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "canRequestCredit",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "creditBalanceOf",
     data: BytesLike
@@ -178,12 +172,16 @@ interface RUSDInterface extends ethers.utils.Interface {
     functionFragment: "creditLimitOf",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "creditManager",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "decimals", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "decreaseAllowance",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "freedom", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "feeManager", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "increaseAllowance",
     data: BytesLike
@@ -194,23 +192,15 @@ interface RUSDInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "operator", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "networkRoles",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "registry", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "pause", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "paused", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "renounceOwnership",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "restrictPositiveBalance",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "restrictRegistered",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "restrictionState",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -231,40 +221,25 @@ interface RUSDInterface extends ethers.utils.Interface {
     functionFragment: "transferOwnership",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(
-    functionFragment: "underwriteManager",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "updateOperator",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "updateRestrictionExpiration",
-    data: BytesLike
-  ): Result;
+  decodeFunctionResult(functionFragment: "unpause", data: BytesLike): Result;
 
   events: {
     "Approval(address,address,uint256)": EventFragment;
     "BalanceUpdate(address,address,uint256,uint256,uint256,uint256)": EventFragment;
-    "BulkBalanceUpdate(address,address[],uint256,uint256,uint256[],uint256[])": EventFragment;
     "CreditLimitUpdate(address,uint256)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
-    "RestrictionExpirationUpdated(uint256)": EventFragment;
-    "RestrictionUpdated(uint8)": EventFragment;
+    "Paused(address)": EventFragment;
     "Transfer(address,address,uint256)": EventFragment;
+    "Unpaused(address)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "Approval"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "BalanceUpdate"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "BulkBalanceUpdate"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "CreditLimitUpdate"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
-  getEvent(
-    nameOrSignatureOrTopic: "RestrictionExpirationUpdated"
-  ): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "RestrictionUpdated"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "Paused"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Transfer"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "Unpaused"): EventFragment;
 }
 
 export type ApprovalEvent = TypedEvent<
@@ -286,17 +261,6 @@ export type BalanceUpdateEvent = TypedEvent<
   }
 >;
 
-export type BulkBalanceUpdateEvent = TypedEvent<
-  [string, string[], BigNumber, BigNumber, BigNumber[], BigNumber[]] & {
-    sender: string;
-    recipients: string[];
-    senderBalance: BigNumber;
-    senderCreditBalance: BigNumber;
-    recipientBalances: BigNumber[];
-    recipientCreditBalances: BigNumber[];
-  }
->;
-
 export type CreditLimitUpdateEvent = TypedEvent<
   [string, BigNumber] & { member: string; limit: BigNumber }
 >;
@@ -305,15 +269,13 @@ export type OwnershipTransferredEvent = TypedEvent<
   [string, string] & { previousOwner: string; newOwner: string }
 >;
 
-export type RestrictionExpirationUpdatedEvent = TypedEvent<
-  [BigNumber] & { restrictionRenewal: BigNumber }
->;
-
-export type RestrictionUpdatedEvent = TypedEvent<[number] & { state: number }>;
+export type PausedEvent = TypedEvent<[string] & { account: string }>;
 
 export type TransferEvent = TypedEvent<
   [string, string, BigNumber] & { from: string; to: string; value: BigNumber }
 >;
+
+export type UnpausedEvent = TypedEvent<[string] & { account: string }>;
 
 export class RUSD extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -390,6 +352,12 @@ export class RUSD extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    canRequestCredit(
+      _requester: string,
+      _member: string,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
     creditBalanceOf(
       _member: string,
       overrides?: CallOverrides
@@ -405,6 +373,8 @@ export class RUSD extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
+    creditManager(overrides?: CallOverrides): Promise<[string]>;
+
     decimals(overrides?: CallOverrides): Promise<[number]>;
 
     decreaseAllowance(
@@ -413,9 +383,7 @@ export class RUSD extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    freedom(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+    feeManager(overrides?: CallOverrides): Promise<[string]>;
 
     increaseAllowance(
       spender: string,
@@ -430,34 +398,27 @@ export class RUSD extends BaseContract {
     ): Promise<ContractTransaction>;
 
     initializeRUSD(
-      registryAddress: string,
-      expiration: BigNumberish,
-      underwriteManagerAddress: string,
-      operatorAddress: string,
+      _creditManager: string,
+      _feeManager: string,
+      _networkRoles: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     name(overrides?: CallOverrides): Promise<[string]>;
 
-    operator(overrides?: CallOverrides): Promise<[string]>;
+    networkRoles(overrides?: CallOverrides): Promise<[string]>;
 
     owner(overrides?: CallOverrides): Promise<[string]>;
 
-    registry(overrides?: CallOverrides): Promise<[string]>;
+    pause(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    paused(overrides?: CallOverrides): Promise<[boolean]>;
 
     renounceOwnership(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
-
-    restrictPositiveBalance(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    restrictRegistered(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    restrictionState(overrides?: CallOverrides): Promise<[number]>;
 
     setCreditLimit(
       _member: string,
@@ -470,14 +431,14 @@ export class RUSD extends BaseContract {
     totalSupply(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     transfer(
-      recipient: string,
+      to: string,
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     transferFrom(
-      sender: string,
-      recipient: string,
+      from: string,
+      to: string,
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
@@ -487,14 +448,7 @@ export class RUSD extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    underwriteManager(overrides?: CallOverrides): Promise<[string]>;
-
-    updateOperator(
-      newOperator: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    updateRestrictionExpiration(
+    unpause(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
   };
@@ -530,6 +484,12 @@ export class RUSD extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  canRequestCredit(
+    _requester: string,
+    _member: string,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
+
   creditBalanceOf(
     _member: string,
     overrides?: CallOverrides
@@ -542,6 +502,8 @@ export class RUSD extends BaseContract {
 
   creditLimitOf(_member: string, overrides?: CallOverrides): Promise<BigNumber>;
 
+  creditManager(overrides?: CallOverrides): Promise<string>;
+
   decimals(overrides?: CallOverrides): Promise<number>;
 
   decreaseAllowance(
@@ -550,9 +512,7 @@ export class RUSD extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  freedom(
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  feeManager(overrides?: CallOverrides): Promise<string>;
 
   increaseAllowance(
     spender: string,
@@ -567,34 +527,27 @@ export class RUSD extends BaseContract {
   ): Promise<ContractTransaction>;
 
   initializeRUSD(
-    registryAddress: string,
-    expiration: BigNumberish,
-    underwriteManagerAddress: string,
-    operatorAddress: string,
+    _creditManager: string,
+    _feeManager: string,
+    _networkRoles: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   name(overrides?: CallOverrides): Promise<string>;
 
-  operator(overrides?: CallOverrides): Promise<string>;
+  networkRoles(overrides?: CallOverrides): Promise<string>;
 
   owner(overrides?: CallOverrides): Promise<string>;
 
-  registry(overrides?: CallOverrides): Promise<string>;
+  pause(
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  paused(overrides?: CallOverrides): Promise<boolean>;
 
   renounceOwnership(
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
-
-  restrictPositiveBalance(
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  restrictRegistered(
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  restrictionState(overrides?: CallOverrides): Promise<number>;
 
   setCreditLimit(
     _member: string,
@@ -607,14 +560,14 @@ export class RUSD extends BaseContract {
   totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
   transfer(
-    recipient: string,
+    to: string,
     amount: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   transferFrom(
-    sender: string,
-    recipient: string,
+    from: string,
+    to: string,
     amount: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
@@ -624,14 +577,7 @@ export class RUSD extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  underwriteManager(overrides?: CallOverrides): Promise<string>;
-
-  updateOperator(
-    newOperator: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  updateRestrictionExpiration(
+  unpause(
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -664,6 +610,12 @@ export class RUSD extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    canRequestCredit(
+      _requester: string,
+      _member: string,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
     creditBalanceOf(
       _member: string,
       overrides?: CallOverrides
@@ -679,6 +631,8 @@ export class RUSD extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    creditManager(overrides?: CallOverrides): Promise<string>;
+
     decimals(overrides?: CallOverrides): Promise<number>;
 
     decreaseAllowance(
@@ -687,7 +641,7 @@ export class RUSD extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    freedom(overrides?: CallOverrides): Promise<void>;
+    feeManager(overrides?: CallOverrides): Promise<string>;
 
     increaseAllowance(
       spender: string,
@@ -702,28 +656,23 @@ export class RUSD extends BaseContract {
     ): Promise<void>;
 
     initializeRUSD(
-      registryAddress: string,
-      expiration: BigNumberish,
-      underwriteManagerAddress: string,
-      operatorAddress: string,
+      _creditManager: string,
+      _feeManager: string,
+      _networkRoles: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
     name(overrides?: CallOverrides): Promise<string>;
 
-    operator(overrides?: CallOverrides): Promise<string>;
+    networkRoles(overrides?: CallOverrides): Promise<string>;
 
     owner(overrides?: CallOverrides): Promise<string>;
 
-    registry(overrides?: CallOverrides): Promise<string>;
+    pause(overrides?: CallOverrides): Promise<void>;
+
+    paused(overrides?: CallOverrides): Promise<boolean>;
 
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
-
-    restrictPositiveBalance(overrides?: CallOverrides): Promise<void>;
-
-    restrictRegistered(overrides?: CallOverrides): Promise<void>;
-
-    restrictionState(overrides?: CallOverrides): Promise<number>;
 
     setCreditLimit(
       _member: string,
@@ -736,14 +685,14 @@ export class RUSD extends BaseContract {
     totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
     transfer(
-      recipient: string,
+      to: string,
       amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<boolean>;
 
     transferFrom(
-      sender: string,
-      recipient: string,
+      from: string,
+      to: string,
       amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<boolean>;
@@ -753,14 +702,7 @@ export class RUSD extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    underwriteManager(overrides?: CallOverrides): Promise<string>;
-
-    updateOperator(
-      newOperator: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    updateRestrictionExpiration(overrides?: CallOverrides): Promise<void>;
+    unpause(overrides?: CallOverrides): Promise<void>;
   };
 
   filters: {
@@ -820,44 +762,6 @@ export class RUSD extends BaseContract {
       }
     >;
 
-    "BulkBalanceUpdate(address,address[],uint256,uint256,uint256[],uint256[])"(
-      sender?: null,
-      recipients?: null,
-      senderBalance?: null,
-      senderCreditBalance?: null,
-      recipientBalances?: null,
-      recipientCreditBalances?: null
-    ): TypedEventFilter<
-      [string, string[], BigNumber, BigNumber, BigNumber[], BigNumber[]],
-      {
-        sender: string;
-        recipients: string[];
-        senderBalance: BigNumber;
-        senderCreditBalance: BigNumber;
-        recipientBalances: BigNumber[];
-        recipientCreditBalances: BigNumber[];
-      }
-    >;
-
-    BulkBalanceUpdate(
-      sender?: null,
-      recipients?: null,
-      senderBalance?: null,
-      senderCreditBalance?: null,
-      recipientBalances?: null,
-      recipientCreditBalances?: null
-    ): TypedEventFilter<
-      [string, string[], BigNumber, BigNumber, BigNumber[], BigNumber[]],
-      {
-        sender: string;
-        recipients: string[];
-        senderBalance: BigNumber;
-        senderCreditBalance: BigNumber;
-        recipientBalances: BigNumber[];
-        recipientCreditBalances: BigNumber[];
-      }
-    >;
-
     "CreditLimitUpdate(address,uint256)"(
       member?: null,
       limit?: null
@@ -890,21 +794,11 @@ export class RUSD extends BaseContract {
       { previousOwner: string; newOwner: string }
     >;
 
-    "RestrictionExpirationUpdated(uint256)"(
-      restrictionRenewal?: null
-    ): TypedEventFilter<[BigNumber], { restrictionRenewal: BigNumber }>;
+    "Paused(address)"(
+      account?: null
+    ): TypedEventFilter<[string], { account: string }>;
 
-    RestrictionExpirationUpdated(
-      restrictionRenewal?: null
-    ): TypedEventFilter<[BigNumber], { restrictionRenewal: BigNumber }>;
-
-    "RestrictionUpdated(uint8)"(
-      state?: BigNumberish | null
-    ): TypedEventFilter<[number], { state: number }>;
-
-    RestrictionUpdated(
-      state?: BigNumberish | null
-    ): TypedEventFilter<[number], { state: number }>;
+    Paused(account?: null): TypedEventFilter<[string], { account: string }>;
 
     "Transfer(address,address,uint256)"(
       from?: string | null,
@@ -923,6 +817,12 @@ export class RUSD extends BaseContract {
       [string, string, BigNumber],
       { from: string; to: string; value: BigNumber }
     >;
+
+    "Unpaused(address)"(
+      account?: null
+    ): TypedEventFilter<[string], { account: string }>;
+
+    Unpaused(account?: null): TypedEventFilter<[string], { account: string }>;
   };
 
   estimateGas: {
@@ -957,6 +857,12 @@ export class RUSD extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    canRequestCredit(
+      _requester: string,
+      _member: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     creditBalanceOf(
       _member: string,
       overrides?: CallOverrides
@@ -972,6 +878,8 @@ export class RUSD extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    creditManager(overrides?: CallOverrides): Promise<BigNumber>;
+
     decimals(overrides?: CallOverrides): Promise<BigNumber>;
 
     decreaseAllowance(
@@ -980,9 +888,7 @@ export class RUSD extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    freedom(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    feeManager(overrides?: CallOverrides): Promise<BigNumber>;
 
     increaseAllowance(
       spender: string,
@@ -997,34 +903,27 @@ export class RUSD extends BaseContract {
     ): Promise<BigNumber>;
 
     initializeRUSD(
-      registryAddress: string,
-      expiration: BigNumberish,
-      underwriteManagerAddress: string,
-      operatorAddress: string,
+      _creditManager: string,
+      _feeManager: string,
+      _networkRoles: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     name(overrides?: CallOverrides): Promise<BigNumber>;
 
-    operator(overrides?: CallOverrides): Promise<BigNumber>;
+    networkRoles(overrides?: CallOverrides): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
-    registry(overrides?: CallOverrides): Promise<BigNumber>;
+    pause(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    paused(overrides?: CallOverrides): Promise<BigNumber>;
 
     renounceOwnership(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
-
-    restrictPositiveBalance(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    restrictRegistered(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    restrictionState(overrides?: CallOverrides): Promise<BigNumber>;
 
     setCreditLimit(
       _member: string,
@@ -1037,14 +936,14 @@ export class RUSD extends BaseContract {
     totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
     transfer(
-      recipient: string,
+      to: string,
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     transferFrom(
-      sender: string,
-      recipient: string,
+      from: string,
+      to: string,
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
@@ -1054,14 +953,7 @@ export class RUSD extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    underwriteManager(overrides?: CallOverrides): Promise<BigNumber>;
-
-    updateOperator(
-      newOperator: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    updateRestrictionExpiration(
+    unpause(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
   };
@@ -1101,6 +993,12 @@ export class RUSD extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
+    canRequestCredit(
+      _requester: string,
+      _member: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     creditBalanceOf(
       _member: string,
       overrides?: CallOverrides
@@ -1116,6 +1014,8 @@ export class RUSD extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    creditManager(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     decimals(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     decreaseAllowance(
@@ -1124,9 +1024,7 @@ export class RUSD extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    freedom(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
+    feeManager(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     increaseAllowance(
       spender: string,
@@ -1141,34 +1039,27 @@ export class RUSD extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     initializeRUSD(
-      registryAddress: string,
-      expiration: BigNumberish,
-      underwriteManagerAddress: string,
-      operatorAddress: string,
+      _creditManager: string,
+      _feeManager: string,
+      _networkRoles: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    operator(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    networkRoles(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    registry(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    pause(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    paused(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     renounceOwnership(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
-
-    restrictPositiveBalance(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    restrictRegistered(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    restrictionState(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     setCreditLimit(
       _member: string,
@@ -1181,14 +1072,14 @@ export class RUSD extends BaseContract {
     totalSupply(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     transfer(
-      recipient: string,
+      to: string,
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     transferFrom(
-      sender: string,
-      recipient: string,
+      from: string,
+      to: string,
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
@@ -1198,14 +1089,7 @@ export class RUSD extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    underwriteManager(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    updateOperator(
-      newOperator: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    updateRestrictionExpiration(
+    unpause(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
   };

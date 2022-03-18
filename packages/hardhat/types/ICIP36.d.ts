@@ -21,12 +21,17 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface ICIP36Interface extends ethers.utils.Interface {
   functions: {
+    "canRequestCredit(address,address)": FunctionFragment;
     "creditBalanceOf(address)": FunctionFragment;
     "creditLimitLeftOf(address)": FunctionFragment;
     "creditLimitOf(address)": FunctionFragment;
     "setCreditLimit(address,uint256)": FunctionFragment;
   };
 
+  encodeFunctionData(
+    functionFragment: "canRequestCredit",
+    values: [string, string]
+  ): string;
   encodeFunctionData(
     functionFragment: "creditBalanceOf",
     values: [string]
@@ -44,6 +49,10 @@ interface ICIP36Interface extends ethers.utils.Interface {
     values: [string, BigNumberish]
   ): string;
 
+  decodeFunctionResult(
+    functionFragment: "canRequestCredit",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "creditBalanceOf",
     data: BytesLike
@@ -108,10 +117,16 @@ export class ICIP36 extends BaseContract {
   interface: ICIP36Interface;
 
   functions: {
+    canRequestCredit(
+      _requester: string,
+      _member: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     creditBalanceOf(
       _member: string,
       overrides?: CallOverrides
-    ): Promise<[string]>;
+    ): Promise<[BigNumber]>;
 
     creditLimitLeftOf(
       _member: string,
@@ -130,7 +145,16 @@ export class ICIP36 extends BaseContract {
     ): Promise<ContractTransaction>;
   };
 
-  creditBalanceOf(_member: string, overrides?: CallOverrides): Promise<string>;
+  canRequestCredit(
+    _requester: string,
+    _member: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  creditBalanceOf(
+    _member: string,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
 
   creditLimitLeftOf(
     _member: string,
@@ -146,10 +170,16 @@ export class ICIP36 extends BaseContract {
   ): Promise<ContractTransaction>;
 
   callStatic: {
+    canRequestCredit(
+      _requester: string,
+      _member: string,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
     creditBalanceOf(
       _member: string,
       overrides?: CallOverrides
-    ): Promise<string>;
+    ): Promise<BigNumber>;
 
     creditLimitLeftOf(
       _member: string,
@@ -171,6 +201,12 @@ export class ICIP36 extends BaseContract {
   filters: {};
 
   estimateGas: {
+    canRequestCredit(
+      _requester: string,
+      _member: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     creditBalanceOf(
       _member: string,
       overrides?: CallOverrides
@@ -194,6 +230,12 @@ export class ICIP36 extends BaseContract {
   };
 
   populateTransaction: {
+    canRequestCredit(
+      _requester: string,
+      _member: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
     creditBalanceOf(
       _member: string,
       overrides?: CallOverrides

@@ -1,26 +1,56 @@
-type Underwriter @entity {
+type NetworkMember @entity {
   id: ID!
-  creditLines: [CreditLine]! @derivedFrom(field: "underwriter")
-  totalRewards: BigInt!
-  totalCollateral: BigInt!
-  balance: BigInt!
+  ambassador: Ambassador!
+  creditRequests: [CreditRequest]! @derivedFrom(field: "networkMember")
+  creditLine: CreditLine! @derivedFrom(field: "networkMember")
+  sourceBalance: BigInt!
+  totalFeesAccrued: BigInt!
 }
 
-type Underwritee @entity {
+type Ambassador @entity {
   id: ID!
-  creditLine: CreditLine
+  memberships: [NetworkMember]! @derivedFrom(field: "ambassador")
+  rewards: BigInt!
+  creditAllowance: BigInt!
+}
+
+type Underwriter @entity {
+  id: ID!
+  pools: [CreditPool]! @derivedFrom(field: "underwriter")
+  rewards: BigInt!
 }
 
 type CreditLine @entity {
   id: ID!
-  active: Boolean!
-  underwritee: Bytes!
-  underwriter: Underwriter!
-  collateral: BigInt!
-  creditLimit: BigInt!
-  balance: BigInt!
-  networkToken: Bytes!
+  pool: CreditPool!
+  networkMember: NetworkMember
+  network: Bytes!
   issueDate: BigInt!
-  outstandingReward: BigInt!
-  totalReward: BigInt!
+  acitve: Boolean!
+  creditLimit: BigInt!
+  creditBalance: BigInt!
+  balance: BigInt!
+}
+
+type CreditPool @entity {
+  id: ID!
+  underwriter: Underwriter!
+  creditLines: [CreditLine]! @derivedFrom(field: "pool")
+  totalCredit: BigInt!
+  totalCollateral: BigInt!
+  active: Boolean!
+}
+
+type CreditRequest @entity {
+  id: ID!
+  networkMember: NetworkMember!
+  type: RequestType!
+  approved: Boolean!
+  creditLimit: BigInt!
+}
+
+enum RequestType {
+  new
+  unstaking
+  extension
 }

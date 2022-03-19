@@ -4,7 +4,6 @@ import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
 import "./interface/ICreditFeeManager.sol";
-import "./interface/IPriceOracle.sol";
 import "./interface/ICreditManager.sol";
 import "./interface/ICreditRoles.sol";
 import "./interface/ICreditRequest.sol";
@@ -20,7 +19,6 @@ contract CreditFeeManager is ICreditFeeManager, OwnableUpgradeable {
     /* ========== STATE VARIABLES ========== */
 
     IERC20Upgradeable public collateralToken;
-    IPriceOracle public priceOracle;
     ICreditManager public creditManager;
     ICreditRoles public creditRoles;
     ICreditRequest public creditRequest;
@@ -30,14 +28,12 @@ contract CreditFeeManager is ICreditFeeManager, OwnableUpgradeable {
     /* ========== INITIALIZER ========== */
 
     function initialize(
-        address _priceOracle,
         address _creditManager,
         address _creditRoles,
         address _creditRequest,
         uint256 _underwriterPercent
     ) external virtual initializer {
         __Ownable_init();
-        priceOracle = IPriceOracle(_priceOracle);
         creditManager = ICreditManager(_creditManager);
         collateralToken = IERC20Upgradeable(creditManager.getCollateralToken());
         creditRoles = ICreditRoles(_creditRoles);

@@ -9,7 +9,7 @@ import type { IPriceOracle, IPriceOracleInterface } from "../IPriceOracle";
 const _abi = [
   {
     inputs: [],
-    name: "getPriceInDollars",
+    name: "getPriceInPPT",
     outputs: [
       {
         internalType: "uint256",

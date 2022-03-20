@@ -14,13 +14,12 @@ Shown above is the seperation of network fees and credit fees. In addition to th
 
 Also shown is the process of requesting, issueing, and collateralizing credit lines for specific networks. The ReSource network and protocol are authorized with distinct roles.
 
-###ReSource Network Roles:
+### ReSource Network Roles:
 
 - **Network Operator**: Manage network fee structure, claim network rewards, and can grant ambassador role access.
 - **Ambassador**: Manage memberships created from granting members access. Ambassadors are also authorized to request credit on behalf of their members.
 - **Member**: CIP36 transactions.
-
-###Credit Roles:
+### Credit Roles:
 
 - **Credit Operator**: Manage credit fee structure, credit pool registration, and claiming credit fee rewards (if a credit line is unassigned to a pool).
 - **Underwriter**: Manage credit pool rewards, credit line pool assignment, and claim credit fee rewards for credit lines associated with managed pools.

@@ -8,11 +8,11 @@
 
 The above diagram depicts how the ReSource network utilizes the ReSource protocol to issue and secure debt for its members.
 
-In order for any mutual credit network to utlize the ReSource credit protocol, the network must use the _CIP36_ standard of mutual credit currency.
+In order for any mutual credit network to utilize the ReSource credit protocol, the network must use the CIP36 standard of mutual credit currency.
 
-Shown above is the seperation of network fees and credit fees. In addition to the credit fees used to incentivise debt collateralization, networks may choose to collect a network fee.
+Shown above is the separation of network fees and credit fees. In addition to the credit fees used to incentivise debt collateralization, networks may choose to collect a network fee.
 
-Also shown is the process of requesting, issueing, and collateralizing credit lines for specific networks. The ReSource network and protocol are authorized with distinct roles.
+Also shown is the process of requesting, issuing, and collateralizing credit lines for specific networks. The ReSource network and protocol are authorized with distinct roles.
 
 ### ReSource Network Roles:
 

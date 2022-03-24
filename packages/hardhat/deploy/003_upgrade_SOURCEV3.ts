@@ -4,7 +4,7 @@ import { deployProxyAndSave } from "../utils/utils"
 import { deployments, upgrades, ethers } from "hardhat"
 import { SourceTokenV3__factory } from "../types/factories/SourceTokenV3__factory"
 
-const func: DeployFunction = async function(hardhat: HardhatRuntimeEnvironment) {
+const func: DeployFunction = async function (hardhat: HardhatRuntimeEnvironment) {
   const ReSourceTokenV3 = await ethers.getContractFactory("SourceTokenV3")
   const ReSourceTokenV3Abi = SourceTokenV3__factory.abi
 
@@ -29,4 +29,4 @@ const func: DeployFunction = async function(hardhat: HardhatRuntimeEnvironment) 
 
 export default func
 
-func.tags = ["SOURCE-upgrade"]
+func.tags = ["SOURCE-upgrade-3"]

@@ -31,9 +31,8 @@ interface CreditFeeManagerInterface extends ethers.utils.Interface {
     "getAccruedFees(address[],address)": FunctionFragment;
     "getCollateralToken()": FunctionFragment;
     "getUnderwriterPoolStakePercent(address,address)": FunctionFragment;
-    "initialize(address,address,address,address,uint256)": FunctionFragment;
+    "initialize(address,address,address,uint256)": FunctionFragment;
     "owner()": FunctionFragment;
-    "priceOracle()": FunctionFragment;
     "recoverERC20(address,uint256)": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
@@ -83,13 +82,9 @@ interface CreditFeeManagerInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "initialize",
-    values: [string, string, string, string, BigNumberish]
+    values: [string, string, string, BigNumberish]
   ): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "priceOracle",
-    values?: undefined
-  ): string;
   encodeFunctionData(
     functionFragment: "recoverERC20",
     values: [string, BigNumberish]
@@ -153,10 +148,6 @@ interface CreditFeeManagerInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "priceOracle",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(
     functionFragment: "recoverERC20",
     data: BytesLike
@@ -297,7 +288,6 @@ export class CreditFeeManager extends BaseContract {
     ): Promise<ContractTransaction>;
 
     initialize(
-      _priceOracle: string,
       _creditManager: string,
       _creditRoles: string,
       _creditRequest: string,
@@ -306,8 +296,6 @@ export class CreditFeeManager extends BaseContract {
     ): Promise<ContractTransaction>;
 
     owner(overrides?: CallOverrides): Promise<[string]>;
-
-    priceOracle(overrides?: CallOverrides): Promise<[string]>;
 
     recoverERC20(
       tokenAddress: string,
@@ -374,7 +362,6 @@ export class CreditFeeManager extends BaseContract {
   ): Promise<ContractTransaction>;
 
   initialize(
-    _priceOracle: string,
     _creditManager: string,
     _creditRoles: string,
     _creditRequest: string,
@@ -383,8 +370,6 @@ export class CreditFeeManager extends BaseContract {
   ): Promise<ContractTransaction>;
 
   owner(overrides?: CallOverrides): Promise<string>;
-
-  priceOracle(overrides?: CallOverrides): Promise<string>;
 
   recoverERC20(
     tokenAddress: string,
@@ -451,7 +436,6 @@ export class CreditFeeManager extends BaseContract {
     ): Promise<BigNumber>;
 
     initialize(
-      _priceOracle: string,
       _creditManager: string,
       _creditRoles: string,
       _creditRequest: string,
@@ -460,8 +444,6 @@ export class CreditFeeManager extends BaseContract {
     ): Promise<void>;
 
     owner(overrides?: CallOverrides): Promise<string>;
-
-    priceOracle(overrides?: CallOverrides): Promise<string>;
 
     recoverERC20(
       tokenAddress: string,
@@ -595,7 +577,6 @@ export class CreditFeeManager extends BaseContract {
     ): Promise<BigNumber>;
 
     initialize(
-      _priceOracle: string,
       _creditManager: string,
       _creditRoles: string,
       _creditRequest: string,
@@ -604,8 +585,6 @@ export class CreditFeeManager extends BaseContract {
     ): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<BigNumber>;
-
-    priceOracle(overrides?: CallOverrides): Promise<BigNumber>;
 
     recoverERC20(
       tokenAddress: string,
@@ -675,7 +654,6 @@ export class CreditFeeManager extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     initialize(
-      _priceOracle: string,
       _creditManager: string,
       _creditRoles: string,
       _creditRequest: string,
@@ -684,8 +662,6 @@ export class CreditFeeManager extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    priceOracle(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     recoverERC20(
       tokenAddress: string,

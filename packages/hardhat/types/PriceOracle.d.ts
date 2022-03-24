@@ -21,13 +21,13 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface PriceOracleInterface extends ethers.utils.Interface {
   functions: {
-    "getPriceInDollars()": FunctionFragment;
+    "getPriceInPPT()": FunctionFragment;
     "price()": FunctionFragment;
     "setPrice(uint256)": FunctionFragment;
   };
 
   encodeFunctionData(
-    functionFragment: "getPriceInDollars",
+    functionFragment: "getPriceInPPT",
     values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "price", values?: undefined): string;
@@ -37,7 +37,7 @@ interface PriceOracleInterface extends ethers.utils.Interface {
   ): string;
 
   decodeFunctionResult(
-    functionFragment: "getPriceInDollars",
+    functionFragment: "getPriceInPPT",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "price", data: BytesLike): Result;
@@ -90,7 +90,7 @@ export class PriceOracle extends BaseContract {
   interface: PriceOracleInterface;
 
   functions: {
-    getPriceInDollars(overrides?: CallOverrides): Promise<[BigNumber]>;
+    getPriceInPPT(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     price(overrides?: CallOverrides): Promise<[BigNumber]>;
 
@@ -100,7 +100,7 @@ export class PriceOracle extends BaseContract {
     ): Promise<ContractTransaction>;
   };
 
-  getPriceInDollars(overrides?: CallOverrides): Promise<BigNumber>;
+  getPriceInPPT(overrides?: CallOverrides): Promise<BigNumber>;
 
   price(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -110,7 +110,7 @@ export class PriceOracle extends BaseContract {
   ): Promise<ContractTransaction>;
 
   callStatic: {
-    getPriceInDollars(overrides?: CallOverrides): Promise<BigNumber>;
+    getPriceInPPT(overrides?: CallOverrides): Promise<BigNumber>;
 
     price(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -120,7 +120,7 @@ export class PriceOracle extends BaseContract {
   filters: {};
 
   estimateGas: {
-    getPriceInDollars(overrides?: CallOverrides): Promise<BigNumber>;
+    getPriceInPPT(overrides?: CallOverrides): Promise<BigNumber>;
 
     price(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -131,7 +131,7 @@ export class PriceOracle extends BaseContract {
   };
 
   populateTransaction: {
-    getPriceInDollars(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    getPriceInPPT(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     price(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 

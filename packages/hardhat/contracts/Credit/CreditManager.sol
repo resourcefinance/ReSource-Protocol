@@ -10,12 +10,12 @@ import "./interface/ICreditManager.sol";
 import "./interface/ICreditRoles.sol";
 import "./interface/ICreditPool.sol";
 import "../Network/interface/ICIP36.sol";
-import "hardhat/console.sol";
 
 contract CreditManager is OwnableUpgradeable, PausableUpgradeable, ICreditManager {
     /* ========== CONSTANTS ========== */
 
     uint32 private constant MAX_PPM = 1000000;
+    uint32 private constant MIN_PPT = 1000;
 
     /* ========== STATE VARIABLES ========== */
 
@@ -161,7 +161,7 @@ contract CreditManager is OwnableUpgradeable, PausableUpgradeable, ICreditManage
         override
         returns (bool)
     {
-        CreditLine storage creditLine = creditLines[_network][_networkMember];
+        CreditLine memory creditLine = creditLines[_network][_networkMember];
         return creditLine.issueDate + creditLineExpiration >= block.timestamp;
     }
 
@@ -214,10 +214,14 @@ contract CreditManager is OwnableUpgradeable, PausableUpgradeable, ICreditManage
         returns (uint256)
     {
         uint256 collateralDecimals = IERC20Metadata(address(collateralToken)).decimals();
-        uint256 decimalConversion = collateralDecimals - IERC20Metadata(_network).decimals();
-        return
-            ((_amount * 10**decimalConversion) / oracle.getPriceInDollars()) *
-            10**collateralDecimals;
+        uint256 networkDecimals = IERC20Metadata(_network).decimals();
+        if (networkDecimals < collateralDecimals) {
+            uint256 delta = collateralDecimals - networkDecimals;
+            return (_amount * 10**delta * oracle.getPriceInPPT()) / MIN_PPT;
+        } else {
+            uint256 delta = networkDecimals - collateralDecimals;
+            return ((_amount / 10**delta) * oracle.getPriceInPPT()) / MIN_PPT;
+        }
     }
 
     /* ========== PRIVATE FUNCTIONS ========== */

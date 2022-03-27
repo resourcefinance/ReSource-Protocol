@@ -54,8 +54,9 @@ contract CreditManager is OwnableUpgradeable, PausableUpgradeable, ICreditManage
         uint256 _creditLimit,
         address _network
     ) external override onlyOperator onlyRegisteredNetwork(_network) onlyRegisteredPool(_pool) {
-        creditLines[_network][_networkMember] = CreditLine(_pool, block.timestamp);
+        creditLines[_network][_networkMember] = CreditLine(_pool, block.timestamp, _creditLimit);
         ICreditPool(_pool).increaseTotalCredit(_creditLimit);
+        totalStakedCollateral += _creditLimit;
         ICIP36(_network).setCreditLimit(_networkMember, _creditLimit);
         emit CreditLineCreated(_network, _networkMember, _pool, _creditLimit, block.timestamp);
     }
@@ -79,6 +80,8 @@ contract CreditManager is OwnableUpgradeable, PausableUpgradeable, ICreditManage
         require(curCreditLimit < _creditLimit, "CreditManager: Invalid credit limit");
         CreditLine storage creditLine = creditLines[_network][_networkMember];
         ICreditPool(creditLine.creditPool).increaseTotalCredit(_creditLimit - curCreditLimit);
+        totalStakedCollateral += _creditLimit - curCreditLimit;
+        creditLine.creditLimit = _creditLimit;
         ICIP36(_network).setCreditLimit(_networkMember, _creditLimit);
         emit CreditLineLimitUpdated(_network, _networkMember, _creditLimit);
     }
@@ -93,29 +96,24 @@ contract CreditManager is OwnableUpgradeable, PausableUpgradeable, ICreditManage
         emit CreditLinePoolUpdated(_network, _networkMember, _pool);
     }
 
-    function closeCreditLine(address _network, address _networkMember) external {
+    function closeCreditLine(address _network, address _networkMember)
+        external
+        onlyExpiredCreditLine(_network, _networkMember)
+        onlyZeroBalance(_network, _networkMember)
+    {
         CreditLine storage creditLine = creditLines[_network][_networkMember];
         address underwriter = ICreditPool(creditLine.creditPool).getUnderwriter();
         require(
             underwriter == msg.sender || msg.sender == _networkMember,
-            "CreditManager: caller is not underwriter or counterparty"
-        );
-        require(
-            isCreditLineExpired(_network, _networkMember),
-            "CreditManager: Can't close active credit line"
-        );
-        require(
-            ICIP36(_network).creditBalanceOf(_networkMember) == 0,
-            "CreditManager: Line of Credit has outstanding balance"
+            "CreditManager: caller is not underwriter or network member"
         );
         ICreditPool(creditLine.creditPool).reduceTotalCredit(
             ICIP36(_network).creditLimitOf(_networkMember)
         );
-        delete creditLines[_network][_networkMember];
         ICIP36(_network).setCreditLimit(_networkMember, 0);
-        ICreditPool(creditLine.creditPool).reduceTotalCredit(
-            ICIP36(_network).creditBalanceOf(_networkMember)
-        );
+        ICreditPool(creditLine.creditPool).reduceTotalCredit(creditLine.creditLimit);
+        totalStakedCollateral -= creditLine.creditLimit;
+        delete creditLines[_network][_networkMember];
         emit CreditLineRemoved(_network, _networkMember);
     }
 
@@ -162,7 +160,7 @@ contract CreditManager is OwnableUpgradeable, PausableUpgradeable, ICreditManage
         returns (bool)
     {
         CreditLine memory creditLine = creditLines[_network][_networkMember];
-        return creditLine.issueDate + creditLineExpiration >= block.timestamp;
+        return creditLine.issueDate + creditLineExpiration < block.timestamp;
     }
 
     function getCollateralToken() external view override returns (address) {
@@ -242,6 +240,22 @@ contract CreditManager is OwnableUpgradeable, PausableUpgradeable, ICreditManage
         require(
             creditRoles.isCreditOperator(msg.sender),
             "CreditManager: Caller must be an operator"
+        );
+        _;
+    }
+
+    modifier onlyExpiredCreditLine(address _network, address _networkMember) {
+        require(
+            isCreditLineExpired(_network, _networkMember),
+            "CreditManager: Can't close active credit line"
+        );
+        _;
+    }
+
+    modifier onlyZeroBalance(address _network, address _networkMember) {
+        require(
+            ICIP36(_network).creditBalanceOf(_networkMember) == 0,
+            "CreditManager: Line of Credit has outstanding balance"
         );
         _;
     }

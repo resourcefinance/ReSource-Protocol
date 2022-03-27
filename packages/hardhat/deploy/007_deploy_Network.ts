@@ -67,7 +67,7 @@ const func: DeployFunction = async function (hardhat: HardhatRuntimeEnvironment)
   await (await creditRoles.grantNetwork(networkFeeManagerAddress)).wait()
 
   // 4. deploy RUSD
-  const rUSDArgs = [creditManagerAddress, networkFeeManagerAddress, networkRolesAddress]
+  const rUSDArgs = [creditRolesAddress, networkFeeManagerAddress, networkRolesAddress]
   const rUSDAbi = (await hardhat.artifacts.readArtifact("RUSD")).abi
   const rUSDAddress = await deployProxyAndSave("RUSD", rUSDArgs, hardhat, rUSDAbi, {
     initializer: "initializeRUSD",

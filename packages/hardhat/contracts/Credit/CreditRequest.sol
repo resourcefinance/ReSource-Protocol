@@ -18,7 +18,7 @@ contract CreditRequest is OwnableUpgradeable, PausableUpgradeable, ICreditReques
 
     ICreditRoles public creditRoles;
     ICreditManager public creditManager;
-    // network => counterparty => CreditRequest
+    // network => member => CreditRequest
     mapping(address => mapping(address => CreditRequest)) public requests;
 
     /* ========== INITIALIZER ========== */
@@ -115,7 +115,7 @@ contract CreditRequest is OwnableUpgradeable, PausableUpgradeable, ICreditReques
         address underwriter = creditManager.getCreditLineUnderwriter(_network, _networkMember);
         require(
             msg.sender == underwriter,
-            "CreditRequest: Sender must be counterparty's underwriter"
+            "CreditRequest: Sender must be network member's underwriter"
         );
         CreditRequest storage creditRequest = requests[_network][_networkMember];
         require(!creditRequest.unstaking, "CreditRequest: Unstake Request already exists");
@@ -216,7 +216,7 @@ contract CreditRequest is OwnableUpgradeable, PausableUpgradeable, ICreditReques
             creditRoles.isRequestOperator(msg.sender);
         require(
             hasAccess,
-            "CreditRequest: Caller must be the counterparty's ambassador or the counterparty"
+            "CreditRequest: Caller must be the network member's ambassador or the network member"
         );
         _;
     }

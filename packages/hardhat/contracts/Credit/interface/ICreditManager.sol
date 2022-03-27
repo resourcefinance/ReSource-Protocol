@@ -5,11 +5,12 @@ interface ICreditManager {
     struct CreditLine {
         address creditPool;
         uint256 issueDate;
+        uint256 creditLimit;
     }
 
     event CreditLineCreated(
         address network,
-        address counterparty,
+        address networkMember,
         address pool,
         uint256 creditLimit,
         uint256 timestamp
@@ -17,13 +18,13 @@ interface ICreditManager {
 
     event CreditPoolAdded(address pool, address underwriter);
 
-    event CreditLineLimitUpdated(address network, address counterparty, uint256 creditLimit);
+    event CreditLineLimitUpdated(address network, address networkMember, uint256 creditLimit);
 
-    event CreditLinePoolUpdated(address network, address counterparty, address pool);
+    event CreditLinePoolUpdated(address network, address networkMember, address pool);
 
-    event CreditLineRemoved(address network, address counterparty);
+    event CreditLineRemoved(address network, address networkMember);
 
-    event CreditLineRenewed(address network, address counterparty, uint256 timestamp);
+    event CreditLineRenewed(address network, address networkMember, uint256 timestamp);
 
     function createCreditLine(
         address _networkMember,

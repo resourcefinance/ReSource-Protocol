@@ -31,7 +31,7 @@ interface RUSDInterface extends ethers.utils.Interface {
     "creditBalanceOf(address)": FunctionFragment;
     "creditLimitLeftOf(address)": FunctionFragment;
     "creditLimitOf(address)": FunctionFragment;
-    "creditManager()": FunctionFragment;
+    "creditRoles()": FunctionFragment;
     "decimals()": FunctionFragment;
     "decreaseAllowance(address,uint256)": FunctionFragment;
     "feeManager()": FunctionFragment;
@@ -88,7 +88,7 @@ interface RUSDInterface extends ethers.utils.Interface {
     values: [string]
   ): string;
   encodeFunctionData(
-    functionFragment: "creditManager",
+    functionFragment: "creditRoles",
     values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "decimals", values?: undefined): string;
@@ -173,7 +173,7 @@ interface RUSDInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "creditManager",
+    functionFragment: "creditRoles",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "decimals", data: BytesLike): Result;
@@ -373,7 +373,7 @@ export class RUSD extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
-    creditManager(overrides?: CallOverrides): Promise<[string]>;
+    creditRoles(overrides?: CallOverrides): Promise<[string]>;
 
     decimals(overrides?: CallOverrides): Promise<[number]>;
 
@@ -398,7 +398,7 @@ export class RUSD extends BaseContract {
     ): Promise<ContractTransaction>;
 
     initializeRUSD(
-      _creditManager: string,
+      _creditRoles: string,
       _feeManager: string,
       _networkRoles: string,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -502,7 +502,7 @@ export class RUSD extends BaseContract {
 
   creditLimitOf(_member: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-  creditManager(overrides?: CallOverrides): Promise<string>;
+  creditRoles(overrides?: CallOverrides): Promise<string>;
 
   decimals(overrides?: CallOverrides): Promise<number>;
 
@@ -527,7 +527,7 @@ export class RUSD extends BaseContract {
   ): Promise<ContractTransaction>;
 
   initializeRUSD(
-    _creditManager: string,
+    _creditRoles: string,
     _feeManager: string,
     _networkRoles: string,
     overrides?: Overrides & { from?: string | Promise<string> }
@@ -631,7 +631,7 @@ export class RUSD extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    creditManager(overrides?: CallOverrides): Promise<string>;
+    creditRoles(overrides?: CallOverrides): Promise<string>;
 
     decimals(overrides?: CallOverrides): Promise<number>;
 
@@ -656,7 +656,7 @@ export class RUSD extends BaseContract {
     ): Promise<void>;
 
     initializeRUSD(
-      _creditManager: string,
+      _creditRoles: string,
       _feeManager: string,
       _networkRoles: string,
       overrides?: CallOverrides
@@ -878,7 +878,7 @@ export class RUSD extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    creditManager(overrides?: CallOverrides): Promise<BigNumber>;
+    creditRoles(overrides?: CallOverrides): Promise<BigNumber>;
 
     decimals(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -903,7 +903,7 @@ export class RUSD extends BaseContract {
     ): Promise<BigNumber>;
 
     initializeRUSD(
-      _creditManager: string,
+      _creditRoles: string,
       _feeManager: string,
       _networkRoles: string,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -1014,7 +1014,7 @@ export class RUSD extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    creditManager(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    creditRoles(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     decimals(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
@@ -1039,7 +1039,7 @@ export class RUSD extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     initializeRUSD(
-      _creditManager: string,
+      _creditRoles: string,
       _feeManager: string,
       _networkRoles: string,
       overrides?: Overrides & { from?: string | Promise<string> }

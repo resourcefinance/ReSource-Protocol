@@ -52,6 +52,8 @@ export const protocolFactory = {
       contracts.walletDeployer.address,
     ])) as NetworkRoles
 
+    await (await contracts.networkRoles.grantOperator(contracts.networkRoles.address)).wait()
+
     // 4. deploy & upgrade SOURCE
     const SOURCEFactory = await ethers.getContractFactory("SourceToken")
     const sourceToken = (await upgrades.deployProxy(SOURCEFactory, [
@@ -117,7 +119,7 @@ export const protocolFactory = {
     contracts.rUSD = (await upgrades.deployProxy(
       RUSDFactory,
       [
-        contracts.creditManager.address,
+        contracts.creditRoles.address,
         contracts.networkFeeManager.address,
         contracts.networkRoles.address,
       ],

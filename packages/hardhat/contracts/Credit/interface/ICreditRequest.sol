@@ -10,7 +10,7 @@ interface ICreditRequest {
 
     event CreditRequestCreated(
         address network,
-        address counterparty,
+        address networkMember,
         address ambassador,
         uint256 creditLimit,
         bool approved
@@ -18,14 +18,14 @@ interface ICreditRequest {
 
     event CreditRequestUpdated(
         address network,
-        address counterparty,
+        address networkMember,
         uint256 creditLimit,
         bool approved
     );
 
-    event CreditRequestRemoved(address network, address counterparty);
+    event CreditRequestRemoved(address network, address networkMember);
 
-    event UnstakeRequestCreated(address network, address counterparty);
+    event UnstakeRequestCreated(address network, address networkMember);
 
     function createRequest(
         address _network,

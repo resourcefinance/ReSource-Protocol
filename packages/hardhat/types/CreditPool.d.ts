@@ -51,6 +51,7 @@ interface CreditPoolInterface extends ethers.utils.Interface {
     "transferOwnership(address)": FunctionFragment;
     "transferUnderwriter(address)": FunctionFragment;
     "userRewardPerTokenPaid(address,address)": FunctionFragment;
+    "viewMapping(address)": FunctionFragment;
     "withdraw(uint256)": FunctionFragment;
   };
 
@@ -153,6 +154,7 @@ interface CreditPoolInterface extends ethers.utils.Interface {
     functionFragment: "userRewardPerTokenPaid",
     values: [string, string]
   ): string;
+  encodeFunctionData(functionFragment: "viewMapping", values: [string]): string;
   encodeFunctionData(
     functionFragment: "withdraw",
     values: [BigNumberish]
@@ -240,6 +242,10 @@ interface CreditPoolInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "userRewardPerTokenPaid",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "viewMapping",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "withdraw", data: BytesLike): Result;
@@ -378,7 +384,7 @@ export class CreditPool extends BaseContract {
     getUnderwriter(overrides?: CallOverrides): Promise<[string]>;
 
     increaseTotalCredit(
-      _amountToAdd: BigNumberish,
+      _amountToRemove: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -411,7 +417,7 @@ export class CreditPool extends BaseContract {
     ): Promise<ContractTransaction>;
 
     reduceTotalCredit(
-      _amountToRemove: BigNumberish,
+      _amountToAdd: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -492,6 +498,22 @@ export class CreditPool extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
+    viewMapping(
+      _rewardsToken: string,
+      overrides?: CallOverrides
+    ): Promise<
+      [
+        [string, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber] & {
+          rewardsDistributor: string;
+          rewardsDuration: BigNumber;
+          periodFinish: BigNumber;
+          rewardRate: BigNumber;
+          lastUpdateTime: BigNumber;
+          rewardPerTokenStored: BigNumber;
+        }
+      ]
+    >;
+
     withdraw(
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -531,7 +553,7 @@ export class CreditPool extends BaseContract {
   getUnderwriter(overrides?: CallOverrides): Promise<string>;
 
   increaseTotalCredit(
-    _amountToAdd: BigNumberish,
+    _amountToRemove: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -564,7 +586,7 @@ export class CreditPool extends BaseContract {
   ): Promise<ContractTransaction>;
 
   reduceTotalCredit(
-    _amountToRemove: BigNumberish,
+    _amountToAdd: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -642,6 +664,20 @@ export class CreditPool extends BaseContract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
+  viewMapping(
+    _rewardsToken: string,
+    overrides?: CallOverrides
+  ): Promise<
+    [string, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber] & {
+      rewardsDistributor: string;
+      rewardsDuration: BigNumber;
+      periodFinish: BigNumber;
+      rewardRate: BigNumber;
+      lastUpdateTime: BigNumber;
+      rewardPerTokenStored: BigNumber;
+    }
+  >;
+
   withdraw(
     amount: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
@@ -677,7 +713,7 @@ export class CreditPool extends BaseContract {
     getUnderwriter(overrides?: CallOverrides): Promise<string>;
 
     increaseTotalCredit(
-      _amountToAdd: BigNumberish,
+      _amountToRemove: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -710,7 +746,7 @@ export class CreditPool extends BaseContract {
     ): Promise<void>;
 
     reduceTotalCredit(
-      _amountToRemove: BigNumberish,
+      _amountToAdd: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -785,6 +821,20 @@ export class CreditPool extends BaseContract {
       arg1: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    viewMapping(
+      _rewardsToken: string,
+      overrides?: CallOverrides
+    ): Promise<
+      [string, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber] & {
+        rewardsDistributor: string;
+        rewardsDuration: BigNumber;
+        periodFinish: BigNumber;
+        rewardRate: BigNumber;
+        lastUpdateTime: BigNumber;
+        rewardPerTokenStored: BigNumber;
+      }
+    >;
 
     withdraw(amount: BigNumberish, overrides?: CallOverrides): Promise<void>;
   };
@@ -943,7 +993,7 @@ export class CreditPool extends BaseContract {
     getUnderwriter(overrides?: CallOverrides): Promise<BigNumber>;
 
     increaseTotalCredit(
-      _amountToAdd: BigNumberish,
+      _amountToRemove: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -976,7 +1026,7 @@ export class CreditPool extends BaseContract {
     ): Promise<BigNumber>;
 
     reduceTotalCredit(
-      _amountToRemove: BigNumberish,
+      _amountToAdd: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -1045,6 +1095,11 @@ export class CreditPool extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    viewMapping(
+      _rewardsToken: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     withdraw(
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -1088,7 +1143,7 @@ export class CreditPool extends BaseContract {
     getUnderwriter(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     increaseTotalCredit(
-      _amountToAdd: BigNumberish,
+      _amountToRemove: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -1121,7 +1176,7 @@ export class CreditPool extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     reduceTotalCredit(
-      _amountToRemove: BigNumberish,
+      _amountToAdd: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -1190,6 +1245,11 @@ export class CreditPool extends BaseContract {
     userRewardPerTokenPaid(
       arg0: string,
       arg1: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    viewMapping(
+      _rewardsToken: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 

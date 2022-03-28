@@ -4,14 +4,12 @@ import fs from "fs"
 import { SourceTokenV2 } from "../types/SourceTokenV2"
 import { CreditPool } from "../types/CreditPool"
 import { MockERC20 } from "../types/MockERC20"
-import { formatEther, formatUnits, parseEther, parseUnits } from "ethers/lib/utils"
+import { formatEther, parseEther } from "ethers/lib/utils"
 import { SourceTokenV3 } from "../types/SourceTokenV3"
 import { BigNumber } from "@ethersproject/bignumber"
-import { CreditManager } from "../types/CreditManager"
 
 task("reward", "Add reward to Credit Pool", async ({ amount }, { ethers, network }) => {
-  const sourceAmt = parseEther("30000")
-  const rewardAmt = parseEther("19000")
+  const reward = parseEther("30000")
   const sourceDeploy = `./deployments/${network.name}/SourceTokenV3.json`
   const poolDeploy = `./deployments/${network.name}/CreditPool.json`
   const sourcePath = fs.readFileSync(sourceDeploy).toString()
@@ -33,31 +31,38 @@ task("reward", "Add reward to Credit Pool", async ({ amount }, { ethers, network
     // Deploy "CELO" rewards
     const celoAmt = ethers.utils.parseEther("100000000")
     const MockERC20 = (await ERC20Factory.deploy(celoAmt)) as MockERC20
+    log("rewards.ts -- MockERC20.address:", MockERC20.address)
+
     // Instantiate the contracts with signer
     const source = new ethers.Contract(sourceAddr, sourceFactory.interface, signer) as SourceTokenV3
     const pool = new ethers.Contract(poolAddr, poolFactory.interface, signer) as CreditPool
 
     // Transfer tokens to signer
-    await (await MockERC20.transfer(signer.address, sourceAmt)).wait()
-    await (await source.transfer(signer.address, sourceAmt)).wait()
+    await (await MockERC20.transfer(signer.address, parseEther("10000000"))).wait()
+    await (await source.transfer(signer.address, reward)).wait()
 
     // Add SOURCE rewwards
-    await (await pool.connect(signer).addReward(sourceAddr, signer.address, 90 * 86400)).wait()
+    await (
+      await pool.connect(signer).addReward(MockERC20.address, signer.address, 30 * 86400)
+    ).wait()
 
     // Add CELO rewwards
-    await (
-      await pool.connect(signer).addReward(MockERC20.address, signer.address, 90 * 86400)
-    ).wait()
+    await (await pool.connect(signer).addReward(source.address, signer.address, 30 * 86400)).wait()
 
     // Approve and notify the rewards
     await (
       await MockERC20.connect(signer).approve(pool.address, ethers.constants.MaxUint256)
     ).wait()
-    await (await pool.connect(signer).notifyRewardAmount(MockERC20.address, rewardAmt)).wait()
+    await (await pool.connect(signer).notifyRewardAmount(MockERC20.address, reward)).wait()
     await (await source.connect(signer).approve(pool.address, ethers.constants.MaxUint256)).wait()
-    await (await pool.connect(signer).notifyRewardAmount(source.address, sourceAmt)).wait()
+    await (await pool.connect(signer).notifyRewardAmount(source.address, reward)).wait()
 
-    log(MockERC20.address)
+    // Ensure rewards are added
+    const rewardAdded = await pool.queryFilter(pool.filters.RewardAdded())
+
+    if (rewardAdded && rewardAdded.length) {
+      console.log("Reward added to pool: ", rewardAdded.length)
+    }
   } catch (e) {
     console.log(e)
   }
@@ -83,8 +88,8 @@ task("rewardBalance", "Get balance of credit pool")
 
       const balance = await pool.earned(account, sourceAddr)
 
-      console.log("earned:", formatEther(balance))
-      console.log("rewardToken:", await pool.rewardTokens(0))
+      console.log("rewards.ts -- formatEther(amount):", formatEther(balance))
+      console.log("rewards.ts -- rewardTokens:", await pool.rewardTokens(0))
       console.log("balanceOf: ", formatEther(await pool.balanceOf(account)))
     } catch (e) {
       console.log(e)
@@ -139,39 +144,6 @@ task("pool", "Get info on credit pool", async ({ account }, { ethers, network })
   }
 })
 
-task("ltv", "Get LTV", async ({ account }, { ethers, network }) => {
-  const creditDeploy = `./deployments/${network.name}/CreditManager.json`
-  const creditPath = fs.readFileSync(creditDeploy).toString()
-  const creditAddr = JSON.parse(creditPath)["address"]
-
-  const poolDeploy = `./deployments/${network.name}/CreditPool.json`
-  const poolPath = fs.readFileSync(poolDeploy).toString()
-  const poolAddr = JSON.parse(poolPath)["address"]
-
-  const networkDeploy = `./deployments/${network.name}/RUSD.json`
-  const networkPath = fs.readFileSync(networkDeploy).toString()
-  const networkAddr = JSON.parse(networkPath)["address"]
-
-  try {
-    const signer = (await ethers.getSigners())[0]
-    const creditFactory = await ethers.getContractFactory("CreditManager")
-    const credit = new ethers.Contract(creditAddr, creditFactory.interface, signer) as CreditManager
-    const poolFactory = await ethers.getContractFactory("CreditPool")
-    const pool = new ethers.Contract(poolAddr, poolFactory.interface, signer) as CreditPool
-
-    const ltv = await credit.minLTV()
-    const calcd = await credit.calculatePoolLTV(networkAddr, poolAddr)
-    const staked = await pool.totalSupply()
-    const underwritten = await pool.getTotalCredit()
-    log("min: ", formatUnits(ltv, "mwei"))
-    log("ltv: ", formatUnits(calcd, "mwei"))
-    log("staked: ", formatUnits(staked, "ether"))
-    log("credit: ", formatUnits(underwritten, "mwei"))
-  } catch (e) {
-    console.log(e)
-  }
-})
-
 task("locked", "Authorize locked SOURCE to be staked", async ({ account }, { ethers, network }) => {
   const sourceDeploy = `./deployments/${network.name}/SourceTokenV3.json`
   const poolDeploy = `./deployments/${network.name}/CreditPool.json`
@@ -194,33 +166,6 @@ task("locked", "Authorize locked SOURCE to be staked", async ({ account }, { eth
   }
 })
 
-task("rewardData", "Get rewardData for contract", async ({ account }, { ethers, network }) => {
-  const sourceDeploy = `./deployments/${network.name}/SourceTokenV3.json`
-  const poolDeploy = `./deployments/${network.name}/CreditPool.json`
-  const sourcePath = fs.readFileSync(sourceDeploy).toString()
-  const poolPath = fs.readFileSync(poolDeploy).toString()
-  const sourceAddr = JSON.parse(sourcePath)["address"]
-  const poolAddr = JSON.parse(poolPath)["address"]
-
-  try {
-    const signer = (await ethers.getSigners())[0]
-
-    const poolFactory = await ethers.getContractFactory("CreditPool")
-    const pool = new ethers.Contract(poolAddr, poolFactory.interface, signer) as CreditPool
-    const sourceFactory = await ethers.getContractFactory("SourceTokenV3")
-    const source = new ethers.Contract(sourceAddr, sourceFactory.interface, signer) as SourceTokenV2
-
-    const token0 = await pool.rewardTokens(0)
-    const token1 = await pool.rewardTokens(1)
-    const data0 = await pool.rewardData(token0)
-    const data1 = await pool.rewardData(token1)
-    console.log("rewardToken 1:", data0)
-    console.log("rewardToken 2:", data1)
-  } catch (e) {
-    console.log(e)
-  }
-})
-
 task("getLocks", "View locks", async ({ account }, { ethers, network }) => {
   const sourceDeploy = `./deployments/${network.name}/SourceTokenV3.json`
   const sourcePath = fs.readFileSync(sourceDeploy).toString()
@@ -232,54 +177,8 @@ task("getLocks", "View locks", async ({ account }, { ethers, network }) => {
     const sourceFactory = await ethers.getContractFactory("SourceTokenV3")
     const source = new ethers.Contract(sourceAddr, sourceFactory.interface, signer) as SourceTokenV3
 
-    const locks = await source.getLockSchedules("0xAe021DFd84979719b69e616B0435EC86af87eFa5")
-    log("locks: ", locks)
-  } catch (e) {
-    console.log(e)
-  }
-})
-
-task("stake", "stake to pool", async ({ account }, { ethers, network }) => {
-  const poolDeploy = `./deployments/localhost/CreditPool.json`
-  const poolPath = fs.readFileSync(poolDeploy).toString()
-  const poolAddr = JSON.parse(poolPath)["address"]
-  const sourceDeploy = `./deployments/${network.name}/SourceTokenV3.json`
-  const sourcePath = fs.readFileSync(sourceDeploy).toString()
-  const sourceAddr = JSON.parse(sourcePath)["address"]
-
-  const signer = (await ethers.getSigners())[0]
-  const member = (await ethers.getSigners())[5]
-
-  const poolFactory = await ethers.getContractFactory("CreditPool")
-  const pool = new ethers.Contract(poolAddr, poolFactory.interface, signer) as CreditPool
-  const sourceFactory = await ethers.getContractFactory("SourceTokenV3")
-  const source = new ethers.Contract(sourceAddr, sourceFactory.interface, signer) as SourceTokenV3
-
-  try {
-    await source.transfer(member.address, parseEther("10000"))
-    await (await source.connect(member).approve(pool.address, ethers.constants.MaxUint256)).wait()
-    await (await pool.connect(member).stake(parseEther("6000"))).wait()
-  } catch (e) {
-    log(e)
-  }
-})
-
-task("credit", "Update total credit", async ({ account }, { ethers, network }) => {
-  const poolDeploy = `./deployments/${network.name}/CreditPool.json`
-  const poolPath = fs.readFileSync(poolDeploy).toString()
-  const poolAddr = JSON.parse(poolPath)["address"]
-  const sourceDeploy = `./deployments/${network.name}/SourceTokenV3.json`
-  const sourcePath = fs.readFileSync(sourceDeploy).toString()
-  const sourceAddr = JSON.parse(sourcePath)["address"]
-
-  try {
-    const signer = (await ethers.getSigners())[0]
-    const poolFactory = await ethers.getContractFactory("CreditPool")
-    const pool = new ethers.Contract(poolAddr, poolFactory.interface, signer) as CreditPool
-
-    await (await pool.connect(signer).increaseTotalCredit(parseUnits("100000.0", "mwei"))).wait()
-
-    log("Increase pool.totalCredit to 50000")
+    const locks = await source.getLockSchedules("0xf445947b68cE09f0c1e1C8010e880895DcF406da")
+    log("locks: ", formatEther((locks[1] as unknown) as BigNumber))
   } catch (e) {
     console.log(e)
   }

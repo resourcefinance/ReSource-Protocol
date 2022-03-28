@@ -139,10 +139,8 @@ function debug(text) {
 task("wallet", "Create a wallet (pk) link", async (_, { ethers }) => {
   const randomWallet = ethers.Wallet.createRandom()
   const privateKey = randomWallet._signingKey().privateKey
-  // console.log("🔐 WALLET Generated as " + randomWallet.address + "")
-  // console.log("pk: " + privateKey)
-  console.log(randomWallet.address)
-  console.log(privateKey)
+  console.log("🔐 WALLET Generated as " + randomWallet.address + "")
+  console.log("pk: " + privateKey)
 })
 
 task("fundedwallet", "Create a wallet (pk) link and fund it with deployer?")

@@ -63,15 +63,16 @@ describe("CreditPool & Rewards Tests", function() {
   })
 
   it("Adds and notifies multiple rewards to pool", async function() {
-    const reward = parseEther("10000")
     const ERC20Factory = await ethers.getContractFactory("MockERC20")
     const rewardToken = (await ERC20Factory.deploy(
       ethers.utils.parseEther("100000000")
     )) as MockERC20
 
-    await (await contracts.sourceToken.transfer(underwriter.address, reward)).wait()
+    await (
+      await contracts.sourceToken.transfer(underwriter.address, ethers.utils.parseEther("10000"))
+    ).wait()
 
-    await (await rewardToken.transfer(underwriter.address, reward)).wait()
+    await (await rewardToken.transfer(underwriter.address, ethers.utils.parseEther("10000"))).wait()
 
     await (
       await contracts.creditPool
@@ -120,8 +121,9 @@ describe("CreditPool & Rewards Tests", function() {
   })
 
   it("Approves and stakes into pool", async function() {
-    const reward = parseEther("100000")
-    await (await contracts.sourceToken.transfer(underwriter.address, reward)).wait()
+    await (
+      await contracts.sourceToken.transfer(underwriter.address, ethers.utils.parseEther("100000"))
+    ).wait()
 
     await (
       await contracts.creditPool
@@ -138,10 +140,10 @@ describe("CreditPool & Rewards Tests", function() {
     await (
       await contracts.creditPool
         .connect(underwriter)
-        .notifyRewardAmount(contracts.sourceToken.address, reward)
+        .notifyRewardAmount(contracts.sourceToken.address, ethers.utils.parseEther("10000"))
     ).wait()
 
-    const seedToken = reward
+    const seedToken = ethers.utils.parseEther("10000")
     const poolToken = ethers.utils.parseEther("1000")
 
     await (await contracts.sourceToken.transfer(member.address, seedToken)).wait()
@@ -167,7 +169,6 @@ describe("CreditPool & Rewards Tests", function() {
   })
 
   it("Accrues rewards after staking", async function() {
-    const reward = parseEther("100000")
     await (
       await contracts.creditPool
         .connect(underwriter)
@@ -188,7 +189,9 @@ describe("CreditPool & Rewards Tests", function() {
         .notifyRewardAmount(contracts.sourceToken.address, ethers.utils.parseEther("100"))
     ).wait()
 
-    await (await contracts.sourceToken.transfer(member.address, reward)).wait()
+    await (
+      await contracts.sourceToken.transfer(member.address, ethers.utils.parseEther("10000"))
+    ).wait()
     await (
       await contracts.sourceToken
         .connect(member)
@@ -219,7 +222,6 @@ describe("CreditPool & Rewards Tests", function() {
   })
 
   it("Claims & withdraws rewards after staking", async function() {
-    const reward = parseEther("100000")
     await (
       await contracts.sourceToken.transfer(underwriter.address, ethers.utils.parseEther("1000"))
     ).wait()
@@ -242,7 +244,9 @@ describe("CreditPool & Rewards Tests", function() {
         .notifyRewardAmount(contracts.sourceToken.address, ethers.utils.parseEther("100"))
     ).wait()
 
-    await (await contracts.sourceToken.transfer(member.address, reward)).wait()
+    await (
+      await contracts.sourceToken.transfer(member.address, ethers.utils.parseEther("10000"))
+    ).wait()
     await (
       await contracts.sourceToken
         .connect(member)
@@ -448,83 +452,6 @@ describe("CreditPool & Rewards Tests", function() {
     await (await contracts.sourceToken.connect(member).transfer(member2.address, balAfter)).wait()
     const balAfterXfer = await contracts.sourceToken.balanceOf(member.address)
     expect(floorEth(balAfterXfer)).to.equal(0)
-  })
-
-  it("Calculates rewards", async function() {
-    const ERC20Factory = await ethers.getContractFactory("MockERC20")
-    const rewardToken = (await ERC20Factory.deploy(
-      ethers.utils.parseEther("100000000")
-    )) as MockERC20
-
-    const reward = ethers.utils.parseEther("100000")
-
-    await (await contracts.sourceToken.transfer(underwriter.address, reward)).wait()
-    await (await contracts.sourceToken.transfer(member.address, reward)).wait()
-    await (await rewardToken.transfer(underwriter.address, ethers.utils.parseEther("25000"))).wait()
-
-    await (
-      await contracts.creditPool
-        .connect(underwriter)
-        .addReward(contracts.sourceToken.address, underwriter.address, 28 * 86400)
-    ).wait()
-
-    await (
-      await contracts.creditPool
-        .connect(underwriter)
-        .addReward(rewardToken.address, underwriter.address, 28 * 86400)
-    ).wait()
-
-    expect(await contracts.creditPool.rewardTokens(0)).to.equal(contracts.sourceToken.address)
-    expect(await contracts.creditPool.rewardTokens(1)).to.equal(rewardToken.address)
-
-    await (
-      await contracts.sourceToken
-        .connect(underwriter)
-        .approve(contracts.creditPool.address, ethers.constants.MaxUint256)
-    ).wait()
-
-    await (
-      await rewardToken
-        .connect(underwriter)
-        .approve(contracts.creditPool.address, ethers.constants.MaxUint256)
-    ).wait()
-
-    await (
-      await contracts.creditPool
-        .connect(underwriter)
-        .notifyRewardAmount(contracts.sourceToken.address, ethers.utils.parseEther("28000"))
-    ).wait()
-
-    await (
-      await contracts.creditPool
-        .connect(underwriter)
-        .notifyRewardAmount(rewardToken.address, ethers.utils.parseEther("200"))
-    ).wait()
-
-    const rewardAdded = await contracts.creditPool.queryFilter(
-      contracts.creditPool.filters.RewardAdded()
-    )
-
-    expect(rewardAdded).to.have.lengthOf(2)
-
-    await (
-      await contracts.sourceToken
-        .connect(member)
-        .approve(contracts.creditPool.address, ethers.constants.MaxUint256)
-    ).wait()
-
-    await (await contracts.creditPool.connect(member).stake(ethers.utils.parseEther("2000"))).wait()
-
-    /*
-      add tests here for APY/APR 
-      to run the test run yarn hardhat test test/protocol/CreditPool.test.ts
-
-      contracts.creditPool = credit pool contract
-      pool is owner by ethers.getAccounts()[0]
-      the member is who staked into the pool
-      the rewards are SOURCE & CELO (MockERC20)
-
-    */
   })
 })
 

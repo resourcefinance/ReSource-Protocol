@@ -521,21 +521,10 @@ export class SourceTokenV3 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<
       [
-        [
-          BigNumber,
-          BigNumber,
-          ([BigNumber, BigNumber] & {
-            amount: BigNumber;
-            expirationBlock: BigNumber;
-          })[]
-        ] & {
-          totalAmount: BigNumber;
-          amountStaked: BigNumber;
-          schedules: ([BigNumber, BigNumber] & {
-            amount: BigNumber;
-            expirationBlock: BigNumber;
-          })[];
-        }
+        ([BigNumber, BigNumber] & {
+          amount: BigNumber;
+          expirationBlock: BigNumber;
+        })[]
       ]
     >;
 
@@ -689,21 +678,10 @@ export class SourceTokenV3 extends BaseContract {
     owner: string,
     overrides?: CallOverrides
   ): Promise<
-    [
-      BigNumber,
-      BigNumber,
-      ([BigNumber, BigNumber] & {
-        amount: BigNumber;
-        expirationBlock: BigNumber;
-      })[]
-    ] & {
-      totalAmount: BigNumber;
-      amountStaked: BigNumber;
-      schedules: ([BigNumber, BigNumber] & {
-        amount: BigNumber;
-        expirationBlock: BigNumber;
-      })[];
-    }
+    ([BigNumber, BigNumber] & {
+      amount: BigNumber;
+      expirationBlock: BigNumber;
+    })[]
   >;
 
   getMaxLockTime(overrides?: CallOverrides): Promise<BigNumber>;
@@ -853,21 +831,10 @@ export class SourceTokenV3 extends BaseContract {
       owner: string,
       overrides?: CallOverrides
     ): Promise<
-      [
-        BigNumber,
-        BigNumber,
-        ([BigNumber, BigNumber] & {
-          amount: BigNumber;
-          expirationBlock: BigNumber;
-        })[]
-      ] & {
-        totalAmount: BigNumber;
-        amountStaked: BigNumber;
-        schedules: ([BigNumber, BigNumber] & {
-          amount: BigNumber;
-          expirationBlock: BigNumber;
-        })[];
-      }
+      ([BigNumber, BigNumber] & {
+        amount: BigNumber;
+        expirationBlock: BigNumber;
+      })[]
     >;
 
     getMaxLockTime(overrides?: CallOverrides): Promise<BigNumber>;

@@ -135,13 +135,28 @@ contract CreditManager is OwnableUpgradeable, PausableUpgradeable, ICreditManage
 
     function calculatePoolLTV(address _network, address _pool) public view returns (uint256) {
         uint256 collateral = ICreditPool(_pool).totalSupply();
-        if (collateral == 0) return 0;
-
         uint256 creditInCollateralUnits = convertNetworkToCollateral(
             _network,
             ICreditPool(_pool).getTotalCredit()
         );
-        return (creditInCollateralUnits / collateral) * MAX_PPM;
+
+        if (collateral == 0 || creditInCollateralUnits == 0) return 0;
+
+        return ((collateral * MAX_PPM) / creditInCollateralUnits);
+    }
+
+    function convertNetworkToCollateral(address _network, uint256 _amount)
+        public
+        view
+        override
+        returns (uint256)
+    {
+        uint256 collateralDecimals = IERC20Metadata(address(collateralToken)).decimals();
+        uint256 decimalConversion = collateralDecimals - IERC20Metadata(_network).decimals();
+
+        return
+            ((_amount * 10**decimalConversion) / oracle.getPriceInDollars()) *
+            10**collateralDecimals;
     }
 
     function calculatePercentInCollateral(
@@ -203,23 +218,6 @@ contract CreditManager is OwnableUpgradeable, PausableUpgradeable, ICreditManage
         uint256 creditInCollateral = convertNetworkToCollateral(_network, totalCredit);
         uint256 minimumCollateral = (creditInCollateral * minLTV) / MAX_PPM;
         return minimumCollateral - ICreditPool(pool).totalSupply();
-    }
-
-    function convertNetworkToCollateral(address _network, uint256 _amount)
-        public
-        view
-        override
-        returns (uint256)
-    {
-        uint256 collateralDecimals = IERC20Metadata(address(collateralToken)).decimals();
-        uint256 networkDecimals = IERC20Metadata(_network).decimals();
-        if (networkDecimals < collateralDecimals) {
-            uint256 delta = collateralDecimals - networkDecimals;
-            return (_amount * 10**delta * oracle.getPriceInPPT()) / MIN_PPT;
-        } else {
-            uint256 delta = networkDecimals - collateralDecimals;
-            return ((_amount / 10**delta) * oracle.getPriceInPPT()) / MIN_PPT;
-        }
     }
 
     /* ========== PRIVATE FUNCTIONS ========== */

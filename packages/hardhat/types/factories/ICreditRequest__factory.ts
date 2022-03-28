@@ -22,7 +22,7 @@ const _abi = [
       {
         indexed: false,
         internalType: "address",
-        name: "counterparty",
+        name: "networkMember",
         type: "address",
       },
       {
@@ -59,7 +59,7 @@ const _abi = [
       {
         indexed: false,
         internalType: "address",
-        name: "counterparty",
+        name: "networkMember",
         type: "address",
       },
     ],
@@ -78,7 +78,7 @@ const _abi = [
       {
         indexed: false,
         internalType: "address",
-        name: "counterparty",
+        name: "networkMember",
         type: "address",
       },
       {
@@ -109,7 +109,7 @@ const _abi = [
       {
         indexed: false,
         internalType: "address",
-        name: "counterparty",
+        name: "networkMember",
         type: "address",
       },
     ],

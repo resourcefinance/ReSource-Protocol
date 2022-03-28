@@ -11,6 +11,7 @@ import "@openzeppelin/contracts-upgradeable/utils/math/SafeMathUpgradeable.sol";
 import "./interface/ICreditPool.sol";
 import "./interface/ICreditRoles.sol";
 import "./interface/ICreditManager.sol";
+import "hardhat/console.sol";
 
 contract CreditPool is
     ReentrancyGuardUpgradeable,
@@ -73,6 +74,9 @@ contract CreditPool is
     }
 
     /* ========== VIEWS ========== */
+    function viewMapping(address _rewardsToken) public view returns (Reward memory) {
+        return rewardData[_rewardsToken];
+    }
 
     function totalSupply() external view override returns (uint256) {
         return _totalSupply;
@@ -227,12 +231,12 @@ contract CreditPool is
         emit RewardsDurationUpdated(_rewardsToken, rewardData[_rewardsToken].rewardsDuration);
     }
 
-    function reduceTotalCredit(uint256 _amountToRemove) external override onlyOperator {
-        totalCredit -= _amountToRemove;
+    function reduceTotalCredit(uint256 _amountToAdd) external override onlyOperator {
+        totalCredit -= _amountToAdd;
     }
 
-    function increaseTotalCredit(uint256 _amountToAdd) external override onlyOperator {
-        totalCredit += _amountToAdd;
+    function increaseTotalCredit(uint256 _amountToRemove) external override onlyOperator {
+        totalCredit += _amountToRemove;
     }
 
     function transferUnderwriter(address _underwriter) external {

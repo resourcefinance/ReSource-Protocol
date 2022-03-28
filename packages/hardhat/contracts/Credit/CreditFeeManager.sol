@@ -4,7 +4,6 @@ import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
 import "./interface/ICreditFeeManager.sol";
-import "./interface/IPriceOracle.sol";
 import "./interface/ICreditManager.sol";
 import "./interface/ICreditRoles.sol";
 import "./interface/ICreditRequest.sol";
@@ -20,7 +19,6 @@ contract CreditFeeManager is ICreditFeeManager, OwnableUpgradeable {
     /* ========== STATE VARIABLES ========== */
 
     IERC20Upgradeable public collateralToken;
-    IPriceOracle public priceOracle;
     ICreditManager public creditManager;
     ICreditRoles public creditRoles;
     ICreditRequest public creditRequest;
@@ -30,14 +28,12 @@ contract CreditFeeManager is ICreditFeeManager, OwnableUpgradeable {
     /* ========== INITIALIZER ========== */
 
     function initialize(
-        address _priceOracle,
         address _creditManager,
         address _creditRoles,
         address _creditRequest,
         uint256 _underwriterPercent
     ) external virtual initializer {
         __Ownable_init();
-        priceOracle = IPriceOracle(_priceOracle);
         creditManager = ICreditManager(_creditManager);
         collateralToken = IERC20Upgradeable(creditManager.getCollateralToken());
         creditRoles = ICreditRoles(_creditRoles);
@@ -110,6 +106,7 @@ contract CreditFeeManager is ICreditFeeManager, OwnableUpgradeable {
     function calculateFees(address _network, uint256 _transactionAmount)
         external
         view
+        override
         returns (uint256 creditFee)
     {
         creditFee = creditManager.calculatePercentInCollateral(
@@ -154,29 +151,21 @@ contract CreditFeeManager is ICreditFeeManager, OwnableUpgradeable {
         uint256 creditFee
     ) private returns (uint256) {
         if (creditManager.isPoolValidLTV(_network, pool)) return creditFee;
-
         uint256 neededCollateral = creditManager.getNeededCollateral(_network, _networkMember);
-
         if (neededCollateral == 0) {
             return creditFee;
         }
-
         if (neededCollateral > creditFee) {
             collateralToken.safeTransfer(underwriter, creditFee);
             ICreditPool(pool).stakeFor(underwriter, creditFee);
-
             emit UnderwriterRewardsStaked(underwriter, creditFee);
-
             creditFee = 0;
         } else {
             collateralToken.safeTransfer(underwriter, neededCollateral);
             ICreditPool(pool).stakeFor(underwriter, neededCollateral);
-
             emit UnderwriterRewardsStaked(underwriter, neededCollateral);
-
             creditFee -= neededCollateral;
         }
-
         return creditFee;
     }
 

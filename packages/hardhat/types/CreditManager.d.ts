@@ -273,7 +273,7 @@ interface CreditManagerInterface extends ethers.utils.Interface {
 export type CreditLineCreatedEvent = TypedEvent<
   [string, string, string, BigNumber, BigNumber] & {
     network: string;
-    counterparty: string;
+    networkMember: string;
     pool: string;
     creditLimit: BigNumber;
     timestamp: BigNumber;
@@ -283,7 +283,7 @@ export type CreditLineCreatedEvent = TypedEvent<
 export type CreditLineLimitUpdatedEvent = TypedEvent<
   [string, string, BigNumber] & {
     network: string;
-    counterparty: string;
+    networkMember: string;
     creditLimit: BigNumber;
   }
 >;
@@ -291,19 +291,19 @@ export type CreditLineLimitUpdatedEvent = TypedEvent<
 export type CreditLinePoolUpdatedEvent = TypedEvent<
   [string, string, string] & {
     network: string;
-    counterparty: string;
+    networkMember: string;
     pool: string;
   }
 >;
 
 export type CreditLineRemovedEvent = TypedEvent<
-  [string, string] & { network: string; counterparty: string }
+  [string, string] & { network: string; networkMember: string }
 >;
 
 export type CreditLineRenewedEvent = TypedEvent<
   [string, string, BigNumber] & {
     network: string;
-    counterparty: string;
+    networkMember: string;
     timestamp: BigNumber;
   }
 >;
@@ -406,7 +406,11 @@ export class CreditManager extends BaseContract {
       arg1: string,
       overrides?: CallOverrides
     ): Promise<
-      [string, BigNumber] & { creditPool: string; issueDate: BigNumber }
+      [string, BigNumber, BigNumber] & {
+        creditPool: string;
+        issueDate: BigNumber;
+        creditLimit: BigNumber;
+      }
     >;
 
     creditRoles(overrides?: CallOverrides): Promise<[string]>;
@@ -425,7 +429,13 @@ export class CreditManager extends BaseContract {
       _networkMember: string,
       overrides?: CallOverrides
     ): Promise<
-      [[string, BigNumber] & { creditPool: string; issueDate: BigNumber }]
+      [
+        [string, BigNumber, BigNumber] & {
+          creditPool: string;
+          issueDate: BigNumber;
+          creditLimit: BigNumber;
+        }
+      ]
     >;
 
     getCreditLineUnderwriter(
@@ -543,7 +553,11 @@ export class CreditManager extends BaseContract {
     arg1: string,
     overrides?: CallOverrides
   ): Promise<
-    [string, BigNumber] & { creditPool: string; issueDate: BigNumber }
+    [string, BigNumber, BigNumber] & {
+      creditPool: string;
+      issueDate: BigNumber;
+      creditLimit: BigNumber;
+    }
   >;
 
   creditRoles(overrides?: CallOverrides): Promise<string>;
@@ -562,7 +576,11 @@ export class CreditManager extends BaseContract {
     _networkMember: string,
     overrides?: CallOverrides
   ): Promise<
-    [string, BigNumber] & { creditPool: string; issueDate: BigNumber }
+    [string, BigNumber, BigNumber] & {
+      creditPool: string;
+      issueDate: BigNumber;
+      creditLimit: BigNumber;
+    }
   >;
 
   getCreditLineUnderwriter(
@@ -680,7 +698,11 @@ export class CreditManager extends BaseContract {
       arg1: string,
       overrides?: CallOverrides
     ): Promise<
-      [string, BigNumber] & { creditPool: string; issueDate: BigNumber }
+      [string, BigNumber, BigNumber] & {
+        creditPool: string;
+        issueDate: BigNumber;
+        creditLimit: BigNumber;
+      }
     >;
 
     creditRoles(overrides?: CallOverrides): Promise<string>;
@@ -699,7 +721,11 @@ export class CreditManager extends BaseContract {
       _networkMember: string,
       overrides?: CallOverrides
     ): Promise<
-      [string, BigNumber] & { creditPool: string; issueDate: BigNumber }
+      [string, BigNumber, BigNumber] & {
+        creditPool: string;
+        issueDate: BigNumber;
+        creditLimit: BigNumber;
+      }
     >;
 
     getCreditLineUnderwriter(
@@ -773,7 +799,7 @@ export class CreditManager extends BaseContract {
   filters: {
     "CreditLineCreated(address,address,address,uint256,uint256)"(
       network?: null,
-      counterparty?: null,
+      networkMember?: null,
       pool?: null,
       creditLimit?: null,
       timestamp?: null
@@ -781,7 +807,7 @@ export class CreditManager extends BaseContract {
       [string, string, string, BigNumber, BigNumber],
       {
         network: string;
-        counterparty: string;
+        networkMember: string;
         pool: string;
         creditLimit: BigNumber;
         timestamp: BigNumber;
@@ -790,7 +816,7 @@ export class CreditManager extends BaseContract {
 
     CreditLineCreated(
       network?: null,
-      counterparty?: null,
+      networkMember?: null,
       pool?: null,
       creditLimit?: null,
       timestamp?: null
@@ -798,7 +824,7 @@ export class CreditManager extends BaseContract {
       [string, string, string, BigNumber, BigNumber],
       {
         network: string;
-        counterparty: string;
+        networkMember: string;
         pool: string;
         creditLimit: BigNumber;
         timestamp: BigNumber;
@@ -807,72 +833,72 @@ export class CreditManager extends BaseContract {
 
     "CreditLineLimitUpdated(address,address,uint256)"(
       network?: null,
-      counterparty?: null,
+      networkMember?: null,
       creditLimit?: null
     ): TypedEventFilter<
       [string, string, BigNumber],
-      { network: string; counterparty: string; creditLimit: BigNumber }
+      { network: string; networkMember: string; creditLimit: BigNumber }
     >;
 
     CreditLineLimitUpdated(
       network?: null,
-      counterparty?: null,
+      networkMember?: null,
       creditLimit?: null
     ): TypedEventFilter<
       [string, string, BigNumber],
-      { network: string; counterparty: string; creditLimit: BigNumber }
+      { network: string; networkMember: string; creditLimit: BigNumber }
     >;
 
     "CreditLinePoolUpdated(address,address,address)"(
       network?: null,
-      counterparty?: null,
+      networkMember?: null,
       pool?: null
     ): TypedEventFilter<
       [string, string, string],
-      { network: string; counterparty: string; pool: string }
+      { network: string; networkMember: string; pool: string }
     >;
 
     CreditLinePoolUpdated(
       network?: null,
-      counterparty?: null,
+      networkMember?: null,
       pool?: null
     ): TypedEventFilter<
       [string, string, string],
-      { network: string; counterparty: string; pool: string }
+      { network: string; networkMember: string; pool: string }
     >;
 
     "CreditLineRemoved(address,address)"(
       network?: null,
-      counterparty?: null
+      networkMember?: null
     ): TypedEventFilter<
       [string, string],
-      { network: string; counterparty: string }
+      { network: string; networkMember: string }
     >;
 
     CreditLineRemoved(
       network?: null,
-      counterparty?: null
+      networkMember?: null
     ): TypedEventFilter<
       [string, string],
-      { network: string; counterparty: string }
+      { network: string; networkMember: string }
     >;
 
     "CreditLineRenewed(address,address,uint256)"(
       network?: null,
-      counterparty?: null,
+      networkMember?: null,
       timestamp?: null
     ): TypedEventFilter<
       [string, string, BigNumber],
-      { network: string; counterparty: string; timestamp: BigNumber }
+      { network: string; networkMember: string; timestamp: BigNumber }
     >;
 
     CreditLineRenewed(
       network?: null,
-      counterparty?: null,
+      networkMember?: null,
       timestamp?: null
     ): TypedEventFilter<
       [string, string, BigNumber],
-      { network: string; counterparty: string; timestamp: BigNumber }
+      { network: string; networkMember: string; timestamp: BigNumber }
     >;
 
     "CreditPoolAdded(address,address)"(

@@ -182,7 +182,7 @@ interface CreditRequestInterface extends ethers.utils.Interface {
 export type CreditRequestCreatedEvent = TypedEvent<
   [string, string, string, BigNumber, boolean] & {
     network: string;
-    counterparty: string;
+    networkMember: string;
     ambassador: string;
     creditLimit: BigNumber;
     approved: boolean;
@@ -190,13 +190,13 @@ export type CreditRequestCreatedEvent = TypedEvent<
 >;
 
 export type CreditRequestRemovedEvent = TypedEvent<
-  [string, string] & { network: string; counterparty: string }
+  [string, string] & { network: string; networkMember: string }
 >;
 
 export type CreditRequestUpdatedEvent = TypedEvent<
   [string, string, BigNumber, boolean] & {
     network: string;
-    counterparty: string;
+    networkMember: string;
     creditLimit: BigNumber;
     approved: boolean;
   }
@@ -211,7 +211,7 @@ export type PausedEvent = TypedEvent<[string] & { account: string }>;
 export type UnpausedEvent = TypedEvent<[string] & { account: string }>;
 
 export type UnstakeRequestCreatedEvent = TypedEvent<
-  [string, string] & { network: string; counterparty: string }
+  [string, string] & { network: string; networkMember: string }
 >;
 
 export class CreditRequest extends BaseContract {
@@ -570,7 +570,7 @@ export class CreditRequest extends BaseContract {
   filters: {
     "CreditRequestCreated(address,address,address,uint256,bool)"(
       network?: null,
-      counterparty?: null,
+      networkMember?: null,
       ambassador?: null,
       creditLimit?: null,
       approved?: null
@@ -578,7 +578,7 @@ export class CreditRequest extends BaseContract {
       [string, string, string, BigNumber, boolean],
       {
         network: string;
-        counterparty: string;
+        networkMember: string;
         ambassador: string;
         creditLimit: BigNumber;
         approved: boolean;
@@ -587,7 +587,7 @@ export class CreditRequest extends BaseContract {
 
     CreditRequestCreated(
       network?: null,
-      counterparty?: null,
+      networkMember?: null,
       ambassador?: null,
       creditLimit?: null,
       approved?: null
@@ -595,7 +595,7 @@ export class CreditRequest extends BaseContract {
       [string, string, string, BigNumber, boolean],
       {
         network: string;
-        counterparty: string;
+        networkMember: string;
         ambassador: string;
         creditLimit: BigNumber;
         approved: boolean;
@@ -604,30 +604,30 @@ export class CreditRequest extends BaseContract {
 
     "CreditRequestRemoved(address,address)"(
       network?: null,
-      counterparty?: null
+      networkMember?: null
     ): TypedEventFilter<
       [string, string],
-      { network: string; counterparty: string }
+      { network: string; networkMember: string }
     >;
 
     CreditRequestRemoved(
       network?: null,
-      counterparty?: null
+      networkMember?: null
     ): TypedEventFilter<
       [string, string],
-      { network: string; counterparty: string }
+      { network: string; networkMember: string }
     >;
 
     "CreditRequestUpdated(address,address,uint256,bool)"(
       network?: null,
-      counterparty?: null,
+      networkMember?: null,
       creditLimit?: null,
       approved?: null
     ): TypedEventFilter<
       [string, string, BigNumber, boolean],
       {
         network: string;
-        counterparty: string;
+        networkMember: string;
         creditLimit: BigNumber;
         approved: boolean;
       }
@@ -635,14 +635,14 @@ export class CreditRequest extends BaseContract {
 
     CreditRequestUpdated(
       network?: null,
-      counterparty?: null,
+      networkMember?: null,
       creditLimit?: null,
       approved?: null
     ): TypedEventFilter<
       [string, string, BigNumber, boolean],
       {
         network: string;
-        counterparty: string;
+        networkMember: string;
         creditLimit: BigNumber;
         approved: boolean;
       }
@@ -678,18 +678,18 @@ export class CreditRequest extends BaseContract {
 
     "UnstakeRequestCreated(address,address)"(
       network?: null,
-      counterparty?: null
+      networkMember?: null
     ): TypedEventFilter<
       [string, string],
-      { network: string; counterparty: string }
+      { network: string; networkMember: string }
     >;
 
     UnstakeRequestCreated(
       network?: null,
-      counterparty?: null
+      networkMember?: null
     ): TypedEventFilter<
       [string, string],
-      { network: string; counterparty: string }
+      { network: string; networkMember: string }
     >;
   };
 

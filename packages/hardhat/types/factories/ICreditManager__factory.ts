@@ -22,7 +22,7 @@ const _abi = [
       {
         indexed: false,
         internalType: "address",
-        name: "counterparty",
+        name: "networkMember",
         type: "address",
       },
       {
@@ -59,7 +59,7 @@ const _abi = [
       {
         indexed: false,
         internalType: "address",
-        name: "counterparty",
+        name: "networkMember",
         type: "address",
       },
       {
@@ -84,7 +84,7 @@ const _abi = [
       {
         indexed: false,
         internalType: "address",
-        name: "counterparty",
+        name: "networkMember",
         type: "address",
       },
       {
@@ -109,7 +109,7 @@ const _abi = [
       {
         indexed: false,
         internalType: "address",
-        name: "counterparty",
+        name: "networkMember",
         type: "address",
       },
     ],
@@ -128,7 +128,7 @@ const _abi = [
       {
         indexed: false,
         internalType: "address",
-        name: "counterparty",
+        name: "networkMember",
         type: "address",
       },
       {
@@ -302,6 +302,11 @@ const _abi = [
           {
             internalType: "uint256",
             name: "issueDate",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "creditLimit",
             type: "uint256",
           },
         ],

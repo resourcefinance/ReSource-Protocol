@@ -15,4 +15,9 @@ interface ICreditFeeManager {
     ) external;
 
     function getCollateralToken() external returns (address);
+
+    function calculateFees(address _network, uint256 _transactionAmount)
+        external
+        view
+        returns (uint256 creditFee);
 }

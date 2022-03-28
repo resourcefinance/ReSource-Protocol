@@ -20,16 +20,16 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface IPriceOracleInterface extends ethers.utils.Interface {
   functions: {
-    "getPriceInDollars()": FunctionFragment;
+    "getPriceInPPT()": FunctionFragment;
   };
 
   encodeFunctionData(
-    functionFragment: "getPriceInDollars",
+    functionFragment: "getPriceInPPT",
     values?: undefined
   ): string;
 
   decodeFunctionResult(
-    functionFragment: "getPriceInDollars",
+    functionFragment: "getPriceInPPT",
     data: BytesLike
   ): Result;
 
@@ -80,22 +80,22 @@ export class IPriceOracle extends BaseContract {
   interface: IPriceOracleInterface;
 
   functions: {
-    getPriceInDollars(overrides?: CallOverrides): Promise<[BigNumber]>;
+    getPriceInPPT(overrides?: CallOverrides): Promise<[BigNumber]>;
   };
 
-  getPriceInDollars(overrides?: CallOverrides): Promise<BigNumber>;
+  getPriceInPPT(overrides?: CallOverrides): Promise<BigNumber>;
 
   callStatic: {
-    getPriceInDollars(overrides?: CallOverrides): Promise<BigNumber>;
+    getPriceInPPT(overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   filters: {};
 
   estimateGas: {
-    getPriceInDollars(overrides?: CallOverrides): Promise<BigNumber>;
+    getPriceInPPT(overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    getPriceInDollars(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    getPriceInPPT(overrides?: CallOverrides): Promise<PopulatedTransaction>;
   };
 }

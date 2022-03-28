@@ -21,10 +21,15 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface ICreditFeeManagerInterface extends ethers.utils.Interface {
   functions: {
+    "calculateFees(address,uint256)": FunctionFragment;
     "collectFees(address,address,uint256)": FunctionFragment;
     "getCollateralToken()": FunctionFragment;
   };
 
+  encodeFunctionData(
+    functionFragment: "calculateFees",
+    values: [string, BigNumberish]
+  ): string;
   encodeFunctionData(
     functionFragment: "collectFees",
     values: [string, string, BigNumberish]
@@ -34,6 +39,10 @@ interface ICreditFeeManagerInterface extends ethers.utils.Interface {
     values?: undefined
   ): string;
 
+  decodeFunctionResult(
+    functionFragment: "calculateFees",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "collectFees",
     data: BytesLike
@@ -114,6 +123,12 @@ export class ICreditFeeManager extends BaseContract {
   interface: ICreditFeeManagerInterface;
 
   functions: {
+    calculateFees(
+      _network: string,
+      _transactionAmount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber] & { creditFee: BigNumber }>;
+
     collectFees(
       _network: string,
       _networkMember: string,
@@ -125,6 +140,12 @@ export class ICreditFeeManager extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
   };
+
+  calculateFees(
+    _network: string,
+    _transactionAmount: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
 
   collectFees(
     _network: string,
@@ -138,6 +159,12 @@ export class ICreditFeeManager extends BaseContract {
   ): Promise<ContractTransaction>;
 
   callStatic: {
+    calculateFees(
+      _network: string,
+      _transactionAmount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     collectFees(
       _network: string,
       _networkMember: string,
@@ -201,6 +228,12 @@ export class ICreditFeeManager extends BaseContract {
   };
 
   estimateGas: {
+    calculateFees(
+      _network: string,
+      _transactionAmount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     collectFees(
       _network: string,
       _networkMember: string,
@@ -214,6 +247,12 @@ export class ICreditFeeManager extends BaseContract {
   };
 
   populateTransaction: {
+    calculateFees(
+      _network: string,
+      _transactionAmount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     collectFees(
       _network: string,
       _networkMember: string,

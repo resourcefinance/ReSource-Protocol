@@ -6,6 +6,7 @@ import "./CIP36.sol";
 import "./interface/INetworkRoles.sol";
 import "./interface/INetworkFeeManager.sol";
 import "../iKeyWallet/IiKeyWalletDeployer.sol";
+import "../Credit/interface/ICreditRoles.sol";
 import "hardhat/console.sol";
 
 contract RUSD is CIP36, PausableUpgradeable {
@@ -13,8 +14,8 @@ contract RUSD is CIP36, PausableUpgradeable {
      *  Storage
      */
     INetworkRoles public networkRoles;
+    ICreditRoles public creditRoles;
     INetworkFeeManager public feeManager;
-    address public creditManager;
 
     /*
      *  Events
@@ -30,10 +31,9 @@ contract RUSD is CIP36, PausableUpgradeable {
 
     modifier onlyAuthorized() override {
         require(
-            msg.sender == creditManager ||
-                msg.sender == address(networkRoles) ||
-                msg.sender == owner() ||
-                networkRoles.isNetworkOperator(msg.sender),
+            networkRoles.isNetworkOperator(msg.sender) ||
+                creditRoles.isCreditOperator(msg.sender) ||
+                msg.sender == owner(),
             "Unauthorized caller"
         );
         _;
@@ -51,12 +51,12 @@ contract RUSD is CIP36, PausableUpgradeable {
     }
 
     function initializeRUSD(
-        address _creditManager,
+        address _creditRoles,
         address _feeManager,
         address _networkRoles
     ) external virtual initializer {
         CIP36.initialize("rUSD", "rUSD");
-        creditManager = _creditManager;
+        creditRoles = ICreditRoles(_creditRoles);
         feeManager = INetworkFeeManager(_feeManager);
         networkRoles = INetworkRoles(_networkRoles);
         __Pausable_init();

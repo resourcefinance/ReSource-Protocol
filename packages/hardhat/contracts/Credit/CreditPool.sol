@@ -11,7 +11,6 @@ import "@openzeppelin/contracts-upgradeable/utils/math/SafeMathUpgradeable.sol";
 import "./interface/ICreditPool.sol";
 import "./interface/ICreditRoles.sol";
 import "./interface/ICreditManager.sol";
-import "hardhat/console.sol";
 
 contract CreditPool is
     ReentrancyGuardUpgradeable,

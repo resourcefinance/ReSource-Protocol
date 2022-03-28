@@ -44,4 +44,5 @@ yarn-error.log*
 # Local Netlify folder
 .netlify
 
-packages/hardhat/stake.ts
+# Testing locally
+packages/hardhat/bootstrap.ts

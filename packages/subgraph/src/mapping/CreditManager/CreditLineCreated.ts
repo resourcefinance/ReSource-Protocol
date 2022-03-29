@@ -2,11 +2,11 @@ import { CreditLineCreated } from "../../../generated/CreditManager/CreditManage
 import { CreditLine, NetworkMember } from "../../../generated/schema"
 
 export function handleCreditLineCreated(event: CreditLineCreated): void {
-  let networkMember = NetworkMember.load(event.params.counterparty.toHex())
+  let networkMember = NetworkMember.load(event.params.networkMember.toHex())
   if (!networkMember) {
     return
   }
-  let id = event.params.network.toHex() + "-" + event.params.counterparty.toHex()
+  let id = event.params.network.toHex() + "-" + event.params.networkMember.toHex()
   let creditLine = CreditLine.load(id)
   if (!creditLine) {
     creditLine = new CreditLine(id)

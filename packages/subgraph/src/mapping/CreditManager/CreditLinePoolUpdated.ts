@@ -2,7 +2,7 @@ import { CreditLinePoolUpdated } from "../../../generated/CreditManager/CreditMa
 import { CreditLine } from "../../../generated/schema"
 
 export function handleCreditLinePoolUpdated(event: CreditLinePoolUpdated): void {
-  let id = event.params.network.toHex() + "-" + event.params.counterparty.toHex()
+  let id = event.params.network.toHex() + "-" + event.params.networkMember.toHex()
   let creditLine = CreditLine.load(id)
   if (!creditLine) {
     return

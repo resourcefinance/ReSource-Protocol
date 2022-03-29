@@ -225,7 +225,6 @@ interface RUSDInterface extends ethers.utils.Interface {
 
   events: {
     "Approval(address,address,uint256)": EventFragment;
-    "BalanceUpdate(address,address,uint256,uint256,uint256,uint256)": EventFragment;
     "CreditLimitUpdate(address,uint256)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
     "Paused(address)": EventFragment;
@@ -234,7 +233,6 @@ interface RUSDInterface extends ethers.utils.Interface {
   };
 
   getEvent(nameOrSignatureOrTopic: "Approval"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "BalanceUpdate"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "CreditLimitUpdate"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Paused"): EventFragment;
@@ -247,17 +245,6 @@ export type ApprovalEvent = TypedEvent<
     owner: string;
     spender: string;
     value: BigNumber;
-  }
->;
-
-export type BalanceUpdateEvent = TypedEvent<
-  [string, string, BigNumber, BigNumber, BigNumber, BigNumber] & {
-    sender: string;
-    recipient: string;
-    senderBalance: BigNumber;
-    senderCreditBalance: BigNumber;
-    recipientBalance: BigNumber;
-    recipientCreditBalance: BigNumber;
   }
 >;
 
@@ -722,44 +709,6 @@ export class RUSD extends BaseContract {
     ): TypedEventFilter<
       [string, string, BigNumber],
       { owner: string; spender: string; value: BigNumber }
-    >;
-
-    "BalanceUpdate(address,address,uint256,uint256,uint256,uint256)"(
-      sender?: null,
-      recipient?: null,
-      senderBalance?: null,
-      senderCreditBalance?: null,
-      recipientBalance?: null,
-      recipientCreditBalance?: null
-    ): TypedEventFilter<
-      [string, string, BigNumber, BigNumber, BigNumber, BigNumber],
-      {
-        sender: string;
-        recipient: string;
-        senderBalance: BigNumber;
-        senderCreditBalance: BigNumber;
-        recipientBalance: BigNumber;
-        recipientCreditBalance: BigNumber;
-      }
-    >;
-
-    BalanceUpdate(
-      sender?: null,
-      recipient?: null,
-      senderBalance?: null,
-      senderCreditBalance?: null,
-      recipientBalance?: null,
-      recipientCreditBalance?: null
-    ): TypedEventFilter<
-      [string, string, BigNumber, BigNumber, BigNumber, BigNumber],
-      {
-        sender: string;
-        recipient: string;
-        senderBalance: BigNumber;
-        senderCreditBalance: BigNumber;
-        recipientBalance: BigNumber;
-        recipientCreditBalance: BigNumber;
-      }
     >;
 
     "CreditLimitUpdate(address,uint256)"(

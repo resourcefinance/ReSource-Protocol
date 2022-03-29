@@ -3,47 +3,6 @@ schema:
   file: ./src/schema.graphql
 dataSources:
   - kind: ethereum/contract
-    name: RUSD
-    network: "{{network}}"
-    source:
-      address: "{{RUSDAddress}}"
-      abi: RUSD
-      startBlock: {{RUSDStartBlock}}
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.4
-      language: wasm/assemblyscript
-      entities:
-        - CreditLine
-        - NetworkMember
-      abis:
-        - name: RUSD
-          file: ./abis/RUSD.json
-      eventHandlers:
-        - event: BalanceUpdate(address,address,uint256,uint256,uint256,uint256)
-          handler: handleRUSDBalanceUpdate
-      file: ./src/mapping/RUSD/index.ts
-  - kind: ethereum/contract
-    name: SourceToken
-    network: "{{network}}"
-    source:
-      address: "{{SourceTokenAddress}}"
-      abi: SourceToken
-      startBlock: {{SourceTokenStartBlock}}
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.4
-      language: wasm/assemblyscript
-      entities:
-        - NetworkMember
-      abis:
-        - name: SourceToken
-          file: ./abis/SourceToken.json
-      eventHandlers:
-        - event: Transfer(indexed address,indexed address,uint256)
-          handler: handleSourceBalanceUpdate
-      file: ./src/mapping/SourceToken/index.ts
-  - kind: ethereum/contract
     name: NetworkFeeManager
     network: "{{network}}"
     source:
@@ -52,7 +11,7 @@ dataSources:
       startBlock: {{NetworkFeeManagerStartBlock}}
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.4
+      apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
         - CreditLine
@@ -76,7 +35,7 @@ dataSources:
       startBlock: {{NetworkRolesStartBlock}}
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.4
+      apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
         - CreditLine
@@ -105,7 +64,7 @@ dataSources:
       startBlock: {{CreditFeeManagerStartBlock}}
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.4
+      apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
         - CreditLine
@@ -127,7 +86,7 @@ dataSources:
       startBlock: {{CreditManagerStartBlock}}
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.4
+      apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
         - CreditLine
@@ -157,7 +116,7 @@ dataSources:
       startBlock: {{CreditRequestStartBlock}}
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.4
+      apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
         - CreditLine
@@ -183,7 +142,7 @@ dataSources:
       startBlock: {{CreditRolesStartBlock}}
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.4
+      apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
         - CreditLine

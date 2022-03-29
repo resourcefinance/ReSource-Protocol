@@ -17,18 +17,6 @@ contract RUSD is CIP36, PausableUpgradeable {
     ICreditRoles public creditRoles;
     INetworkFeeManager public feeManager;
 
-    /*
-     *  Events
-     */
-    event BalanceUpdate(
-        address sender,
-        address recipient,
-        uint256 senderBalance,
-        uint256 senderCreditBalance,
-        uint256 recipientBalance,
-        uint256 recipientCreditBalance
-    );
-
     modifier onlyAuthorized() override {
         require(
             networkRoles.isNetworkOperator(msg.sender) ||
@@ -75,15 +63,6 @@ contract RUSD is CIP36, PausableUpgradeable {
             feeManager.collectFees(_from, _amount);
         }
         super._transfer(_from, _to, _amount);
-
-        emit BalanceUpdate(
-            _from,
-            _to,
-            balanceOf(_from),
-            super.creditBalanceOf(_from),
-            balanceOf(_to),
-            super.creditBalanceOf(_to)
-        );
     }
 
     function bulkTransfer(address[] memory _to, uint256[] memory _values) public {

@@ -22,6 +22,7 @@ contract CreditRoles is AccessControlUpgradeable, OwnableUpgradeable, ICreditRol
             require(_operators[j] != address(0));
             grantRole("OPERATOR", _operators[j]);
         }
+        emit UnderwriterAdded(msg.sender);
     }
 
     /* ========== PUBLIC FUNCTIONS ========== */

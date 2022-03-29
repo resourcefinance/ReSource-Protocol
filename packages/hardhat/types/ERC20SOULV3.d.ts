@@ -286,10 +286,10 @@ interface ERC20SOULV3Interface extends ethers.utils.Interface {
 
   events: {
     "Approval(address,address,uint256)": EventFragment;
-    "LockExpired(address,tuple)": EventFragment;
+    "LockExpired(address)": EventFragment;
     "LockReturned(address,uint256)": EventFragment;
-    "LockScheduleExpired(address,tuple)": EventFragment;
-    "LockedTransfer(tuple,address,address)": EventFragment;
+    "LockScheduleExpired(address)": EventFragment;
+    "LockedTransfer(address,address)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
     "Transfer(address,address,uint256)": EventFragment;
   };
@@ -311,124 +311,16 @@ export type ApprovalEvent = TypedEvent<
   }
 >;
 
-export type LockExpiredEvent = TypedEvent<
-  [
-    string,
-    [
-      BigNumber,
-      BigNumber,
-      ([BigNumber, BigNumber] & {
-        amount: BigNumber;
-        expirationBlock: BigNumber;
-      })[]
-    ] & {
-      totalAmount: BigNumber;
-      amountStaked: BigNumber;
-      schedules: ([BigNumber, BigNumber] & {
-        amount: BigNumber;
-        expirationBlock: BigNumber;
-      })[];
-    }
-  ] & {
-    owner: string;
-    lock: [
-      BigNumber,
-      BigNumber,
-      ([BigNumber, BigNumber] & {
-        amount: BigNumber;
-        expirationBlock: BigNumber;
-      })[]
-    ] & {
-      totalAmount: BigNumber;
-      amountStaked: BigNumber;
-      schedules: ([BigNumber, BigNumber] & {
-        amount: BigNumber;
-        expirationBlock: BigNumber;
-      })[];
-    };
-  }
->;
+export type LockExpiredEvent = TypedEvent<[string] & { owner: string }>;
 
 export type LockReturnedEvent = TypedEvent<
   [string, BigNumber] & { owner: string; amount: BigNumber }
 >;
 
-export type LockScheduleExpiredEvent = TypedEvent<
-  [
-    string,
-    [
-      BigNumber,
-      BigNumber,
-      ([BigNumber, BigNumber] & {
-        amount: BigNumber;
-        expirationBlock: BigNumber;
-      })[]
-    ] & {
-      totalAmount: BigNumber;
-      amountStaked: BigNumber;
-      schedules: ([BigNumber, BigNumber] & {
-        amount: BigNumber;
-        expirationBlock: BigNumber;
-      })[];
-    }
-  ] & {
-    owner: string;
-    lock: [
-      BigNumber,
-      BigNumber,
-      ([BigNumber, BigNumber] & {
-        amount: BigNumber;
-        expirationBlock: BigNumber;
-      })[]
-    ] & {
-      totalAmount: BigNumber;
-      amountStaked: BigNumber;
-      schedules: ([BigNumber, BigNumber] & {
-        amount: BigNumber;
-        expirationBlock: BigNumber;
-      })[];
-    };
-  }
->;
+export type LockScheduleExpiredEvent = TypedEvent<[string] & { owner: string }>;
 
 export type LockedTransferEvent = TypedEvent<
-  [
-    [
-      BigNumber,
-      BigNumber,
-      ([BigNumber, BigNumber] & {
-        amount: BigNumber;
-        expirationBlock: BigNumber;
-      })[]
-    ] & {
-      totalAmount: BigNumber;
-      amountStaked: BigNumber;
-      schedules: ([BigNumber, BigNumber] & {
-        amount: BigNumber;
-        expirationBlock: BigNumber;
-      })[];
-    },
-    string,
-    string
-  ] & {
-    lock: [
-      BigNumber,
-      BigNumber,
-      ([BigNumber, BigNumber] & {
-        amount: BigNumber;
-        expirationBlock: BigNumber;
-      })[]
-    ] & {
-      totalAmount: BigNumber;
-      amountStaked: BigNumber;
-      schedules: ([BigNumber, BigNumber] & {
-        amount: BigNumber;
-        expirationBlock: BigNumber;
-      })[];
-    };
-    sender: string;
-    recipient: string;
-  }
+  [string, string] & { sender: string; recipient: string }
 >;
 
 export type OwnershipTransferredEvent = TypedEvent<
@@ -980,89 +872,11 @@ export class ERC20SOULV3 extends BaseContract {
       { owner: string; spender: string; value: BigNumber }
     >;
 
-    "LockExpired(address,tuple)"(
-      owner?: null,
-      lock?: null
-    ): TypedEventFilter<
-      [
-        string,
-        [
-          BigNumber,
-          BigNumber,
-          ([BigNumber, BigNumber] & {
-            amount: BigNumber;
-            expirationBlock: BigNumber;
-          })[]
-        ] & {
-          totalAmount: BigNumber;
-          amountStaked: BigNumber;
-          schedules: ([BigNumber, BigNumber] & {
-            amount: BigNumber;
-            expirationBlock: BigNumber;
-          })[];
-        }
-      ],
-      {
-        owner: string;
-        lock: [
-          BigNumber,
-          BigNumber,
-          ([BigNumber, BigNumber] & {
-            amount: BigNumber;
-            expirationBlock: BigNumber;
-          })[]
-        ] & {
-          totalAmount: BigNumber;
-          amountStaked: BigNumber;
-          schedules: ([BigNumber, BigNumber] & {
-            amount: BigNumber;
-            expirationBlock: BigNumber;
-          })[];
-        };
-      }
-    >;
+    "LockExpired(address)"(
+      owner?: null
+    ): TypedEventFilter<[string], { owner: string }>;
 
-    LockExpired(
-      owner?: null,
-      lock?: null
-    ): TypedEventFilter<
-      [
-        string,
-        [
-          BigNumber,
-          BigNumber,
-          ([BigNumber, BigNumber] & {
-            amount: BigNumber;
-            expirationBlock: BigNumber;
-          })[]
-        ] & {
-          totalAmount: BigNumber;
-          amountStaked: BigNumber;
-          schedules: ([BigNumber, BigNumber] & {
-            amount: BigNumber;
-            expirationBlock: BigNumber;
-          })[];
-        }
-      ],
-      {
-        owner: string;
-        lock: [
-          BigNumber,
-          BigNumber,
-          ([BigNumber, BigNumber] & {
-            amount: BigNumber;
-            expirationBlock: BigNumber;
-          })[]
-        ] & {
-          totalAmount: BigNumber;
-          amountStaked: BigNumber;
-          schedules: ([BigNumber, BigNumber] & {
-            amount: BigNumber;
-            expirationBlock: BigNumber;
-          })[];
-        };
-      }
-    >;
+    LockExpired(owner?: null): TypedEventFilter<[string], { owner: string }>;
 
     "LockReturned(address,uint256)"(
       owner?: null,
@@ -1080,178 +894,28 @@ export class ERC20SOULV3 extends BaseContract {
       { owner: string; amount: BigNumber }
     >;
 
-    "LockScheduleExpired(address,tuple)"(
-      owner?: null,
-      lock?: null
-    ): TypedEventFilter<
-      [
-        string,
-        [
-          BigNumber,
-          BigNumber,
-          ([BigNumber, BigNumber] & {
-            amount: BigNumber;
-            expirationBlock: BigNumber;
-          })[]
-        ] & {
-          totalAmount: BigNumber;
-          amountStaked: BigNumber;
-          schedules: ([BigNumber, BigNumber] & {
-            amount: BigNumber;
-            expirationBlock: BigNumber;
-          })[];
-        }
-      ],
-      {
-        owner: string;
-        lock: [
-          BigNumber,
-          BigNumber,
-          ([BigNumber, BigNumber] & {
-            amount: BigNumber;
-            expirationBlock: BigNumber;
-          })[]
-        ] & {
-          totalAmount: BigNumber;
-          amountStaked: BigNumber;
-          schedules: ([BigNumber, BigNumber] & {
-            amount: BigNumber;
-            expirationBlock: BigNumber;
-          })[];
-        };
-      }
-    >;
+    "LockScheduleExpired(address)"(
+      owner?: null
+    ): TypedEventFilter<[string], { owner: string }>;
 
     LockScheduleExpired(
-      owner?: null,
-      lock?: null
-    ): TypedEventFilter<
-      [
-        string,
-        [
-          BigNumber,
-          BigNumber,
-          ([BigNumber, BigNumber] & {
-            amount: BigNumber;
-            expirationBlock: BigNumber;
-          })[]
-        ] & {
-          totalAmount: BigNumber;
-          amountStaked: BigNumber;
-          schedules: ([BigNumber, BigNumber] & {
-            amount: BigNumber;
-            expirationBlock: BigNumber;
-          })[];
-        }
-      ],
-      {
-        owner: string;
-        lock: [
-          BigNumber,
-          BigNumber,
-          ([BigNumber, BigNumber] & {
-            amount: BigNumber;
-            expirationBlock: BigNumber;
-          })[]
-        ] & {
-          totalAmount: BigNumber;
-          amountStaked: BigNumber;
-          schedules: ([BigNumber, BigNumber] & {
-            amount: BigNumber;
-            expirationBlock: BigNumber;
-          })[];
-        };
-      }
-    >;
+      owner?: null
+    ): TypedEventFilter<[string], { owner: string }>;
 
-    "LockedTransfer(tuple,address,address)"(
-      lock?: null,
+    "LockedTransfer(address,address)"(
       sender?: null,
       recipient?: null
     ): TypedEventFilter<
-      [
-        [
-          BigNumber,
-          BigNumber,
-          ([BigNumber, BigNumber] & {
-            amount: BigNumber;
-            expirationBlock: BigNumber;
-          })[]
-        ] & {
-          totalAmount: BigNumber;
-          amountStaked: BigNumber;
-          schedules: ([BigNumber, BigNumber] & {
-            amount: BigNumber;
-            expirationBlock: BigNumber;
-          })[];
-        },
-        string,
-        string
-      ],
-      {
-        lock: [
-          BigNumber,
-          BigNumber,
-          ([BigNumber, BigNumber] & {
-            amount: BigNumber;
-            expirationBlock: BigNumber;
-          })[]
-        ] & {
-          totalAmount: BigNumber;
-          amountStaked: BigNumber;
-          schedules: ([BigNumber, BigNumber] & {
-            amount: BigNumber;
-            expirationBlock: BigNumber;
-          })[];
-        };
-        sender: string;
-        recipient: string;
-      }
+      [string, string],
+      { sender: string; recipient: string }
     >;
 
     LockedTransfer(
-      lock?: null,
       sender?: null,
       recipient?: null
     ): TypedEventFilter<
-      [
-        [
-          BigNumber,
-          BigNumber,
-          ([BigNumber, BigNumber] & {
-            amount: BigNumber;
-            expirationBlock: BigNumber;
-          })[]
-        ] & {
-          totalAmount: BigNumber;
-          amountStaked: BigNumber;
-          schedules: ([BigNumber, BigNumber] & {
-            amount: BigNumber;
-            expirationBlock: BigNumber;
-          })[];
-        },
-        string,
-        string
-      ],
-      {
-        lock: [
-          BigNumber,
-          BigNumber,
-          ([BigNumber, BigNumber] & {
-            amount: BigNumber;
-            expirationBlock: BigNumber;
-          })[]
-        ] & {
-          totalAmount: BigNumber;
-          amountStaked: BigNumber;
-          schedules: ([BigNumber, BigNumber] & {
-            amount: BigNumber;
-            expirationBlock: BigNumber;
-          })[];
-        };
-        sender: string;
-        recipient: string;
-      }
+      [string, string],
+      { sender: string; recipient: string }
     >;
 
     "OwnershipTransferred(address,address)"(

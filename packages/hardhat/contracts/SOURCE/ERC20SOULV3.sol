@@ -14,11 +14,11 @@ contract ERC20SOULV3 is ERC20Upgradeable, OwnableUpgradeable {
     /*
      *  Events
      */
-    event LockedTransfer(Lock lock, address sender, address recipient);
+    event LockedTransfer(address sender, address recipient);
 
-    event LockExpired(address owner, Lock lock);
+    event LockExpired(address owner);
 
-    event LockScheduleExpired(address owner, Lock lock);
+    event LockScheduleExpired(address owner);
 
     event LockReturned(address owner, uint256 amount);
 
@@ -108,7 +108,7 @@ contract ERC20SOULV3 is ERC20Upgradeable, OwnableUpgradeable {
             );
         }
         totalLocked += _lock.totalAmount;
-        emit LockedTransfer(_lock, msg.sender, _to);
+        emit LockedTransfer(msg.sender, _to);
     }
 
     /*
@@ -174,7 +174,7 @@ contract ERC20SOULV3 is ERC20Upgradeable, OwnableUpgradeable {
                 senderLock.schedules.pop();
                 deleteOffset++;
                 totalSenderSchedules--;
-                emit LockScheduleExpired(_from, locks[_from]);
+                emit LockScheduleExpired(_from);
             }
         }
         uint256 availableAmount = amountToUnlock +
@@ -185,7 +185,7 @@ contract ERC20SOULV3 is ERC20Upgradeable, OwnableUpgradeable {
         totalLocked = totalLocked < amountToUnlock ? 0 : totalLocked -= amountToUnlock;
         require(availableAmount >= sendAmount, "Insufficient unlocked funds");
         if (senderLock.totalAmount == 0) {
-            emit LockExpired(_from, locks[_from]);
+            emit LockExpired(_from);
             delete locks[_from];
         }
     }

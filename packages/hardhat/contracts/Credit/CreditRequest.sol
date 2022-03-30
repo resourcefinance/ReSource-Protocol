@@ -60,6 +60,10 @@ contract CreditRequest is OwnableUpgradeable, PausableUpgradeable, ICreditReques
             !requests[_network][_networkMember].approved,
             "CreditRequest: request already approved"
         );
+        require(
+            requests[_network][_networkMember].creditLimit != 0,
+            "CreditRequest: Request does not exist"
+        );
         requests[_network][_networkMember].approved = true;
         emit CreditRequestUpdated(
             _network,
@@ -78,17 +82,21 @@ contract CreditRequest is OwnableUpgradeable, PausableUpgradeable, ICreditReques
             requests[_network][_networkMember].approved,
             "CreditRequest: request is not approved"
         );
-        CreditRequest storage request = requests[_network][_networkMember];
+        CreditRequest memory request = requests[_network][_networkMember];
         uint256 curCreditLimit = ICIP36(_network).creditLimitOf(_networkMember);
         address underwriter = creditManager.getCreditLineUnderwriter(_network, _networkMember);
 
         if (underwriter == address(0)) {
             creditManager.createCreditLine(_networkMember, _pool, request.creditLimit, _network);
         } else if (request.unstaking) {
-            require(msg.sender != underwriter, "Cannot accept own unstake request");
+            require(msg.sender != underwriter, "CreditRequest: Cannot accept own unstake request");
             creditManager.swapCreditLinePool(_network, _networkMember, _pool);
-        } else if (request.creditLimit > curCreditLimit) {
-            require(msg.sender == underwriter, "Unauthorized to extend credit line");
+        } else {
+            require(
+                request.creditLimit > curCreditLimit,
+                "CreditRequest: request limit is less than current limit"
+            );
+            require(msg.sender == underwriter, "CreditRequest: Unauthorized to extend credit line");
             creditManager.extendCreditLine(_network, _networkMember, request.creditLimit);
         }
         emit CreditRequestRemoved(_network, _networkMember);
@@ -150,15 +158,6 @@ contract CreditRequest is OwnableUpgradeable, PausableUpgradeable, ICreditReques
 
     /* ========== VIEWS ========== */
 
-    function getCreditRequest(address _network, address _networkMember)
-        public
-        view
-        override
-        returns (CreditRequest memory)
-    {
-        return requests[_network][_networkMember];
-    }
-
     function verifyCreditLineExpiration(
         address _network,
         address _networkMember,
@@ -170,7 +169,7 @@ contract CreditRequest is OwnableUpgradeable, PausableUpgradeable, ICreditReques
 
         if (usingCreditBalance && creditLineExpired) {
             require(
-                !getCreditRequest(_network, _networkMember).unstaking,
+                !requests[_network][_networkMember].unstaking,
                 "CreditFeeManager: CreditLine is expired"
             );
             creditManager.renewCreditLine(_network, _networkMember);

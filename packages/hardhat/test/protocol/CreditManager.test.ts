@@ -142,4 +142,26 @@ describe("CreditRequest and CreditManager Tests", function () {
     expect(poolCreditLimit).to.equal("100.0")
     expect(creditLimit).to.equal("100.0")
   })
+  it("converts rUSD amount to SOURCE value", async function () {
+    // Source at $0.50
+    await (await contracts.priceOracle.setPrice(500)).wait()
+
+    let collateralValue = ethers.utils.formatEther(
+      await contracts.creditManager.convertNetworkToCollateral(
+        contracts.rUSD.address,
+        ethers.utils.parseUnits("1000.0", "mwei")
+      )
+    )
+    expect(collateralValue).to.equal("500.0")
+
+    // Source at $1.50
+    await (await contracts.priceOracle.setPrice(1500)).wait()
+    collateralValue = ethers.utils.formatEther(
+      await contracts.creditManager.convertNetworkToCollateral(
+        contracts.rUSD.address,
+        ethers.utils.parseUnits("1000.0", "mwei")
+      )
+    )
+    expect(collateralValue).to.equal("1500.0")
+  })
 })

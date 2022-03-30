@@ -53,7 +53,14 @@ contract CreditManager is OwnableUpgradeable, PausableUpgradeable, ICreditManage
         address _pool,
         uint256 _creditLimit,
         address _network
-    ) external override onlyOperator onlyRegisteredNetwork(_network) onlyRegisteredPool(_pool) {
+    )
+        external
+        override
+        onlyOperator
+        onlyRegisteredNetwork(_network)
+        onlyRegisteredPool(_pool)
+        onlyNewCreditLine(_network, _networkMember)
+    {
         creditLines[_network][_networkMember] = CreditLine(_pool, block.timestamp, _creditLimit);
         ICreditPool(_pool).increaseTotalCredit(_creditLimit);
         totalStakedCollateral += _creditLimit;
@@ -75,7 +82,7 @@ contract CreditManager is OwnableUpgradeable, PausableUpgradeable, ICreditManage
         address _network,
         address _networkMember,
         uint256 _creditLimit
-    ) external override onlyOperator {
+    ) external override onlyOperator creditLineExists(_network, _networkMember) {
         uint256 curCreditLimit = ICIP36(_network).creditLimitOf(_networkMember);
         require(curCreditLimit < _creditLimit, "CreditManager: Invalid credit limit");
         CreditLine storage creditLine = creditLines[_network][_networkMember];
@@ -90,8 +97,16 @@ contract CreditManager is OwnableUpgradeable, PausableUpgradeable, ICreditManage
         address _network,
         address _networkMember,
         address _pool
-    ) external override onlyOperator onlyRegisteredPool(_pool) {
+    )
+        external
+        override
+        onlyOperator
+        onlyRegisteredPool(_pool)
+        creditLineExists(_network, _networkMember)
+    {
         CreditLine storage creditLine = creditLines[_network][_networkMember];
+        ICreditPool(creditLine.creditPool).reduceTotalCredit(creditLine.creditLimit);
+        ICreditPool(_pool).increaseTotalCredit(creditLine.creditLimit);
         creditLine.creditPool = _pool;
         emit CreditLinePoolUpdated(_network, _networkMember, _pool);
     }
@@ -101,7 +116,7 @@ contract CreditManager is OwnableUpgradeable, PausableUpgradeable, ICreditManage
         onlyExpiredCreditLine(_network, _networkMember)
         onlyZeroBalance(_network, _networkMember)
     {
-        CreditLine storage creditLine = creditLines[_network][_networkMember];
+        CreditLine memory creditLine = creditLines[_network][_networkMember];
         address underwriter = ICreditPool(creditLine.creditPool).getUnderwriter();
         require(
             underwriter == msg.sender || msg.sender == _networkMember,
@@ -244,6 +259,22 @@ contract CreditManager is OwnableUpgradeable, PausableUpgradeable, ICreditManage
         _;
     }
 
+    modifier onlyNewCreditLine(address _network, address _networkMember) {
+        require(
+            creditLines[_network][_networkMember].issueDate == 0,
+            "CreditManager: Credit line already exists for network member"
+        );
+        _;
+    }
+
+    modifier creditLineExists(address _network, address _networkMember) {
+        require(
+            creditLines[_network][_networkMember].issueDate > 0,
+            "CreditManager: Credit line does not exist for network member"
+        );
+        _;
+    }
+
     modifier onlyExpiredCreditLine(address _network, address _networkMember) {
         require(
             isCreditLineExpired(_network, _networkMember),
@@ -271,13 +302,13 @@ contract CreditManager is OwnableUpgradeable, PausableUpgradeable, ICreditManage
     modifier onlyRegisteredNetwork(address _network) {
         require(
             creditRoles.isNetwork(_network),
-            "CreditRequest: Network token address is not registered"
+            "CreditManager: Network token address is not registered"
         );
         _;
     }
 
     modifier onlyRegisteredPool(address _pool) {
-        require(pools[_pool], "CreditRequest: Pool is not registered");
+        require(pools[_pool], "CreditManager: Pool is not registered");
         _;
     }
 }

@@ -59,11 +59,11 @@ contract CreditFeeManager is ICreditFeeManager, OwnableUpgradeable {
         );
         collateralToken.safeTransferFrom(_networkMember, address(this), creditFee);
         creditRequest.verifyCreditLineExpiration(_network, _networkMember, _transactionAmount);
-        accruedFees[_network][_networkMember] = creditFee;
+        accruedFees[_network][_networkMember] += creditFee;
         emit FeesCollected(_network, _networkMember, creditFee);
     }
 
-    function distributeFees(address _network, address[] memory _networkMembers) public {
+    function distributeFees(address _network, address[] memory _networkMembers) external {
         for (uint256 i = 0; i < _networkMembers.length; i++) {
             uint256 fees = accruedFees[_network][_networkMembers[i]];
             accruedFees[_network][_networkMembers[i]] = 0;
@@ -94,10 +94,7 @@ contract CreditFeeManager is ICreditFeeManager, OwnableUpgradeable {
     }
 
     function updateUnderwriterFeePercent(uint256 _feePercent) external onlyCreditOperator {
-        require(
-            _feePercent <= MAX_PPM && _feePercent >= 0,
-            "CreditFeeManager: invalid fee percent"
-        );
+        require(_feePercent <= MAX_PPM, "CreditFeeManager: invalid fee percent");
         underwriterFeePercent = _feePercent;
     }
 
@@ -175,14 +172,6 @@ contract CreditFeeManager is ICreditFeeManager, OwnableUpgradeable {
         require(
             creditRoles.isCreditOperator(msg.sender),
             "CreditFeeManager: Caller is not credit operator"
-        );
-        _;
-    }
-
-    modifier onlyUnderwriter() {
-        require(
-            creditRoles.isUnderwriter(msg.sender),
-            "CreditFeeManager: Caller is not an underwriter"
         );
         _;
     }

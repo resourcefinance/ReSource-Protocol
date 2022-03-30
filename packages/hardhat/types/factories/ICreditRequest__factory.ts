@@ -187,47 +187,6 @@ const _abi = [
         name: "_networkMember",
         type: "address",
       },
-    ],
-    name: "getCreditRequest",
-    outputs: [
-      {
-        components: [
-          {
-            internalType: "bool",
-            name: "approved",
-            type: "bool",
-          },
-          {
-            internalType: "bool",
-            name: "unstaking",
-            type: "bool",
-          },
-          {
-            internalType: "uint256",
-            name: "creditLimit",
-            type: "uint256",
-          },
-        ],
-        internalType: "struct ICreditRequest.CreditRequest",
-        name: "",
-        type: "tuple",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "_network",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "_networkMember",
-        type: "address",
-      },
       {
         internalType: "uint256",
         name: "_creditLimit",

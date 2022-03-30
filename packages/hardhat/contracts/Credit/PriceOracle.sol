@@ -12,7 +12,6 @@ contract PriceOracle is IPriceOracle {
     }
 
     function setPrice(uint256 _price) external {
-        require(_price <= MIN_PPT, "PriceOracle: new _price must be greater than 1000");
         price = _price;
     }
 

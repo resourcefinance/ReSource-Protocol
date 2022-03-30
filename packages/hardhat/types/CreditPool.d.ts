@@ -358,7 +358,10 @@ export class CreditPool extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    balanceOf(account: string, overrides?: CallOverrides): Promise<[BigNumber]>;
+    balanceOf(
+      _account: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
 
     earned(
       account: string,
@@ -473,8 +476,8 @@ export class CreditPool extends BaseContract {
     ): Promise<ContractTransaction>;
 
     stakeFor(
-      staker: string,
-      amount: BigNumberish,
+      _staker: string,
+      _amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -527,7 +530,7 @@ export class CreditPool extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
+  balanceOf(_account: string, overrides?: CallOverrides): Promise<BigNumber>;
 
   earned(
     account: string,
@@ -639,8 +642,8 @@ export class CreditPool extends BaseContract {
   ): Promise<ContractTransaction>;
 
   stakeFor(
-    staker: string,
-    amount: BigNumberish,
+    _staker: string,
+    _amount: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -691,7 +694,7 @@ export class CreditPool extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
+    balanceOf(_account: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     earned(
       account: string,
@@ -797,8 +800,8 @@ export class CreditPool extends BaseContract {
     stake(amount: BigNumberish, overrides?: CallOverrides): Promise<void>;
 
     stakeFor(
-      staker: string,
-      amount: BigNumberish,
+      _staker: string,
+      _amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -967,7 +970,7 @@ export class CreditPool extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
+    balanceOf(_account: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     earned(
       account: string,
@@ -1070,8 +1073,8 @@ export class CreditPool extends BaseContract {
     ): Promise<BigNumber>;
 
     stakeFor(
-      staker: string,
-      amount: BigNumberish,
+      _staker: string,
+      _amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -1115,7 +1118,7 @@ export class CreditPool extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     balanceOf(
-      account: string,
+      _account: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -1223,8 +1226,8 @@ export class CreditPool extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     stakeFor(
-      staker: string,
-      amount: BigNumberish,
+      _staker: string,
+      _amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 

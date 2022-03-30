@@ -6,9 +6,9 @@ interface ICreditPool {
 
     function totalSupply() external view returns (uint256);
 
-    function stakeFor(address staker, uint256 amount) external;
+    function stakeFor(address _staker, uint256 _amount) external;
 
-    function balanceOf(address account) external view returns (uint256);
+    function balanceOf(address _account) external view returns (uint256);
 
     function reduceTotalCredit(uint256 _amountToAdd) external;
 

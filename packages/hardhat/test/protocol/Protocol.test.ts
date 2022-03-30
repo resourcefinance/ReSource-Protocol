@@ -182,7 +182,7 @@ describe("Protocol Tests", function () {
     expect(sourceBalance).to.equal("100.0")
   })
   it("create, use, and claim reward fees for credit line with SOURCE at .50cents", async function () {
-    await await contracts.priceOracle.setPrice(500)
+    await (await contracts.priceOracle.setPrice(500)).wait()
 
     // Add two members as ambassador pre approved for 100
     await (

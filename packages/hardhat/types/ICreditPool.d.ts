@@ -135,7 +135,10 @@ export class ICreditPool extends BaseContract {
   interface: ICreditPoolInterface;
 
   functions: {
-    balanceOf(account: string, overrides?: CallOverrides): Promise<[BigNumber]>;
+    balanceOf(
+      _account: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
 
     getTotalCredit(overrides?: CallOverrides): Promise<[BigNumber]>;
 
@@ -158,15 +161,15 @@ export class ICreditPool extends BaseContract {
     ): Promise<ContractTransaction>;
 
     stakeFor(
-      staker: string,
-      amount: BigNumberish,
+      _staker: string,
+      _amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     totalSupply(overrides?: CallOverrides): Promise<[BigNumber]>;
   };
 
-  balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
+  balanceOf(_account: string, overrides?: CallOverrides): Promise<BigNumber>;
 
   getTotalCredit(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -189,15 +192,15 @@ export class ICreditPool extends BaseContract {
   ): Promise<ContractTransaction>;
 
   stakeFor(
-    staker: string,
-    amount: BigNumberish,
+    _staker: string,
+    _amount: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
   callStatic: {
-    balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
+    balanceOf(_account: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     getTotalCredit(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -220,8 +223,8 @@ export class ICreditPool extends BaseContract {
     ): Promise<void>;
 
     stakeFor(
-      staker: string,
-      amount: BigNumberish,
+      _staker: string,
+      _amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -231,7 +234,7 @@ export class ICreditPool extends BaseContract {
   filters: {};
 
   estimateGas: {
-    balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
+    balanceOf(_account: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     getTotalCredit(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -254,8 +257,8 @@ export class ICreditPool extends BaseContract {
     ): Promise<BigNumber>;
 
     stakeFor(
-      staker: string,
-      amount: BigNumberish,
+      _staker: string,
+      _amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -264,7 +267,7 @@ export class ICreditPool extends BaseContract {
 
   populateTransaction: {
     balanceOf(
-      account: string,
+      _account: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -289,8 +292,8 @@ export class ICreditPool extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     stakeFor(
-      staker: string,
-      amount: BigNumberish,
+      _staker: string,
+      _amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 

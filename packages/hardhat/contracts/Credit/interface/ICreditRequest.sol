@@ -44,11 +44,6 @@ interface ICreditRequest {
 
     function deleteRequest(address _network, address _networkMember) external;
 
-    function getCreditRequest(address _network, address _networkMember)
-        external
-        view
-        returns (CreditRequest memory);
-
     function verifyCreditLineExpiration(
         address _network,
         address _networkMember,

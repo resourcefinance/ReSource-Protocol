@@ -34,7 +34,7 @@ contract NetworkRoles is AccessControlUpgradeable, OwnableUpgradeable, INetworkR
         _setRoleAdmin("MEMBER", "AMBASSADOR");
 
         for (uint256 j = 0; j < _operators.length; j++) {
-            require(_operators[j] != address(0));
+            require(_operators[j] != address(0), "NetworkRoles: invalid operator supplied");
             grantRole("OPERATOR", _operators[j]);
         }
     }
@@ -90,7 +90,6 @@ contract NetworkRoles is AccessControlUpgradeable, OwnableUpgradeable, INetworkR
         external
         onlyNetworkOperator
         ambassadorExists(_ambassador)
-        notNull(_ambassador)
     {
         revokeRole("AMBASSADOR", _ambassador);
         emit AmbassadorRemoved(_ambassador);
@@ -174,18 +173,8 @@ contract NetworkRoles is AccessControlUpgradeable, OwnableUpgradeable, INetworkR
 
     /* ========== MODIFIERS ========== */
 
-    modifier memberDoesNotExist(address _member) {
-        require(!hasRole("MEMBER", _member), "NetworkRoles: member already exists");
-        _;
-    }
-
     modifier memberExists(address _member) {
         require(hasRole("MEMBER", _member), "NetworkRoles: member does not exist");
-        _;
-    }
-
-    modifier onlyMember() {
-        require(hasRole("MEMBER", msg.sender), "NetworkRoles: member does not exist");
         _;
     }
 
@@ -209,11 +198,6 @@ contract NetworkRoles is AccessControlUpgradeable, OwnableUpgradeable, INetworkR
 
     modifier operatorDoesNotExist(address _operator) {
         require(!hasRole("OPERATOR", _operator), "NetworkRoles: operator already exists");
-        _;
-    }
-
-    modifier operatorExists(address _operator) {
-        require(hasRole("OPERATOR", _operator), "NetworkRoles: operator does not exist");
         _;
     }
 

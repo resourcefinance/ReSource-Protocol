@@ -11,7 +11,6 @@ import "@openzeppelin/contracts-upgradeable/utils/math/SafeMathUpgradeable.sol";
 import "./interface/ICreditPool.sol";
 import "./interface/ICreditRoles.sol";
 import "./interface/ICreditManager.sol";
-import "hardhat/console.sol";
 
 contract CreditPool is
     ReentrancyGuardUpgradeable,
@@ -66,8 +65,10 @@ contract CreditPool is
         address _rewardsDistributor,
         uint256 _rewardsDuration
     ) public onlyOwnerOrUnderwriter {
-        require(rewardData[_rewardsToken].rewardsDuration == 0);
-
+        require(
+            rewardData[_rewardsToken].rewardsDuration == 0,
+            "CreditPool: reward token already exists"
+        );
         rewardTokens.push(_rewardsToken);
         rewardData[_rewardsToken].rewardsDistributor = _rewardsDistributor;
         rewardData[_rewardsToken].rewardsDuration = _rewardsDuration;
@@ -82,8 +83,8 @@ contract CreditPool is
         return _totalSupply;
     }
 
-    function balanceOf(address account) external view override returns (uint256) {
-        return _balances[account];
+    function balanceOf(address _account) external view override returns (uint256) {
+        return _balances[_account];
     }
 
     function lastTimeRewardApplicable(address _rewardsToken) public view returns (uint256) {
@@ -131,24 +132,25 @@ contract CreditPool is
 
     function stake(uint256 amount) external nonReentrant whenNotPaused updateReward(msg.sender) {
         require(amount > 0, "Cannot stake 0");
-        _totalSupply = _totalSupply.add(amount);
-        _balances[msg.sender] = _balances[msg.sender].add(amount);
+        _totalSupply = _totalSupply + amount;
+        _balances[msg.sender] += _balances[msg.sender].add(amount);
         stakingToken.safeTransferFrom(msg.sender, address(this), amount);
         emit Staked(msg.sender, amount);
     }
 
-    function stakeFor(address staker, uint256 amount)
+    function stakeFor(address _staker, uint256 _amount)
         external
         override
         nonReentrant
         whenNotPaused
-        updateReward(staker)
+        updateReward(_staker)
+        onlyOperator
     {
-        require(amount > 0, "Cannot stake 0");
-        _totalSupply = _totalSupply.add(amount);
-        _balances[staker] = _balances[staker].add(amount);
-        stakingToken.safeTransferFrom(staker, address(this), amount);
-        emit Staked(staker, amount);
+        require(_amount > 0, "CreditPool: Cannot stake 0");
+        _totalSupply = _totalSupply.add(_amount);
+        _balances[_staker] = _balances[_staker].add(_amount);
+        stakingToken.safeTransferFrom(_staker, address(this), _amount);
+        emit Staked(_staker, _amount);
     }
 
     function withdraw(uint256 amount) public nonReentrant updateReward(msg.sender) {
@@ -186,7 +188,7 @@ contract CreditPool is
         require(
             rewardData[_rewardsToken].rewardsDistributor == msg.sender ||
                 creditRoles.isCreditOperator(msg.sender),
-            "CollateralPool: "
+            "CreditPool: unauthorized caller"
         );
         // handle the transfer of reward tokens via `transferFrom` to reduce the number
         // of transactions required and ensure correctness of the reward amount

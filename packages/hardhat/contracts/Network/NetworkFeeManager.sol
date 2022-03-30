@@ -47,10 +47,10 @@ contract NetworkFeeManager is OwnableUpgradeable, INetworkFeeManager {
         feeToken = IERC20Upgradeable(creditFeeManager.getCollateralToken());
         require(
             _ambassadorFeePercent <= MAX_PPM,
-            "NetworkFeeManager: Total fee percent greater than 100"
+            "NetworkFeeManager: Ambassador fee percent greater than 100"
         );
         require(
-            _ambassadorFeePercent <= MAX_PPM,
+            _totalFeePercent <= MAX_PPM,
             "NetworkFeeManager: Total fee percent greater than 100"
         );
         totalFeePercent = _totalFeePercent;
@@ -89,30 +89,34 @@ contract NetworkFeeManager is OwnableUpgradeable, INetworkFeeManager {
 
     function distributeFees(address[] memory _members) public {
         for (uint256 i = 0; i < _members.length; i++) {
-            uint256 totalFees = accruedFees[_members[i]];
-            if (totalFees == 0) continue;
+            uint256 totalFee = accruedFees[_members[i]];
+            if (totalFee == 0) continue;
             // distribute ambassador fees
             address ambassador = networkRoles.getMembershipAmbassador(_members[i]);
-            uint256 ambassadorFee = (ambassadorFeePercent * totalFees) / MAX_PPM;
+            uint256 ambassadorFee = (ambassadorFeePercent * totalFee) / MAX_PPM;
             // no ambassador for membership
             if (ambassador == address(0)) {
                 rewards[address(this)] += ambassadorFee;
+                emit AmbassadorRewardsUpdated(address(this), rewards[address(this)]);
             } else {
                 rewards[ambassador] += ambassadorFee;
+                emit AmbassadorRewardsUpdated(ambassador, rewards[ambassador]);
             }
-            emit AmbassadorRewardsUpdated(ambassador, rewards[ambassador]);
             // distribute network fees
-            uint256 networkFee = ((MAX_PPM - ambassadorFeePercent) * totalFees) / MAX_PPM;
+            uint256 networkFee = totalFee - ambassadorFee;
             rewards[address(this)] += networkFee;
             emit NetworkRewardsUpdated(rewards[address(this)]);
             accruedFees[_members[i]] = 0;
         }
     }
 
-    function updateAmbassadorFeePercent(uint256 _ambassadorFeePercent) public onlyNetworkOperator {
+    function updateAmbassadorFeePercent(uint256 _ambassadorFeePercent)
+        external
+        onlyNetworkOperator
+    {
         require(
             _ambassadorFeePercent <= MAX_PPM,
-            "NetworkFeeManager: Total fee percent greater than 100"
+            "NetworkFeeManager: Ambassador fee percent greater than 100"
         );
         ambassadorFeePercent = _ambassadorFeePercent;
     }

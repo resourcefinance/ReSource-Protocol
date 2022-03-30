@@ -24,7 +24,6 @@ interface ICreditRequestInterface extends ethers.utils.Interface {
     "approveRequest(address,address)": FunctionFragment;
     "createRequest(address,address,uint256)": FunctionFragment;
     "deleteRequest(address,address)": FunctionFragment;
-    "getCreditRequest(address,address)": FunctionFragment;
     "updateRequestLimit(address,address,uint256,bool)": FunctionFragment;
     "verifyCreditLineExpiration(address,address,uint256)": FunctionFragment;
   };
@@ -39,10 +38,6 @@ interface ICreditRequestInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "deleteRequest",
-    values: [string, string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getCreditRequest",
     values: [string, string]
   ): string;
   encodeFunctionData(
@@ -64,10 +59,6 @@ interface ICreditRequestInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "deleteRequest",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getCreditRequest",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -182,20 +173,6 @@ export class ICreditRequest extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    getCreditRequest(
-      _network: string,
-      _networkMember: string,
-      overrides?: CallOverrides
-    ): Promise<
-      [
-        [boolean, boolean, BigNumber] & {
-          approved: boolean;
-          unstaking: boolean;
-          creditLimit: BigNumber;
-        }
-      ]
-    >;
-
     updateRequestLimit(
       _network: string,
       _networkMember: string,
@@ -231,18 +208,6 @@ export class ICreditRequest extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  getCreditRequest(
-    _network: string,
-    _networkMember: string,
-    overrides?: CallOverrides
-  ): Promise<
-    [boolean, boolean, BigNumber] & {
-      approved: boolean;
-      unstaking: boolean;
-      creditLimit: BigNumber;
-    }
-  >;
-
   updateRequestLimit(
     _network: string,
     _networkMember: string,
@@ -277,18 +242,6 @@ export class ICreditRequest extends BaseContract {
       _networkMember: string,
       overrides?: CallOverrides
     ): Promise<void>;
-
-    getCreditRequest(
-      _network: string,
-      _networkMember: string,
-      overrides?: CallOverrides
-    ): Promise<
-      [boolean, boolean, BigNumber] & {
-        approved: boolean;
-        unstaking: boolean;
-        creditLimit: BigNumber;
-      }
-    >;
 
     updateRequestLimit(
       _network: string,
@@ -424,12 +377,6 @@ export class ICreditRequest extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    getCreditRequest(
-      _network: string,
-      _networkMember: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
     updateRequestLimit(
       _network: string,
       _networkMember: string,
@@ -464,12 +411,6 @@ export class ICreditRequest extends BaseContract {
       _network: string,
       _networkMember: string,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    getCreditRequest(
-      _network: string,
-      _networkMember: string,
-      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     updateRequestLimit(

@@ -2,14 +2,14 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
-import "./CIP36.sol";
+import "./CIP36Migratable.sol";
 import "./interface/INetworkRoles.sol";
 import "./interface/INetworkFeeManager.sol";
 import "../iKeyWallet/IiKeyWalletDeployer.sol";
 import "../Credit/interface/ICreditRoles.sol";
 import "hardhat/console.sol";
 
-contract RUSD is CIP36, PausableUpgradeable {
+contract RUSD is CIP36Migratable, PausableUpgradeable {
     /*
      *  Storage
      */
@@ -43,7 +43,7 @@ contract RUSD is CIP36, PausableUpgradeable {
         address _feeManager,
         address _networkRoles
     ) external virtual initializer {
-        CIP36.initialize("rUSD", "rUSD");
+        CIP36Migratable.initialize("rUSD", "rUSD");
         creditRoles = ICreditRoles(_creditRoles);
         feeManager = INetworkFeeManager(_feeManager);
         networkRoles = INetworkRoles(_networkRoles);

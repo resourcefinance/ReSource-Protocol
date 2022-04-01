@@ -7,7 +7,6 @@ import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/math/MathUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/utils/math/SafeMathUpgradeable.sol";
 import "./interface/ICreditPool.sol";
 import "./interface/ICreditRoles.sol";
 import "./interface/ICreditManager.sol";
@@ -19,7 +18,6 @@ contract CreditPool is
     ICreditPool
 {
     using SafeERC20Upgradeable for IERC20Upgradeable;
-    using SafeMathUpgradeable for uint256;
 
     /* ========== STATE VARIABLES ========== */
 
@@ -96,29 +94,20 @@ contract CreditPool is
             return rewardData[_rewardsToken].rewardPerTokenStored;
         }
         return
-            rewardData[_rewardsToken].rewardPerTokenStored.add(
-                lastTimeRewardApplicable(_rewardsToken)
-                    .sub(rewardData[_rewardsToken].lastUpdateTime)
-                    .mul(rewardData[_rewardsToken].rewardRate)
-                    .mul(1e18)
-                    .div(_totalSupply)
-            );
+            rewardData[_rewardsToken].rewardPerTokenStored +
+            (((lastTimeRewardApplicable(_rewardsToken) - rewardData[_rewardsToken].lastUpdateTime) *
+                rewardData[_rewardsToken].rewardRate *
+                1e18) / _totalSupply);
     }
 
     function earned(address account, address _rewardsToken) public view returns (uint256) {
-        return
-            _balances[account]
-                .mul(
-                    rewardPerToken(_rewardsToken).sub(
-                        userRewardPerTokenPaid[account][_rewardsToken]
-                    )
-                )
-                .div(1e18)
-                .add(rewards[account][_rewardsToken]);
+        return (((_balances[account] *
+            (rewardPerToken(_rewardsToken) - userRewardPerTokenPaid[account][_rewardsToken])) /
+            1e18) + rewards[account][_rewardsToken]);
     }
 
     function getRewardForDuration(address _rewardsToken) external view returns (uint256) {
-        return rewardData[_rewardsToken].rewardRate.mul(rewardData[_rewardsToken].rewardsDuration);
+        return rewardData[_rewardsToken].rewardRate * rewardData[_rewardsToken].rewardsDuration;
     }
 
     /* ========== MUTATIVE FUNCTIONS ========== */
@@ -133,7 +122,7 @@ contract CreditPool is
     function stake(uint256 amount) external nonReentrant whenNotPaused updateReward(msg.sender) {
         require(amount > 0, "Cannot stake 0");
         _totalSupply = _totalSupply + amount;
-        _balances[msg.sender] += _balances[msg.sender].add(amount);
+        _balances[msg.sender] += amount;
         stakingToken.safeTransferFrom(msg.sender, address(this), amount);
         emit Staked(msg.sender, amount);
     }
@@ -147,16 +136,16 @@ contract CreditPool is
         onlyOperator
     {
         require(_amount > 0, "CreditPool: Cannot stake 0");
-        _totalSupply = _totalSupply.add(_amount);
-        _balances[_staker] = _balances[_staker].add(_amount);
+        _totalSupply += _amount;
+        _balances[_staker] += _amount;
         stakingToken.safeTransferFrom(_staker, address(this), _amount);
         emit Staked(_staker, _amount);
     }
 
     function withdraw(uint256 amount) public nonReentrant updateReward(msg.sender) {
         require(amount > 0, "Cannot withdraw 0");
-        _totalSupply = _totalSupply.sub(amount);
-        _balances[msg.sender] = _balances[msg.sender].sub(amount);
+        _totalSupply -= amount;
+        _balances[msg.sender] -= amount;
         stakingToken.safeTransfer(msg.sender, amount);
         emit Withdrawn(msg.sender, amount);
     }
@@ -195,21 +184,21 @@ contract CreditPool is
         IERC20Upgradeable(_rewardsToken).safeTransferFrom(msg.sender, address(this), reward);
 
         if (block.timestamp >= rewardData[_rewardsToken].periodFinish) {
-            rewardData[_rewardsToken].rewardRate = reward.div(
-                rewardData[_rewardsToken].rewardsDuration
-            );
+            rewardData[_rewardsToken].rewardRate =
+                reward /
+                rewardData[_rewardsToken].rewardsDuration;
         } else {
-            uint256 remaining = rewardData[_rewardsToken].periodFinish.sub(block.timestamp);
-            uint256 leftover = remaining.mul(rewardData[_rewardsToken].rewardRate);
-            rewardData[_rewardsToken].rewardRate = reward.add(leftover).div(
-                rewardData[_rewardsToken].rewardsDuration
-            );
+            uint256 remaining = rewardData[_rewardsToken].periodFinish - block.timestamp;
+            uint256 leftover = remaining * rewardData[_rewardsToken].rewardRate;
+            rewardData[_rewardsToken].rewardRate =
+                (reward + leftover) /
+                rewardData[_rewardsToken].rewardsDuration;
         }
 
         rewardData[_rewardsToken].lastUpdateTime = block.timestamp;
-        rewardData[_rewardsToken].periodFinish = block.timestamp.add(
-            rewardData[_rewardsToken].rewardsDuration
-        );
+        rewardData[_rewardsToken].periodFinish =
+            block.timestamp +
+            rewardData[_rewardsToken].rewardsDuration;
 
         emit RewardAdded(reward);
     }

@@ -65,6 +65,16 @@ contract RUSD is CIP36Migratable, PausableUpgradeable {
         super._transfer(_from, _to, _amount);
     }
 
+    function migrate(
+        address[] calldata accounts,
+        uint128[] calldata balances,
+        uint128[] calldata creditBalances,
+        uint128[] calldata creditLimits,
+        uint256 totalSupply
+    ) public override onlyOwner {
+        super.migrate(accounts, balances, creditBalances, creditLimits, totalSupply);
+    }
+
     function bulkTransfer(address[] memory _to, uint256[] memory _values) external {
         require(_to.length == _values.length, "RUSD: invalid input");
         for (uint256 i = 0; i < _to.length; i++) {

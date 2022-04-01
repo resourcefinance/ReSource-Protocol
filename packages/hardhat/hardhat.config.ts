@@ -9,6 +9,7 @@ import "@openzeppelin/hardhat-upgrades"
 import "hardhat-gas-reporter"
 import "solidity-coverage"
 import "hardhat-contract-sizer"
+import { existsSync, readFileSync, writeFileSync } from "fs"
 
 import { utils } from "ethers"
 
@@ -30,10 +31,7 @@ function mnemonic() {
   const path = "./mnemonic.txt"
   if (fs.existsSync(path)) {
     try {
-      return fs
-        .readFileSync("./mnemonic.txt")
-        .toString()
-        .trim()
+      return fs.readFileSync("./mnemonic.txt").toString().trim()
     } catch (e) {
       console.log("Mnemonic: ", e)
     }
@@ -227,9 +225,7 @@ task("mineContractAddress", "Looks for a deployer account that will give leading
       let input_arr = [sender, nonce]
       let rlp_encoded = rlp.encode(input_arr)
 
-      let contract_address_long = keccak("keccak256")
-        .update(rlp_encoded)
-        .digest("hex")
+      let contract_address_long = keccak("keccak256").update(rlp_encoded).digest("hex")
 
       contract_address = contract_address_long.substring(24) //Trim the first 24 characters.
     }
@@ -245,10 +241,7 @@ task("mineContractAddress", "Looks for a deployer account that will give leading
 task("account", "Get balance informations for the deployment account.", async (_, { ethers }) => {
   const hdkey = require("ethereumjs-wallet/hdkey")
   const bip39 = require("bip39")
-  let mnemonic = fs
-    .readFileSync("./mnemonic.txt")
-    .toString()
-    .trim()
+  let mnemonic = fs.readFileSync("./mnemonic.txt").toString().trim()
   if (DEBUG) console.log("mnemonic", mnemonic)
   const seed = await bip39.mnemonicToSeed(mnemonic)
   if (DEBUG) console.log("seed", seed)
@@ -560,3 +553,90 @@ task("unpauseRUSD", "unpauseRUSD transaction fees").setAction(
     }
   }
 )
+
+task("migrateRUSD", "migrateRUSD").setAction(async (taskArgs, { ethers, network }) => {
+  if (!existsSync("./rUSDMigration.json")) {
+    return console.log("No migration file found")
+  }
+
+  let migration = readFileSync("./rUSDMigration.json").toString()
+
+  migration = JSON.parse(migration)
+
+  const deploymentPath = `./deployments/${network.name}/RUSD.json`
+  const rUSDDeployment = fs.readFileSync(deploymentPath).toString()
+  const rUSDAddress = JSON.parse(rUSDDeployment)["address"]
+
+  if (!rUSDAddress) throw new Error("rUSD not deployed on this network")
+
+  const networkDeploymentPath = `./deployments/${network.name}/NetworkRoles.json`
+  const networkRolesDeployment = fs.readFileSync(networkDeploymentPath).toString()
+  const networkRolesAddress = JSON.parse(networkRolesDeployment)["address"]
+
+  if (!networkRolesAddress) throw new Error("network roles not deployed on this network")
+
+  const signer = (await ethers.getSigners())[0]
+
+  const rUSDFactory = await ethers.getContractFactory("RUSD")
+
+  const rUSD = new ethers.Contract(rUSDAddress, rUSDFactory.interface, signer)
+
+  const networkRolesFactory = await ethers.getContractFactory("NetworkRoles")
+
+  const networkRoles = new ethers.Contract(
+    networkRolesAddress,
+    networkRolesFactory.interface,
+    signer
+  )
+
+  const accounts = migration["accounts"]
+  const balances = migration["balances"]
+  const creditBalances = migration["creditBalances"]
+  const creditLimits = migration["creditLimits"]
+  const totalSupply = migration["totalSupply"]
+
+  try {
+    let count = 1
+    for (var account of accounts) {
+      console.log("granting ", count++, " of ", accounts.length)
+      await (await networkRoles.grantMember(account, ethers.constants.AddressZero)).wait()
+    }
+    await (await rUSD.migrate(accounts, balances, creditBalances, creditLimits, totalSupply)).wait()
+    console.log("rUSD migrated")
+  } catch (e) {
+    console.log(e)
+  }
+})
+
+task("getRUSDAccountInfo", "logs the credit and balance info for a given address")
+  .addParam("address", "Address to get rUSD info for")
+  .setAction(async (taskArgs, { ethers, network }) => {
+    const deploymentPath = `./deployments/${network.name}/RUSD.json`
+    const rUSDDeployment = fs.readFileSync(deploymentPath).toString()
+    const rUSDAddress = JSON.parse(rUSDDeployment)["address"]
+
+    if (!rUSDAddress) throw new Error("rUSD not deployed on this network")
+
+    const signer = (await ethers.getSigners())[0]
+
+    const rUSDFactory = await ethers.getContractFactory("RUSD")
+
+    const rUSD = new ethers.Contract(rUSDAddress, rUSDFactory.interface, signer)
+
+    const accountAddress = await addr(ethers, taskArgs.address)
+
+    try {
+      const balance = ethers.utils.formatUnits(await rUSD.balanceOf(accountAddress), "mwei")
+      const creditBalance = ethers.utils.formatUnits(
+        await rUSD.creditBalanceOf(accountAddress),
+        "mwei"
+      )
+      const creditLimit = ethers.utils.formatUnits(await rUSD.creditLimitOf(accountAddress), "mwei")
+
+      console.log("Balance: ", balance)
+      console.log("CreditBalance: ", creditBalance)
+      console.log("CreditLimit: ", creditLimit)
+    } catch (e) {
+      console.log(e)
+    }
+  })

@@ -38,6 +38,8 @@ interface RUSDInterface extends ethers.utils.Interface {
     "increaseAllowance(address,uint256)": FunctionFragment;
     "initialize(string,string)": FunctionFragment;
     "initializeRUSD(address,address,address)": FunctionFragment;
+    "migrate(address[],uint128[],uint128[],uint128[],uint256)": FunctionFragment;
+    "migrated()": FunctionFragment;
     "name()": FunctionFragment;
     "networkRoles()": FunctionFragment;
     "owner()": FunctionFragment;
@@ -112,6 +114,17 @@ interface RUSDInterface extends ethers.utils.Interface {
     functionFragment: "initializeRUSD",
     values: [string, string, string]
   ): string;
+  encodeFunctionData(
+    functionFragment: "migrate",
+    values: [
+      string[],
+      BigNumberish[],
+      BigNumberish[],
+      BigNumberish[],
+      BigNumberish
+    ]
+  ): string;
+  encodeFunctionData(functionFragment: "migrated", values?: undefined): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "networkRoles",
@@ -191,6 +204,8 @@ interface RUSDInterface extends ethers.utils.Interface {
     functionFragment: "initializeRUSD",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "migrate", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "migrated", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "networkRoles",
@@ -391,6 +406,17 @@ export class RUSD extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    migrate(
+      accounts: string[],
+      balances: BigNumberish[],
+      creditBalances: BigNumberish[],
+      creditLimits: BigNumberish[],
+      totalSupply: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    migrated(overrides?: CallOverrides): Promise<[boolean]>;
+
     name(overrides?: CallOverrides): Promise<[string]>;
 
     networkRoles(overrides?: CallOverrides): Promise<[string]>;
@@ -520,6 +546,17 @@ export class RUSD extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  migrate(
+    accounts: string[],
+    balances: BigNumberish[],
+    creditBalances: BigNumberish[],
+    creditLimits: BigNumberish[],
+    totalSupply: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  migrated(overrides?: CallOverrides): Promise<boolean>;
+
   name(overrides?: CallOverrides): Promise<string>;
 
   networkRoles(overrides?: CallOverrides): Promise<string>;
@@ -648,6 +685,17 @@ export class RUSD extends BaseContract {
       _networkRoles: string,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    migrate(
+      accounts: string[],
+      balances: BigNumberish[],
+      creditBalances: BigNumberish[],
+      creditLimits: BigNumberish[],
+      totalSupply: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    migrated(overrides?: CallOverrides): Promise<boolean>;
 
     name(overrides?: CallOverrides): Promise<string>;
 
@@ -858,6 +906,17 @@ export class RUSD extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    migrate(
+      accounts: string[],
+      balances: BigNumberish[],
+      creditBalances: BigNumberish[],
+      creditLimits: BigNumberish[],
+      totalSupply: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    migrated(overrides?: CallOverrides): Promise<BigNumber>;
+
     name(overrides?: CallOverrides): Promise<BigNumber>;
 
     networkRoles(overrides?: CallOverrides): Promise<BigNumber>;
@@ -993,6 +1052,17 @@ export class RUSD extends BaseContract {
       _networkRoles: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
+
+    migrate(
+      accounts: string[],
+      balances: BigNumberish[],
+      creditBalances: BigNumberish[],
+      creditLimits: BigNumberish[],
+      totalSupply: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    migrated(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 

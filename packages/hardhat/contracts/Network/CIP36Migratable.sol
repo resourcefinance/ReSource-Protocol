@@ -100,7 +100,7 @@ contract CIP36Migratable is OwnableUpgradeable, ERC20BurnableUpgradeable {
         uint128[] calldata creditBalances,
         uint128[] calldata creditLimits,
         uint256 totalSupply
-    ) external onlyOwner {
+    ) public virtual onlyOwner {
         require(!migrated, "RUSD: Contract already migrated");
         require(
             accounts.length == balances.length &&

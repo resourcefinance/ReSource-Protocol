@@ -27,7 +27,10 @@ const func: DeployFunction = async function (hardhat: HardhatRuntimeEnvironment)
 
   // 2. deploy PriceOracle
   const priceOracleFactory = await ethers.getContractFactory("PriceOracle")
-  const priceOracle = (await priceOracleFactory.deploy(1000)) as PriceOracle
+  const priceOracle = await hardhat.deployments.deploy("PriceOracle", {
+    args: [1000],
+    from: accounts[0].address,
+  })
 
   // 3. deploy CreditManager
   const creditManagerArgs = [sourceTokenAddress, creditRoles.address, priceOracle.address]

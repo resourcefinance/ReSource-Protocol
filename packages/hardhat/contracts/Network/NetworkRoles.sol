@@ -12,12 +12,6 @@ contract NetworkRoles is AccessControlUpgradeable, OwnableUpgradeable, INetworkR
 
     IiKeyWalletDeployer private walletDeployer;
     address network;
-    // member => ambassador
-    mapping(address => address) membershipAmbassador;
-    // member => ambassador => invited
-    mapping(address => mapping(address => bool)) memberInvited;
-    // ambassador => allowance
-    mapping(address => uint256) ambassadorCreditAllowance;
 
     /* ========== INITIALIZER ========== */
 
@@ -27,11 +21,8 @@ contract NetworkRoles is AccessControlUpgradeable, OwnableUpgradeable, INetworkR
         // create roles
         _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _setupRole("OPERATOR", msg.sender);
-        _setupRole("AMBASSADOR", msg.sender);
         _setupRole("MEMBER", msg.sender);
-        // configure roles hierarchy
-        _setRoleAdmin("AMBASSADOR", "OPERATOR");
-        _setRoleAdmin("MEMBER", "AMBASSADOR");
+        _setRoleAdmin("MEMBER", "OPERATOR");
 
         for (uint256 j = 0; j < _operators.length; j++) {
             require(_operators[j] != address(0), "NetworkRoles: invalid operator supplied");
@@ -41,81 +32,9 @@ contract NetworkRoles is AccessControlUpgradeable, OwnableUpgradeable, INetworkR
 
     /* ========== PUBLIC FUNCTIONS ========== */
 
-    function createMembershipAmbassadorInvite(address _member) external onlyAmbassador {
-        require(!memberInvited[_member][msg.sender], "NetworkRoles: Invite already exists");
-        memberInvited[_member][msg.sender] = true;
+    function grantMember(address _member) external override onlyNetworkOperator {
         grantRole("MEMBER", _member);
-        emit MemberAdded(_member, address(0));
-    }
-
-    function acceptMembershipAmbassadorInvitation(address _ambassador) external {
-        require(memberInvited[msg.sender][_ambassador], "NetworkRoles: Invite does not exist");
-        membershipAmbassador[msg.sender] = _ambassador;
-        delete memberInvited[msg.sender][_ambassador];
-        if (ambassadorCreditAllowance[_ambassador] > 0) {
-            ICIP36(network).setCreditLimit(msg.sender, ambassadorCreditAllowance[_ambassador]);
-        }
-        emit MembershipAmbassadorUpdated(msg.sender, _ambassador);
-    }
-
-    function grantMember(address _member, address _ambassador) external onlyNetworkOperator {
-        membershipAmbassador[_member] = _ambassador;
-        grantRole("MEMBER", _member);
-        if (ambassadorCreditAllowance[_ambassador] > 0) {
-            ICIP36(network).setCreditLimit(_member, ambassadorCreditAllowance[_ambassador]);
-        }
-        emit MembershipAmbassadorUpdated(_member, _ambassador);
-    }
-
-    function grantAmbassador(address _ambassador, uint256 _ambassadorCreditAllowance)
-        external
-        onlyNetworkOperator
-        ambassadorDoesNotExist(_ambassador)
-        notNull(_ambassador)
-    {
-        grantRole("AMBASSADOR", _ambassador);
-        ambassadorCreditAllowance[_ambassador] = _ambassadorCreditAllowance;
-        emit AmbassadorAdded(_ambassador, _ambassadorCreditAllowance);
-    }
-
-    function updateAmbassadorCreditAllowance(
-        address _ambassador,
-        uint256 _ambassadorCreditAllowance
-    ) external onlyNetworkOperator ambassadorExists(_ambassador) {
-        ambassadorCreditAllowance[_ambassador] = _ambassadorCreditAllowance;
-        emit AmbassadorAllowanceUpdated(_ambassador, _ambassadorCreditAllowance);
-    }
-
-    function revokeAmbassador(address _ambassador)
-        external
-        onlyNetworkOperator
-        ambassadorExists(_ambassador)
-    {
-        revokeRole("AMBASSADOR", _ambassador);
-        emit AmbassadorRemoved(_ambassador);
-    }
-
-    function transferMembershipAmbassador(address _member, address _ambassador)
-        external
-        memberExists(_member)
-        canAlterMembership(_member)
-    {
-        require(
-            _ambassador != msg.sender,
-            "NetworkRoles: Cannot transfer membership to caller address"
-        );
-        require(isAmbassador(_ambassador), "NetworkRoles: provided ambassador does not have role");
-        membershipAmbassador[_member] = _ambassador;
-        emit MembershipAmbassadorUpdated(_member, _ambassador);
-    }
-
-    function dropMembership(address _member)
-        external
-        memberExists(_member)
-        canAlterMembership(_member)
-    {
-        delete membershipAmbassador[_member];
-        emit MembershipAmbassadorUpdated(_member, address(0));
+        emit MemberAdded(_member);
     }
 
     function grantOperator(address _operator)
@@ -132,23 +51,6 @@ contract NetworkRoles is AccessControlUpgradeable, OwnableUpgradeable, INetworkR
         revokeRole("OPERATOR", _operator);
     }
 
-    function deployMemberWallet(
-        address[] memory _clients,
-        address[] memory _guardians,
-        address _coSigner,
-        address _ambassador,
-        uint256 _required
-    ) public onlyAmbassador returns (address) {
-        address newWallet = walletDeployer.deployWallet(_clients, _guardians, _coSigner, _required);
-        membershipAmbassador[newWallet] = _ambassador;
-        if (ambassadorCreditAllowance[_ambassador] > 0) {
-            ICIP36(network).setCreditLimit(newWallet, ambassadorCreditAllowance[_ambassador]);
-        }
-        grantRole("MEMBER", newWallet);
-        emit MemberAdded(newWallet, _ambassador);
-        return newWallet;
-    }
-
     function setNetwork(address _network) external onlyNetworkOperator {
         network = _network;
     }
@@ -159,14 +61,6 @@ contract NetworkRoles is AccessControlUpgradeable, OwnableUpgradeable, INetworkR
         return hasRole("MEMBER", _member);
     }
 
-    function getMembershipAmbassador(address _member) external view override returns (address) {
-        return membershipAmbassador[_member];
-    }
-
-    function isAmbassador(address _ambassador) public view override returns (bool) {
-        return hasRole("AMBASSADOR", _ambassador);
-    }
-
     function isNetworkOperator(address _operator) public view override returns (bool) {
         return hasRole("OPERATOR", _operator);
     }
@@ -175,24 +69,6 @@ contract NetworkRoles is AccessControlUpgradeable, OwnableUpgradeable, INetworkR
 
     modifier memberExists(address _member) {
         require(hasRole("MEMBER", _member), "NetworkRoles: member does not exist");
-        _;
-    }
-
-    modifier ambassadorDoesNotExist(address _ambassador) {
-        require(!hasRole("AMBASSADOR", _ambassador), "NetworkRoles: ambassador already exists");
-        _;
-    }
-
-    modifier ambassadorExists(address _ambassador) {
-        require(hasRole("AMBASSADOR", _ambassador), "NetworkRoles: ambassador does not exist");
-        _;
-    }
-
-    modifier onlyAmbassador() {
-        require(
-            hasRole("AMBASSADOR", msg.sender) || hasRole("OPERATOR", msg.sender),
-            "NetworkRoles: Only ambassadors can call"
-        );
         _;
     }
 
@@ -213,16 +89,6 @@ contract NetworkRoles is AccessControlUpgradeable, OwnableUpgradeable, INetworkR
 
     modifier notNull(address _address) {
         require(_address != address(0), "invalid operator address");
-        _;
-    }
-
-    modifier canAlterMembership(address _member) {
-        require(
-            isNetworkOperator(msg.sender) ||
-                membershipAmbassador[_member] == msg.sender ||
-                msg.sender == _member,
-            "NetworkRoles: Caller not authorized to alter membership"
-        );
         _;
     }
 }

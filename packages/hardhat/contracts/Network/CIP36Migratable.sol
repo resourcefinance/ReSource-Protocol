@@ -4,6 +4,7 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts/utils/math/Math.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC20/extensions/ERC20BurnableUpgradeable.sol";
+import "hardhat/console.sol";
 
 contract CIP36Migratable is OwnableUpgradeable, ERC20BurnableUpgradeable {
     using ExtraMath for *;
@@ -14,7 +15,7 @@ contract CIP36Migratable is OwnableUpgradeable, ERC20BurnableUpgradeable {
     }
 
     mapping(address => Member) private _members;
-    bool public migrated;
+    bool migrationInitialized;
 
     event CreditLimitUpdate(address member, uint256 limit);
 
@@ -94,33 +95,43 @@ contract CIP36Migratable is OwnableUpgradeable, ERC20BurnableUpgradeable {
         _burn(_to, _repay);
     }
 
-    function migrate(
-        address[] calldata accounts,
-        uint128[] calldata balances,
-        uint128[] calldata creditBalances,
-        uint128[] calldata creditLimits,
-        uint256 totalSupply
-    ) public virtual onlyOwner {
-        require(!migrated, "RUSD: Contract already migrated");
+    function initializeMigration(uint128 migratedSupply_) external onlyOwner {
+        require(migratedSupply_ > 0, "CIP36Migratable: nothing to migrate");
+        require(!migrationInitialized, "CIP36Migratable: migration already initialized");
+        _mint(address(this), migratedSupply_);
+        _members[address(this)] = Member(migratedSupply_, migratedSupply_);
+    }
+
+    function migrateAccount(
+        address _member,
+        uint128 _balance,
+        uint128 _creditBalance,
+        uint128 _creditLimit
+    ) public virtual onlyAuthorized {
         require(
-            accounts.length == balances.length &&
-                balances.length == creditBalances.length &&
-                creditBalances.length == creditLimits.length,
-            "RUSD: must have an equal number if input parameters"
+            _members[_member].creditBalance == 0 && balanceOf(_member) == 0,
+            "CIP36Migratable: member is already migrated"
         );
-        _mint(msg.sender, totalSupply);
-        uint256 transfered;
-        for (uint256 i = 0; i < accounts.length; i++) {
-            _members[accounts[i]] = Member(creditBalances[i], creditLimits[i]);
-            if (balances[i] == 0) continue;
-            transfered += balances[i];
-            require(
-                transfered <= totalSupply,
-                "CIP36Migratable: totalSupply is greater than balances supplied"
-            );
-            transfer(accounts[i], balances[i]);
+        if (_balance > 0) {
+            require(_creditBalance == 0, "CIP36Migratable: invalid migration input");
+            _transfer(address(this), _member, _balance);
         }
-        migrated = true;
+        if (_creditBalance > 0) {
+            require(
+                _balance == 0 && _creditLimit >= _creditBalance,
+                "CIP36Migratable: invalid migration input"
+            );
+            require(
+                _members[address(this)].creditBalance >= _creditBalance,
+                "CIP36Migratable: Insufficient migratable credit"
+            );
+            _members[address(this)].creditBalance -= _creditBalance;
+        }
+        _members[_member] = Member(_creditBalance, _creditLimit);
+    }
+
+    function recoverUnmigrated() external onlyAuthorized {
+        _transfer(address(this), msg.sender, balanceOf(address(this)));
     }
 }
 

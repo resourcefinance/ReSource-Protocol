@@ -12,7 +12,6 @@ describe("NetworkAccess Test", function () {
   let contracts: ProtocolContracts
   let underwriter: SignerWithAddress
   let creditOperator: SignerWithAddress
-  let ambassador: SignerWithAddress
   let request: SignerWithAddress
 
   // deploy protocol
@@ -21,7 +20,6 @@ describe("NetworkAccess Test", function () {
     deployer = accounts[0]
     underwriter = accounts[1]
     creditOperator = accounts[2]
-    ambassador = accounts[3]
     request = accounts[4]
 
     contracts = await protocolFactory.deployDefault(underwriter.address)

@@ -13,7 +13,6 @@ describe("CreditFeeManager Tests", function () {
   let underwriter: SignerWithAddress
   let network: SignerWithAddress
   let creditOpperator: SignerWithAddress
-  let ambassador: SignerWithAddress
   let member: SignerWithAddress
 
   this.beforeEach(async function () {
@@ -22,7 +21,6 @@ describe("CreditFeeManager Tests", function () {
     underwriter = accounts[1]
     network = accounts[2]
     creditOpperator = accounts[3]
-    ambassador = accounts[4]
     member = accounts[5]
     contracts = await protocolFactory.deployDefault(underwriter.address)
   })
@@ -43,10 +41,13 @@ describe("CreditFeeManager Tests", function () {
       .approve(contracts.creditFeeManager.address, ethers.constants.MaxUint256)
 
     const totalFees = ethers.utils.formatEther(
-      await contracts.networkFeeManager.calculateFees(ethers.utils.parseUnits("1000", "mwei"))
+      await contracts.creditFeeManager.calculateFees(
+        contracts.rUSD.address,
+        ethers.utils.parseUnits("1000", "mwei")
+      )
     )
 
-    expect(totalFees).to.equal("200.0")
+    expect(totalFees).to.equal("100.0")
 
     await (
       await contracts.creditFeeManager

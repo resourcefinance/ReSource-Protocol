@@ -11,6 +11,7 @@ import {
   PopulatedTransaction,
   BaseContract,
   ContractTransaction,
+  Overrides,
   CallOverrides,
 } from "ethers";
 import { BytesLike } from "@ethersproject/bytes";
@@ -20,20 +21,12 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface INetworkRolesInterface extends ethers.utils.Interface {
   functions: {
-    "getMembershipAmbassador(address)": FunctionFragment;
-    "isAmbassador(address)": FunctionFragment;
+    "grantMember(address)": FunctionFragment;
     "isMember(address)": FunctionFragment;
     "isNetworkOperator(address)": FunctionFragment;
   };
 
-  encodeFunctionData(
-    functionFragment: "getMembershipAmbassador",
-    values: [string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "isAmbassador",
-    values: [string]
-  ): string;
+  encodeFunctionData(functionFragment: "grantMember", values: [string]): string;
   encodeFunctionData(functionFragment: "isMember", values: [string]): string;
   encodeFunctionData(
     functionFragment: "isNetworkOperator",
@@ -41,11 +34,7 @@ interface INetworkRolesInterface extends ethers.utils.Interface {
   ): string;
 
   decodeFunctionResult(
-    functionFragment: "getMembershipAmbassador",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "isAmbassador",
+    functionFragment: "grantMember",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "isMember", data: BytesLike): Result;
@@ -55,41 +44,13 @@ interface INetworkRolesInterface extends ethers.utils.Interface {
   ): Result;
 
   events: {
-    "AmbassadorAdded(address,uint256)": EventFragment;
-    "AmbassadorAllowanceUpdated(address,uint256)": EventFragment;
-    "AmbassadorRemoved(address)": EventFragment;
-    "MemberAdded(address,address)": EventFragment;
-    "MembershipAmbassadorUpdated(address,address)": EventFragment;
+    "MemberAdded(address)": EventFragment;
   };
 
-  getEvent(nameOrSignatureOrTopic: "AmbassadorAdded"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "AmbassadorAllowanceUpdated"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "AmbassadorRemoved"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "MemberAdded"): EventFragment;
-  getEvent(
-    nameOrSignatureOrTopic: "MembershipAmbassadorUpdated"
-  ): EventFragment;
 }
 
-export type AmbassadorAddedEvent = TypedEvent<
-  [string, BigNumber] & { ambassador: string; creditAllowance: BigNumber }
->;
-
-export type AmbassadorAllowanceUpdatedEvent = TypedEvent<
-  [string, BigNumber] & { ambassador: string; creditAllowance: BigNumber }
->;
-
-export type AmbassadorRemovedEvent = TypedEvent<
-  [string] & { ambassador: string }
->;
-
-export type MemberAddedEvent = TypedEvent<
-  [string, string] & { member: string; ambassador: string }
->;
-
-export type MembershipAmbassadorUpdatedEvent = TypedEvent<
-  [string, string] & { member: string; ambassador: string }
->;
+export type MemberAddedEvent = TypedEvent<[string] & { member: string }>;
 
 export class INetworkRoles extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -135,15 +96,10 @@ export class INetworkRoles extends BaseContract {
   interface: INetworkRolesInterface;
 
   functions: {
-    getMembershipAmbassador(
+    grantMember(
       _member: string,
-      overrides?: CallOverrides
-    ): Promise<[string]>;
-
-    isAmbassador(
-      _ambassador: string,
-      overrides?: CallOverrides
-    ): Promise<[boolean]>;
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
 
     isMember(_member: string, overrides?: CallOverrides): Promise<[boolean]>;
 
@@ -153,15 +109,10 @@ export class INetworkRoles extends BaseContract {
     ): Promise<[boolean]>;
   };
 
-  getMembershipAmbassador(
+  grantMember(
     _member: string,
-    overrides?: CallOverrides
-  ): Promise<string>;
-
-  isAmbassador(
-    _ambassador: string,
-    overrides?: CallOverrides
-  ): Promise<boolean>;
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
 
   isMember(_member: string, overrides?: CallOverrides): Promise<boolean>;
 
@@ -171,15 +122,7 @@ export class INetworkRoles extends BaseContract {
   ): Promise<boolean>;
 
   callStatic: {
-    getMembershipAmbassador(
-      _member: string,
-      overrides?: CallOverrides
-    ): Promise<string>;
-
-    isAmbassador(
-      _ambassador: string,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
+    grantMember(_member: string, overrides?: CallOverrides): Promise<void>;
 
     isMember(_member: string, overrides?: CallOverrides): Promise<boolean>;
 
@@ -190,88 +133,17 @@ export class INetworkRoles extends BaseContract {
   };
 
   filters: {
-    "AmbassadorAdded(address,uint256)"(
-      ambassador?: null,
-      creditAllowance?: null
-    ): TypedEventFilter<
-      [string, BigNumber],
-      { ambassador: string; creditAllowance: BigNumber }
-    >;
+    "MemberAdded(address)"(
+      member?: null
+    ): TypedEventFilter<[string], { member: string }>;
 
-    AmbassadorAdded(
-      ambassador?: null,
-      creditAllowance?: null
-    ): TypedEventFilter<
-      [string, BigNumber],
-      { ambassador: string; creditAllowance: BigNumber }
-    >;
-
-    "AmbassadorAllowanceUpdated(address,uint256)"(
-      ambassador?: null,
-      creditAllowance?: null
-    ): TypedEventFilter<
-      [string, BigNumber],
-      { ambassador: string; creditAllowance: BigNumber }
-    >;
-
-    AmbassadorAllowanceUpdated(
-      ambassador?: null,
-      creditAllowance?: null
-    ): TypedEventFilter<
-      [string, BigNumber],
-      { ambassador: string; creditAllowance: BigNumber }
-    >;
-
-    "AmbassadorRemoved(address)"(
-      ambassador?: null
-    ): TypedEventFilter<[string], { ambassador: string }>;
-
-    AmbassadorRemoved(
-      ambassador?: null
-    ): TypedEventFilter<[string], { ambassador: string }>;
-
-    "MemberAdded(address,address)"(
-      member?: null,
-      ambassador?: null
-    ): TypedEventFilter<
-      [string, string],
-      { member: string; ambassador: string }
-    >;
-
-    MemberAdded(
-      member?: null,
-      ambassador?: null
-    ): TypedEventFilter<
-      [string, string],
-      { member: string; ambassador: string }
-    >;
-
-    "MembershipAmbassadorUpdated(address,address)"(
-      member?: null,
-      ambassador?: null
-    ): TypedEventFilter<
-      [string, string],
-      { member: string; ambassador: string }
-    >;
-
-    MembershipAmbassadorUpdated(
-      member?: null,
-      ambassador?: null
-    ): TypedEventFilter<
-      [string, string],
-      { member: string; ambassador: string }
-    >;
+    MemberAdded(member?: null): TypedEventFilter<[string], { member: string }>;
   };
 
   estimateGas: {
-    getMembershipAmbassador(
+    grantMember(
       _member: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    isAmbassador(
-      _ambassador: string,
-      overrides?: CallOverrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     isMember(_member: string, overrides?: CallOverrides): Promise<BigNumber>;
@@ -283,14 +155,9 @@ export class INetworkRoles extends BaseContract {
   };
 
   populateTransaction: {
-    getMembershipAmbassador(
+    grantMember(
       _member: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    isAmbassador(
-      _ambassador: string,
-      overrides?: CallOverrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     isMember(

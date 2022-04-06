@@ -4,7 +4,7 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
 import "./CIP36Migratable.sol";
 import "./interface/INetworkRoles.sol";
-import "./interface/INetworkFeeManager.sol";
+import "../Credit/interface/ICreditFeeManager.sol";
 import "../iKeyWallet/IiKeyWalletDeployer.sol";
 import "../Credit/interface/ICreditRoles.sol";
 import "hardhat/console.sol";
@@ -15,7 +15,7 @@ contract RUSD is CIP36Migratable, PausableUpgradeable {
      */
     INetworkRoles public networkRoles;
     ICreditRoles public creditRoles;
-    INetworkFeeManager public feeManager;
+    ICreditFeeManager public feeManager;
 
     modifier onlyAuthorized() override {
         require(
@@ -43,10 +43,10 @@ contract RUSD is CIP36Migratable, PausableUpgradeable {
         address _feeManager,
         address _networkRoles
     ) external virtual initializer {
-        CIP36Migratable.initialize("rUSD", "rUSD");
         creditRoles = ICreditRoles(_creditRoles);
-        feeManager = INetworkFeeManager(_feeManager);
+        feeManager = ICreditFeeManager(_feeManager);
         networkRoles = INetworkRoles(_networkRoles);
+        CIP36Migratable.initialize("rUSD", "rUSD");
         __Pausable_init();
         _pause();
     }
@@ -60,19 +60,19 @@ contract RUSD is CIP36Migratable, PausableUpgradeable {
         uint256 _amount
     ) internal override onlyRegistered(_from, _to) {
         if (!paused()) {
-            feeManager.collectFees(_from, _amount);
+            feeManager.collectFees(address(this), _from, _amount);
         }
         super._transfer(_from, _to, _amount);
     }
 
-    function migrate(
-        address[] calldata accounts,
-        uint128[] calldata balances,
-        uint128[] calldata creditBalances,
-        uint128[] calldata creditLimits,
-        uint256 totalSupply
-    ) public override onlyOwner {
-        super.migrate(accounts, balances, creditBalances, creditLimits, totalSupply);
+    function migrateAccount(
+        address member,
+        uint128 balance,
+        uint128 creditBalance,
+        uint128 creditLimit
+    ) public override onlyAuthorized {
+        networkRoles.grantMember(member);
+        super.migrateAccount(member, balance, creditBalance, creditLimit);
     }
 
     function bulkTransfer(address[] memory _to, uint256[] memory _values) external {
@@ -88,8 +88,7 @@ contract RUSD is CIP36Migratable, PausableUpgradeable {
         override
         returns (bool)
     {
-        address ambassador = networkRoles.getMembershipAmbassador(_member);
-        return _requester == _member || _requester == ambassador;
+        return _requester == _member || networkRoles.isNetworkOperator(_requester);
     }
 
     function pause() public onlyAuthorized {

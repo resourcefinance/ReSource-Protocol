@@ -1,0 +1,478 @@
+{
+  "address": "0x55795017f7d1cEE50bcB9046f4DE8603f428A0E5",
+  "abi": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "network",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "member",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "totalFee",
+          "type": "uint256"
+        }
+      ],
+      "name": "FeesCollected",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "previousOwner",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "OwnershipTransferred",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "underwriter",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "totalRewards",
+          "type": "uint256"
+        }
+      ],
+      "name": "PoolRewardsUpdated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "underwriter",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "totalStaked",
+          "type": "uint256"
+        }
+      ],
+      "name": "UnderwriterRewardsStaked",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_network",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_transactionAmount",
+          "type": "uint256"
+        }
+      ],
+      "name": "calculateFees",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "creditFee",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "collateralToken",
+      "outputs": [
+        {
+          "internalType": "contract IERC20Upgradeable",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_network",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_networkMember",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_transactionAmount",
+          "type": "uint256"
+        }
+      ],
+      "name": "collectFees",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "creditManager",
+      "outputs": [
+        {
+          "internalType": "contract ICreditManager",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "creditRequest",
+      "outputs": [
+        {
+          "internalType": "contract ICreditRequest",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "creditRoles",
+      "outputs": [
+        {
+          "internalType": "contract ICreditRoles",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_network",
+          "type": "address"
+        },
+        {
+          "internalType": "address[]",
+          "name": "_networkMembers",
+          "type": "address[]"
+        }
+      ],
+      "name": "distributeFees",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address[]",
+          "name": "_members",
+          "type": "address[]"
+        },
+        {
+          "internalType": "address",
+          "name": "_network",
+          "type": "address"
+        }
+      ],
+      "name": "getAccruedFees",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "totalFees",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getCollateralToken",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_network",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_networkMember",
+          "type": "address"
+        }
+      ],
+      "name": "getUnderwriterPoolStakePercent",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_creditManager",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_creditRoles",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_creditRequest",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_underwriterPercent",
+          "type": "uint256"
+        }
+      ],
+      "name": "initialize",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "owner",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "tokenAddress",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "tokenAmount",
+          "type": "uint256"
+        }
+      ],
+      "name": "recoverERC20",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "renounceOwnership",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "transferOwnership",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "underwriterFeePercent",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_feePercent",
+          "type": "uint256"
+        }
+      ],
+      "name": "updateUnderwriterFeePercent",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "transactionHash": "0xa8b5fe8f90d8e98a9361bdbfce30f13cceedc3b7b618b8b66a6be45bbc00f71a",
+  "receipt": {
+    "to": null,
+    "from": "0x0219f301551757D33954c074091718B785f5B87c",
+    "contractAddress": "0x55795017f7d1cEE50bcB9046f4DE8603f428A0E5",
+    "transactionIndex": 2,
+    "gasUsed": "749198",
+    "logsBloom": "0x00000000000000000000000000000000400000000000000000800000000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000001000000000000400000000000000000000000020000000800000000000800000000800010000000000000000000400000000000000000000000000000000000000000000000000000000000800000000000000000000000000000000000000000000100000000000000000000000000000020020000000800000000000000000000000400000000000000000020800000000000000000000000000000000000000000000000000000000004000000",
+    "blockHash": "0x0fd135650bba8467bb64aa761200614096e556cc750e1c46ce5c65abe0db326e",
+    "transactionHash": "0xa8b5fe8f90d8e98a9361bdbfce30f13cceedc3b7b618b8b66a6be45bbc00f71a",
+    "logs": [
+      {
+        "transactionIndex": 2,
+        "blockNumber": 10747882,
+        "transactionHash": "0xa8b5fe8f90d8e98a9361bdbfce30f13cceedc3b7b618b8b66a6be45bbc00f71a",
+        "address": "0x55795017f7d1cEE50bcB9046f4DE8603f428A0E5",
+        "topics": [
+          "0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b",
+          "0x00000000000000000000000004d93eac2ebfb68b8243bbe1bdf76a635efb6d74"
+        ],
+        "data": "0x",
+        "logIndex": 3,
+        "blockHash": "0x0fd135650bba8467bb64aa761200614096e556cc750e1c46ce5c65abe0db326e"
+      },
+      {
+        "transactionIndex": 2,
+        "blockNumber": 10747882,
+        "transactionHash": "0xa8b5fe8f90d8e98a9361bdbfce30f13cceedc3b7b618b8b66a6be45bbc00f71a",
+        "address": "0x55795017f7d1cEE50bcB9046f4DE8603f428A0E5",
+        "topics": [
+          "0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0",
+          "0x0000000000000000000000000000000000000000000000000000000000000000",
+          "0x0000000000000000000000000219f301551757d33954c074091718b785f5b87c"
+        ],
+        "data": "0x",
+        "logIndex": 4,
+        "blockHash": "0x0fd135650bba8467bb64aa761200614096e556cc750e1c46ce5c65abe0db326e"
+      },
+      {
+        "transactionIndex": 2,
+        "blockNumber": 10747882,
+        "transactionHash": "0xa8b5fe8f90d8e98a9361bdbfce30f13cceedc3b7b618b8b66a6be45bbc00f71a",
+        "address": "0x55795017f7d1cEE50bcB9046f4DE8603f428A0E5",
+        "topics": [
+          "0x7e644d79422f17c01e4894b5f4f588d331ebfa28653d42ae832dc59e38c9798f"
+        ],
+        "data": "0x0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000861095d92ec90c0c9ecdcb29a77d9d1cebf9d421",
+        "logIndex": 5,
+        "blockHash": "0x0fd135650bba8467bb64aa761200614096e556cc750e1c46ce5c65abe0db326e"
+      }
+    ],
+    "events": [
+      {
+        "transactionIndex": 2,
+        "blockNumber": 10747882,
+        "transactionHash": "0xa8b5fe8f90d8e98a9361bdbfce30f13cceedc3b7b618b8b66a6be45bbc00f71a",
+        "address": "0x55795017f7d1cEE50bcB9046f4DE8603f428A0E5",
+        "topics": [
+          "0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b",
+          "0x00000000000000000000000004d93eac2ebfb68b8243bbe1bdf76a635efb6d74"
+        ],
+        "data": "0x",
+        "logIndex": 3,
+        "blockHash": "0x0fd135650bba8467bb64aa761200614096e556cc750e1c46ce5c65abe0db326e",
+        "args": [
+          "0x04d93eAC2eBFb68b8243BbE1BDf76A635EfB6d74"
+        ],
+        "event": "Upgraded",
+        "eventSignature": "Upgraded(address)"
+      },
+      {
+        "transactionIndex": 2,
+        "blockNumber": 10747882,
+        "transactionHash": "0xa8b5fe8f90d8e98a9361bdbfce30f13cceedc3b7b618b8b66a6be45bbc00f71a",
+        "address": "0x55795017f7d1cEE50bcB9046f4DE8603f428A0E5",
+        "topics": [
+          "0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0",
+          "0x0000000000000000000000000000000000000000000000000000000000000000",
+          "0x0000000000000000000000000219f301551757d33954c074091718b785f5b87c"
+        ],
+        "data": "0x",
+        "logIndex": 4,
+        "blockHash": "0x0fd135650bba8467bb64aa761200614096e556cc750e1c46ce5c65abe0db326e"
+      },
+      {
+        "transactionIndex": 2,
+        "blockNumber": 10747882,
+        "transactionHash": "0xa8b5fe8f90d8e98a9361bdbfce30f13cceedc3b7b618b8b66a6be45bbc00f71a",
+        "address": "0x55795017f7d1cEE50bcB9046f4DE8603f428A0E5",
+        "topics": [
+          "0x7e644d79422f17c01e4894b5f4f588d331ebfa28653d42ae832dc59e38c9798f"
+        ],
+        "data": "0x0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000861095d92ec90c0c9ecdcb29a77d9d1cebf9d421",
+        "logIndex": 5,
+        "blockHash": "0x0fd135650bba8467bb64aa761200614096e556cc750e1c46ce5c65abe0db326e",
+        "args": [
+          "0x0000000000000000000000000000000000000000",
+          "0x861095d92ec90C0c9ecdcb29a77d9D1cebf9d421"
+        ],
+        "event": "AdminChanged",
+        "eventSignature": "AdminChanged(address,address)"
+      }
+    ],
+    "blockNumber": 10747882,
+    "cumulativeGasUsed": "992834",
+    "status": 1,
+    "byzantium": true
+  }
+}

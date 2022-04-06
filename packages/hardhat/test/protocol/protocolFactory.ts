@@ -7,13 +7,10 @@ import {
   PriceOracle,
   SourceToken,
   CreditManager,
-  NetworkFeeManager,
   CreditFeeManager,
   IKeyWalletDeployer,
   NetworkRoles,
   RUSD,
-  SourceTokenV2,
-  SourceTokenV2__factory,
 } from "../../types"
 
 export interface ProtocolContracts {
@@ -23,7 +20,6 @@ export interface ProtocolContracts {
   creditManager: CreditManager
   creditRequest: CreditRequest
   walletDeployer: IKeyWalletDeployer
-  networkFeeManager: NetworkFeeManager
   creditFeeManager: CreditFeeManager
   networkRoles: NetworkRoles
   rUSD: RUSD
@@ -33,6 +29,7 @@ export interface ProtocolContracts {
 export const protocolFactory = {
   deployDefault: async (underwriterAddress: string) => {
     contracts = {} as ProtocolContracts
+    const accounts = await ethers.getSigners()
     var contracts = contracts as ProtocolContracts
     // 1. deploy ProtocolRoles
     const creditRolesFactory = await ethers.getContractFactory("CreditRoles")
@@ -73,7 +70,10 @@ export const protocolFactory = {
 
     // 5. deploy PriceOracle
     const priceOracleFactory = await ethers.getContractFactory("PriceOracle")
-    contracts.priceOracle = (await priceOracleFactory.deploy(1000)) as PriceOracle
+    contracts.priceOracle = (await priceOracleFactory.deploy(
+      1000,
+      accounts[0].address
+    )) as PriceOracle
 
     // 6. deploy CreditManager
     const creditManagerFactory = await ethers.getContractFactory("CreditManager")
@@ -102,25 +102,13 @@ export const protocolFactory = {
     ])) as CreditFeeManager
     await (await contracts.creditRoles.grantOperator(contracts.creditFeeManager.address)).wait()
 
-    // 9. deploy NetworkFeeManager
-    const networkFeeManagerFactory = await ethers.getContractFactory("NetworkFeeManager")
-    contracts.networkFeeManager = (await upgrades.deployProxy(networkFeeManagerFactory, [
-      contracts.creditFeeManager.address,
-      contracts.creditManager.address,
-      contracts.networkRoles.address,
-      100000,
-      500000,
-    ])) as NetworkFeeManager
-
-    await (await contracts.creditRoles.grantNetwork(contracts.networkFeeManager.address)).wait()
-
-    // 10. deploy RUSD
+    // 9. deploy RUSD
     const RUSDFactory = await ethers.getContractFactory("RUSD")
     contracts.rUSD = (await upgrades.deployProxy(
       RUSDFactory,
       [
         contracts.creditRoles.address,
-        contracts.networkFeeManager.address,
+        contracts.creditFeeManager.address,
         contracts.networkRoles.address,
       ],
       {
@@ -129,10 +117,11 @@ export const protocolFactory = {
     )) as RUSD
 
     await (await contracts.rUSD.unpause()).wait()
-    await (await contracts.networkFeeManager.setNetwork(contracts.rUSD.address)).wait()
     await (await contracts.networkRoles.setNetwork(contracts.rUSD.address)).wait()
+    await (await contracts.networkRoles.grantOperator(contracts.rUSD.address)).wait()
+    await (await contracts.networkRoles.grantMember(contracts.rUSD.address)).wait()
 
-    // 11. deploy a CreditPool
+    // 10. deploy a CreditPool
     const creditPoolFactory = await ethers.getContractFactory("CreditPool")
     contracts.creditPool = (await upgrades.deployProxy(creditPoolFactory, [
       contracts.creditManager.address,

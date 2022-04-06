@@ -87,7 +87,7 @@ export type CreditRequestCreatedEvent = TypedEvent<
   [string, string, string, BigNumber, boolean] & {
     network: string;
     networkMember: string;
-    ambassador: string;
+    requester: string;
     creditLimit: BigNumber;
     approved: boolean;
   }
@@ -263,7 +263,7 @@ export class ICreditRequest extends BaseContract {
     "CreditRequestCreated(address,address,address,uint256,bool)"(
       network?: null,
       networkMember?: null,
-      ambassador?: null,
+      requester?: null,
       creditLimit?: null,
       approved?: null
     ): TypedEventFilter<
@@ -271,7 +271,7 @@ export class ICreditRequest extends BaseContract {
       {
         network: string;
         networkMember: string;
-        ambassador: string;
+        requester: string;
         creditLimit: BigNumber;
         approved: boolean;
       }
@@ -280,7 +280,7 @@ export class ICreditRequest extends BaseContract {
     CreditRequestCreated(
       network?: null,
       networkMember?: null,
-      ambassador?: null,
+      requester?: null,
       creditLimit?: null,
       approved?: null
     ): TypedEventFilter<
@@ -288,7 +288,7 @@ export class ICreditRequest extends BaseContract {
       {
         network: string;
         networkMember: string;
-        ambassador: string;
+        requester: string;
         creditLimit: BigNumber;
         approved: boolean;
       }

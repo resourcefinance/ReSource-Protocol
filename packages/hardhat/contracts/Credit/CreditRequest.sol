@@ -213,10 +213,7 @@ contract CreditRequest is OwnableUpgradeable, PausableUpgradeable, ICreditReques
     modifier onlyValidRequester(address _network, address _networkMember) {
         bool hasAccess = ICIP36(_network).canRequestCredit(msg.sender, _networkMember) ||
             creditRoles.isRequestOperator(msg.sender);
-        require(
-            hasAccess,
-            "CreditRequest: Caller must be the network member's ambassador or the network member"
-        );
+        require(hasAccess, "CreditRequest: Caller cannot request credit on behalf of member");
         _;
     }
 }

@@ -8,8 +8,9 @@ contract PriceOracle is IPriceOracle, Ownable {
     uint256 public price;
     address public oracleManager;
 
-    constructor(uint256 _price) {
+    constructor(uint256 _price, address _oracleManager) {
         price = _price;
+        oracleManager = _oracleManager;
     }
 
     function setPrice(uint256 _price) external onlyOracleManager {

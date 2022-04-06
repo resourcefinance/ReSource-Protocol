@@ -3,9 +3,8 @@ import { DeployFunction } from "hardhat-deploy/types"
 import { deployProxyAndSave } from "../utils/utils"
 import { ethers } from "hardhat"
 import { CreditRoles__factory } from "../types/factories/CreditRoles__factory"
-import { PriceOracle__factory } from "../types/factories/PriceOracle__factory"
 import { CreditManager__factory } from "../types/factories/CreditManager__factory"
-import { CreditRequest__factory, PriceOracle } from "../types"
+import { CreditRequest__factory } from "../types"
 
 const func: DeployFunction = async function (hardhat: HardhatRuntimeEnvironment) {
   const accounts = await ethers.getSigners()
@@ -28,9 +27,10 @@ const func: DeployFunction = async function (hardhat: HardhatRuntimeEnvironment)
   // 2. deploy PriceOracle
   const priceOracleFactory = await ethers.getContractFactory("PriceOracle")
   const priceOracle = await hardhat.deployments.deploy("PriceOracle", {
-    args: [1000],
+    args: [1000, accounts[0].address],
     from: accounts[0].address,
   })
+  console.log("🚀  PriceOracle  deployed")
 
   // 3. deploy CreditManager
   const creditManagerArgs = [sourceTokenAddress, creditRoles.address, priceOracle.address]

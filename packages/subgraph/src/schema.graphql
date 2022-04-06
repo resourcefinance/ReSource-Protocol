@@ -1,16 +1,8 @@
 type NetworkMember @entity {
   id: ID!
-  ambassador: Ambassador!
   creditRequests: [CreditRequest!] @derivedFrom(field: "networkMember")
   creditLine: CreditLine! @derivedFrom(field: "networkMember")
   totalFeesAccrued: BigInt!
-}
-
-type Ambassador @entity {
-  id: ID!
-  memberships: [NetworkMember!] @derivedFrom(field: "ambassador")
-  rewards: BigInt!
-  creditAllowance: BigInt!
 }
 
 type Underwriter @entity {

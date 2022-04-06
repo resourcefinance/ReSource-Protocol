@@ -13,7 +13,6 @@ describe("CreditRequest and CreditManager Tests", function () {
   let underwriter: SignerWithAddress
   let network: SignerWithAddress
   let requestOpperator: SignerWithAddress
-  let ambassador: SignerWithAddress
   let member: SignerWithAddress
 
   this.beforeEach(async function () {
@@ -22,7 +21,6 @@ describe("CreditRequest and CreditManager Tests", function () {
     underwriter = accounts[1]
     network = accounts[2]
     requestOpperator = accounts[3]
-    ambassador = accounts[4]
     member = accounts[5]
     contracts = await protocolFactory.deployDefault(underwriter.address)
     await (await contracts.creditRoles.grantNetwork(contracts.rUSD.address)).wait()

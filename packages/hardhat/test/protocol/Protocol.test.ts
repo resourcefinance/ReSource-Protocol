@@ -13,7 +13,6 @@ describe("Protocol Tests", function () {
   let underwriter: SignerWithAddress
   let network: SignerWithAddress
   let requestOpperator: SignerWithAddress
-  let ambassador: SignerWithAddress
   let memberA: SignerWithAddress
   let memberB: SignerWithAddress
   let creditOperator: SignerWithAddress
@@ -24,7 +23,6 @@ describe("Protocol Tests", function () {
     underwriter = accounts[1]
     network = accounts[2]
     requestOpperator = accounts[3]
-    ambassador = accounts[4]
     memberA = accounts[5]
     memberB = accounts[6]
     creditOperator = accounts[7]
@@ -33,46 +31,13 @@ describe("Protocol Tests", function () {
   })
 
   it("create, use, and claim reward fees for credit line", async function () {
-    // Add two members as ambassador pre approved for 100
-    await (
-      await contracts.networkRoles.grantAmbassador(
-        ambassador.address,
-        ethers.utils.parseUnits("100", "mwei")
-      )
-    ).wait()
+    await (await contracts.networkRoles.grantMember(memberA.address)).wait()
+    await (await contracts.networkRoles.grantMember(memberB.address)).wait()
 
-    await (
-      await contracts.networkRoles
-        .connect(ambassador)
-        .createMembershipAmbassadorInvite(memberA.address)
-    ).wait()
-    await (
-      await contracts.networkRoles
-        .connect(memberA)
-        .acceptMembershipAmbassadorInvitation(ambassador.address)
-    ).wait()
-
-    await (
-      await contracts.networkRoles
-        .connect(ambassador)
-        .createMembershipAmbassadorInvite(memberB.address)
-    ).wait()
-    await (
-      await contracts.networkRoles
-        .connect(memberB)
-        .acceptMembershipAmbassadorInvitation(ambassador.address)
-    ).wait()
-
-    const creditLimitA = ethers.utils.formatUnits(
-      await contracts.rUSD.creditLimitOf(memberA.address),
-      "mwei"
-    )
-    expect(creditLimitA).to.equal("100.0")
-
-    // request a credit line for memberA as ambassador
+    // request a credit line for memberA as memberA
     await (
       await contracts.creditRequest
-        .connect(ambassador)
+        .connect(memberA)
         .createRequest(
           contracts.rUSD.address,
           memberA.address,
@@ -106,19 +71,13 @@ describe("Protocol Tests", function () {
 
     // send funds from memberA to memberB
     await (
-      await contracts.sourceToken.transfer(memberA.address, ethers.utils.parseEther("200"))
+      await contracts.sourceToken.transfer(memberA.address, ethers.utils.parseEther("100"))
     ).wait()
     let sourceBalance = ethers.utils.formatEther(
       await contracts.sourceToken.balanceOf(memberA.address)
     )
 
-    expect(sourceBalance).to.equal("200.0")
-
-    await (
-      await contracts.sourceToken
-        .connect(memberA)
-        .approve(contracts.networkFeeManager.address, ethers.constants.MaxUint256)
-    ).wait()
+    expect(sourceBalance).to.equal("100.0")
 
     await (
       await contracts.sourceToken
@@ -140,28 +99,6 @@ describe("Protocol Tests", function () {
 
     sourceBalance = ethers.utils.formatEther(await contracts.sourceToken.balanceOf(memberA.address))
     expect(sourceBalance).to.equal("0.0")
-
-    // claim networkFees as ambassador
-    await (
-      await contracts.networkFeeManager.connect(ambassador).claimRewards([memberA.address])
-    ).wait()
-
-    sourceBalance = ethers.utils.formatEther(
-      await contracts.sourceToken.balanceOf(ambassador.address)
-    )
-    expect(sourceBalance).to.equal("50.0")
-
-    // claim networkFees as networkOperator
-    await (await contracts.networkRoles.grantOperator(network.address)).wait()
-
-    await (
-      await contracts.networkFeeManager.connect(network).claimRewards([memberA.address])
-    ).wait()
-
-    sourceBalance = ethers.utils.formatEther(
-      await contracts.sourceToken.balanceOf(ambassador.address)
-    )
-    expect(sourceBalance).to.equal("50.0")
 
     // try claim creditFees as creditOperator
     await (await contracts.creditRoles.grantOperator(creditOperator.address)).wait()
@@ -184,46 +121,19 @@ describe("Protocol Tests", function () {
   it("create, use, and claim reward fees for credit line with SOURCE at .50cents", async function () {
     await (await contracts.priceOracle.setPrice(500)).wait()
 
-    // Add two members as ambassador pre approved for 100
-    await (
-      await contracts.networkRoles.grantAmbassador(
-        ambassador.address,
-        ethers.utils.parseUnits("100", "mwei")
-      )
-    ).wait()
-
-    await (
-      await contracts.networkRoles
-        .connect(ambassador)
-        .createMembershipAmbassadorInvite(memberA.address)
-    ).wait()
-    await (
-      await contracts.networkRoles
-        .connect(memberA)
-        .acceptMembershipAmbassadorInvitation(ambassador.address)
-    ).wait()
-
-    await (
-      await contracts.networkRoles
-        .connect(ambassador)
-        .createMembershipAmbassadorInvite(memberB.address)
-    ).wait()
-    await (
-      await contracts.networkRoles
-        .connect(memberB)
-        .acceptMembershipAmbassadorInvitation(ambassador.address)
-    ).wait()
+    // Add two members
+    await (await contracts.networkRoles.grantMember(memberA.address)).wait()
+    await (await contracts.networkRoles.grantMember(memberB.address)).wait()
 
     const creditLimitA = ethers.utils.formatUnits(
       await contracts.rUSD.creditLimitOf(memberA.address),
       "mwei"
     )
-    expect(creditLimitA).to.equal("100.0")
 
-    // request a credit line for memberA as ambassador
+    // request a credit line for memberA as memberA
     await (
       await contracts.creditRequest
-        .connect(ambassador)
+        .connect(memberA)
         .createRequest(
           contracts.rUSD.address,
           memberA.address,
@@ -257,19 +167,13 @@ describe("Protocol Tests", function () {
 
     // send funds from memberA to memberB
     await (
-      await contracts.sourceToken.transfer(memberA.address, ethers.utils.parseEther("200"))
+      await contracts.sourceToken.transfer(memberA.address, ethers.utils.parseEther("100"))
     ).wait()
     let sourceBalance = ethers.utils.formatEther(
       await contracts.sourceToken.balanceOf(memberA.address)
     )
 
-    expect(sourceBalance).to.equal("200.0")
-
-    await (
-      await contracts.sourceToken
-        .connect(memberA)
-        .approve(contracts.networkFeeManager.address, ethers.constants.MaxUint256)
-    ).wait()
+    expect(sourceBalance).to.equal("100.0")
 
     await (
       await contracts.sourceToken
@@ -290,29 +194,7 @@ describe("Protocol Tests", function () {
     ).wait()
 
     sourceBalance = ethers.utils.formatEther(await contracts.sourceToken.balanceOf(memberA.address))
-    expect(sourceBalance).to.equal("100.0")
-
-    // claim networkFees as ambassador
-    await (
-      await contracts.networkFeeManager.connect(ambassador).claimRewards([memberA.address])
-    ).wait()
-
-    sourceBalance = ethers.utils.formatEther(
-      await contracts.sourceToken.balanceOf(ambassador.address)
-    )
-    expect(sourceBalance).to.equal("25.0")
-
-    // claim networkFees as networkOperator
-    await (await contracts.networkRoles.grantOperator(network.address)).wait()
-
-    await (
-      await contracts.networkFeeManager.connect(network).claimRewards([memberA.address])
-    ).wait()
-
-    sourceBalance = ethers.utils.formatEther(
-      await contracts.sourceToken.balanceOf(ambassador.address)
-    )
-    expect(sourceBalance).to.equal("25.0")
+    expect(sourceBalance).to.equal("50.0")
 
     // try claim creditFees as creditOperator
     await (await contracts.creditRoles.grantOperator(creditOperator.address)).wait()

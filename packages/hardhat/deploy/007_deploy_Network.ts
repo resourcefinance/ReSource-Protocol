@@ -3,7 +3,6 @@ import { DeployFunction } from "hardhat-deploy/types"
 import { deployProxyAndSave } from "../utils/utils"
 import { ethers } from "hardhat"
 import { CreditRoles__factory } from "../types/factories/CreditRoles__factory"
-import { NetworkFeeManager__factory } from "../types/factories/NetworkFeeManager__factory"
 import { NetworkRoles__factory } from "../types/factories/NetworkRoles__factory"
 
 const func: DeployFunction = async function (hardhat: HardhatRuntimeEnvironment) {
@@ -43,37 +42,13 @@ const func: DeployFunction = async function (hardhat: HardhatRuntimeEnvironment)
 
   const networkRoles = NetworkRoles__factory.connect(networkRolesAddress, accounts[0])
 
-  // 3. deploy NetworkFeeManager
-  const networkFeeManagerArgs = [
-    creditFeeManagerAddress,
-    creditManagerAddress,
-    networkRolesAddress,
-    100000,
-    500000,
-  ]
-  const networkFeeManagerAbi = (await hardhat.artifacts.readArtifact("NetworkFeeManager")).abi
-  const networkFeeManagerAddress = await deployProxyAndSave(
-    "NetworkFeeManager",
-    networkFeeManagerArgs,
-    hardhat,
-    networkFeeManagerAbi
-  )
-
-  const networkFeeManager = NetworkFeeManager__factory.connect(
-    networkFeeManagerAddress,
-    accounts[0]
-  )
-
-  await (await creditRoles.grantNetwork(networkFeeManagerAddress)).wait()
-
   // 4. deploy RUSD
-  const rUSDArgs = [creditRolesAddress, networkFeeManagerAddress, networkRolesAddress]
+  const rUSDArgs = [creditRolesAddress, creditFeeManagerAddress, networkRolesAddress]
   const rUSDAbi = (await hardhat.artifacts.readArtifact("RUSD")).abi
   const rUSDAddress = await deployProxyAndSave("RUSD", rUSDArgs, hardhat, rUSDAbi, {
     initializer: "initializeRUSD",
   })
 
-  await (await networkFeeManager.setNetwork(rUSDAddress)).wait()
   await (await networkRoles.setNetwork(rUSDAddress)).wait()
   await (await creditRoles.grantNetwork(rUSDAddress)).wait()
 }

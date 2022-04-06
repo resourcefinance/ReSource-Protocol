@@ -11,7 +11,7 @@ interface ICreditRequest {
     event CreditRequestCreated(
         address network,
         address networkMember,
-        address ambassador,
+        address requester,
         uint256 creditLimit,
         bool approved
     );

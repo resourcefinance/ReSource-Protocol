@@ -5,30 +5,6 @@ schema:
   file: ./src/schema.graphql
 dataSources:
   - kind: ethereum/contract
-    name: NetworkFeeManager
-    network: "{{network}}"
-    source:
-      address: "{{NetworkFeeManagerAddress}}"
-      abi: NetworkFeeManager
-      startBlock: {{NetworkFeeManagerStartBlock}}
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.5
-      language: wasm/assemblyscript
-      entities:
-        - CreditLine
-      abis:
-        - name: NetworkFeeManager
-          file: ./abis/NetworkFeeManager.json
-      eventHandlers:
-        - event: FeesCollected(address,uint256)
-          handler: handleFeesCollected
-        - event: RewardsClaimed(address,uint256)
-          handler: handleAmbassadorRewardsClaimed
-        - event: AmbassadorRewardsUpdated(address,uint256)
-          handler: handleNetworkRewardsUpdated
-      file: ./src/mapping/NetworkFeeManager/index.ts
-  - kind: ethereum/contract
     name: NetworkRoles
     network: "{{network}}"
     source:
@@ -47,14 +23,6 @@ dataSources:
       eventHandlers:
         - event: MemberAdded(address,address)
           handler: handleMemberAdded
-        - event: MembershipAmbassadorUpdated(address,address)
-          handler: handleMembershipAmbassadorUpdated
-        - event: AmbassadorAdded(address,uint256)
-          handler: handleAmbassadorAdded
-        - event: AmbassadorAllowanceUpdated(address,uint256)
-          handler: handleAmbassadorAllowanceUpdated
-        - event: AmbassadorRemoved(address)
-          handler: handleAmbassadorRemoved
       file: ./src/mapping/NetworkRoles/index.ts
 
   - kind: ethereum/contract

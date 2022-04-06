@@ -28,7 +28,7 @@ const _abi = [
       {
         indexed: false,
         internalType: "address",
-        name: "ambassador",
+        name: "requester",
         type: "address",
       },
       {

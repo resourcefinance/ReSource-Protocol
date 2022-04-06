@@ -18,7 +18,17 @@ import { HttpNetworkUserConfig } from "hardhat/types"
 
 import "./tasks/accounts"
 import "./tasks/clean"
-import "./tasks/rewards"
+import "./tasks/fundedwallet"
+import "./tasks/generate"
+import "./tasks/grantAPIRoles"
+import "./tasks/grantRequestOperator"
+import "./tasks/grantUnderwriter"
+import "./tasks/initRUSDMigration"
+import "./tasks/pauseRUSD"
+import "./tasks/unpauseRUSD"
+import "./tasks/sendSource"
+import "./tasks/wallet"
+import { CeloProvider } from "@celo-tools/celo-ethers-wrapper"
 
 const { isAddress, getAddress, formatUnits, parseUnits } = utils
 
@@ -56,12 +66,14 @@ const config: HardhatUserConfig = {
       chainId: chainIds.localhost,
       saveDeployments: true,
       tags: ["local", "testing"],
+      timeout: 100000000,
     },
     celolocal: {
       url: "http://localhost:8545",
       chainId: chainIds.celoLocal,
       saveDeployments: true,
       tags: ["local", "testing", "celo"],
+      timeout: 100000000,
     },
     "celo-alfajores": {
       url: "https://alfajores-forno.celo-testnet.org",
@@ -69,17 +81,20 @@ const config: HardhatUserConfig = {
       accounts: { mnemonic: mnemonic() },
       saveDeployments: true,
       tags: ["alfajores", "staging"],
+      timeout: 100000000,
     },
     celo: {
       url: "http://127.0.0.1:1248",
       chainId: chainIds.mainnet,
       saveDeployments: true,
       tags: ["production", "mainnet"],
+      timeout: 100000000,
     },
     "frame-celo-alfajores": {
       url: "http://127.0.0.1:1248",
       chainId: chainIds.testnet,
       saveDeployments: true,
+      timeout: 100000000,
     },
   },
   solidity: {
@@ -126,158 +141,15 @@ const config: HardhatUserConfig = {
 
 export default config
 
-const DEBUG = false
+export const DEBUG = false
 
-function debug(text) {
+export function debug(text) {
   if (DEBUG) {
     console.log(text)
   }
 }
 
-task("wallet", "Create a wallet (pk) link", async (_, { ethers }) => {
-  const randomWallet = ethers.Wallet.createRandom()
-  const privateKey = randomWallet._signingKey().privateKey
-  console.log("🔐 WALLET Generated as " + randomWallet.address + "")
-  console.log("pk: " + privateKey)
-})
-
-task("fundedwallet", "Create a wallet (pk) link and fund it with deployer?")
-  .addOptionalParam("amount", "Amount of ETH to send to wallet after generating")
-  .addParam("address", "Address to fund")
-  .addOptionalParam("url", "URL to add pk to")
-  .setAction(async (taskArgs, { network, ethers }) => {
-    let url = taskArgs.url ? taskArgs.url : "http://localhost:3000"
-
-    let localDeployerMnemonic
-    try {
-      localDeployerMnemonic = fs.readFileSync("./mnemonic.txt")
-      localDeployerMnemonic = localDeployerMnemonic.toString().trim()
-    } catch (e) {
-      /* do nothing - this file isn't always there */
-    }
-
-    let amount = taskArgs.amount ? taskArgs.amount : "0.01"
-    let address = taskArgs.address
-    const tx = {
-      to: address,
-      value: ethers.utils.parseEther(amount),
-    }
-    console.log("💵 Sending " + amount + " ETH to " + address + " using local node")
-    return send(ethers.provider.getSigner(), tx)
-  })
-
-task("generate", "Create a mnemonic for builder deploys", async (_, { ethers }) => {
-  const bip39 = require("bip39")
-  const hdkey = require("ethereumjs-wallet/hdkey")
-  const mnemonic = bip39.generateMnemonic()
-  if (DEBUG) console.log("mnemonic", mnemonic)
-  const seed = await bip39.mnemonicToSeed(mnemonic)
-  if (DEBUG) console.log("seed", seed)
-  const hdwallet = hdkey.fromMasterSeed(seed)
-  const wallet_hdpath = "m/44'/60'/0'/0/"
-  const account_index = 0
-  let fullPath = wallet_hdpath + account_index
-  if (DEBUG) console.log("fullPath", fullPath)
-  const wallet = hdwallet.derivePath(fullPath).getWallet()
-  const privateKey = "0x" + wallet._privKey.toString("hex")
-  if (DEBUG) console.log("privateKey", privateKey)
-  var EthUtil = require("ethereumjs-util")
-  const address = "0x" + EthUtil.privateToAddress(wallet._privKey).toString("hex")
-  console.log("🔐 Account Generated as " + address + " and set as mnemonic in packages/hardhat")
-  console.log("💬 Use 'yarn run account' to get more information about the deployment account.")
-
-  fs.writeFileSync("./" + address + ".txt", mnemonic.toString())
-  fs.writeFileSync("./mnemonic.txt", mnemonic.toString())
-})
-
-task("mineContractAddress", "Looks for a deployer account that will give leading zeros")
-  .addParam("searchFor", "String to search for")
-  .setAction(async (taskArgs, { network, ethers }) => {
-    let contract_address = ""
-    let address
-
-    const bip39 = require("bip39")
-    const hdkey = require("ethereumjs-wallet/hdkey")
-
-    let mnemonic = ""
-    while (contract_address.indexOf(taskArgs.searchFor) != 0) {
-      mnemonic = bip39.generateMnemonic()
-      if (DEBUG) console.log("mnemonic", mnemonic)
-      const seed = await bip39.mnemonicToSeed(mnemonic)
-      if (DEBUG) console.log("seed", seed)
-      const hdwallet = hdkey.fromMasterSeed(seed)
-      const wallet_hdpath = "m/44'/60'/0'/0/"
-      const account_index = 0
-      let fullPath = wallet_hdpath + account_index
-      if (DEBUG) console.log("fullPath", fullPath)
-      const wallet = hdwallet.derivePath(fullPath).getWallet()
-      const privateKey = "0x" + wallet._privKey.toString("hex")
-      if (DEBUG) console.log("privateKey", privateKey)
-      var EthUtil = require("ethereumjs-util")
-      address = "0x" + EthUtil.privateToAddress(wallet._privKey).toString("hex")
-
-      const rlp = require("rlp")
-      const keccak = require("keccak")
-
-      let nonce = 0x00 //The nonce must be a hex literal!
-      let sender = address
-
-      let input_arr = [sender, nonce]
-      let rlp_encoded = rlp.encode(input_arr)
-
-      let contract_address_long = keccak("keccak256").update(rlp_encoded).digest("hex")
-
-      contract_address = contract_address_long.substring(24) //Trim the first 24 characters.
-    }
-
-    console.log("⛏  Account Mined as " + address + " and set as mnemonic in packages/hardhat")
-    console.log("📜 This will create the first contract: " + chalk.magenta("0x" + contract_address))
-    console.log("💬 Use 'yarn run account' to get more information about the deployment account.")
-
-    fs.writeFileSync("./" + address + "_produces" + contract_address + ".txt", mnemonic.toString())
-    fs.writeFileSync("./mnemonic.txt", mnemonic.toString())
-  })
-
-task("account", "Get balance informations for the deployment account.", async (_, { ethers }) => {
-  const hdkey = require("ethereumjs-wallet/hdkey")
-  const bip39 = require("bip39")
-  let mnemonic = fs.readFileSync("./mnemonic.txt").toString().trim()
-  if (DEBUG) console.log("mnemonic", mnemonic)
-  const seed = await bip39.mnemonicToSeed(mnemonic)
-  if (DEBUG) console.log("seed", seed)
-  const hdwallet = hdkey.fromMasterSeed(seed)
-  const wallet_hdpath = "m/44'/60'/0'/0/"
-  const account_index = 0
-  let fullPath = wallet_hdpath + account_index
-  if (DEBUG) console.log("fullPath", fullPath)
-  const wallet = hdwallet.derivePath(fullPath).getWallet()
-  const privateKey = "0x" + wallet._privKey.toString("hex")
-  if (DEBUG) console.log("privateKey", privateKey)
-  var EthUtil = require("ethereumjs-util")
-  const address = "0x" + EthUtil.privateToAddress(wallet._privKey).toString("hex")
-
-  var qrcode = require("qrcode-terminal")
-  qrcode.generate(address)
-  console.log("‍📬 Deployer Account is " + address)
-  for (let n in config.networks) {
-    //console.log(config.networks[n],n)
-    try {
-      let provider = new ethers.providers.JsonRpcProvider(
-        (config.networks[n] as HttpNetworkUserConfig).url
-      )
-      let balance = await provider.getBalance(address)
-      console.log(" -- " + n + " --  -- -- 📡 ")
-      console.log("   balance: " + ethers.utils.formatEther(balance))
-      console.log("   nonce: " + (await provider.getTransactionCount(address)))
-    } catch (e) {
-      if (DEBUG) {
-        console.log(e)
-      }
-    }
-  }
-})
-
-async function addr(ethers, addr) {
+export async function addr(ethers, addr) {
   if (isAddress(addr)) {
     return getAddress(addr)
   }
@@ -287,11 +159,6 @@ async function addr(ethers, addr) {
   }
   throw `Could not normalize address: ${addr}`
 }
-
-task("accounts", "Prints the list of accounts", async (_, { ethers }) => {
-  const accounts = await ethers.provider.listAccounts()
-  accounts.forEach((account) => console.log(account))
-})
 
 task("blockNumber", "Prints the block number", async (_, { ethers }) => {
   const blockNumber = await ethers.provider.getBlockNumber()
@@ -305,7 +172,7 @@ task("balance", "Prints an account's balance")
     console.log(formatUnits(balance, "ether"), "ETH")
   })
 
-function send(signer, txparams) {
+export function send(signer, txparams) {
   return signer.sendTransaction(txparams, (error, transactionHash) => {
     if (error) {
       debug(`Error: ${error}`)
@@ -341,302 +208,4 @@ task("send", "Send ETH")
     }
 
     return send(fromSigner, txRequest)
-  })
-
-task("sendSource", "Send SOURCE")
-  .addParam("to", "Address to send SOURCE to ")
-  .addParam("amount", "Amount of Source to send to to address")
-  .setAction(async (taskArgs, { ethers, network }) => {
-    const deploymentPath = `./deployments/${network.name}/SourceToken.json`
-    const ReSourceTokenDeployment = fs.readFileSync(deploymentPath).toString()
-    const ReSourceTokenAddress = JSON.parse(ReSourceTokenDeployment)["address"]
-
-    if (!ReSourceTokenAddress) throw new Error("token not deployed on this network")
-
-    const to = await addr(ethers, taskArgs.to)
-    const amount = ethers.utils.parseEther(taskArgs.amount)
-    debug(`Normalized to address: ${to}`)
-    const signer = (await ethers.getSigners())[0]
-
-    const SourceTokenFactory = await ethers.getContractFactory("SourceToken")
-
-    const tokenContract = new ethers.Contract(
-      ReSourceTokenAddress,
-      SourceTokenFactory.interface,
-      signer
-    )
-
-    try {
-      await (await tokenContract.transfer(to, amount)).wait()
-      console.log("Funds transfered")
-    } catch (e) {
-      console.log(e)
-    }
-  })
-
-task("grantAmbassador", "grant ambassador")
-  .addParam("address", "Address to grant ambassadorship")
-  .addParam("allowance", "Ambassador credit allowance")
-  .setAction(async (taskArgs, { ethers, network }) => {
-    const deploymentPath = `./deployments/${network.name}/NetworkRoles.json`
-    const networkRolesDeployment = fs.readFileSync(deploymentPath).toString()
-    const networkRolesAddress = JSON.parse(networkRolesDeployment)["address"]
-
-    if (!networkRolesAddress) throw new Error("network roles not deployed on this network")
-
-    const ambassadorAddress = await addr(ethers, taskArgs.address)
-    const allowance = ethers.utils.parseUnits(taskArgs.allowance, "mwei")
-    debug(`Normalized to address: ${ambassadorAddress}`)
-    const signer = (await ethers.getSigners())[0]
-
-    const networkRolesFactory = await ethers.getContractFactory("NetworkRoles")
-
-    const networkRoles = new ethers.Contract(
-      networkRolesAddress,
-      networkRolesFactory.interface,
-      signer
-    )
-
-    try {
-      await (await networkRoles.grantAmbassador(ambassadorAddress, allowance)).wait()
-      console.log("Ambassador Granted")
-    } catch (e) {
-      console.log(e)
-    }
-  })
-
-task("grantUnderwriter", "grant underwriter")
-  .addParam("address", "Address to grant underwriter")
-  .setAction(async (taskArgs, { ethers, network }) => {
-    const deploymentPath = `./deployments/${network.name}/CreditRoles.json`
-    const creditRolesDeployment = fs.readFileSync(deploymentPath).toString()
-    const creditRolesAddress = JSON.parse(creditRolesDeployment)["address"]
-
-    if (!creditRolesAddress) throw new Error("credit roles not deployed on this network")
-
-    const underwriterAddress = await addr(ethers, taskArgs.address)
-    debug(`Normalized to address: ${underwriterAddress}`)
-    const signer = (await ethers.getSigners())[0]
-
-    const creditRolesFactory = await ethers.getContractFactory("CreditRoles")
-
-    const creditRoles = new ethers.Contract(
-      creditRolesAddress,
-      creditRolesFactory.interface,
-      signer
-    )
-
-    try {
-      await (await creditRoles.grantUnderwriter(underwriterAddress)).wait()
-      console.log("Underwriter Granted")
-    } catch (e) {
-      console.log(e)
-    }
-  })
-
-task("grantRequestOperator", "grant request operator")
-  .addParam("address", "Address to grant request operator")
-  .setAction(async (taskArgs, { ethers, network }) => {
-    const deploymentPath = `./deployments/${network.name}/CreditRoles.json`
-    const creditRolesDeployment = fs.readFileSync(deploymentPath).toString()
-    const creditRolesAddress = JSON.parse(creditRolesDeployment)["address"]
-
-    if (!creditRolesAddress) throw new Error("credit roles not deployed on this network")
-
-    const requestAddress = await addr(ethers, taskArgs.address)
-    debug(`Normalized to address: ${requestAddress}`)
-    const signer = (await ethers.getSigners())[0]
-
-    const creditRolesFactory = await ethers.getContractFactory("CreditRoles")
-
-    const creditRoles = new ethers.Contract(
-      creditRolesAddress,
-      creditRolesFactory.interface,
-      signer
-    )
-
-    try {
-      await (await creditRoles.grantRequestOperator(requestAddress)).wait()
-      console.log("Request Operator Granted")
-    } catch (e) {
-      console.log(e)
-    }
-  })
-
-task("grantAPIRoles", "grant request operator")
-  .addParam("address", "Address to grant api roles")
-  .addParam("allowance", "Ambassador credit allowance")
-  .setAction(async (taskArgs, { ethers, network }) => {
-    const creditDeploymentPath = `./deployments/${network.name}/CreditRoles.json`
-    const creditRolesDeployment = fs.readFileSync(creditDeploymentPath).toString()
-    const creditRolesAddress = JSON.parse(creditRolesDeployment)["address"]
-
-    if (!creditRolesAddress) throw new Error("credit roles not deployed on this network")
-
-    const networkDeploymentPath = `./deployments/${network.name}/NetworkRoles.json`
-    const networkRolesDeployment = fs.readFileSync(networkDeploymentPath).toString()
-    const networkRolesAddress = JSON.parse(networkRolesDeployment)["address"]
-
-    if (!networkRolesAddress) throw new Error("network roles not deployed on this network")
-    const allowance = ethers.utils.parseUnits(taskArgs.allowance, "mwei")
-
-    const apiAddress = await addr(ethers, taskArgs.address)
-    debug(`Normalized to address: ${apiAddress}`)
-    const signer = (await ethers.getSigners())[0]
-
-    const creditRolesFactory = await ethers.getContractFactory("CreditRoles")
-
-    const creditRoles = new ethers.Contract(
-      creditRolesAddress,
-      creditRolesFactory.interface,
-      signer
-    )
-
-    const networkRolesFactory = await ethers.getContractFactory("NetworkRoles")
-
-    const networkRoles = new ethers.Contract(
-      networkRolesAddress,
-      networkRolesFactory.interface,
-      signer
-    )
-
-    try {
-      await (await creditRoles.grantRequestOperator(apiAddress)).wait()
-      await (await creditRoles.grantUnderwriter(apiAddress)).wait()
-      await (await networkRoles.grantAmbassador(apiAddress, allowance)).wait()
-      console.log("🚀 API roles granted")
-    } catch (e) {
-      console.log(e)
-    }
-  })
-
-task("pauseRUSD", "pauseRUSD transaction fees").setAction(async (taskArgs, { ethers, network }) => {
-  const deploymentPath = `./deployments/${network.name}/RUSD.json`
-  const rUSDDeployment = fs.readFileSync(deploymentPath).toString()
-  const rUSDAddress = JSON.parse(rUSDDeployment)["address"]
-
-  if (!rUSDAddress) throw new Error("rUSD not deployed on this network")
-
-  const signer = (await ethers.getSigners())[0]
-
-  const rUSDFactory = await ethers.getContractFactory("RUSD")
-
-  const rUSD = new ethers.Contract(rUSDAddress, rUSDFactory.interface, signer)
-
-  try {
-    await (await rUSD.pause()).wait()
-    console.log("rUSD transactions fees paused")
-  } catch (e) {
-    console.log(e)
-  }
-})
-
-task("unpauseRUSD", "unpauseRUSD transaction fees").setAction(
-  async (taskArgs, { ethers, network }) => {
-    const deploymentPath = `./deployments/${network.name}/RUSD.json`
-    const rUSDDeployment = fs.readFileSync(deploymentPath).toString()
-    const rUSDAddress = JSON.parse(rUSDDeployment)["address"]
-
-    if (!rUSDAddress) throw new Error("rUSD not deployed on this network")
-
-    const signer = (await ethers.getSigners())[0]
-
-    const rUSDFactory = await ethers.getContractFactory("RUSD")
-
-    const rUSD = new ethers.Contract(rUSDAddress, rUSDFactory.interface, signer)
-
-    try {
-      await (await rUSD.unpause()).wait()
-      console.log("rUSD transactions fees unpaused")
-    } catch (e) {
-      console.log(e)
-    }
-  }
-)
-
-task("migrateRUSD", "migrateRUSD").setAction(async (taskArgs, { ethers, network }) => {
-  if (!existsSync("./rUSDMigration.json")) {
-    return console.log("No migration file found")
-  }
-
-  let migration = readFileSync("./rUSDMigration.json").toString()
-
-  migration = JSON.parse(migration)
-
-  const deploymentPath = `./deployments/${network.name}/RUSD.json`
-  const rUSDDeployment = fs.readFileSync(deploymentPath).toString()
-  const rUSDAddress = JSON.parse(rUSDDeployment)["address"]
-
-  if (!rUSDAddress) throw new Error("rUSD not deployed on this network")
-
-  const networkDeploymentPath = `./deployments/${network.name}/NetworkRoles.json`
-  const networkRolesDeployment = fs.readFileSync(networkDeploymentPath).toString()
-  const networkRolesAddress = JSON.parse(networkRolesDeployment)["address"]
-
-  if (!networkRolesAddress) throw new Error("network roles not deployed on this network")
-
-  const signer = (await ethers.getSigners())[0]
-
-  const rUSDFactory = await ethers.getContractFactory("RUSD")
-
-  const rUSD = new ethers.Contract(rUSDAddress, rUSDFactory.interface, signer)
-
-  const networkRolesFactory = await ethers.getContractFactory("NetworkRoles")
-
-  const networkRoles = new ethers.Contract(
-    networkRolesAddress,
-    networkRolesFactory.interface,
-    signer
-  )
-
-  const accounts = migration["accounts"]
-  const balances = migration["balances"]
-  const creditBalances = migration["creditBalances"]
-  const creditLimits = migration["creditLimits"]
-  const totalSupply = migration["totalSupply"]
-
-  try {
-    let count = 1
-    for (var account of accounts) {
-      console.log("granting ", count++, " of ", accounts.length)
-      await (await networkRoles.grantMember(account, ethers.constants.AddressZero)).wait()
-    }
-    await (await rUSD.migrate(accounts, balances, creditBalances, creditLimits, totalSupply)).wait()
-    console.log("rUSD migrated")
-  } catch (e) {
-    console.log(e)
-  }
-})
-
-task("getRUSDAccountInfo", "logs the credit and balance info for a given address")
-  .addParam("address", "Address to get rUSD info for")
-  .setAction(async (taskArgs, { ethers, network }) => {
-    const deploymentPath = `./deployments/${network.name}/RUSD.json`
-    const rUSDDeployment = fs.readFileSync(deploymentPath).toString()
-    const rUSDAddress = JSON.parse(rUSDDeployment)["address"]
-
-    if (!rUSDAddress) throw new Error("rUSD not deployed on this network")
-
-    const signer = (await ethers.getSigners())[0]
-
-    const rUSDFactory = await ethers.getContractFactory("RUSD")
-
-    const rUSD = new ethers.Contract(rUSDAddress, rUSDFactory.interface, signer)
-
-    const accountAddress = await addr(ethers, taskArgs.address)
-
-    try {
-      const balance = ethers.utils.formatUnits(await rUSD.balanceOf(accountAddress), "mwei")
-      const creditBalance = ethers.utils.formatUnits(
-        await rUSD.creditBalanceOf(accountAddress),
-        "mwei"
-      )
-      const creditLimit = ethers.utils.formatUnits(await rUSD.creditLimitOf(accountAddress), "mwei")
-
-      console.log("Balance: ", balance)
-      console.log("CreditBalance: ", creditBalance)
-      console.log("CreditLimit: ", creditLimit)
-    } catch (e) {
-      console.log(e)
-    }
   })

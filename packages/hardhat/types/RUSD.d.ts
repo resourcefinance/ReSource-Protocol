@@ -37,15 +37,12 @@ interface RUSDInterface extends ethers.utils.Interface {
     "feeManager()": FunctionFragment;
     "increaseAllowance(address,uint256)": FunctionFragment;
     "initialize(string,string)": FunctionFragment;
-    "initializeMigration(uint128)": FunctionFragment;
     "initializeRUSD(address,address,address)": FunctionFragment;
-    "migrateAccount(address,uint128,uint128,uint128)": FunctionFragment;
     "name()": FunctionFragment;
     "networkRoles()": FunctionFragment;
     "owner()": FunctionFragment;
     "pause()": FunctionFragment;
     "paused()": FunctionFragment;
-    "recoverUnmigrated()": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "setCreditLimit(address,uint256)": FunctionFragment;
     "symbol()": FunctionFragment;
@@ -112,16 +109,8 @@ interface RUSDInterface extends ethers.utils.Interface {
     values: [string, string]
   ): string;
   encodeFunctionData(
-    functionFragment: "initializeMigration",
-    values: [BigNumberish]
-  ): string;
-  encodeFunctionData(
     functionFragment: "initializeRUSD",
     values: [string, string, string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "migrateAccount",
-    values: [string, BigNumberish, BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
   encodeFunctionData(
@@ -131,10 +120,6 @@ interface RUSDInterface extends ethers.utils.Interface {
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(functionFragment: "pause", values?: undefined): string;
   encodeFunctionData(functionFragment: "paused", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "recoverUnmigrated",
-    values?: undefined
-  ): string;
   encodeFunctionData(
     functionFragment: "renounceOwnership",
     values?: undefined
@@ -203,15 +188,7 @@ interface RUSDInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "initializeMigration",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "initializeRUSD",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "migrateAccount",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
@@ -222,10 +199,6 @@ interface RUSDInterface extends ethers.utils.Interface {
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "pause", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "paused", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "recoverUnmigrated",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(
     functionFragment: "renounceOwnership",
     data: BytesLike
@@ -411,23 +384,10 @@ export class RUSD extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    initializeMigration(
-      migratedSupply_: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
     initializeRUSD(
       _creditRoles: string,
       _feeManager: string,
       _networkRoles: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    migrateAccount(
-      member: string,
-      balance: BigNumberish,
-      creditBalance: BigNumberish,
-      creditLimit: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -442,10 +402,6 @@ export class RUSD extends BaseContract {
     ): Promise<ContractTransaction>;
 
     paused(overrides?: CallOverrides): Promise<[boolean]>;
-
-    recoverUnmigrated(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
 
     renounceOwnership(
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -557,23 +513,10 @@ export class RUSD extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  initializeMigration(
-    migratedSupply_: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
   initializeRUSD(
     _creditRoles: string,
     _feeManager: string,
     _networkRoles: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  migrateAccount(
-    member: string,
-    balance: BigNumberish,
-    creditBalance: BigNumberish,
-    creditLimit: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -588,10 +531,6 @@ export class RUSD extends BaseContract {
   ): Promise<ContractTransaction>;
 
   paused(overrides?: CallOverrides): Promise<boolean>;
-
-  recoverUnmigrated(
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
 
   renounceOwnership(
     overrides?: Overrides & { from?: string | Promise<string> }
@@ -703,23 +642,10 @@ export class RUSD extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    initializeMigration(
-      migratedSupply_: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
     initializeRUSD(
       _creditRoles: string,
       _feeManager: string,
       _networkRoles: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    migrateAccount(
-      member: string,
-      balance: BigNumberish,
-      creditBalance: BigNumberish,
-      creditLimit: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -732,8 +658,6 @@ export class RUSD extends BaseContract {
     pause(overrides?: CallOverrides): Promise<void>;
 
     paused(overrides?: CallOverrides): Promise<boolean>;
-
-    recoverUnmigrated(overrides?: CallOverrides): Promise<void>;
 
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
 
@@ -927,23 +851,10 @@ export class RUSD extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    initializeMigration(
-      migratedSupply_: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
     initializeRUSD(
       _creditRoles: string,
       _feeManager: string,
       _networkRoles: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    migrateAccount(
-      member: string,
-      balance: BigNumberish,
-      creditBalance: BigNumberish,
-      creditLimit: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -958,10 +869,6 @@ export class RUSD extends BaseContract {
     ): Promise<BigNumber>;
 
     paused(overrides?: CallOverrides): Promise<BigNumber>;
-
-    recoverUnmigrated(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
 
     renounceOwnership(
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -1080,23 +987,10 @@ export class RUSD extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    initializeMigration(
-      migratedSupply_: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
     initializeRUSD(
       _creditRoles: string,
       _feeManager: string,
       _networkRoles: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    migrateAccount(
-      member: string,
-      balance: BigNumberish,
-      creditBalance: BigNumberish,
-      creditLimit: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -1111,10 +1005,6 @@ export class RUSD extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     paused(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    recoverUnmigrated(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
 
     renounceOwnership(
       overrides?: Overrides & { from?: string | Promise<string> }

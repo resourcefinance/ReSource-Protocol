@@ -50,6 +50,7 @@ const func: DeployFunction = async function (hardhat: HardhatRuntimeEnvironment)
   })
 
   await (await networkRoles.setNetwork(rUSDAddress)).wait()
+  await (await networkRoles.grantOperator(rUSDAddress)).wait()
   await (await creditRoles.grantNetwork(rUSDAddress)).wait()
 }
 export default func

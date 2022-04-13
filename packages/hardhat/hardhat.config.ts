@@ -51,7 +51,6 @@ function mnemonic() {
 }
 
 enum chainIds {
-  celoLocal = 1337,
   localhost = 31337,
   testnet = 44787,
   mainnet = 42220,
@@ -66,13 +65,6 @@ const config: HardhatUserConfig = {
       chainId: chainIds.localhost,
       saveDeployments: true,
       tags: ["local", "testing"],
-      timeout: 100000000,
-    },
-    celolocal: {
-      url: "http://localhost:8545",
-      chainId: chainIds.celoLocal,
-      saveDeployments: true,
-      tags: ["local", "testing", "celo"],
       timeout: 100000000,
     },
     "celo-alfajores": {

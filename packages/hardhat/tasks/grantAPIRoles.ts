@@ -18,7 +18,6 @@ task(TASK_GRANTAPIROLES, "grant request operator")
     const networkRolesAddress = JSON.parse(networkRolesDeployment)["address"]
 
     if (!networkRolesAddress) throw new Error("network roles not deployed on this network")
-    const allowance = ethers.utils.parseUnits(taskArgs.allowance, "mwei")
 
     const apiAddress = await addr(ethers, taskArgs.address)
     debug(`Normalized to address: ${apiAddress}`)
@@ -43,6 +42,7 @@ task(TASK_GRANTAPIROLES, "grant request operator")
     try {
       await (await creditRoles.grantRequestOperator(apiAddress)).wait()
       await (await creditRoles.grantUnderwriter(apiAddress)).wait()
+      await (await networkRoles.grantOperator(apiAddress)).wait()
       console.log("🚀 API roles granted")
     } catch (e) {
       console.log(e)

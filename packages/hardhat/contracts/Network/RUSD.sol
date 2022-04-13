@@ -2,14 +2,14 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
-import "./CIP36Migratable.sol";
+import "./CIP36.sol";
 import "./interface/INetworkRoles.sol";
 import "../Credit/interface/ICreditFeeManager.sol";
 import "../iKeyWallet/IiKeyWalletDeployer.sol";
 import "../Credit/interface/ICreditRoles.sol";
 import "hardhat/console.sol";
 
-contract RUSD is CIP36Migratable, PausableUpgradeable {
+contract RUSD is CIP36, PausableUpgradeable {
     /*
      *  Storage
      */
@@ -46,7 +46,7 @@ contract RUSD is CIP36Migratable, PausableUpgradeable {
         creditRoles = ICreditRoles(_creditRoles);
         feeManager = ICreditFeeManager(_feeManager);
         networkRoles = INetworkRoles(_networkRoles);
-        CIP36Migratable.initialize("rUSD", "rUSD");
+        CIP36.initialize("rUSD", "rUSD");
         __Pausable_init();
         _pause();
     }
@@ -63,16 +63,6 @@ contract RUSD is CIP36Migratable, PausableUpgradeable {
             feeManager.collectFees(address(this), _from, _amount);
         }
         super._transfer(_from, _to, _amount);
-    }
-
-    function migrateAccount(
-        address member,
-        uint128 balance,
-        uint128 creditBalance,
-        uint128 creditLimit
-    ) public override onlyAuthorized {
-        networkRoles.grantMember(member);
-        super.migrateAccount(member, balance, creditBalance, creditLimit);
     }
 
     function bulkTransfer(address[] memory _to, uint256[] memory _values) external {

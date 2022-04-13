@@ -110,11 +110,14 @@ contract CreditRequest is OwnableUpgradeable, PausableUpgradeable, ICreditReques
         address _pool
     ) external onlyUnderwriter onlyRequestOperator {
         uint256 curCreditLimit = ICIP36(_network).creditLimitOf(_networkMember);
+        require(
+            _creditLimit > curCreditLimit,
+            "CreditRequest: New credit limit must be greater than current credit limit"
+        );
         address underwriter = creditManager.getCreditLineUnderwriter(_network, _networkMember);
-
         if (underwriter == address(0)) {
             creditManager.createCreditLine(_networkMember, _pool, _creditLimit, _network);
-        } else if (_creditLimit > curCreditLimit) {
+        } else {
             creditManager.extendCreditLine(_network, _networkMember, _creditLimit);
         }
     }

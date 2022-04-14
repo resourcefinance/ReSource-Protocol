@@ -23,11 +23,11 @@ import "./tasks/generate"
 import "./tasks/grantAPIRoles"
 import "./tasks/grantRequestOperator"
 import "./tasks/grantUnderwriter"
-import "./tasks/initRUSDMigration"
 import "./tasks/pauseRUSD"
 import "./tasks/unpauseRUSD"
 import "./tasks/sendSource"
 import "./tasks/wallet"
+import "./tasks/viewSourceLock"
 import { CeloProvider } from "@celo-tools/celo-ethers-wrapper"
 
 const { isAddress, getAddress, formatUnits, parseUnits } = utils

@@ -1,6 +1,7 @@
 import { BigNumber } from "ethers"
 import { config, deployments, ethers, network } from "hardhat"
 import { SourceToken, SourceToken__factory } from "../types"
+import { SourceTokenV3__factory } from "../types/factories/SourceTokenV3__factory"
 
 const fs = require("fs")
 const recipientsFile = "./scripts/recipients.json"
@@ -31,11 +32,7 @@ async function main(): Promise<void> {
 
   const signer = (await ethers.getSigners())[0]
 
-  const sourceContract = new ethers.Contract(
-    sourceTokenAddress,
-    SourceToken__factory.createInterface(),
-    signer
-  ) as SourceToken
+  const sourceContract = SourceTokenV3__factory.connect(sourceTokenAddress, signer)
 
   const addresses = recipients.recipients
   let schedules

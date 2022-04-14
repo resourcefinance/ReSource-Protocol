@@ -1,5 +1,6 @@
 export const TASK_WALLET: string = "wallet"
 export const TASK_FUNDEDWALLET: string = "fundedwallet"
+export const VIEW_SOURCE_LOCK: string = "viewSourceLock"
 export const TASK_GENERATE: string = "generate"
 export const TASK_MINECONTRACTADDRESS: string = "mineContractAddress"
 export const TASK_ACCOUNT: string = "account"

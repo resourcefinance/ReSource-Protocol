@@ -21,7 +21,7 @@ dataSources:
         - name: NetworkRoles
           file: ./abis/NetworkRoles.json
       eventHandlers:
-        - event: MemberAdded(address,address)
+        - event: MemberAdded(address)
           handler: handleMemberAdded
       file: ./src/mapping/NetworkRoles/index.ts
 

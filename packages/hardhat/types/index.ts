@@ -32,7 +32,6 @@ export type { IiKeyWalletDeployer } from "./IiKeyWalletDeployer";
 export type { IKeyMultiSig } from "./IKeyMultiSig";
 export type { IKeyWalletDeployer } from "./IKeyWalletDeployer";
 export type { CIP36 } from "./CIP36";
-export type { CIP36Migratable } from "./CIP36Migratable";
 export type { ICIP36 } from "./ICIP36";
 export type { INetworkRoles } from "./INetworkRoles";
 export type { NetworkRoles } from "./NetworkRoles";
@@ -79,7 +78,6 @@ export { IiKeyWalletDeployer__factory } from "./factories/IiKeyWalletDeployer__f
 export { IKeyMultiSig__factory } from "./factories/IKeyMultiSig__factory";
 export { IKeyWalletDeployer__factory } from "./factories/IKeyWalletDeployer__factory";
 export { CIP36__factory } from "./factories/CIP36__factory";
-export { CIP36Migratable__factory } from "./factories/CIP36Migratable__factory";
 export { ICIP36__factory } from "./factories/ICIP36__factory";
 export { INetworkRoles__factory } from "./factories/INetworkRoles__factory";
 export { NetworkRoles__factory } from "./factories/NetworkRoles__factory";

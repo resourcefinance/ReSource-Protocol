@@ -7,7 +7,7 @@ packages/hardhat/*.txt
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 **/node_modules
 packages/hardhat/artifacts*
-packages/hardhat/scripts/recipients.json
+packages/hardhat/scripts/locks/*
 packages/hardhat/transfers_celo/localhost*
 packages/hardhat/transfers_SOURCE/localhost*
 packages/hardhat/.openzeppelin/unknown-31337.json
@@ -45,3 +45,8 @@ yarn-error.log*
 .netlify
 
 packages/hardhat/stake.ts
+
+
+packages/hardhat/config.env
+
+.vscode/*

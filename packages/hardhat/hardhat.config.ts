@@ -28,6 +28,13 @@ import "./tasks/unpauseRUSD"
 import "./tasks/sendSource"
 import "./tasks/wallet"
 import "./tasks/viewSourceLock"
+import "./tasks/createConfig"
+import "./tasks/viewRUSDTx"
+import "./tasks/sendMock"
+import "./tasks/viewMock"
+import "./tasks/issueCredit"
+import "./tasks/grantMember"
+
 import { CeloProvider } from "@celo-tools/celo-ethers-wrapper"
 
 const { isAddress, getAddress, formatUnits, parseUnits } = utils

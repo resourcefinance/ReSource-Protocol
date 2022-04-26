@@ -1,0 +1,23 @@
+{
+  "0x6a7098Ace955C6348c45085c8065a97A460C790B": {
+    "name": "Rasheed | ReSource",
+    "unlockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x00"
+    },
+    "lockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x28c702c19ee0950000"
+    },
+    "txHash": "0xc02834e43a349da369dc33062003f7389d66e0aa928b6ff4eeeb7ee9d4aa333e",
+    "schedules": [
+      {
+        "amount": "752.21",
+        "expirationBlock": 1659420000,
+        "expirationDate": "2022-08-02T06:00:00.000Z"
+      }
+    ],
+    "isSuccess": true,
+    "error": ""
+  }
+}

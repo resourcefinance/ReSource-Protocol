@@ -13,12 +13,10 @@ task("viewRUSDTx", "view rusd tx").setAction(async (_, { ethers, network }) => {
 
   const rUSDInterface = new ethers.utils.Interface(RUSD__factory.abi)
 
-  const parsedTx = rUSDInterface.parseTransaction({
+  const contractTx = rUSDInterface.parseTransaction({
     data: transaction.data,
     value: transaction.value,
   })
-
-  console.log(parsedTx)
 
   const rUSDDeploymentPath = `./deployments/${network.name}/RUSD.json`
   const rUSDDeployment = fs.readFileSync(rUSDDeploymentPath).toString()
@@ -28,14 +26,20 @@ task("viewRUSDTx", "view rusd tx").setAction(async (_, { ethers, network }) => {
 
   const rUSD = new ethers.Contract(rUSDAddress, rUSDFactory.interface, signer)
 
-  console.log(ethers.utils.formatUnits(parsedTx.args["amount"], "mwei"))
+  console.log(ethers.utils.formatUnits(contractTx.args["amount"], "mwei"))
   console.log(
     "balance: ",
-    ethers.utils.formatUnits(await rUSD.balanceOf(parsedTx.args["to"]), "mwei")
+    ethers.utils.formatUnits(await rUSD.balanceOf(contractTx.args.to), "mwei")
   )
 
-  if (parsedTx.name != "transfer") throw new Error("invalid transaction")
+  if (contractTx.name != "transfer") throw new Error("invalid transaction")
 
-  console.log(parsedTx.name)
-  console.log(parsedTx.args)
+  const tx = await signer.provider?.getTransaction(txHash)
+
+  console.log(tx?.from)
+
+  console.log(tx?.blockNumber)
+
+  console.log(contractTx.name)
+  console.log(contractTx.args)
 })

@@ -41,7 +41,7 @@ task(CREATE_CONFIG, "create config").setAction(async (taskArgs, { ethers, networ
     !sourceTokenDeployment ||
     !networkRolesDeployment
   )
-    throw new Error("rUSD not deployed on this network")
+    throw new Error("one or more contract not deployed on this network")
 
   const addresses = {
     RUSD_ADDRESS: rUSDDeployment,

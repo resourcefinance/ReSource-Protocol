@@ -1,123 +1,120 @@
-import { ethers, getNamedAccounts } from "hardhat"
-import { parseEther } from "ethers/lib/utils"
-import { readFileSync } from "fs"
-import { RUSD, RUSD__factory, SourceTokenV2, SourceToken__factory } from "../types"
-const fs = require("fs")
+import { ethers, getNamedAccounts, network } from "hardhat"
+import fs from "fs"
+import { send } from "../hardhat.config"
 
-const underwriteAbi = "./deployments/localhost/UnderwriteManager.json"
-const mutualityAbi = "./deployments/localhost/SourceToken.json"
-const rUSDAbi = "./deployments/localhost/RUSD.json"
-const networkRegistryAbi = "./deployments/localhost/NetworkRegistry.json"
-
-const member1 = ethers.Wallet.createRandom().connect(ethers.provider)
-const member2 = ethers.Wallet.createRandom()
-// Add your business's multiSig address
-const members = [
-  "0x7fB7a463A9817C88aF7F223242968Ce882A0D7fD",
-  "0x9620C68f4B0CE33A32dEeEc22C9DDe28a7EFda6f", // nate local
-  member1.address,
-  member2.address,
-]
-// Add your underwriter address
-const underwriters = [
-  "0x7A900e4b37D5635Ccec6Ab8751f5Feb652b6bc8d", // bridger
-  "0xa7b9b3E61a5d3063510C54C9a6561A193c6a4a06", // nate
-]
-
-const underwriterKey = "ecb264ec4ef15b8a29dd0c6b9d0fb96f837cd8485979b4ac73616a8e64366ea5"
-
-async function issueCreditLine() {
-  // try {
-  //   let underwriteContract = fs.readFileSync(underwriteAbi).toString()
-  //   underwriteContract = JSON.parse(underwriteContract)
-  //   const underwriteAddress = underwriteContract.address
-  //   if (!underwriteAddress) return
-  //   let mutualityContract = fs.readFileSync(mutualityAbi).toString()
-  //   mutualityContract = JSON.parse(mutualityContract)
-  //   const mutualityAddress = mutualityContract.address
-  //   let rUSDContract = fs.readFileSync(rUSDAbi).toString()
-  //   rUSDContract = JSON.parse(rUSDContract)
-  //   const rUSDAddress = rUSDContract.address
-  //   let networkRegistryContract = fs.readFileSync(networkRegistryAbi).toString()
-  //   networkRegistryContract = JSON.parse(networkRegistryContract)
-  //   const networkRegistryAddress = networkRegistryContract.address
-  //   const deployer = (await ethers.getSigners())[0]
-  //   const underwriteManager = UnderwriteManager__factory.getContract(
-  //     underwriteAddress,
-  //     UnderwriteManager__factory.createInterface(),
-  //     deployer,
-  //   ) as UnderwriteManager
-  //   const sourceToken = SourceToken__factory.getContract(
-  //     mutualityAddress,
-  //     SourceToken__factory.createInterface(),
-  //     deployer,
-  //   ) as SourceTokenV2
-  //   const networkRegistry = NetworkRegistry__factory.getContract(
-  //     networkRegistryAddress,
-  //     NetworkRegistry__factory.createInterface(),
-  //     deployer,
-  //   ) as NetworkRegistry
-  //   const rUSD = RUSD__factory.getContract(
-  //     rUSDAddress,
-  //     RUSD__factory.createInterface(),
-  //     deployer,
-  //   ) as RUSD
-  //   const curMembers = await networkRegistry
-  //   for (var member of members) {
-  //     if (!(await networkRegistry.isMember(member)))
-  //       await (await networkRegistry.connect(deployer).addMembers([member])).wait
-  //   }
-  //   for (var underwriter of underwriters)
-  //     if (Number(ethers.utils.formatEther(await sourceToken.balanceOf(underwriter))) < 1000)
-  //       await sourceToken
-  //         .connect(deployer)
-  //         .transfer(underwriter, ethers.utils.parseEther("10000.0"))
-  //   const underwriterWallet = new ethers.Wallet(underwriterKey, ethers.provider)
-  //   let tx = {
-  //     to: underwriterWallet.address,
-  //     value: ethers.utils.parseEther("1"),
-  //   }
-  //   const signer = ethers.provider.getSigner()
-  //   await (await signer.sendTransaction(tx)).wait()
-  //   tx = {
-  //     to: "0xe105fb303e5ffee9e27726267e2db11c37260865", // relayer
-  //     value: ethers.utils.parseEther("1"),
-  //   }
-  //   await (await signer.sendTransaction(tx)).wait()
-  //   tx = {
-  //     to: "0xE31b212Adcf7A617fcB2E8B608c09E6D596d8425", // guardian
-  //     value: ethers.utils.parseEther("1"),
-  //   }
-  //   await (await signer.sendTransaction(tx)).wait()
-  //   tx = {
-  //     to: member1.address,
-  //     value: ethers.utils.parseEther("1"),
-  //   }
-  //   await (await signer.sendTransaction(tx)).wait()
-  //   // await (await underwriteManager.updateUnderwriters([underwriterWallet.address], [true])).wait()
-  //   await (
-  //     await sourceToken
-  //       .connect(underwriterWallet)
-  //       .approve(underwriteAddress, ethers.utils.parseEther("1000000000000"))
-  //   ).wait()
-  //   await (
-  //     await underwriteManager
-  //       .connect(underwriterWallet)
-  //       .underwrite(rUSDAddress, ethers.utils.parseEther("1000.0"), member1.address)
-  //   ).wait()
-  //   await (
-  //     await rUSD
-  //       .connect(member1)
-  //       .transfer(member2.address, ethers.utils.parseUnits("500.0", "mwei"))
-  //   ).wait()
-  // } catch (e) {
-  //   console.log(e)
-  // }
-}
+const configFile = "./ledgerConfig.json"
 
 async function main() {
-  await issueCreditLine()
-  console.log("✅ Local Environment Provisioned.")
+  if (network.name !== "localhost") return
+
+  const networkOperator = (await getNamedAccounts())["networkOperator"]
+
+  const creditDeploymentPath = `./deployments/${network.name}/CreditRoles.json`
+  const creditRolesDeployment = fs.readFileSync(creditDeploymentPath).toString()
+  const creditRolesAddress = JSON.parse(creditRolesDeployment)["address"]
+
+  if (!creditRolesAddress) throw new Error("credit roles not deployed on this network")
+
+  const networkDeploymentPath = `./deployments/${network.name}/NetworkRoles.json`
+  const networkRolesDeployment = fs.readFileSync(networkDeploymentPath).toString()
+  const networkRolesAddress = JSON.parse(networkRolesDeployment)["address"]
+
+  if (!networkRolesAddress) throw new Error("network roles not deployed on this network")
+
+  const signer = (await ethers.getSigners())[0]
+
+  const creditRolesFactory = await ethers.getContractFactory("CreditRoles")
+
+  const creditRoles = new ethers.Contract(creditRolesAddress, creditRolesFactory.interface, signer)
+
+  const networkRolesFactory = await ethers.getContractFactory("NetworkRoles")
+
+  const networkRoles = new ethers.Contract(
+    networkRolesAddress,
+    networkRolesFactory.interface,
+    signer
+  )
+
+  try {
+    await (await creditRoles.grantRequestOperator(networkOperator)).wait()
+    await (await creditRoles.grantUnderwriter(networkOperator)).wait()
+    await (await networkRoles.grantOperator(networkOperator)).wait()
+
+    let amount = ethers.utils.parseEther("1000")
+    let address = networkOperator
+    const tx = {
+      to: address,
+      value: amount,
+    }
+    await send(signer, tx)
+
+    const sourceFactory = await ethers.getContractFactory("SourceToken")
+    const sourceDeploymentPath = `./deployments/${network.name}/SourceToken.json`
+    const sourceTokenDeployment = fs.readFileSync(sourceDeploymentPath).toString()
+    const sourceTokenAddress = JSON.parse(sourceTokenDeployment)["address"]
+    const source = new ethers.Contract(sourceTokenAddress, sourceFactory.interface, signer)
+    await (await source.transfer(address, amount)).wait()
+
+    await createConfig()
+
+    const rUSDFactory = await ethers.getContractFactory("RUSD")
+    const rUSDDeploymentPath = `./deployments/${network.name}/RUSD.json`
+    const rUSDDeployment = JSON.parse(fs.readFileSync(rUSDDeploymentPath).toString()).address
+    const rUSD = new ethers.Contract(rUSDDeployment, rUSDFactory.interface, signer)
+    await (await rUSD.unpause()).wait()
+  } catch (e) {
+    console.log(e)
+  }
+  console.log("✅ environment provisioned.")
+}
+
+async function createConfig() {
+  if (!fs.existsSync(configFile)) fs.writeFileSync(configFile, JSON.stringify({}, null, 2))
+
+  const rUSDDeploymentPath = `./deployments/${network.name}/RUSD.json`
+  const creditFeeManagerDeploymentPath = `./deployments/${network.name}/CreditFeeManager.json`
+  const creditPoolDeploymentPath = `./deployments/${network.name}/CreditPool.json`
+  const creditRequestDeploymentPath = `./deployments/${network.name}/CreditRequest.json`
+  const sourceTokenDeploymentPath = `./deployments/${network.name}/SourceToken.json`
+  const networkRolesDeploymentPath = `./deployments/${network.name}/NetworkRoles.json`
+
+  const rUSDDeployment = JSON.parse(fs.readFileSync(rUSDDeploymentPath).toString()).address
+  const creditFeeManagerDeployment = JSON.parse(
+    fs.readFileSync(creditFeeManagerDeploymentPath).toString()
+  ).address
+  const creditPoolDeployment = JSON.parse(
+    fs.readFileSync(creditPoolDeploymentPath).toString()
+  ).address
+  const creditRequestDeployment = JSON.parse(
+    fs.readFileSync(creditRequestDeploymentPath).toString()
+  ).address
+  const sourceTokenDeployment = JSON.parse(
+    fs.readFileSync(sourceTokenDeploymentPath).toString()
+  ).address
+  const networkRolesDeployment = JSON.parse(
+    fs.readFileSync(networkRolesDeploymentPath).toString()
+  ).address
+
+  if (
+    !rUSDDeployment ||
+    !creditFeeManagerDeployment ||
+    !creditPoolDeployment ||
+    !creditRequestDeployment ||
+    !sourceTokenDeployment ||
+    !networkRolesDeployment
+  )
+    throw new Error("one or more contract not deployed on this network")
+
+  const addresses = {
+    RUSD_ADDRESS: rUSDDeployment,
+    CREDIT_POOL_ADDRESS: creditPoolDeployment,
+    CREDIT_REQUEST_ADDRESS: creditRequestDeployment,
+    SOURCE_ADDRESS: sourceTokenDeployment,
+    CREDIT_FEE_MANAGER_ADDRESS: creditFeeManagerDeployment,
+    NETWORK_ROLES_ADDRESS: networkRolesDeployment,
+  }
+
+  fs.writeFileSync(configFile, JSON.stringify(addresses))
 }
 
 main()

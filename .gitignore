@@ -47,6 +47,6 @@ yarn-error.log*
 packages/hardhat/stake.ts
 
 
-packages/hardhat/config.env
+packages/hardhat/ledgerConfig.json
 
 .vscode/*

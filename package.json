@@ -10,6 +10,7 @@
   ],
   "private": true,
   "scripts": {
+    "dev": "yarn workspace @resource/hardhat dev",
     "chain": "yarn workspace @resource/hardhat chain",
     "fork": "yarn workspace @resource/hardhat fork",
     "node": "yarn workspace @resource/hardhat chain",

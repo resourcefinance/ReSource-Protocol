@@ -49,4 +49,4 @@ packages/hardhat/stake.ts
 
 packages/hardhat/ledgerConfig.json
 
-.vscode/*
+.vscode/settings.json

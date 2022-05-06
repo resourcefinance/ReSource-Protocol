@@ -4,9 +4,8 @@ const fs = require("fs")
 const chalk = require("chalk")
 const fse = require("fs-extra")
 
-const graphDir = "./../subgraph"
+const graphDir = "./"
 const deploymentsDir = "./deployments"
-const typesDir = "./types"
 
 function publishContract(contractName: string, networkName: string) {
   try {
@@ -14,7 +13,7 @@ function publishContract(contractName: string, networkName: string) {
       .readFileSync(`${deploymentsDir}/${networkName}/${contractName}.json`)
       .toString()
     contract = JSON.parse(contract)
-    const graphConfigPath = `${graphDir}/config/config.json`
+    const graphConfigPath = `${graphDir}/config.json`
     let graphConfig
     try {
       if (fs.existsSync(graphConfigPath)) {
@@ -36,12 +35,9 @@ function publishContract(contractName: string, networkName: string) {
     }
     fs.writeFileSync(graphConfigPath, JSON.stringify(graphConfig, null, 2))
 
-    if (!fs.existsSync(`${graphDir}/abis`)) fs.mkdirSync(`${graphDir}/abis`)
-    if (!contract.abi) console.log(contract.contractName)
-    fs.writeFileSync(`${graphDir}/abis/${contractName}.json`, JSON.stringify(contract.abi, null, 2))
     return true
   } catch (e) {
-    console.log("Failed to publish " + chalk.red(contractName) + " to the subgraph.")
+    console.log("Failed to publish " + chalk.red(contractName))
     console.log(e)
     return false
   }
@@ -56,7 +52,7 @@ async function main() {
       publishContract(contractName, network.name)
     }
   })
-  console.log("✅  Published contracts to the subgraph package.")
+  console.log("✅  Published contracts to config.")
 }
 main()
   .then(() => process.exit(0))

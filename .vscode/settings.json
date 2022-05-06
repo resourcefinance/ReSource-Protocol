@@ -6,5 +6,25 @@
     "editor.defaultFormatter": "JuanBlanco.solidity"
   },
   "solidity.defaultCompiler": "localNodeModule",
-  "typescript.tsdk": "node_modules/typescript/lib"
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "workbench.colorCustomizations": {
+    "activityBar.activeBackground": "#008000",
+    "activityBar.activeBorder": "#9f9fff",
+    "activityBar.background": "#008000",
+    "activityBar.foreground": "#e7e7e7",
+    "activityBar.inactiveForeground": "#e7e7e799",
+    "activityBarBadge.background": "#9f9fff",
+    "activityBarBadge.foreground": "#15202b",
+    "sash.hoverBorder": "#008000",
+    "statusBar.background": "#004d00",
+    "statusBar.foreground": "#e7e7e7",
+    "statusBarItem.hoverBackground": "#008000",
+    "statusBarItem.remoteBackground": "#004d00",
+    "statusBarItem.remoteForeground": "#e7e7e7",
+    "titleBar.activeBackground": "#004d00",
+    "titleBar.activeForeground": "#e7e7e7",
+    "titleBar.inactiveBackground": "#004d0099",
+    "titleBar.inactiveForeground": "#e7e7e799"
+  },
+  "peacock.color": "#004d00"
 }

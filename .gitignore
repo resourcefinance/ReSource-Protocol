@@ -1,22 +1,15 @@
-packages/subgraph/subgraph.yaml
-packages/subgraph/generated
-packages/subgraph/abis/*
-packages/hardhat/*.txt
+*.txt
 **/aws.json
 
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 **/node_modules
-packages/hardhat/artifacts*
-packages/hardhat/scripts/locks/*
-packages/hardhat/transfers_celo/localhost*
-packages/hardhat/transfers_SOURCE/localhost*
-packages/hardhat/.openzeppelin/unknown-31337.json
-packages/hardhat/deployments/localhost
-packages/hardhat/cache*
+artifacts*
+scripts/locks/*
+transfers_celo/localhost*
+transfers_SOURCE/localhost*
+.openzeppelin/unknown-31337.json
+deployments/localhost
+cache*
 
-packages/**/data
-
-packages/subgraph/config/config.json
 tenderly.yaml
 
 # dependencies
@@ -44,9 +37,9 @@ yarn-error.log*
 # Local Netlify folder
 .netlify
 
-packages/hardhat/stake.ts
+stake.ts
 
 
-packages/hardhat/ledgerConfig.json
+ledgerConfig.json
 
 .vscode/settings.json

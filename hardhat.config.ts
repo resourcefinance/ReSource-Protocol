@@ -9,12 +9,10 @@ import "@openzeppelin/hardhat-upgrades"
 import "hardhat-gas-reporter"
 import "solidity-coverage"
 import "hardhat-contract-sizer"
-import { existsSync, readFileSync, writeFileSync } from "fs"
 
 import { utils } from "ethers"
 
 import { HardhatUserConfig, task } from "hardhat/config"
-import { HttpNetworkUserConfig } from "hardhat/types"
 
 import "./tasks/accounts"
 import "./tasks/clean"

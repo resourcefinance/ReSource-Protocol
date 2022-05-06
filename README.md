@@ -48,40 +48,12 @@ yarn chain
 yarn deploy
 ```
 
-🔏 Contract deployments are stored in `packages/hardhat/deployments/<network>/<contract_name>`
+🔏 Contract deployments are stored in `deployments/<network>/<contract_name>`
 
 # 🏗 Run Contract Tests
 
 ```bash
 yarn test
 ```
-
-# 🤓 Details
-
-> Local graph node
-
-```bash
-yarn run-graph-node
-```
-
-> if old graph node, clean graph node
-
-```bash
-yarn clean-graph-node
-```
-
-> build and deploy the subgraph
-
-```bash
-yarn graph-prepare
-yarn graph-codegen
-yarn graph-build
-yarn graph-create-local
-yarn graph-deploy-local
-```
-
-🔏 smart contracts in `packages/hardhat/contracts`
-
-💼 Deployment scripts in `packages/hardhat/deploy`
 
 📕 Go to our home page to learn more : https://www.resourcenetwork.co/

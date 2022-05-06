@@ -1,1 +1,0 @@
-export { handleMemberAdded } from "./MemberAdded"

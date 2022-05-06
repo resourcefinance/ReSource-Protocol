@@ -5,7 +5,7 @@ import { TokenClaim__factory } from "../types/factories/TokenClaim__factory"
 import { TokenClaim } from "../types/TokenClaim"
 
 const fs = require("fs")
-const recipientsFile = "./scripts/recipients.json"
+const recipientsFile = "./scripts/locks/recipients.json"
 const transferPath = "./tx_receipts/claims_SOURCE/"
 
 async function main(): Promise<void> {
@@ -40,13 +40,13 @@ async function main(): Promise<void> {
   const sourceContract = new ethers.Contract(
     sourceTokenAddress,
     SourceToken__factory.createInterface(),
-    signer,
+    signer
   ) as SourceToken
 
   const tokenClaimContract = new ethers.Contract(
     tokenClaimAddress,
     TokenClaim__factory.createInterface(),
-    signer,
+    signer
   ) as TokenClaim
 
   const addresses = recipients.recipients
@@ -67,7 +67,7 @@ async function main(): Promise<void> {
         lockedAmount,
         recipients.schedule.periods,
         recipients.schedule.monthsInPeriod,
-        recipients.schedule.startDate,
+        recipients.schedule.startDate
       )
 
       console.log("💵 Creating Claim for " + address)
@@ -80,7 +80,7 @@ async function main(): Promise<void> {
             totalAmount: scheduleTotal,
             amountStaked: 0,
             schedules: schedules,
-          },
+          }
         )
       ).wait()
 

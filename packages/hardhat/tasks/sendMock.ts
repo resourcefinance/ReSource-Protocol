@@ -1,5 +1,4 @@
 import { task } from "hardhat/config"
-import { MockERC20 } from "../types/MockERC20"
 import { SEND_MOCK } from "./task-names"
 import fs from "fs"
 import { addr } from "../hardhat.config"

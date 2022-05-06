@@ -25,6 +25,7 @@ function publishContract(contractName: string, networkName: string) {
     } catch (e) {
       console.log(e)
     }
+    if (graphConfig.includes(contract.address)) return
     graphConfig = JSON.parse(graphConfig)
     graphConfig[`${contractName}Address`] = contract.address
     graphConfig[`${contractName}StartBlock`] = Number(contract.receipt.blockNumber)
@@ -49,7 +50,7 @@ function publishContract(contractName: string, networkName: string) {
 async function main() {
   if (!fs.existsSync(`${deploymentsDir}/${network.name}`)) return
   const files = fs.readdirSync(`${deploymentsDir}/${network.name}`)
-  files.forEach(function(file) {
+  files.forEach(function (file) {
     if (file.indexOf(".json") >= 0 && file.indexOf(".dbg") === -1) {
       const contractName = file.replace(".json", "")
       publishContract(contractName, network.name)

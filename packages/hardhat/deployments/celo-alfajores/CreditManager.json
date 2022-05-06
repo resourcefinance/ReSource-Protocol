@@ -1,0 +1,871 @@
+{
+  "address": "0x2AE227c3d4c947e683A065984a65144529e22494",
+  "abi": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "network",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "networkMember",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "pool",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "creditLimit",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "timestamp",
+          "type": "uint256"
+        }
+      ],
+      "name": "CreditLineCreated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "network",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "networkMember",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "creditLimit",
+          "type": "uint256"
+        }
+      ],
+      "name": "CreditLineLimitUpdated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "network",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "networkMember",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "pool",
+          "type": "address"
+        }
+      ],
+      "name": "CreditLinePoolUpdated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "network",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "networkMember",
+          "type": "address"
+        }
+      ],
+      "name": "CreditLineRemoved",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "network",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "networkMember",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "timestamp",
+          "type": "uint256"
+        }
+      ],
+      "name": "CreditLineRenewed",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "pool",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "underwriter",
+          "type": "address"
+        }
+      ],
+      "name": "CreditPoolAdded",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "previousOwner",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "OwnershipTransferred",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "Paused",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "Unpaused",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_networkToken",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_percent",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "calculatePercentInCollateral",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_network",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_pool",
+          "type": "address"
+        }
+      ],
+      "name": "calculatePoolLTV",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_network",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_networkMember",
+          "type": "address"
+        }
+      ],
+      "name": "closeCreditLine",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "collateralToken",
+      "outputs": [
+        {
+          "internalType": "contract IERC20",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_network",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "convertNetworkToCollateral",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_networkMember",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_pool",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_creditLimit",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "_network",
+          "type": "address"
+        }
+      ],
+      "name": "createCreditLine",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "creditLineExpiration",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "creditLines",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "creditPool",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "issueDate",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "creditLimit",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "creditRoles",
+      "outputs": [
+        {
+          "internalType": "contract ICreditRoles",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_network",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_networkMember",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_creditLimit",
+          "type": "uint256"
+        }
+      ],
+      "name": "extendCreditLine",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getCollateralToken",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_network",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_networkMember",
+          "type": "address"
+        }
+      ],
+      "name": "getCreditLine",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "address",
+              "name": "creditPool",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "issueDate",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "creditLimit",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct ICreditManager.CreditLine",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_network",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_networkMember",
+          "type": "address"
+        }
+      ],
+      "name": "getCreditLineUnderwriter",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getMinLTV",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_network",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_networkMember",
+          "type": "address"
+        }
+      ],
+      "name": "getNeededCollateral",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "collateralTokenAddress",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_creditRoles",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_oracle",
+          "type": "address"
+        }
+      ],
+      "name": "initialize",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_network",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_networkMember",
+          "type": "address"
+        }
+      ],
+      "name": "isCreditLineExpired",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_network",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_pool",
+          "type": "address"
+        }
+      ],
+      "name": "isPoolValidLTV",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "minLTV",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "oracle",
+      "outputs": [
+        {
+          "internalType": "contract IPriceOracle",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "owner",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "paused",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "pools",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_pool",
+          "type": "address"
+        }
+      ],
+      "name": "registerCreditPool",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_network",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_networkMember",
+          "type": "address"
+        }
+      ],
+      "name": "renewCreditLine",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "renounceOwnership",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_network",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_networkMember",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_pool",
+          "type": "address"
+        }
+      ],
+      "name": "swapCreditLinePool",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "totalStakedCollateral",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "transferOwnership",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "transactionHash": "0x42e2bd9d159b4c2094f091aa8f7a447c22b5b691641e85f311fa56b9a20c78b9",
+  "receipt": {
+    "to": null,
+    "from": "0x0219f301551757D33954c074091718B785f5B87c",
+    "contractAddress": "0x2AE227c3d4c947e683A065984a65144529e22494",
+    "transactionIndex": 2,
+    "gasUsed": "744200",
+    "logsBloom": "0x00001000000000000000000000000000400000000008000000800000000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000001000000000000400000000000000000000000020000000000000000000800000000800000000000000000000000400000000000000000000000000000000000000000000000000008000008800000000000000000000000000000000000000000000400000000000000000000000000000020000000000800000000000001000000000400000000000000000020000000000000000000000000000000000000000000000000000000000000000000",
+    "blockHash": "0x6fe34aba87bcadcd330404c62a443c6b2e1a26d3c0eb4ae1663442fd334ff534",
+    "transactionHash": "0x42e2bd9d159b4c2094f091aa8f7a447c22b5b691641e85f311fa56b9a20c78b9",
+    "logs": [
+      {
+        "transactionIndex": 2,
+        "blockNumber": 11301100,
+        "transactionHash": "0x42e2bd9d159b4c2094f091aa8f7a447c22b5b691641e85f311fa56b9a20c78b9",
+        "address": "0x2AE227c3d4c947e683A065984a65144529e22494",
+        "topics": [
+          "0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b",
+          "0x0000000000000000000000006cdb16c5e6acdd29b5bcb829d937785501c5f8f7"
+        ],
+        "data": "0x",
+        "logIndex": 3,
+        "blockHash": "0x6fe34aba87bcadcd330404c62a443c6b2e1a26d3c0eb4ae1663442fd334ff534"
+      },
+      {
+        "transactionIndex": 2,
+        "blockNumber": 11301100,
+        "transactionHash": "0x42e2bd9d159b4c2094f091aa8f7a447c22b5b691641e85f311fa56b9a20c78b9",
+        "address": "0x2AE227c3d4c947e683A065984a65144529e22494",
+        "topics": [
+          "0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0",
+          "0x0000000000000000000000000000000000000000000000000000000000000000",
+          "0x0000000000000000000000000219f301551757d33954c074091718b785f5b87c"
+        ],
+        "data": "0x",
+        "logIndex": 4,
+        "blockHash": "0x6fe34aba87bcadcd330404c62a443c6b2e1a26d3c0eb4ae1663442fd334ff534"
+      },
+      {
+        "transactionIndex": 2,
+        "blockNumber": 11301100,
+        "transactionHash": "0x42e2bd9d159b4c2094f091aa8f7a447c22b5b691641e85f311fa56b9a20c78b9",
+        "address": "0x2AE227c3d4c947e683A065984a65144529e22494",
+        "topics": [
+          "0x7e644d79422f17c01e4894b5f4f588d331ebfa28653d42ae832dc59e38c9798f"
+        ],
+        "data": "0x0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000861095d92ec90c0c9ecdcb29a77d9d1cebf9d421",
+        "logIndex": 5,
+        "blockHash": "0x6fe34aba87bcadcd330404c62a443c6b2e1a26d3c0eb4ae1663442fd334ff534"
+      }
+    ],
+    "events": [
+      {
+        "transactionIndex": 2,
+        "blockNumber": 11301100,
+        "transactionHash": "0x42e2bd9d159b4c2094f091aa8f7a447c22b5b691641e85f311fa56b9a20c78b9",
+        "address": "0x2AE227c3d4c947e683A065984a65144529e22494",
+        "topics": [
+          "0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b",
+          "0x0000000000000000000000006cdb16c5e6acdd29b5bcb829d937785501c5f8f7"
+        ],
+        "data": "0x",
+        "logIndex": 3,
+        "blockHash": "0x6fe34aba87bcadcd330404c62a443c6b2e1a26d3c0eb4ae1663442fd334ff534",
+        "args": [
+          "0x6CDB16c5e6ACdd29B5BCb829d937785501c5f8f7"
+        ],
+        "event": "Upgraded",
+        "eventSignature": "Upgraded(address)"
+      },
+      {
+        "transactionIndex": 2,
+        "blockNumber": 11301100,
+        "transactionHash": "0x42e2bd9d159b4c2094f091aa8f7a447c22b5b691641e85f311fa56b9a20c78b9",
+        "address": "0x2AE227c3d4c947e683A065984a65144529e22494",
+        "topics": [
+          "0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0",
+          "0x0000000000000000000000000000000000000000000000000000000000000000",
+          "0x0000000000000000000000000219f301551757d33954c074091718b785f5b87c"
+        ],
+        "data": "0x",
+        "logIndex": 4,
+        "blockHash": "0x6fe34aba87bcadcd330404c62a443c6b2e1a26d3c0eb4ae1663442fd334ff534"
+      },
+      {
+        "transactionIndex": 2,
+        "blockNumber": 11301100,
+        "transactionHash": "0x42e2bd9d159b4c2094f091aa8f7a447c22b5b691641e85f311fa56b9a20c78b9",
+        "address": "0x2AE227c3d4c947e683A065984a65144529e22494",
+        "topics": [
+          "0x7e644d79422f17c01e4894b5f4f588d331ebfa28653d42ae832dc59e38c9798f"
+        ],
+        "data": "0x0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000861095d92ec90c0c9ecdcb29a77d9d1cebf9d421",
+        "logIndex": 5,
+        "blockHash": "0x6fe34aba87bcadcd330404c62a443c6b2e1a26d3c0eb4ae1663442fd334ff534",
+        "args": [
+          "0x0000000000000000000000000000000000000000",
+          "0x861095d92ec90C0c9ecdcb29a77d9D1cebf9d421"
+        ],
+        "event": "AdminChanged",
+        "eventSignature": "AdminChanged(address,address)"
+      }
+    ],
+    "blockNumber": 11301100,
+    "cumulativeGasUsed": "1142829",
+    "status": 1,
+    "byzantium": true
+  }
+}

@@ -1,5 +1,5 @@
 {
-  "address": "0xf254D120A2d53bD774e265257d126a5A47d1dE14",
+  "address": "0xdbc44f5Be6fACfaD46F7a148c434B0118D15Cf75",
   "abi": [
     {
       "anonymous": false,
@@ -24,92 +24,6 @@
         }
       ],
       "name": "Approval",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": false,
-          "internalType": "address",
-          "name": "sender",
-          "type": "address"
-        },
-        {
-          "indexed": false,
-          "internalType": "address",
-          "name": "recipient",
-          "type": "address"
-        },
-        {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "senderBalance",
-          "type": "uint256"
-        },
-        {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "senderCreditBalance",
-          "type": "uint256"
-        },
-        {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "recipientBalance",
-          "type": "uint256"
-        },
-        {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "recipientCreditBalance",
-          "type": "uint256"
-        }
-      ],
-      "name": "BalanceUpdate",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": false,
-          "internalType": "address",
-          "name": "sender",
-          "type": "address"
-        },
-        {
-          "indexed": false,
-          "internalType": "address[]",
-          "name": "recipients",
-          "type": "address[]"
-        },
-        {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "senderBalance",
-          "type": "uint256"
-        },
-        {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "senderCreditBalance",
-          "type": "uint256"
-        },
-        {
-          "indexed": false,
-          "internalType": "uint256[]",
-          "name": "recipientBalances",
-          "type": "uint256[]"
-        },
-        {
-          "indexed": false,
-          "internalType": "uint256[]",
-          "name": "recipientCreditBalances",
-          "type": "uint256[]"
-        }
-      ],
-      "name": "BulkBalanceUpdate",
       "type": "event"
     },
     {
@@ -155,25 +69,12 @@
       "inputs": [
         {
           "indexed": false,
-          "internalType": "uint256",
-          "name": "restrictionRenewal",
-          "type": "uint256"
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
         }
       ],
-      "name": "RestrictionExpirationUpdated",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
-          "internalType": "enum RUSD.Restriction",
-          "name": "state",
-          "type": "uint8"
-        }
-      ],
-      "name": "RestrictionUpdated",
+      "name": "Paused",
       "type": "event"
     },
     {
@@ -199,6 +100,19 @@
         }
       ],
       "name": "Transfer",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "Unpaused",
       "type": "event"
     },
     {
@@ -321,6 +235,30 @@
       "inputs": [
         {
           "internalType": "address",
+          "name": "_requester",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_member",
+          "type": "address"
+        }
+      ],
+      "name": "canRequestCredit",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
           "name": "_member",
           "type": "address"
         }
@@ -376,6 +314,19 @@
     },
     {
       "inputs": [],
+      "name": "creditRoles",
+      "outputs": [
+        {
+          "internalType": "contract ICreditRoles",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
       "name": "decimals",
       "outputs": [
         {
@@ -409,6 +360,19 @@
         }
       ],
       "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "feeManager",
+      "outputs": [
+        {
+          "internalType": "contract ICreditFeeManager",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
       "type": "function"
     },
     {
@@ -457,22 +421,17 @@
       "inputs": [
         {
           "internalType": "address",
-          "name": "registryAddress",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_expiration",
-          "type": "uint256"
-        },
-        {
-          "internalType": "address",
-          "name": "_underwriteManager",
+          "name": "_creditRoles",
           "type": "address"
         },
         {
           "internalType": "address",
-          "name": "operatorAddress",
+          "name": "_feeManager",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_networkRoles",
           "type": "address"
         }
       ],
@@ -496,10 +455,10 @@
     },
     {
       "inputs": [],
-      "name": "operator",
+      "name": "networkRoles",
       "outputs": [
         {
-          "internalType": "address",
+          "internalType": "contract INetworkRoles",
           "name": "",
           "type": "address"
         }
@@ -522,22 +481,22 @@
     },
     {
       "inputs": [],
-      "name": "registry",
-      "outputs": [
-        {
-          "internalType": "contract NetworkRegistry",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
+      "name": "pause",
+      "outputs": [],
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
       "inputs": [],
-      "name": "removeRestrictions",
-      "outputs": [],
-      "stateMutability": "nonpayable",
+      "name": "paused",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
       "type": "function"
     },
     {
@@ -545,33 +504,6 @@
       "name": "renounceOwnership",
       "outputs": [],
       "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "restrictPositiveBalance",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "restrictRegistered",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "restrictionState",
-      "outputs": [
-        {
-          "internalType": "enum RUSD.Restriction",
-          "name": "",
-          "type": "uint8"
-        }
-      ],
-      "stateMutability": "view",
       "type": "function"
     },
     {
@@ -622,7 +554,7 @@
       "inputs": [
         {
           "internalType": "address",
-          "name": "recipient",
+          "name": "to",
           "type": "address"
         },
         {
@@ -646,12 +578,12 @@
       "inputs": [
         {
           "internalType": "address",
-          "name": "sender",
+          "name": "from",
           "type": "address"
         },
         {
           "internalType": "address",
-          "name": "recipient",
+          "name": "to",
           "type": "address"
         },
         {
@@ -686,33 +618,142 @@
     },
     {
       "inputs": [],
-      "name": "underwriteManager",
-      "outputs": [
-        {
-          "internalType": "contract UnderwriteManager",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "updateRestrictionExpiration",
+      "name": "unpause",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
     }
   ],
-  "transactionHash": "0x98e4a1a0ff95de6b6e3be78756b9eb95e903d181b9256c2f38c7b4f8bffe429c",
+  "transactionHash": "0xa77fe0c5124be5d4e4ab0b5462294acea8ea6a5591d6b9424649a373a64f2115",
   "receipt": {
-    "from": "0x8bb2af5d4877345aAc16c89d7147D4CC73D808AA",
-    "transactionIndex": null,
-    "gasUsed": "500000000",
-    "blockHash": null,
-    "transactionHash": "0x98e4a1a0ff95de6b6e3be78756b9eb95e903d181b9256c2f38c7b4f8bffe429c",
-    "blockNumber": null,
-    "cumulativeGasUsed": "787259"
+    "to": null,
+    "from": "0x0219f301551757D33954c074091718B785f5B87c",
+    "contractAddress": "0xdbc44f5Be6fACfaD46F7a148c434B0118D15Cf75",
+    "transactionIndex": 2,
+    "gasUsed": "767819",
+    "logsBloom": "0x00000000000000000000000000000000400000000000000000800000000000000000001000000000000000008000000000000000000000000000000000000000000000000000000000000000000002000081000000000400400000000000000000000800020000000000000000000800000000810020000000000000000000400000000000000000000008000000000000000000000000000000000000800000000000000000000000000000000000000000000000000000000000000000000000000020000000000800400000000000000000000400000000000000000020000000000000000000000000000000000000000000000000000400000000000000",
+    "blockHash": "0x3a0e9e1cc9bba3607dbc3bc94d03a4768e39d82033225ccc5e9f4effaf2e29a8",
+    "transactionHash": "0xa77fe0c5124be5d4e4ab0b5462294acea8ea6a5591d6b9424649a373a64f2115",
+    "logs": [
+      {
+        "transactionIndex": 2,
+        "blockNumber": 11301115,
+        "transactionHash": "0xa77fe0c5124be5d4e4ab0b5462294acea8ea6a5591d6b9424649a373a64f2115",
+        "address": "0xdbc44f5Be6fACfaD46F7a148c434B0118D15Cf75",
+        "topics": [
+          "0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b",
+          "0x000000000000000000000000e756b77a261fc6bb3487bebaf9281e5ad2ac9a31"
+        ],
+        "data": "0x",
+        "logIndex": 6,
+        "blockHash": "0x3a0e9e1cc9bba3607dbc3bc94d03a4768e39d82033225ccc5e9f4effaf2e29a8"
+      },
+      {
+        "transactionIndex": 2,
+        "blockNumber": 11301115,
+        "transactionHash": "0xa77fe0c5124be5d4e4ab0b5462294acea8ea6a5591d6b9424649a373a64f2115",
+        "address": "0xdbc44f5Be6fACfaD46F7a148c434B0118D15Cf75",
+        "topics": [
+          "0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0",
+          "0x0000000000000000000000000000000000000000000000000000000000000000",
+          "0x0000000000000000000000000219f301551757d33954c074091718b785f5b87c"
+        ],
+        "data": "0x",
+        "logIndex": 7,
+        "blockHash": "0x3a0e9e1cc9bba3607dbc3bc94d03a4768e39d82033225ccc5e9f4effaf2e29a8"
+      },
+      {
+        "transactionIndex": 2,
+        "blockNumber": 11301115,
+        "transactionHash": "0xa77fe0c5124be5d4e4ab0b5462294acea8ea6a5591d6b9424649a373a64f2115",
+        "address": "0xdbc44f5Be6fACfaD46F7a148c434B0118D15Cf75",
+        "topics": [
+          "0x62e78cea01bee320cd4e420270b5ea74000d11b0c9f74754ebdbfc544b05a258"
+        ],
+        "data": "0x0000000000000000000000000219f301551757d33954c074091718b785f5b87c",
+        "logIndex": 8,
+        "blockHash": "0x3a0e9e1cc9bba3607dbc3bc94d03a4768e39d82033225ccc5e9f4effaf2e29a8"
+      },
+      {
+        "transactionIndex": 2,
+        "blockNumber": 11301115,
+        "transactionHash": "0xa77fe0c5124be5d4e4ab0b5462294acea8ea6a5591d6b9424649a373a64f2115",
+        "address": "0xdbc44f5Be6fACfaD46F7a148c434B0118D15Cf75",
+        "topics": [
+          "0x7e644d79422f17c01e4894b5f4f588d331ebfa28653d42ae832dc59e38c9798f"
+        ],
+        "data": "0x0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000861095d92ec90c0c9ecdcb29a77d9d1cebf9d421",
+        "logIndex": 9,
+        "blockHash": "0x3a0e9e1cc9bba3607dbc3bc94d03a4768e39d82033225ccc5e9f4effaf2e29a8"
+      }
+    ],
+    "events": [
+      {
+        "transactionIndex": 2,
+        "blockNumber": 11301115,
+        "transactionHash": "0xa77fe0c5124be5d4e4ab0b5462294acea8ea6a5591d6b9424649a373a64f2115",
+        "address": "0xdbc44f5Be6fACfaD46F7a148c434B0118D15Cf75",
+        "topics": [
+          "0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b",
+          "0x000000000000000000000000e756b77a261fc6bb3487bebaf9281e5ad2ac9a31"
+        ],
+        "data": "0x",
+        "logIndex": 6,
+        "blockHash": "0x3a0e9e1cc9bba3607dbc3bc94d03a4768e39d82033225ccc5e9f4effaf2e29a8",
+        "args": [
+          "0xE756B77a261Fc6bB3487BebAf9281E5Ad2ac9A31"
+        ],
+        "event": "Upgraded",
+        "eventSignature": "Upgraded(address)"
+      },
+      {
+        "transactionIndex": 2,
+        "blockNumber": 11301115,
+        "transactionHash": "0xa77fe0c5124be5d4e4ab0b5462294acea8ea6a5591d6b9424649a373a64f2115",
+        "address": "0xdbc44f5Be6fACfaD46F7a148c434B0118D15Cf75",
+        "topics": [
+          "0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0",
+          "0x0000000000000000000000000000000000000000000000000000000000000000",
+          "0x0000000000000000000000000219f301551757d33954c074091718b785f5b87c"
+        ],
+        "data": "0x",
+        "logIndex": 7,
+        "blockHash": "0x3a0e9e1cc9bba3607dbc3bc94d03a4768e39d82033225ccc5e9f4effaf2e29a8"
+      },
+      {
+        "transactionIndex": 2,
+        "blockNumber": 11301115,
+        "transactionHash": "0xa77fe0c5124be5d4e4ab0b5462294acea8ea6a5591d6b9424649a373a64f2115",
+        "address": "0xdbc44f5Be6fACfaD46F7a148c434B0118D15Cf75",
+        "topics": [
+          "0x62e78cea01bee320cd4e420270b5ea74000d11b0c9f74754ebdbfc544b05a258"
+        ],
+        "data": "0x0000000000000000000000000219f301551757d33954c074091718b785f5b87c",
+        "logIndex": 8,
+        "blockHash": "0x3a0e9e1cc9bba3607dbc3bc94d03a4768e39d82033225ccc5e9f4effaf2e29a8"
+      },
+      {
+        "transactionIndex": 2,
+        "blockNumber": 11301115,
+        "transactionHash": "0xa77fe0c5124be5d4e4ab0b5462294acea8ea6a5591d6b9424649a373a64f2115",
+        "address": "0xdbc44f5Be6fACfaD46F7a148c434B0118D15Cf75",
+        "topics": [
+          "0x7e644d79422f17c01e4894b5f4f588d331ebfa28653d42ae832dc59e38c9798f"
+        ],
+        "data": "0x0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000861095d92ec90c0c9ecdcb29a77d9d1cebf9d421",
+        "logIndex": 9,
+        "blockHash": "0x3a0e9e1cc9bba3607dbc3bc94d03a4768e39d82033225ccc5e9f4effaf2e29a8",
+        "args": [
+          "0x0000000000000000000000000000000000000000",
+          "0x861095d92ec90C0c9ecdcb29a77d9D1cebf9d421"
+        ],
+        "event": "AdminChanged",
+        "eventSignature": "AdminChanged(address,address)"
+      }
+    ],
+    "blockNumber": 11301115,
+    "cumulativeGasUsed": "1005977",
+    "status": 1,
+    "byzantium": true
   }
 }

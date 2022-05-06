@@ -61,7 +61,7 @@ const func: DeployFunction = async function (hardhat: HardhatRuntimeEnvironment)
     creditManager.address,
     creditRoles.address,
     creditRequest.address,
-    100000,
+    20000,
   ]
   const creditFeeManagerAbi = (await hardhat.artifacts.readArtifact("CreditFeeManager")).abi
   await deployProxyAndSave("CreditFeeManager", creditFeeManagerArgs, hardhat, creditFeeManagerAbi)

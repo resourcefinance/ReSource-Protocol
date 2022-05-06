@@ -1,5 +1,5 @@
 import { task } from "hardhat/config"
-import { RUSD__factory } from "../types/factories/RUSD__factory"
+
 const fs = require("fs")
 
 const txHash = "0x2719bd5f5324ea76c87e47b6d493121e09bac26636f7f3f28fc3e92c43c38a82"
@@ -11,9 +11,9 @@ task("viewRUSDTx", "view rusd tx").setAction(async (_, { ethers, network }) => {
 
   if (!transaction) return
 
-  const rUSDInterface = new ethers.utils.Interface(RUSD__factory.abi)
+  const rUSDFactory = await ethers.getContractFactory("RUSD")
 
-  const contractTx = rUSDInterface.parseTransaction({
+  const contractTx = rUSDFactory.interface.parseTransaction({
     data: transaction.data,
     value: transaction.value,
   })
@@ -21,8 +21,6 @@ task("viewRUSDTx", "view rusd tx").setAction(async (_, { ethers, network }) => {
   const rUSDDeploymentPath = `./deployments/${network.name}/RUSD.json`
   const rUSDDeployment = fs.readFileSync(rUSDDeploymentPath).toString()
   const rUSDAddress = JSON.parse(rUSDDeployment)["address"]
-
-  const rUSDFactory = await ethers.getContractFactory("RUSD")
 
   const rUSD = new ethers.Contract(rUSDAddress, rUSDFactory.interface, signer)
 

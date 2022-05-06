@@ -14,7 +14,7 @@ tenderly.yaml
 
 # dependencies
 /node_modules
-/.pnp
+
 .pnp.js
 
 # testing
@@ -42,4 +42,4 @@ stake.ts
 
 ledgerConfig.json
 
-.vscode/settings.json
+.vscode

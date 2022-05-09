@@ -56,4 +56,4 @@ yarn deploy
 yarn test
 ```
 
-📕 Go to our home page to learn more : https://www.resourcenetwork.co/
+📕 Go to our home page to learn more : https://www.resource.finance/

@@ -1,4 +1,5 @@
 import { network } from "hardhat"
+import { HttpNetworkConfig } from "hardhat/types"
 
 const fs = require("fs")
 const chalk = require("chalk")
@@ -25,10 +26,13 @@ function publishContract(contractName: string, networkName: string) {
       console.log(e)
     }
     if (graphConfig.includes(contract.address)) return
+    const config = network.config as HttpNetworkConfig
     graphConfig = JSON.parse(graphConfig)
     graphConfig[`${contractName}Address`] = contract.address
     graphConfig[`${contractName}StartBlock`] = Number(contract.receipt.blockNumber)
     graphConfig["network"] = networkName
+    graphConfig["chainId"] = config.chainId
+    graphConfig["networkURL"] = config.url
     let folderPath = graphConfigPath.replace("/config.json", "")
     if (!fs.existsSync(folderPath)) {
       fs.mkdirSync(folderPath)

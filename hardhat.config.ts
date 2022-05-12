@@ -95,7 +95,7 @@ const config: HardhatUserConfig = {
   },
   solidity: {
     compilers: [
-      { version: "0.8.0" },
+      { version: "0.8.9" },
       { version: "0.8.7", settings: {} },
       {
         version: "0.5.13",
@@ -117,7 +117,7 @@ const config: HardhatUserConfig = {
     deployer: {
       default: 0,
     },
-    networkOperator: "0xe105fb303e5ffee9e27726267e2db11c37260865",
+    networkOperator: "0x213fabd3244c0f221aaa77002a38a333df672bb1",
   },
   paths: {
     artifacts: "./artifacts",

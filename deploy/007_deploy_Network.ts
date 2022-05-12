@@ -20,18 +20,8 @@ const func: DeployFunction = async function (hardhat: HardhatRuntimeEnvironment)
 
   const creditRoles = CreditRoles__factory.connect(creditRolesAddress, accounts[0])
 
-  // 1. deploy WalletDeployer
-  const walletDeployerArgs = []
-  const walletDeployerAbi = (await hardhat.artifacts.readArtifact("iKeyWalletDeployer")).abi
-  const walletDeployerAddress = await deployProxyAndSave(
-    "iKeyWalletDeployer",
-    walletDeployerArgs,
-    hardhat,
-    walletDeployerAbi
-  )
-
-  // 2. deploy NetworkRoles
-  const networkRolesArgs = [[], walletDeployerAddress]
+  // 1. deploy NetworkRoles
+  const networkRolesArgs = [[]]
   const networkRolesAbi = (await hardhat.artifacts.readArtifact("NetworkRoles")).abi
   const networkRolesAddress = await deployProxyAndSave(
     "NetworkRoles",
@@ -42,8 +32,21 @@ const func: DeployFunction = async function (hardhat: HardhatRuntimeEnvironment)
 
   const networkRoles = NetworkRoles__factory.connect(networkRolesAddress, accounts[0])
 
-  // 4. deploy RUSD
-  const rUSDArgs = [creditRolesAddress, creditFeeManagerAddress, networkRolesAddress]
+  // 2. deploy forwarder
+  const minimalForwarder = await hardhat.deployments.deploy("MinimalForwarder", {
+    args: [],
+    from: accounts[0].address,
+  })
+
+  console.log("🚀  Forwarder deployed")
+
+  // 3. deploy RUSD
+  const rUSDArgs = [
+    creditRolesAddress,
+    creditFeeManagerAddress,
+    networkRolesAddress,
+    minimalForwarder.address,
+  ]
   const rUSDAbi = (await hardhat.artifacts.readArtifact("RUSD")).abi
   const rUSDAddress = await deployProxyAndSave("RUSD", rUSDArgs, hardhat, rUSDAbi, {
     initializer: "initializeRUSD",

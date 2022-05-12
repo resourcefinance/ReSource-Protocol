@@ -11,7 +11,6 @@ import {
   PopulatedTransaction,
   BaseContract,
   ContractTransaction,
-  Overrides,
   CallOverrides,
 } from "ethers";
 import { BytesLike } from "@ethersproject/bytes";
@@ -19,25 +18,25 @@ import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
-interface IiKeyWalletDeployerInterface extends ethers.utils.Interface {
+interface ERC2771ContextUpgradeableInterface extends ethers.utils.Interface {
   functions: {
-    "deployWallet(address[],address[],address,uint256)": FunctionFragment;
+    "isTrustedForwarder(address)": FunctionFragment;
   };
 
   encodeFunctionData(
-    functionFragment: "deployWallet",
-    values: [string[], string[], string, BigNumberish]
+    functionFragment: "isTrustedForwarder",
+    values: [string]
   ): string;
 
   decodeFunctionResult(
-    functionFragment: "deployWallet",
+    functionFragment: "isTrustedForwarder",
     data: BytesLike
   ): Result;
 
   events: {};
 }
 
-export class IiKeyWalletDeployer extends BaseContract {
+export class ERC2771ContextUpgradeable extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
@@ -78,55 +77,40 @@ export class IiKeyWalletDeployer extends BaseContract {
     toBlock?: string | number | undefined
   ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
 
-  interface: IiKeyWalletDeployerInterface;
+  interface: ERC2771ContextUpgradeableInterface;
 
   functions: {
-    deployWallet(
-      _clients: string[],
-      _guardians: string[],
-      _coSigner: string,
-      _required: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+    isTrustedForwarder(
+      forwarder: string,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
   };
 
-  deployWallet(
-    _clients: string[],
-    _guardians: string[],
-    _coSigner: string,
-    _required: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  isTrustedForwarder(
+    forwarder: string,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
 
   callStatic: {
-    deployWallet(
-      _clients: string[],
-      _guardians: string[],
-      _coSigner: string,
-      _required: BigNumberish,
+    isTrustedForwarder(
+      forwarder: string,
       overrides?: CallOverrides
-    ): Promise<string>;
+    ): Promise<boolean>;
   };
 
   filters: {};
 
   estimateGas: {
-    deployWallet(
-      _clients: string[],
-      _guardians: string[],
-      _coSigner: string,
-      _required: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+    isTrustedForwarder(
+      forwarder: string,
+      overrides?: CallOverrides
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    deployWallet(
-      _clients: string[],
-      _guardians: string[],
-      _coSigner: string,
-      _required: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+    isTrustedForwarder(
+      forwarder: string,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
   };
 }

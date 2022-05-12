@@ -2,11 +2,7 @@ import { ethers, getNamedAccounts, network } from "hardhat"
 import fs from "fs"
 import { send } from "../hardhat.config"
 
-const configFile = "./ledgerConfig.json"
-
 async function main() {
-  if (network.name !== "localhost") return
-
   const networkOperator = (await getNamedAccounts())["networkOperator"]
 
   const creditDeploymentPath = `./deployments/${network.name}/CreditRoles.json`
@@ -36,17 +32,22 @@ async function main() {
   )
 
   try {
-    await (await creditRoles.grantRequestOperator(networkOperator)).wait()
-    await (await creditRoles.grantUnderwriter(networkOperator)).wait()
-    await (await networkRoles.grantOperator(networkOperator)).wait()
+    if (!(await creditRoles.isRequestOperator(networkOperator)))
+      await (await creditRoles.grantRequestOperator(networkOperator)).wait()
+    if (!(await creditRoles.isUnderwriter(networkOperator)))
+      await (await creditRoles.grantUnderwriter(networkOperator)).wait()
+    if (!(await networkRoles.isNetworkOperator(networkOperator)))
+      await (await networkRoles.grantOperator(networkOperator)).wait()
 
     let amount = ethers.utils.parseEther("1000")
     let address = networkOperator
-    const tx = {
-      to: address,
-      value: amount,
+    if (network.name === "localhost") {
+      const tx = {
+        to: address,
+        value: amount,
+      }
+      await send(signer, tx)
     }
-    await send(signer, tx)
 
     const sourceFactory = await ethers.getContractFactory("SourceToken")
     const sourceDeploymentPath = `./deployments/${network.name}/SourceToken.json`
@@ -54,8 +55,6 @@ async function main() {
     const sourceTokenAddress = JSON.parse(sourceTokenDeployment)["address"]
     const source = new ethers.Contract(sourceTokenAddress, sourceFactory.interface, signer)
     await (await source.transfer(address, amount)).wait()
-
-    await createConfig()
 
     const rUSDFactory = await ethers.getContractFactory("RUSD")
     const rUSDDeploymentPath = `./deployments/${network.name}/RUSD.json`
@@ -67,56 +66,6 @@ async function main() {
   }
   console.log("✅ environment provisioned.")
 }
-
-async function createConfig() {
-  if (!fs.existsSync(configFile)) fs.writeFileSync(configFile, JSON.stringify({}, null, 2))
-
-  const rUSDDeploymentPath = `./deployments/${network.name}/RUSD.json`
-  const creditFeeManagerDeploymentPath = `./deployments/${network.name}/CreditFeeManager.json`
-  const creditPoolDeploymentPath = `./deployments/${network.name}/CreditPool.json`
-  const creditRequestDeploymentPath = `./deployments/${network.name}/CreditRequest.json`
-  const sourceTokenDeploymentPath = `./deployments/${network.name}/SourceToken.json`
-  const networkRolesDeploymentPath = `./deployments/${network.name}/NetworkRoles.json`
-
-  const rUSDDeployment = JSON.parse(fs.readFileSync(rUSDDeploymentPath).toString()).address
-  const creditFeeManagerDeployment = JSON.parse(
-    fs.readFileSync(creditFeeManagerDeploymentPath).toString()
-  ).address
-  const creditPoolDeployment = JSON.parse(
-    fs.readFileSync(creditPoolDeploymentPath).toString()
-  ).address
-  const creditRequestDeployment = JSON.parse(
-    fs.readFileSync(creditRequestDeploymentPath).toString()
-  ).address
-  const sourceTokenDeployment = JSON.parse(
-    fs.readFileSync(sourceTokenDeploymentPath).toString()
-  ).address
-  const networkRolesDeployment = JSON.parse(
-    fs.readFileSync(networkRolesDeploymentPath).toString()
-  ).address
-
-  if (
-    !rUSDDeployment ||
-    !creditFeeManagerDeployment ||
-    !creditPoolDeployment ||
-    !creditRequestDeployment ||
-    !sourceTokenDeployment ||
-    !networkRolesDeployment
-  )
-    throw new Error("one or more contract not deployed on this network")
-
-  const addresses = {
-    RUSD_ADDRESS: rUSDDeployment,
-    CREDIT_POOL_ADDRESS: creditPoolDeployment,
-    CREDIT_REQUEST_ADDRESS: creditRequestDeployment,
-    SOURCE_ADDRESS: sourceTokenDeployment,
-    CREDIT_FEE_MANAGER_ADDRESS: creditFeeManagerDeployment,
-    NETWORK_ROLES_ADDRESS: networkRolesDeployment,
-  }
-
-  fs.writeFileSync(configFile, JSON.stringify(addresses))
-}
-
 main()
   .then(() => process.exit(0))
   .catch((error) => {

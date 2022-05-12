@@ -27,7 +27,7 @@ interface NetworkRolesInterface extends ethers.utils.Interface {
     "grantOperator(address)": FunctionFragment;
     "grantRole(bytes32,address)": FunctionFragment;
     "hasRole(bytes32,address)": FunctionFragment;
-    "initialize(address[],address)": FunctionFragment;
+    "initialize(address[])": FunctionFragment;
     "isMember(address)": FunctionFragment;
     "isNetworkOperator(address)": FunctionFragment;
     "owner()": FunctionFragment;
@@ -63,7 +63,7 @@ interface NetworkRolesInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "initialize",
-    values: [string[], string]
+    values: [string[]]
   ): string;
   encodeFunctionData(functionFragment: "isMember", values: [string]): string;
   encodeFunctionData(
@@ -254,7 +254,6 @@ export class NetworkRoles extends BaseContract {
 
     initialize(
       _operators: string[],
-      _walletDeployer: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -332,7 +331,6 @@ export class NetworkRoles extends BaseContract {
 
   initialize(
     _operators: string[],
-    _walletDeployer: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -402,11 +400,7 @@ export class NetworkRoles extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    initialize(
-      _operators: string[],
-      _walletDeployer: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    initialize(_operators: string[], overrides?: CallOverrides): Promise<void>;
 
     isMember(_member: string, overrides?: CallOverrides): Promise<boolean>;
 
@@ -556,7 +550,6 @@ export class NetworkRoles extends BaseContract {
 
     initialize(
       _operators: string[],
-      _walletDeployer: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -640,7 +633,6 @@ export class NetworkRoles extends BaseContract {
 
     initialize(
       _operators: string[],
-      _walletDeployer: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 

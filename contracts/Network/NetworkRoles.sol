@@ -3,21 +3,18 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
-import "../iKeyWallet/IiKeyWalletDeployer.sol";
 import "./interface/INetworkRoles.sol";
 import "./interface/ICIP36.sol";
 
 contract NetworkRoles is AccessControlUpgradeable, OwnableUpgradeable, INetworkRoles {
     /* ========== STATE VARIABLES ========== */
 
-    IiKeyWalletDeployer private walletDeployer;
     address network;
 
     /* ========== INITIALIZER ========== */
 
-    function initialize(address[] memory _operators, address _walletDeployer) external initializer {
+    function initialize(address[] memory _operators) external initializer {
         __AccessControl_init();
-        walletDeployer = IiKeyWalletDeployer(_walletDeployer);
         // create roles
         _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _setupRole("OPERATOR", msg.sender);

@@ -2,14 +2,15 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
+import "./ERC2771ContextUpgradeable.sol";
+import "@openzeppelin/contracts/metatx/MinimalForwarder.sol";
 import "./CIP36.sol";
 import "./interface/INetworkRoles.sol";
 import "../Credit/interface/ICreditFeeManager.sol";
-import "../iKeyWallet/IiKeyWalletDeployer.sol";
 import "../Credit/interface/ICreditRoles.sol";
 import "hardhat/console.sol";
 
-contract RUSD is CIP36, PausableUpgradeable {
+contract RUSD is CIP36, PausableUpgradeable, ERC2771ContextUpgradeable {
     /*
      *  Storage
      */
@@ -41,13 +42,15 @@ contract RUSD is CIP36, PausableUpgradeable {
     function initializeRUSD(
         address _creditRoles,
         address _feeManager,
-        address _networkRoles
+        address _networkRoles,
+        address _forwarder
     ) external virtual initializer {
         creditRoles = ICreditRoles(_creditRoles);
         feeManager = ICreditFeeManager(_feeManager);
         networkRoles = INetworkRoles(_networkRoles);
         CIP36.initialize("rUSD", "rUSD");
         __Pausable_init();
+        __ERC2771ContextUpgradeable_init(_forwarder);
         _pause();
     }
 
@@ -87,5 +90,23 @@ contract RUSD is CIP36, PausableUpgradeable {
 
     function unpause() public onlyAuthorized {
         _unpause();
+    }
+
+    function _msgSender()
+        internal
+        view
+        override(ERC2771ContextUpgradeable, ContextUpgradeable)
+        returns (address)
+    {
+        return ERC2771ContextUpgradeable._msgSender();
+    }
+
+    function _msgData()
+        internal
+        view
+        override(ERC2771ContextUpgradeable, ContextUpgradeable)
+        returns (bytes calldata)
+    {
+        return ERC2771ContextUpgradeable._msgData();
     }
 }

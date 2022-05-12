@@ -37,7 +37,8 @@ interface RUSDInterface extends ethers.utils.Interface {
     "feeManager()": FunctionFragment;
     "increaseAllowance(address,uint256)": FunctionFragment;
     "initialize(string,string)": FunctionFragment;
-    "initializeRUSD(address,address,address)": FunctionFragment;
+    "initializeRUSD(address,address,address,address)": FunctionFragment;
+    "isTrustedForwarder(address)": FunctionFragment;
     "name()": FunctionFragment;
     "networkRoles()": FunctionFragment;
     "owner()": FunctionFragment;
@@ -110,7 +111,11 @@ interface RUSDInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "initializeRUSD",
-    values: [string, string, string]
+    values: [string, string, string, string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "isTrustedForwarder",
+    values: [string]
   ): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
   encodeFunctionData(
@@ -189,6 +194,10 @@ interface RUSDInterface extends ethers.utils.Interface {
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "initializeRUSD",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "isTrustedForwarder",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
@@ -388,8 +397,14 @@ export class RUSD extends BaseContract {
       _creditRoles: string,
       _feeManager: string,
       _networkRoles: string,
+      _forwarder: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
+
+    isTrustedForwarder(
+      forwarder: string,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
 
     name(overrides?: CallOverrides): Promise<[string]>;
 
@@ -517,8 +532,14 @@ export class RUSD extends BaseContract {
     _creditRoles: string,
     _feeManager: string,
     _networkRoles: string,
+    _forwarder: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
+
+  isTrustedForwarder(
+    forwarder: string,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
 
   name(overrides?: CallOverrides): Promise<string>;
 
@@ -646,8 +667,14 @@ export class RUSD extends BaseContract {
       _creditRoles: string,
       _feeManager: string,
       _networkRoles: string,
+      _forwarder: string,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    isTrustedForwarder(
+      forwarder: string,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
 
     name(overrides?: CallOverrides): Promise<string>;
 
@@ -855,7 +882,13 @@ export class RUSD extends BaseContract {
       _creditRoles: string,
       _feeManager: string,
       _networkRoles: string,
+      _forwarder: string,
       overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    isTrustedForwarder(
+      forwarder: string,
+      overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     name(overrides?: CallOverrides): Promise<BigNumber>;
@@ -991,7 +1024,13 @@ export class RUSD extends BaseContract {
       _creditRoles: string,
       _feeManager: string,
       _networkRoles: string,
+      _forwarder: string,
       overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    isTrustedForwarder(
+      forwarder: string,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     name(overrides?: CallOverrides): Promise<PopulatedTransaction>;

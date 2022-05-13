@@ -8,9 +8,9 @@ import {
   SourceToken,
   CreditManager,
   CreditFeeManager,
-  IKeyWalletDeployer,
   NetworkRoles,
   RUSD,
+  MinimalForwarder,
 } from "../../types"
 
 export interface ProtocolContracts {
@@ -19,9 +19,9 @@ export interface ProtocolContracts {
   priceOracle: PriceOracle
   creditManager: CreditManager
   creditRequest: CreditRequest
-  walletDeployer: IKeyWalletDeployer
   creditFeeManager: CreditFeeManager
   networkRoles: NetworkRoles
+  minimalForwarder: MinimalForwarder
   rUSD: RUSD
   creditPool: CreditPool
 }
@@ -35,19 +35,9 @@ export const protocolFactory = {
     const creditRolesFactory = await ethers.getContractFactory("CreditRoles")
     contracts.creditRoles = (await upgrades.deployProxy(creditRolesFactory, [[]])) as CreditRoles
 
-    // 2. deploy walletDeployer
-    const walletDeployerFactory = await ethers.getContractFactory("iKeyWalletDeployer")
-    contracts.walletDeployer = (await upgrades.deployProxy(
-      walletDeployerFactory,
-      []
-    )) as IKeyWalletDeployer
-
-    // 3. deploy NetworkRoles
+    // 2. deploy NetworkRoles
     const networkRolesFactory = await ethers.getContractFactory("NetworkRoles")
-    contracts.networkRoles = (await upgrades.deployProxy(networkRolesFactory, [
-      [],
-      contracts.walletDeployer.address,
-    ])) as NetworkRoles
+    contracts.networkRoles = (await upgrades.deployProxy(networkRolesFactory, [[]])) as NetworkRoles
 
     await (await contracts.networkRoles.grantOperator(contracts.networkRoles.address)).wait()
 
@@ -102,6 +92,10 @@ export const protocolFactory = {
     ])) as CreditFeeManager
     await (await contracts.creditRoles.grantOperator(contracts.creditFeeManager.address)).wait()
 
+    // 9. deploy
+    const minimalForwarderFactory = await ethers.getContractFactory("MinimalForwarder")
+    contracts.minimalForwarder = (await minimalForwarderFactory.deploy()) as MinimalForwarder
+
     // 9. deploy RUSD
     const RUSDFactory = await ethers.getContractFactory("RUSD")
     contracts.rUSD = (await upgrades.deployProxy(
@@ -110,6 +104,7 @@ export const protocolFactory = {
         contracts.creditRoles.address,
         contracts.creditFeeManager.address,
         contracts.networkRoles.address,
+        contracts.minimalForwarder.address,
       ],
       {
         initializer: "initializeRUSD",

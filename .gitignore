@@ -43,3 +43,5 @@ stake.ts
 ledgerConfig.json
 
 .vscode
+
+config.json

@@ -1,9 +1,11 @@
 import { ethers, getNamedAccounts, network } from "hardhat"
 import fs from "fs"
 import { send } from "../hardhat.config"
+import { RUSD } from "../types/RUSD"
 
 async function main() {
-  const networkOperator = (await getNamedAccounts())["networkOperator"]
+  const operator = "networkOperator-" + network.name
+  const networkOperator = (await getNamedAccounts())[operator]
 
   const creditDeploymentPath = `./deployments/${network.name}/CreditRoles.json`
   const creditRolesDeployment = fs.readFileSync(creditDeploymentPath).toString()
@@ -59,8 +61,8 @@ async function main() {
     const rUSDFactory = await ethers.getContractFactory("RUSD")
     const rUSDDeploymentPath = `./deployments/${network.name}/RUSD.json`
     const rUSDDeployment = JSON.parse(fs.readFileSync(rUSDDeploymentPath).toString()).address
-    const rUSD = new ethers.Contract(rUSDDeployment, rUSDFactory.interface, signer)
-    await (await rUSD.unpause()).wait()
+    const rUSD = new ethers.Contract(rUSDDeployment, rUSDFactory.interface, signer) as RUSD
+    if (await rUSD.paused()) await (await rUSD.unpause()).wait()
   } catch (e) {
     console.log(e)
   }

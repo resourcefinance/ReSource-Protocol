@@ -118,7 +118,9 @@ const config: HardhatUserConfig = {
     deployer: {
       default: 0,
     },
-    networkOperator: "0x213fabd3244c0f221aaa77002a38a333df672bb1",
+    "networkOperator-celo": "0x213fabd3244c0f221aaa77002a38a333df672bb1",
+    "networkOperator-celo-alfajores": "0x213fabd3244c0f221aaa77002a38a333df672bb1",
+    "networkOperator-localhost": "0xe105fb303e5ffee9e27726267e2db11c37260865",
   },
   paths: {
     artifacts: "./artifacts",

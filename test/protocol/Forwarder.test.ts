@@ -26,11 +26,11 @@ describe("Forwarder Tests", function () {
     memberA = new Wallet(privateKey).connect(ethers.provider)
     memberB = accounts[3]
     contracts = await protocolFactory.deployDefault(underwriter.address)
-    await (await contracts.creditRoles.grantNetwork(contracts.rUSD.address)).wait()
+    await (await contracts.creditRoles.grantNetwork(contracts.RSD.address)).wait()
   })
 
-  it("Forwards rUSD tx", async function () {
-    await (await contracts.rUSD.pause()).wait()
+  it("Forwards RSD tx", async function () {
+    await (await contracts.RSD.pause()).wait()
     await (
       await deployer.sendTransaction({ to: memberA.address, value: ethers.utils.parseEther("10") })
     ).wait()
@@ -42,38 +42,39 @@ describe("Forwarder Tests", function () {
       await contracts.creditRequest
         .connect(memberA)
         .createRequest(
-          contracts.rUSD.address,
+          contracts.RSD.address,
           memberA.address,
           ethers.utils.parseUnits("1000", "mwei")
         )
     ).wait()
 
     await (
-      await contracts.creditRequest.approveRequest(contracts.rUSD.address, memberA.address)
+      await contracts.creditRequest.approveRequest(contracts.RSD.address, memberA.address)
     ).wait()
 
     // accept request as underwriter
     await (
       await contracts.creditRequest
         .connect(underwriter)
-        .acceptRequest(contracts.rUSD.address, memberA.address, contracts.creditPool.address)
+        .acceptRequest(contracts.RSD.address, memberA.address, contracts.creditPool.address)
     ).wait()
 
     const creditLimit = ethers.utils.formatUnits(
-      await contracts.rUSD.creditLimitOf(memberA.address),
+      await contracts.RSD.creditLimitOf(memberA.address),
       "mwei"
     )
 
     expect(creditLimit).to.equal("1000.0")
 
-    const { data } = await contracts.rUSD.populateTransaction.transfer(
+    const { data } = await contracts.RSD.populateTransaction.transfer(
       memberB.address,
       ethers.utils.parseUnits("1000", "mwei")
     )
 
-    const gas = await contracts.rUSD
-      .connect(memberA)
-      .estimateGas.transfer(memberB.address, ethers.utils.parseUnits("1000", "mwei"))
+    const gas = await contracts.RSD.connect(memberA).estimateGas.transfer(
+      memberB.address,
+      ethers.utils.parseUnits("1000", "mwei")
+    )
 
     expect(Number(ethers.utils.formatUnits(gas, "wei"))).to.be.greaterThan(0)
 
@@ -89,7 +90,7 @@ describe("Forwarder Tests", function () {
 
       message: {
         from: memberA.address,
-        to: contracts.rUSD.address,
+        to: contracts.RSD.address,
         value: hexValue(0),
         gas: 1e6,
         nonce: hexValue(0),
@@ -127,7 +128,7 @@ describe("Forwarder Tests", function () {
     await (await contracts.minimalForwarder.execute(typedData.message, sig)).wait()
 
     const balanceB = ethers.utils.formatUnits(
-      await contracts.rUSD.balanceOf(memberB.address),
+      await contracts.RSD.balanceOf(memberB.address),
       "mwei"
     )
 

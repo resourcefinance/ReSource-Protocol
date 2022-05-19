@@ -3,7 +3,7 @@ import { ISSUE_CREDIT } from "./task-names"
 import fs from "fs"
 import { addr } from "../hardhat.config"
 
-task(ISSUE_CREDIT, "Issue rUSD credit")
+task(ISSUE_CREDIT, "Issue RSD credit")
   .addParam("member", "Address to issue credit")
   .addParam("amount", "Amount of credit to issue")
   .setAction(async (taskArgs, { ethers, network }) => {
@@ -15,9 +15,9 @@ task(ISSUE_CREDIT, "Issue rUSD credit")
     const networkRolesDeployment = fs.readFileSync(networkRolesDeploymentPath).toString()
     const networkRolesAddress = JSON.parse(networkRolesDeployment)["address"]
 
-    const rUSDDeploymentPath = `./deployments/${network.name}/RUSD.json`
-    const rUSDDeployment = fs.readFileSync(rUSDDeploymentPath).toString()
-    const rUSDAddress = JSON.parse(rUSDDeployment)["address"]
+    const RSDDeploymentPath = `./deployments/${network.name}/RSD.json`
+    const RSDDeployment = fs.readFileSync(RSDDeploymentPath).toString()
+    const RSDAddress = JSON.parse(RSDDeployment)["address"]
 
     const creditPoolDeploymentPath = `./deployments/${network.name}/CreditPool.json`
     const creditPoolDeployment = fs.readFileSync(creditPoolDeploymentPath).toString()
@@ -50,7 +50,7 @@ task(ISSUE_CREDIT, "Issue rUSD credit")
       }
 
       await (
-        await creditRequest.createAndAcceptRequest(rUSDAddress, member, amount, creditPoolAddress)
+        await creditRequest.createAndAcceptRequest(RSDAddress, member, amount, creditPoolAddress)
       ).wait()
 
       console.log("Credit Issued")

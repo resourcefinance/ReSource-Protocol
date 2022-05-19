@@ -27,7 +27,7 @@ describe("Protocol Tests", function () {
     memberB = accounts[6]
     creditOperator = accounts[7]
     contracts = await protocolFactory.deployDefault(underwriter.address)
-    await (await contracts.creditRoles.grantNetwork(contracts.rUSD.address)).wait()
+    await (await contracts.creditRoles.grantNetwork(contracts.RSD.address)).wait()
   })
 
   it("create, use, and claim reward fees for credit line", async function () {
@@ -39,7 +39,7 @@ describe("Protocol Tests", function () {
       await contracts.creditRequest
         .connect(memberA)
         .createRequest(
-          contracts.rUSD.address,
+          contracts.RSD.address,
           memberA.address,
           ethers.utils.parseUnits("999", "mwei")
         )
@@ -48,7 +48,7 @@ describe("Protocol Tests", function () {
     // update and approve request as request operator
     await (
       await contracts.creditRequest.updateRequestLimit(
-        contracts.rUSD.address,
+        contracts.RSD.address,
         memberA.address,
         ethers.utils.parseUnits("1000", "mwei"),
         true
@@ -59,11 +59,11 @@ describe("Protocol Tests", function () {
     await (
       await contracts.creditRequest
         .connect(underwriter)
-        .acceptRequest(contracts.rUSD.address, memberA.address, contracts.creditPool.address)
+        .acceptRequest(contracts.RSD.address, memberA.address, contracts.creditPool.address)
     ).wait()
 
     const creditLimit = ethers.utils.formatUnits(
-      await contracts.rUSD.creditLimitOf(memberA.address),
+      await contracts.RSD.creditLimitOf(memberA.address),
       "mwei"
     )
 
@@ -92,9 +92,10 @@ describe("Protocol Tests", function () {
     ).wait()
 
     await (
-      await contracts.rUSD
-        .connect(memberA)
-        .transfer(memberB.address, ethers.utils.parseUnits("1000", "mwei"))
+      await contracts.RSD.connect(memberA).transfer(
+        memberB.address,
+        ethers.utils.parseUnits("1000", "mwei")
+      )
     ).wait()
 
     sourceBalance = ethers.utils.formatEther(await contracts.sourceToken.balanceOf(memberA.address))
@@ -105,7 +106,7 @@ describe("Protocol Tests", function () {
     await (
       await contracts.creditFeeManager
         .connect(creditOperator)
-        .distributeFees(contracts.rUSD.address, [memberA.address])
+        .distributeFees(contracts.RSD.address, [memberA.address])
     ).wait()
 
     sourceBalance = ethers.utils.formatEther(
@@ -126,7 +127,7 @@ describe("Protocol Tests", function () {
     await (await contracts.networkRoles.grantMember(memberB.address)).wait()
 
     const creditLimitA = ethers.utils.formatUnits(
-      await contracts.rUSD.creditLimitOf(memberA.address),
+      await contracts.RSD.creditLimitOf(memberA.address),
       "mwei"
     )
 
@@ -135,7 +136,7 @@ describe("Protocol Tests", function () {
       await contracts.creditRequest
         .connect(memberA)
         .createRequest(
-          contracts.rUSD.address,
+          contracts.RSD.address,
           memberA.address,
           ethers.utils.parseUnits("999", "mwei")
         )
@@ -144,7 +145,7 @@ describe("Protocol Tests", function () {
     // update and approve request as request operator
     await (
       await contracts.creditRequest.updateRequestLimit(
-        contracts.rUSD.address,
+        contracts.RSD.address,
         memberA.address,
         ethers.utils.parseUnits("1000", "mwei"),
         true
@@ -155,11 +156,11 @@ describe("Protocol Tests", function () {
     await (
       await contracts.creditRequest
         .connect(underwriter)
-        .acceptRequest(contracts.rUSD.address, memberA.address, contracts.creditPool.address)
+        .acceptRequest(contracts.RSD.address, memberA.address, contracts.creditPool.address)
     ).wait()
 
     const creditLimit = ethers.utils.formatUnits(
-      await contracts.rUSD.creditLimitOf(memberA.address),
+      await contracts.RSD.creditLimitOf(memberA.address),
       "mwei"
     )
 
@@ -188,9 +189,10 @@ describe("Protocol Tests", function () {
     ).wait()
 
     await (
-      await contracts.rUSD
-        .connect(memberA)
-        .transfer(memberB.address, ethers.utils.parseUnits("1000", "mwei"))
+      await contracts.RSD.connect(memberA).transfer(
+        memberB.address,
+        ethers.utils.parseUnits("1000", "mwei")
+      )
     ).wait()
 
     sourceBalance = ethers.utils.formatEther(await contracts.sourceToken.balanceOf(memberA.address))
@@ -201,7 +203,7 @@ describe("Protocol Tests", function () {
     await (
       await contracts.creditFeeManager
         .connect(creditOperator)
-        .distributeFees(contracts.rUSD.address, [memberA.address])
+        .distributeFees(contracts.RSD.address, [memberA.address])
     ).wait()
 
     sourceBalance = ethers.utils.formatEther(

@@ -1,5 +1,6 @@
 import { upgrades, ethers, network } from "hardhat"
 import { SourceTokenV3 } from "../../types/SourceTokenV3"
+import { RestrictedCreditPool } from "../../types/RestrictedCreditPool"
 import {
   CreditPool,
   CreditRequest,
@@ -9,7 +10,7 @@ import {
   CreditManager,
   CreditFeeManager,
   NetworkRoles,
-  RUSD,
+  RSD,
   MinimalForwarder,
 } from "../../types"
 
@@ -22,8 +23,8 @@ export interface ProtocolContracts {
   creditFeeManager: CreditFeeManager
   networkRoles: NetworkRoles
   minimalForwarder: MinimalForwarder
-  rUSD: RUSD
-  creditPool: CreditPool
+  RSD: RSD
+  creditPool: RestrictedCreditPool
 }
 
 export const protocolFactory = {
@@ -96,10 +97,10 @@ export const protocolFactory = {
     const minimalForwarderFactory = await ethers.getContractFactory("MinimalForwarder")
     contracts.minimalForwarder = (await minimalForwarderFactory.deploy()) as MinimalForwarder
 
-    // 9. deploy RUSD
-    const RUSDFactory = await ethers.getContractFactory("RUSD")
-    contracts.rUSD = (await upgrades.deployProxy(
-      RUSDFactory,
+    // 9. deploy RSD
+    const RSDFactory = await ethers.getContractFactory("RSD")
+    contracts.RSD = (await upgrades.deployProxy(
+      RSDFactory,
       [
         contracts.creditRoles.address,
         contracts.creditFeeManager.address,
@@ -107,22 +108,22 @@ export const protocolFactory = {
         contracts.minimalForwarder.address,
       ],
       {
-        initializer: "initializeRUSD",
+        initializer: "initializeRSD",
       }
-    )) as RUSD
+    )) as RSD
 
-    await (await contracts.rUSD.unpause()).wait()
-    await (await contracts.networkRoles.setNetwork(contracts.rUSD.address)).wait()
-    await (await contracts.networkRoles.grantOperator(contracts.rUSD.address)).wait()
-    await (await contracts.networkRoles.grantMember(contracts.rUSD.address)).wait()
+    await (await contracts.RSD.unpause()).wait()
+    await (await contracts.networkRoles.setNetwork(contracts.RSD.address)).wait()
+    await (await contracts.networkRoles.grantOperator(contracts.RSD.address)).wait()
+    await (await contracts.networkRoles.grantMember(contracts.RSD.address)).wait()
 
     // 10. deploy a CreditPool
-    const creditPoolFactory = await ethers.getContractFactory("CreditPool")
+    const creditPoolFactory = await ethers.getContractFactory("RestrictedCreditPool")
     contracts.creditPool = (await upgrades.deployProxy(creditPoolFactory, [
       contracts.creditManager.address,
       contracts.creditRoles.address,
       underwriterAddress,
-    ])) as CreditPool
+    ])) as RestrictedCreditPool
     await (await contracts.creditRoles.grantUnderwriter(underwriterAddress)).wait()
 
     await (await contracts.creditManager.registerCreditPool(contracts.creditPool.address)).wait()

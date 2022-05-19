@@ -10,7 +10,7 @@ import "../Credit/interface/ICreditFeeManager.sol";
 import "../Credit/interface/ICreditRoles.sol";
 import "hardhat/console.sol";
 
-contract RUSD is CIP36, PausableUpgradeable, ERC2771ContextUpgradeable {
+contract RSD is CIP36, PausableUpgradeable, ERC2771ContextUpgradeable {
     /*
      *  Storage
      */
@@ -39,7 +39,7 @@ contract RUSD is CIP36, PausableUpgradeable, ERC2771ContextUpgradeable {
         _;
     }
 
-    function initializeRUSD(
+    function initializeRSD(
         address _creditRoles,
         address _feeManager,
         address _networkRoles,
@@ -48,7 +48,7 @@ contract RUSD is CIP36, PausableUpgradeable, ERC2771ContextUpgradeable {
         creditRoles = ICreditRoles(_creditRoles);
         feeManager = ICreditFeeManager(_feeManager);
         networkRoles = INetworkRoles(_networkRoles);
-        CIP36.initialize("rUSD", "rUSD");
+        CIP36.initialize("RSD", "RSD");
         __Pausable_init();
         __ERC2771ContextUpgradeable_init(_forwarder);
         _pause();

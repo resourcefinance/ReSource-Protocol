@@ -11,7 +11,7 @@ import "./interface/ICreditPool.sol";
 import "./interface/ICreditRoles.sol";
 import "./interface/ICreditManager.sol";
 
-contract CreditPool is
+contract RestrictedCreditPool is
     ReentrancyGuardUpgradeable,
     OwnableUpgradeable,
     PausableUpgradeable,
@@ -36,6 +36,8 @@ contract CreditPool is
     address[] public rewardTokens;
     address public underwriter;
     uint256 public totalCredit;
+
+    mapping(address => bool) public isRestricted;
 
     // user -> reward token -> amount
     mapping(address => mapping(address => uint256)) public userRewardPerTokenPaid;
@@ -101,6 +103,7 @@ contract CreditPool is
     }
 
     function earned(address account, address _rewardsToken) public view returns (uint256) {
+        if (isRestricted[_rewardsToken] && isRestricted[account]) return 0;
         return (((_balances[account] *
             (rewardPerToken(_rewardsToken) - userRewardPerTokenPaid[account][_rewardsToken])) /
             1e18) + rewards[account][_rewardsToken]);
@@ -152,6 +155,7 @@ contract CreditPool is
 
     function getReward() public nonReentrant updateReward(msg.sender) {
         for (uint256 i; i < rewardTokens.length; i++) {
+            if (isRestricted[rewardTokens[i]] && isRestricted[msg.sender]) return;
             address _rewardsToken = rewardTokens[i];
             uint256 reward = rewards[msg.sender][_rewardsToken];
             if (reward > 0) {
@@ -216,7 +220,10 @@ contract CreditPool is
             block.timestamp > rewardData[_rewardsToken].periodFinish,
             "Reward period still active"
         );
-        require(rewardData[_rewardsToken].rewardsDistributor == msg.sender);
+        require(
+            rewardData[_rewardsToken].rewardsDistributor == msg.sender,
+            "CreditPool: caller is not rewards distributor"
+        );
         require(_rewardsDuration > 0, "Reward duration must be non-zero");
         rewardData[_rewardsToken].rewardsDuration = _rewardsDuration;
         emit RewardsDurationUpdated(_rewardsToken, rewardData[_rewardsToken].rewardsDuration);
@@ -244,6 +251,14 @@ contract CreditPool is
 
     function getTotalCredit() external view override returns (uint256) {
         return totalCredit;
+    }
+
+    function addRestriction(address _account) external onlyOperator {
+        isRestricted[_account] = true;
+    }
+
+    function removeRestriction(address _account) external onlyOperator {
+        isRestricted[_account] = false;
     }
 
     /* ========== MODIFIERS ========== */

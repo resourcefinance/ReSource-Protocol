@@ -40,21 +40,21 @@ const func: DeployFunction = async function (hardhat: HardhatRuntimeEnvironment)
 
   console.log("🚀  Forwarder deployed")
 
-  // 3. deploy RUSD
-  const rUSDArgs = [
+  // 3. deploy RSD
+  const RSDArgs = [
     creditRolesAddress,
     creditFeeManagerAddress,
     networkRolesAddress,
     minimalForwarder.address,
   ]
-  const rUSDAbi = (await hardhat.artifacts.readArtifact("RUSD")).abi
-  const rUSDAddress = await deployProxyAndSave("RUSD", rUSDArgs, hardhat, rUSDAbi, {
-    initializer: "initializeRUSD",
+  const RSDAbi = (await hardhat.artifacts.readArtifact("RSD")).abi
+  const RSDAddress = await deployProxyAndSave("RSD", RSDArgs, hardhat, RSDAbi, {
+    initializer: "initializeRSD",
   })
 
-  await (await networkRoles.setNetwork(rUSDAddress)).wait()
-  await (await networkRoles.grantOperator(rUSDAddress)).wait()
-  await (await creditRoles.grantNetwork(rUSDAddress)).wait()
+  await (await networkRoles.setNetwork(RSDAddress)).wait()
+  await (await networkRoles.grantOperator(RSDAddress)).wait()
+  await (await creditRoles.grantNetwork(RSDAddress)).wait()
 }
 export default func
 func.tags = ["NETWORK"]

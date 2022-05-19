@@ -42,7 +42,7 @@ describe("CreditFeeManager Tests", function () {
 
     const totalFees = ethers.utils.formatEther(
       await contracts.creditFeeManager.calculateFees(
-        contracts.rUSD.address,
+        contracts.RSD.address,
         ethers.utils.parseUnits("1000", "mwei")
       )
     )
@@ -52,11 +52,7 @@ describe("CreditFeeManager Tests", function () {
     await (
       await contracts.creditFeeManager
         .connect(network)
-        .collectFees(
-          contracts.rUSD.address,
-          member.address,
-          ethers.utils.parseUnits("1000", "mwei")
-        )
+        .collectFees(contracts.RSD.address, member.address, ethers.utils.parseUnits("1000", "mwei"))
     ).wait()
 
     expect(await contracts.sourceToken.balanceOf(member.address)).to.equal(
@@ -99,11 +95,7 @@ describe("CreditFeeManager Tests", function () {
     await expect(
       contracts.creditFeeManager
         .connect(network)
-        .collectFees(
-          contracts.rUSD.address,
-          member.address,
-          ethers.utils.parseUnits("1000", "mwei")
-        )
+        .collectFees(contracts.RSD.address, member.address, ethers.utils.parseUnits("1000", "mwei"))
     ).to.be.reverted
   })
 })

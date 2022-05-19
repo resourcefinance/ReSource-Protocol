@@ -39,10 +39,10 @@ describe("NetworkAccess Test", function () {
   })
 
   it("Grant and revoke Network role", async function () {
-    await (await contracts.creditRoles.grantNetwork(contracts.rUSD.address)).wait()
-    expect(await contracts.creditRoles.isNetwork(contracts.rUSD.address)).to.equal(true)
-    await (await contracts.creditRoles.revokeNetwork(contracts.rUSD.address)).wait()
-    expect(await contracts.creditRoles.isNetwork(contracts.rUSD.address)).to.equal(false)
+    await (await contracts.creditRoles.grantNetwork(contracts.RSD.address)).wait()
+    expect(await contracts.creditRoles.isNetwork(contracts.RSD.address)).to.equal(true)
+    await (await contracts.creditRoles.revokeNetwork(contracts.RSD.address)).wait()
+    expect(await contracts.creditRoles.isNetwork(contracts.RSD.address)).to.equal(false)
   })
 
   it("Grant and revoke Request role", async function () {

@@ -1,7 +1,7 @@
 import { ethers, getNamedAccounts, network } from "hardhat"
 import fs from "fs"
 import { send } from "../hardhat.config"
-import { RUSD } from "../types/RUSD"
+import { RSD } from "../types/RSD"
 
 async function main() {
   const operator = "networkOperator-" + network.name
@@ -58,11 +58,11 @@ async function main() {
     const source = new ethers.Contract(sourceTokenAddress, sourceFactory.interface, signer)
     await (await source.transfer(address, amount)).wait()
 
-    const rUSDFactory = await ethers.getContractFactory("RUSD")
-    const rUSDDeploymentPath = `./deployments/${network.name}/RUSD.json`
-    const rUSDDeployment = JSON.parse(fs.readFileSync(rUSDDeploymentPath).toString()).address
-    const rUSD = new ethers.Contract(rUSDDeployment, rUSDFactory.interface, signer) as RUSD
-    if (await rUSD.paused()) await (await rUSD.unpause()).wait()
+    const RSDFactory = await ethers.getContractFactory("RSD")
+    const RSDDeploymentPath = `./deployments/${network.name}/RSD.json`
+    const RSDDeployment = JSON.parse(fs.readFileSync(RSDDeploymentPath).toString()).address
+    const RSD = new ethers.Contract(RSDDeployment, RSDFactory.interface, signer) as RSD
+    if (await RSD.paused()) await (await RSD.unpause()).wait()
   } catch (e) {
     console.log(e)
   }

@@ -23,7 +23,7 @@ describe("CreditRequest and CreditManager Tests", function () {
     requestOpperator = accounts[3]
     member = accounts[5]
     contracts = await protocolFactory.deployDefault(underwriter.address)
-    await (await contracts.creditRoles.grantNetwork(contracts.rUSD.address)).wait()
+    await (await contracts.creditRoles.grantNetwork(contracts.RSD.address)).wait()
   })
 
   it("Create, approve, and accept a new credit request as operator", async function () {
@@ -33,7 +33,7 @@ describe("CreditRequest and CreditManager Tests", function () {
       await contracts.creditRequest
         .connect(underwriter)
         .createRequest(
-          contracts.rUSD.address,
+          contracts.RSD.address,
           member.address,
           ethers.utils.parseUnits("100", "mwei")
         )
@@ -42,11 +42,11 @@ describe("CreditRequest and CreditManager Tests", function () {
     await (
       await contracts.creditRequest
         .connect(underwriter)
-        .acceptRequest(contracts.rUSD.address, member.address, contracts.creditPool.address)
+        .acceptRequest(contracts.RSD.address, member.address, contracts.creditPool.address)
     ).wait()
 
     const creditLimit = ethers.utils.formatUnits(
-      await contracts.rUSD.creditLimitOf(member.address),
+      await contracts.RSD.creditLimitOf(member.address),
       "mwei"
     )
 
@@ -66,7 +66,7 @@ describe("CreditRequest and CreditManager Tests", function () {
       await contracts.creditRequest
         .connect(underwriter)
         .createRequest(
-          contracts.rUSD.address,
+          contracts.RSD.address,
           member.address,
           ethers.utils.parseUnits("100", "mwei")
         )
@@ -76,7 +76,7 @@ describe("CreditRequest and CreditManager Tests", function () {
       await contracts.creditRequest
         .connect(underwriter)
         .updateRequestLimit(
-          contracts.rUSD.address,
+          contracts.RSD.address,
           member.address,
           ethers.utils.parseUnits("150", "mwei"),
           true
@@ -86,11 +86,11 @@ describe("CreditRequest and CreditManager Tests", function () {
     await (
       await contracts.creditRequest
         .connect(underwriter)
-        .acceptRequest(contracts.rUSD.address, member.address, contracts.creditPool.address)
+        .acceptRequest(contracts.RSD.address, member.address, contracts.creditPool.address)
     ).wait()
 
     const creditLimit = ethers.utils.formatUnits(
-      await contracts.rUSD.creditLimitOf(member.address),
+      await contracts.RSD.creditLimitOf(member.address),
       "mwei"
     )
 
@@ -109,7 +109,7 @@ describe("CreditRequest and CreditManager Tests", function () {
       await contracts.creditRequest
         .connect(member)
         .createRequest(
-          contracts.rUSD.address,
+          contracts.RSD.address,
           member.address,
           ethers.utils.parseUnits("100", "mwei")
         )
@@ -118,17 +118,17 @@ describe("CreditRequest and CreditManager Tests", function () {
     await (
       await contracts.creditRequest
         .connect(requestOpperator)
-        .approveRequest(contracts.rUSD.address, member.address)
+        .approveRequest(contracts.RSD.address, member.address)
     ).wait()
 
     await (
       await contracts.creditRequest
         .connect(underwriter)
-        .acceptRequest(contracts.rUSD.address, member.address, contracts.creditPool.address)
+        .acceptRequest(contracts.RSD.address, member.address, contracts.creditPool.address)
     ).wait()
 
     const creditLimit = ethers.utils.formatUnits(
-      await contracts.rUSD.creditLimitOf(member.address),
+      await contracts.RSD.creditLimitOf(member.address),
       "mwei"
     )
 
@@ -140,13 +140,13 @@ describe("CreditRequest and CreditManager Tests", function () {
     expect(poolCreditLimit).to.equal("100.0")
     expect(creditLimit).to.equal("100.0")
   })
-  it("converts rUSD amount to SOURCE value", async function () {
+  it("converts RSD amount to SOURCE value", async function () {
     // Source at $0.50
     await (await contracts.priceOracle.setPrice(500)).wait()
 
     let collateralValue = ethers.utils.formatEther(
       await contracts.creditManager.convertNetworkToCollateral(
-        contracts.rUSD.address,
+        contracts.RSD.address,
         ethers.utils.parseUnits("1000.0", "mwei")
       )
     )
@@ -156,7 +156,7 @@ describe("CreditRequest and CreditManager Tests", function () {
     await (await contracts.priceOracle.setPrice(1500)).wait()
     collateralValue = ethers.utils.formatEther(
       await contracts.creditManager.convertNetworkToCollateral(
-        contracts.rUSD.address,
+        contracts.RSD.address,
         ethers.utils.parseUnits("1000.0", "mwei")
       )
     )

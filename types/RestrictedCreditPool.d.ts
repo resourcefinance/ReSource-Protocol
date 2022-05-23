@@ -19,8 +19,9 @@ import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
-interface CreditPoolInterface extends ethers.utils.Interface {
+interface RestrictedCreditPoolInterface extends ethers.utils.Interface {
   functions: {
+    "addRestriction(address)": FunctionFragment;
     "addReward(address,address,uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
     "earned(address,address)": FunctionFragment;
@@ -31,12 +32,14 @@ interface CreditPoolInterface extends ethers.utils.Interface {
     "getUnderwriter()": FunctionFragment;
     "increaseTotalCredit(uint256)": FunctionFragment;
     "initialize(address,address,address)": FunctionFragment;
+    "isRestricted(address)": FunctionFragment;
     "lastTimeRewardApplicable(address)": FunctionFragment;
     "notifyRewardAmount(address,uint256)": FunctionFragment;
     "owner()": FunctionFragment;
     "paused()": FunctionFragment;
     "recoverERC20(address,uint256)": FunctionFragment;
     "reduceTotalCredit(uint256)": FunctionFragment;
+    "removeRestriction(address)": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "rewardData(address)": FunctionFragment;
     "rewardPerToken(address)": FunctionFragment;
@@ -57,6 +60,10 @@ interface CreditPoolInterface extends ethers.utils.Interface {
     "withdraw(uint256)": FunctionFragment;
   };
 
+  encodeFunctionData(
+    functionFragment: "addRestriction",
+    values: [string]
+  ): string;
   encodeFunctionData(
     functionFragment: "addReward",
     values: [string, string, BigNumberish]
@@ -89,6 +96,10 @@ interface CreditPoolInterface extends ethers.utils.Interface {
     values: [string, string, string]
   ): string;
   encodeFunctionData(
+    functionFragment: "isRestricted",
+    values: [string]
+  ): string;
+  encodeFunctionData(
     functionFragment: "lastTimeRewardApplicable",
     values: [string]
   ): string;
@@ -105,6 +116,10 @@ interface CreditPoolInterface extends ethers.utils.Interface {
   encodeFunctionData(
     functionFragment: "reduceTotalCredit",
     values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "removeRestriction",
+    values: [string]
   ): string;
   encodeFunctionData(
     functionFragment: "renounceOwnership",
@@ -170,6 +185,10 @@ interface CreditPoolInterface extends ethers.utils.Interface {
     values: [BigNumberish]
   ): string;
 
+  decodeFunctionResult(
+    functionFragment: "addRestriction",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "addReward", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "earned", data: BytesLike): Result;
@@ -193,6 +212,10 @@ interface CreditPoolInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(
+    functionFragment: "isRestricted",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "lastTimeRewardApplicable",
     data: BytesLike
   ): Result;
@@ -208,6 +231,10 @@ interface CreditPoolInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "reduceTotalCredit",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "removeRestriction",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -325,7 +352,7 @@ export type WithdrawnEvent = TypedEvent<
   [string, BigNumber] & { user: string; amount: BigNumber }
 >;
 
-export class CreditPool extends BaseContract {
+export class RestrictedCreditPool extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
@@ -366,9 +393,14 @@ export class CreditPool extends BaseContract {
     toBlock?: string | number | undefined
   ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
 
-  interface: CreditPoolInterface;
+  interface: RestrictedCreditPoolInterface;
 
   functions: {
+    addRestriction(
+      _account: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     addReward(
       _rewardsToken: string,
       _rewardsDistributor: string,
@@ -416,6 +448,8 @@ export class CreditPool extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    isRestricted(arg0: string, overrides?: CallOverrides): Promise<[boolean]>;
+
     lastTimeRewardApplicable(
       _rewardsToken: string,
       overrides?: CallOverrides
@@ -439,6 +473,11 @@ export class CreditPool extends BaseContract {
 
     reduceTotalCredit(
       _amountToAdd: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    removeRestriction(
+      _account: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -545,6 +584,11 @@ export class CreditPool extends BaseContract {
     ): Promise<ContractTransaction>;
   };
 
+  addRestriction(
+    _account: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   addReward(
     _rewardsToken: string,
     _rewardsDistributor: string,
@@ -589,6 +633,8 @@ export class CreditPool extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  isRestricted(arg0: string, overrides?: CallOverrides): Promise<boolean>;
+
   lastTimeRewardApplicable(
     _rewardsToken: string,
     overrides?: CallOverrides
@@ -612,6 +658,11 @@ export class CreditPool extends BaseContract {
 
   reduceTotalCredit(
     _amountToAdd: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  removeRestriction(
+    _account: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -713,6 +764,8 @@ export class CreditPool extends BaseContract {
   ): Promise<ContractTransaction>;
 
   callStatic: {
+    addRestriction(_account: string, overrides?: CallOverrides): Promise<void>;
+
     addReward(
       _rewardsToken: string,
       _rewardsDistributor: string,
@@ -753,6 +806,8 @@ export class CreditPool extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    isRestricted(arg0: string, overrides?: CallOverrides): Promise<boolean>;
+
     lastTimeRewardApplicable(
       _rewardsToken: string,
       overrides?: CallOverrides
@@ -776,6 +831,11 @@ export class CreditPool extends BaseContract {
 
     reduceTotalCredit(
       _amountToAdd: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    removeRestriction(
+      _account: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -993,6 +1053,11 @@ export class CreditPool extends BaseContract {
   };
 
   estimateGas: {
+    addRestriction(
+      _account: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     addReward(
       _rewardsToken: string,
       _rewardsDistributor: string,
@@ -1037,6 +1102,8 @@ export class CreditPool extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    isRestricted(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
+
     lastTimeRewardApplicable(
       _rewardsToken: string,
       overrides?: CallOverrides
@@ -1060,6 +1127,11 @@ export class CreditPool extends BaseContract {
 
     reduceTotalCredit(
       _amountToAdd: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    removeRestriction(
+      _account: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -1144,6 +1216,11 @@ export class CreditPool extends BaseContract {
   };
 
   populateTransaction: {
+    addRestriction(
+      _account: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
     addReward(
       _rewardsToken: string,
       _rewardsDistributor: string,
@@ -1191,6 +1268,11 @@ export class CreditPool extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
+    isRestricted(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     lastTimeRewardApplicable(
       _rewardsToken: string,
       overrides?: CallOverrides
@@ -1214,6 +1296,11 @@ export class CreditPool extends BaseContract {
 
     reduceTotalCredit(
       _amountToAdd: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    removeRestriction(
+      _account: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 

@@ -19,7 +19,7 @@ import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
-interface RUSDInterface extends ethers.utils.Interface {
+interface RSDInterface extends ethers.utils.Interface {
   functions: {
     "allowance(address,address)": FunctionFragment;
     "approve(address,uint256)": FunctionFragment;
@@ -37,7 +37,7 @@ interface RUSDInterface extends ethers.utils.Interface {
     "feeManager()": FunctionFragment;
     "increaseAllowance(address,uint256)": FunctionFragment;
     "initialize(string,string)": FunctionFragment;
-    "initializeRUSD(address,address,address,address)": FunctionFragment;
+    "initializeRSD(address,address,address,address)": FunctionFragment;
     "isTrustedForwarder(address)": FunctionFragment;
     "name()": FunctionFragment;
     "networkRoles()": FunctionFragment;
@@ -110,7 +110,7 @@ interface RUSDInterface extends ethers.utils.Interface {
     values: [string, string]
   ): string;
   encodeFunctionData(
-    functionFragment: "initializeRUSD",
+    functionFragment: "initializeRSD",
     values: [string, string, string, string]
   ): string;
   encodeFunctionData(
@@ -193,7 +193,7 @@ interface RUSDInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "initializeRUSD",
+    functionFragment: "initializeRSD",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -273,7 +273,7 @@ export type TransferEvent = TypedEvent<
 
 export type UnpausedEvent = TypedEvent<[string] & { account: string }>;
 
-export class RUSD extends BaseContract {
+export class RSD extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
@@ -314,7 +314,7 @@ export class RUSD extends BaseContract {
     toBlock?: string | number | undefined
   ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
 
-  interface: RUSDInterface;
+  interface: RSDInterface;
 
   functions: {
     allowance(
@@ -393,7 +393,7 @@ export class RUSD extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    initializeRUSD(
+    initializeRSD(
       _creditRoles: string,
       _feeManager: string,
       _networkRoles: string,
@@ -528,7 +528,7 @@ export class RUSD extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  initializeRUSD(
+  initializeRSD(
     _creditRoles: string,
     _feeManager: string,
     _networkRoles: string,
@@ -663,7 +663,7 @@ export class RUSD extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    initializeRUSD(
+    initializeRSD(
       _creditRoles: string,
       _feeManager: string,
       _networkRoles: string,
@@ -878,7 +878,7 @@ export class RUSD extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    initializeRUSD(
+    initializeRSD(
       _creditRoles: string,
       _feeManager: string,
       _networkRoles: string,
@@ -1020,7 +1020,7 @@ export class RUSD extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    initializeRUSD(
+    initializeRSD(
       _creditRoles: string,
       _feeManager: string,
       _networkRoles: string,

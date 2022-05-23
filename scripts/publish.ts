@@ -47,6 +47,17 @@ function publishContract(contractName: string, networkName: string) {
   }
 }
 
+function copyConfigToMonorepo() {
+  const monorepoLedgerDir = "../monorepo/packages/ledger/src/"
+  if (!fs.existsSync(monorepoLedgerDir)) {
+    console.warn("❌ Could not copy local config to monorepo at:", monorepoLedgerDir)
+    return
+  }
+  const graphConfig = fs.readFileSync("./config.json").toString()
+  fs.writeFileSync(monorepoLedgerDir + "config.local.json", graphConfig)
+  console.log("✅  Copied localhost config to monorepo")
+}
+
 async function main() {
   if (!fs.existsSync(`${deploymentsDir}/${network.name}`)) return
   const files = fs.readdirSync(`${deploymentsDir}/${network.name}`)
@@ -57,6 +68,10 @@ async function main() {
     }
   })
   console.log("✅  Published contracts to config.")
+
+  if (network.name === "localhost") {
+    copyConfigToMonorepo()
+  }
 }
 main()
   .then(() => process.exit(0))

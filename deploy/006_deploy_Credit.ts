@@ -68,9 +68,9 @@ const func: DeployFunction = async function (hardhat: HardhatRuntimeEnvironment)
 
   // 6. deploy a CreditPool
   const creditPoolArgs = [creditManager.address, creditRoles.address, accounts[0].address]
-  const creditPoolAbi = (await hardhat.artifacts.readArtifact("CreditPool")).abi
+  const creditPoolAbi = (await hardhat.artifacts.readArtifact("RestrictedCreditPool")).abi
   const creditPoolAddress = await deployProxyAndSave(
-    "CreditPool",
+    "RestrictedCreditPool",
     creditPoolArgs,
     hardhat,
     creditPoolAbi

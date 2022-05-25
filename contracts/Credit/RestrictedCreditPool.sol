@@ -155,7 +155,7 @@ contract RestrictedCreditPool is
 
     function getReward() public nonReentrant updateReward(msg.sender) {
         for (uint256 i; i < rewardTokens.length; i++) {
-            if (isRestricted[rewardTokens[i]] && isRestricted[msg.sender]) return;
+            if (isRestricted[rewardTokens[i]] && isRestricted[msg.sender]) continue;
             address _rewardsToken = rewardTokens[i];
             uint256 reward = rewards[msg.sender][_rewardsToken];
             if (reward > 0) {

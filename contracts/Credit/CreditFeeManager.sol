@@ -166,6 +166,13 @@ contract CreditFeeManager is ICreditFeeManager, OwnableUpgradeable {
         return creditFee;
     }
 
+    function approveCreditPool(address _pool) external onlyCreditOperator {
+        collateralToken.approve(
+            _pool,
+            0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+        );
+    }
+
     /* ========== MODIFIERS ========== */
 
     modifier onlyCreditOperator() {

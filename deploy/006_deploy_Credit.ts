@@ -5,6 +5,7 @@ import { ethers } from "hardhat"
 import { CreditRoles__factory } from "../types/factories/CreditRoles__factory"
 import { CreditManager__factory } from "../types/factories/CreditManager__factory"
 import { CreditRequest__factory } from "../types"
+import { CreditFeeManager__factory } from "../types/factories/CreditFeeManager__factory"
 
 const func: DeployFunction = async function (hardhat: HardhatRuntimeEnvironment) {
   const accounts = await ethers.getSigners()
@@ -64,7 +65,14 @@ const func: DeployFunction = async function (hardhat: HardhatRuntimeEnvironment)
     20000,
   ]
   const creditFeeManagerAbi = (await hardhat.artifacts.readArtifact("CreditFeeManager")).abi
-  await deployProxyAndSave("CreditFeeManager", creditFeeManagerArgs, hardhat, creditFeeManagerAbi)
+  const creditFeeManagerAddress = await deployProxyAndSave(
+    "CreditFeeManager",
+    creditFeeManagerArgs,
+    hardhat,
+    creditFeeManagerAbi
+  )
+
+  const creditFeeManager = CreditFeeManager__factory.connect(creditFeeManagerAddress, accounts[0])
 
   // 6. deploy a CreditPool
   const creditPoolArgs = [creditManager.address, creditRoles.address, accounts[0].address]
@@ -77,7 +85,19 @@ const func: DeployFunction = async function (hardhat: HardhatRuntimeEnvironment)
   )
 
   await (await creditManager.registerCreditPool(creditPoolAddress)).wait()
+  await (await creditFeeManager.approveCreditPool(creditPoolAddress)).wait()
   await (await creditRoles.grantOperator(creditManagerAddress)).wait()
+
+  // TODO: add dynamic render of reward tokens to source dapp so can uncomment this out
+  // FOR NOW ADD CELO REWARD FIRST THEN ADD SOURCE REWARDS
+
+  // await (
+  //   await contracts.creditPool.addReward(
+  //     contracts.sourceToken.address,
+  //     accounts[0].address,
+  //     7776000
+  //   )
+  // ).wait()
 }
 export default func
 func.tags = ["CREDIT"]

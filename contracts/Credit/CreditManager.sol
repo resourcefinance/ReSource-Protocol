@@ -156,7 +156,8 @@ contract CreditManager is OwnableUpgradeable, PausableUpgradeable, ICreditManage
             _network,
             ICreditPool(_pool).getTotalCredit()
         );
-        return (creditInCollateralUnits / collateral) * MAX_PPM;
+
+        return ((collateral * MAX_PPM) / creditInCollateralUnits);
     }
 
     function calculatePercentInCollateral(

@@ -126,7 +126,17 @@ export const protocolFactory = {
     ])) as RestrictedCreditPool
     await (await contracts.creditRoles.grantUnderwriter(underwriterAddress)).wait()
 
+    await (await contracts.creditFeeManager.approveCreditPool(contracts.creditPool.address)).wait()
+
     await (await contracts.creditManager.registerCreditPool(contracts.creditPool.address)).wait()
+
+    await (
+      await contracts.creditPool.addReward(
+        contracts.sourceToken.address,
+        accounts[0].address,
+        7776000
+      )
+    ).wait()
 
     return contracts
   },

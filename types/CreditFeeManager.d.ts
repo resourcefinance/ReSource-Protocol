@@ -21,6 +21,7 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface CreditFeeManagerInterface extends ethers.utils.Interface {
   functions: {
+    "approveCreditPool(address)": FunctionFragment;
     "calculateFees(address,uint256)": FunctionFragment;
     "collateralToken()": FunctionFragment;
     "collectFees(address,address,uint256)": FunctionFragment;
@@ -40,6 +41,10 @@ interface CreditFeeManagerInterface extends ethers.utils.Interface {
     "updateUnderwriterFeePercent(uint256)": FunctionFragment;
   };
 
+  encodeFunctionData(
+    functionFragment: "approveCreditPool",
+    values: [string]
+  ): string;
   encodeFunctionData(
     functionFragment: "calculateFees",
     values: [string, BigNumberish]
@@ -106,6 +111,10 @@ interface CreditFeeManagerInterface extends ethers.utils.Interface {
     values: [BigNumberish]
   ): string;
 
+  decodeFunctionResult(
+    functionFragment: "approveCreditPool",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "calculateFees",
     data: BytesLike
@@ -246,6 +255,11 @@ export class CreditFeeManager extends BaseContract {
   interface: CreditFeeManagerInterface;
 
   functions: {
+    approveCreditPool(
+      _pool: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     calculateFees(
       _network: string,
       _transactionAmount: BigNumberish,
@@ -319,6 +333,11 @@ export class CreditFeeManager extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
   };
+
+  approveCreditPool(
+    _pool: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
 
   calculateFees(
     _network: string,
@@ -394,6 +413,8 @@ export class CreditFeeManager extends BaseContract {
   ): Promise<ContractTransaction>;
 
   callStatic: {
+    approveCreditPool(_pool: string, overrides?: CallOverrides): Promise<void>;
+
     calculateFees(
       _network: string,
       _transactionAmount: BigNumberish,
@@ -535,6 +556,11 @@ export class CreditFeeManager extends BaseContract {
   };
 
   estimateGas: {
+    approveCreditPool(
+      _pool: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     calculateFees(
       _network: string,
       _transactionAmount: BigNumberish,
@@ -610,6 +636,11 @@ export class CreditFeeManager extends BaseContract {
   };
 
   populateTransaction: {
+    approveCreditPool(
+      _pool: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
     calculateFees(
       _network: string,
       _transactionAmount: BigNumberish,

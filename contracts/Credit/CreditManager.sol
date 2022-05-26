@@ -145,7 +145,7 @@ contract CreditManager is OwnableUpgradeable, PausableUpgradeable, ICreditManage
 
     function isPoolValidLTV(address _network, address _pool) public view override returns (bool) {
         uint256 LTV = calculatePoolLTV(_network, _pool);
-        return LTV > minLTV;
+        return LTV >= minLTV;
     }
 
     function calculatePoolLTV(address _network, address _pool) public view returns (uint256) {

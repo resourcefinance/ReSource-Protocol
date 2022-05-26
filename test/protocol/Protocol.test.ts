@@ -212,6 +212,13 @@ describe("Protocol Tests", function () {
 
     expect(LTV).to.equal(20)
 
+    expect(
+      await contracts.creditManager.isPoolValidLTV(
+        contracts.RSD.address,
+        contracts.creditPool.address
+      )
+    ).to.be.true
+
     // send funds from memberA to memberB
     await (
       await contracts.sourceToken.transfer(memberA.address, ethers.utils.parseEther("100"))

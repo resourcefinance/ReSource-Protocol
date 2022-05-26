@@ -11,14 +11,14 @@ import { ProtocolContracts, protocolFactory } from "./protocolFactory"
 
 chai.use(solidity)
 
-describe("CreditPool & Rewards Tests", function() {
+describe("CreditPool & Rewards Tests", function () {
   let contracts: ProtocolContracts
   let deployer: SignerWithAddress
   let underwriter: SignerWithAddress
   let member: SignerWithAddress
   let member2: SignerWithAddress
 
-  this.beforeEach(async function() {
+  this.beforeEach(async function () {
     const accounts = await ethers.getSigners()
 
     deployer = accounts[0]
@@ -29,15 +29,9 @@ describe("CreditPool & Rewards Tests", function() {
     contracts = await protocolFactory.deployDefault(underwriter.address)
   })
 
-  it("Adds and notifies a single reward to pool", async function() {
+  it("Adds and notifies a single reward to pool", async function () {
     await (
       await contracts.sourceToken.transfer(underwriter.address, ethers.utils.parseEther("1000"))
-    ).wait()
-
-    await (
-      await contracts.creditPool
-        .connect(underwriter)
-        .addReward(contracts.sourceToken.address, underwriter.address, 360)
     ).wait()
 
     expect(await contracts.creditPool.rewardTokens(0)).to.equal(contracts.sourceToken.address)
@@ -62,7 +56,7 @@ describe("CreditPool & Rewards Tests", function() {
     expect(rewardAdded.event).to.equal("RewardAdded")
   })
 
-  it("Adds and notifies multiple rewards to pool", async function() {
+  it("Adds and notifies multiple rewards to pool", async function () {
     const ERC20Factory = await ethers.getContractFactory("MockERC20")
     const rewardToken = (await ERC20Factory.deploy(
       ethers.utils.parseEther("100000000")
@@ -73,12 +67,6 @@ describe("CreditPool & Rewards Tests", function() {
     ).wait()
 
     await (await rewardToken.transfer(underwriter.address, ethers.utils.parseEther("10000"))).wait()
-
-    await (
-      await contracts.creditPool
-        .connect(underwriter)
-        .addReward(contracts.sourceToken.address, underwriter.address, 360)
-    ).wait()
 
     await (
       await contracts.creditPool
@@ -120,15 +108,9 @@ describe("CreditPool & Rewards Tests", function() {
     expect(rewardAdded).to.have.lengthOf(2)
   })
 
-  it("Approves and stakes into pool", async function() {
+  it("Approves and stakes into pool", async function () {
     await (
       await contracts.sourceToken.transfer(underwriter.address, ethers.utils.parseEther("100000"))
-    ).wait()
-
-    await (
-      await contracts.creditPool
-        .connect(underwriter)
-        .addReward(contracts.sourceToken.address, underwriter.address, 60 * 60 * 60)
     ).wait()
 
     await (
@@ -168,15 +150,9 @@ describe("CreditPool & Rewards Tests", function() {
     expect(postPoolBal).to.equal(poolToken)
   })
 
-  it("Claims & withdraws rewards after staking", async function() {
+  it("Claims & withdraws rewards after staking", async function () {
     await (
       await contracts.sourceToken.transfer(underwriter.address, ethers.utils.parseEther("1000"))
-    ).wait()
-
-    await (
-      await contracts.creditPool
-        .connect(underwriter)
-        .addReward(contracts.sourceToken.address, underwriter.address, 3600)
     ).wait()
 
     await (
@@ -232,19 +208,13 @@ describe("CreditPool & Rewards Tests", function() {
     expect(balanceAfterExit).to.be.equal(ethers.utils.parseEther("0.0"))
   })
 
-  it("Updates locks & balances", async function() {
+  it("Updates locks & balances", async function () {
     await (
       await contracts.sourceToken.transfer(underwriter.address, ethers.utils.parseEther("1000"))
     ).wait()
 
     await (
       await contracts.sourceToken.transfer(member.address, ethers.utils.parseEther("2000"))
-    ).wait()
-
-    await (
-      await contracts.creditPool
-        .connect(underwriter)
-        .addReward(contracts.sourceToken.address, underwriter.address, 360)
     ).wait()
 
     expect(await contracts.creditPool.rewardTokens(0)).to.equal(contracts.sourceToken.address)
@@ -312,15 +282,9 @@ describe("CreditPool & Rewards Tests", function() {
     // TODO unstake half, send more locked & unlocked, then withdraw full amount
   })
 
-  it("Ability to stake locked tokens", async function() {
+  it("Ability to stake locked tokens", async function () {
     await (
       await contracts.sourceToken.transfer(underwriter.address, ethers.utils.parseEther("1000"))
-    ).wait()
-
-    await (
-      await contracts.creditPool
-        .connect(underwriter)
-        .addReward(contracts.sourceToken.address, underwriter.address, 360)
     ).wait()
 
     expect(await contracts.creditPool.rewardTokens(0)).to.equal(contracts.sourceToken.address)

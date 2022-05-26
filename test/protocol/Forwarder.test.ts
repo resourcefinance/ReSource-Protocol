@@ -92,7 +92,7 @@ describe("Forwarder Tests", function () {
         from: memberA.address,
         to: contracts.RSD.address,
         value: hexValue(0),
-        gas: 1e6,
+        gas: 1,
         nonce: hexValue(0),
         data,
       },
@@ -112,7 +112,7 @@ describe("Forwarder Tests", function () {
           { name: "data", type: "bytes" },
         ],
       },
-      primaryType: "ForwardRequest",
+      primaryType: "ForwardRequest" as any,
     }
 
     const sig = signTypedData({

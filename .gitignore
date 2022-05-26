@@ -45,3 +45,5 @@ ledgerConfig.json
 .vscode
 
 config.json
+
+coverage.json

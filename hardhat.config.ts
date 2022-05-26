@@ -56,6 +56,7 @@ function mnemonic() {
 
 enum chainIds {
   localhost = 31337,
+  ganache = 1337,
   testnet = 44787,
   mainnet = 42220,
 }
@@ -90,6 +91,13 @@ const config: HardhatUserConfig = {
       url: "http://127.0.0.1:1248",
       chainId: chainIds.testnet,
       saveDeployments: true,
+      timeout: 100000000,
+    },
+    ganache: {
+      url: "http://localhost:8545",
+      chainId: chainIds.ganache,
+      saveDeployments: true,
+      tags: ["local", "testing"],
       timeout: 100000000,
     },
   },

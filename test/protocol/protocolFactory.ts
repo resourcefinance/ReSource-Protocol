@@ -133,7 +133,7 @@ export const protocolFactory = {
     await (
       await contracts.creditPool.addReward(
         contracts.sourceToken.address,
-        accounts[0].address,
+        underwriterAddress,
         7776000
       )
     ).wait()

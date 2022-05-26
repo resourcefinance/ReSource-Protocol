@@ -34,12 +34,6 @@ describe("RestrictedCreditPool & Rewards Tests", function () {
       await contracts.sourceToken.transfer(underwriter.address, ethers.utils.parseEther("1000"))
     ).wait()
 
-    await (
-      await contracts.creditPool
-        .connect(underwriter)
-        .addReward(contracts.sourceToken.address, underwriter.address, 360)
-    ).wait()
-
     expect(await contracts.creditPool.rewardTokens(0)).to.equal(contracts.sourceToken.address)
 
     await (
@@ -73,12 +67,6 @@ describe("RestrictedCreditPool & Rewards Tests", function () {
     ).wait()
 
     await (await rewardToken.transfer(underwriter.address, ethers.utils.parseEther("10000"))).wait()
-
-    await (
-      await contracts.creditPool
-        .connect(underwriter)
-        .addReward(contracts.sourceToken.address, underwriter.address, 360)
-    ).wait()
 
     await (
       await contracts.creditPool
@@ -126,12 +114,6 @@ describe("RestrictedCreditPool & Rewards Tests", function () {
     ).wait()
 
     await (
-      await contracts.creditPool
-        .connect(underwriter)
-        .addReward(contracts.sourceToken.address, underwriter.address, 60 * 60 * 60)
-    ).wait()
-
-    await (
       await contracts.sourceToken
         .connect(underwriter)
         .approve(contracts.creditPool.address, ethers.constants.MaxUint256)
@@ -171,12 +153,6 @@ describe("RestrictedCreditPool & Rewards Tests", function () {
   it("Claims & withdraws rewards after staking", async function () {
     await (
       await contracts.sourceToken.transfer(underwriter.address, ethers.utils.parseEther("1000"))
-    ).wait()
-
-    await (
-      await contracts.creditPool
-        .connect(underwriter)
-        .addReward(contracts.sourceToken.address, underwriter.address, 3600)
     ).wait()
 
     await (
@@ -239,12 +215,6 @@ describe("RestrictedCreditPool & Rewards Tests", function () {
 
     await (
       await contracts.sourceToken.transfer(member.address, ethers.utils.parseEther("2000"))
-    ).wait()
-
-    await (
-      await contracts.creditPool
-        .connect(underwriter)
-        .addReward(contracts.sourceToken.address, underwriter.address, 360)
     ).wait()
 
     expect(await contracts.creditPool.rewardTokens(0)).to.equal(contracts.sourceToken.address)
@@ -315,12 +285,6 @@ describe("RestrictedCreditPool & Rewards Tests", function () {
   it("Ability to stake locked tokens", async function () {
     await (
       await contracts.sourceToken.transfer(underwriter.address, ethers.utils.parseEther("1000"))
-    ).wait()
-
-    await (
-      await contracts.creditPool
-        .connect(underwriter)
-        .addReward(contracts.sourceToken.address, underwriter.address, 360)
     ).wait()
 
     expect(await contracts.creditPool.rewardTokens(0)).to.equal(contracts.sourceToken.address)
@@ -415,12 +379,6 @@ describe("RestrictedCreditPool & Rewards Tests", function () {
 
     await (
       await contracts.sourceToken.transfer(underwriter.address, ethers.utils.parseEther("1000"))
-    ).wait()
-
-    await (
-      await contracts.creditPool
-        .connect(underwriter)
-        .addReward(contracts.sourceToken.address, underwriter.address, 360)
     ).wait()
 
     await (

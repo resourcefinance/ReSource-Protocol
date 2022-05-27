@@ -231,10 +231,10 @@ contract CreditManager is OwnableUpgradeable, PausableUpgradeable, ICreditManage
         uint256 networkDecimals = IERC20Metadata(_network).decimals();
         if (networkDecimals < collateralDecimals) {
             uint256 delta = collateralDecimals - networkDecimals;
-            return (_amount * 10**delta * oracle.getPriceInPPT()) / MIN_PPT;
+            return ((_amount * 10**delta) / oracle.getPriceInPPT()) * MIN_PPT;
         } else {
             uint256 delta = networkDecimals - collateralDecimals;
-            return ((_amount / 10**delta) * oracle.getPriceInPPT()) / MIN_PPT;
+            return ((_amount / 10**delta) / oracle.getPriceInPPT()) * MIN_PPT;
         }
     }
 

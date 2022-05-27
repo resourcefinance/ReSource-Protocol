@@ -879,6 +879,51 @@
       "address": "0x1428aC0Ec89b02D3fE3AC1aA17eff168aAD7A878",
       "txHash": "0x52ed526df3340c224fc9a72c5e56abb160f9987a07c9985fdc23d0e361ea23c9",
       "kind": "transparent"
+    },
+    {
+      "address": "0x5459Eb103ECb02bc504AC0916230989d9A9526A5",
+      "txHash": "0xbe6971609d8f681fc1db9e050c8ed99f23e418160a0a5aae5fe25280c33884a3",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x0CBb1FD4011962f44847A91858C1D26401645c17",
+      "txHash": "0x3e9c92e7f9918fd7f77dc9cccc3b1d69d6af9988309c6aa2777a9f712f205f8e",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x6eBE1c9DBB53670b7Ae0e3B6De2E4365f6296aa8",
+      "txHash": "0x163197e4714a98e9fb7e1771ad980c4c8415377a628736d8f790f2af0bfe852a",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x05b400551E3233D50fe4f3bA643E4b26806b59cB",
+      "txHash": "0x7d4c8bf7af7c0a57d3dd4d4e68f91d883bb39e7f1266fb4dd6d11b15072fa9cc",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x2429eC8eF605DdFB7f486a87998CA5A2BCbcCD3B",
+      "txHash": "0x216ac13d6c5f13205505ce3a4abb022a45337250118ffb666ea09f8c55418acd",
+      "kind": "transparent"
+    },
+    {
+      "address": "0xE93c0514c605FAC460BBd43Fd6dbD2a6F34A44F3",
+      "txHash": "0x692352512488517a8ba2cbce1a2544bd048560c97261fe211cfbe4b4bf0cce42",
+      "kind": "transparent"
+    },
+    {
+      "address": "0xae6663adF81a7F30C0c5b63ebcC95bFDe5457Eb1",
+      "txHash": "0xc74c073fc141f0f01ebd17987e0a2cc912d815bbfec0c273c614740c83c46331",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x6F39dd842fFF012E26252c375334F4dc94c004ab",
+      "txHash": "0x1fc24d8e0c55629ee92b8edcdcae461d3b7f09fc1d5d8277e62e73af8c54ecb8",
+      "kind": "transparent"
+    },
+    {
+      "address": "0xe349788502C9459D02F6988ee1e34A93C3b2a142",
+      "txHash": "0xabed99b2b3c6c76d5b227aa7f58702ec2d8ca8fe00503a84d85ee886c27bbb9c",
+      "kind": "transparent"
     }
   ],
   "impls": {
@@ -5442,7 +5487,7 @@
             "label": "locks",
             "offset": 0,
             "slot": "152",
-            "type": "t_mapping(t_address,t_struct(Lock)11005_storage)",
+            "type": "t_mapping(t_address,t_struct(Lock)11022_storage)",
             "contract": "ERC20SOUL",
             "src": "contracts/SOURCE/ERC20SOUL.sol:36"
           },
@@ -5475,7 +5520,7 @@
           "t_address": {
             "label": "address"
           },
-          "t_array(t_struct(Schedule)11010_storage)dyn_storage": {
+          "t_array(t_struct(Schedule)11027_storage)dyn_storage": {
             "label": "struct ERC20SOUL.Schedule[]"
           },
           "t_array(t_uint256)45_storage": {
@@ -5496,7 +5541,7 @@
           "t_mapping(t_address,t_mapping(t_address,t_uint256))": {
             "label": "mapping(address => mapping(address => uint256))"
           },
-          "t_mapping(t_address,t_struct(Lock)11005_storage)": {
+          "t_mapping(t_address,t_struct(Lock)11022_storage)": {
             "label": "mapping(address => struct ERC20SOUL.Lock)"
           },
           "t_mapping(t_address,t_uint256)": {
@@ -5505,7 +5550,7 @@
           "t_string_storage": {
             "label": "string"
           },
-          "t_struct(Lock)11005_storage": {
+          "t_struct(Lock)11022_storage": {
             "label": "struct ERC20SOUL.Lock",
             "members": [
               {
@@ -5518,11 +5563,11 @@
               },
               {
                 "label": "schedules",
-                "type": "t_array(t_struct(Schedule)11010_storage)dyn_storage"
+                "type": "t_array(t_struct(Schedule)11027_storage)dyn_storage"
               }
             ]
           },
-          "t_struct(Schedule)11010_storage": {
+          "t_struct(Schedule)11027_storage": {
             "label": "struct ERC20SOUL.Schedule",
             "members": [
               {
@@ -5646,7 +5691,7 @@
             "label": "locks",
             "offset": 0,
             "slot": "152",
-            "type": "t_mapping(t_address,t_struct(Lock)11674_storage)",
+            "type": "t_mapping(t_address,t_struct(Lock)11691_storage)",
             "contract": "ERC20SOULV2",
             "src": "contracts/SOURCE/ERC20SOULV2.sol:40"
           },
@@ -5695,7 +5740,7 @@
           "t_address": {
             "label": "address"
           },
-          "t_array(t_struct(Schedule)11679_storage)dyn_storage": {
+          "t_array(t_struct(Schedule)11696_storage)dyn_storage": {
             "label": "struct ERC20SOULV2.Schedule[]"
           },
           "t_array(t_uint256)45_storage": {
@@ -5716,7 +5761,7 @@
           "t_mapping(t_address,t_mapping(t_address,t_uint256))": {
             "label": "mapping(address => mapping(address => uint256))"
           },
-          "t_mapping(t_address,t_struct(Lock)11674_storage)": {
+          "t_mapping(t_address,t_struct(Lock)11691_storage)": {
             "label": "mapping(address => struct ERC20SOULV2.Lock)"
           },
           "t_mapping(t_address,t_uint256)": {
@@ -5725,7 +5770,7 @@
           "t_string_storage": {
             "label": "string"
           },
-          "t_struct(Lock)11674_storage": {
+          "t_struct(Lock)11691_storage": {
             "label": "struct ERC20SOULV2.Lock",
             "members": [
               {
@@ -5738,11 +5783,11 @@
               },
               {
                 "label": "schedules",
-                "type": "t_array(t_struct(Schedule)11679_storage)dyn_storage"
+                "type": "t_array(t_struct(Schedule)11696_storage)dyn_storage"
               }
             ]
           },
-          "t_struct(Schedule)11679_storage": {
+          "t_struct(Schedule)11696_storage": {
             "label": "struct ERC20SOULV2.Schedule",
             "members": [
               {
@@ -6046,7 +6091,7 @@
             "label": "_token",
             "offset": 0,
             "slot": "151",
-            "type": "t_contract(IERC20SOUL)13466",
+            "type": "t_contract(IERC20SOUL)13483",
             "contract": "TokenClaim",
             "src": "contracts/SOURCE/TokenClaim.sol:23"
           },
@@ -6054,7 +6099,7 @@
             "label": "claims",
             "offset": 0,
             "slot": "152",
-            "type": "t_mapping(t_address,t_struct(Claim)13577_storage)",
+            "type": "t_mapping(t_address,t_struct(Claim)13594_storage)",
             "contract": "TokenClaim",
             "src": "contracts/SOURCE/TokenClaim.sol:24"
           },
@@ -6071,7 +6116,7 @@
           "t_address": {
             "label": "address"
           },
-          "t_array(t_struct(Schedule)13364_storage)dyn_storage": {
+          "t_array(t_struct(Schedule)13381_storage)dyn_storage": {
             "label": "struct IERC20SOUL.Schedule[]"
           },
           "t_array(t_uint256)49_storage": {
@@ -6083,13 +6128,13 @@
           "t_bool": {
             "label": "bool"
           },
-          "t_contract(IERC20SOUL)13466": {
+          "t_contract(IERC20SOUL)13483": {
             "label": "contract IERC20SOUL"
           },
-          "t_mapping(t_address,t_struct(Claim)13577_storage)": {
+          "t_mapping(t_address,t_struct(Claim)13594_storage)": {
             "label": "mapping(address => struct TokenClaim.Claim)"
           },
-          "t_struct(Claim)13577_storage": {
+          "t_struct(Claim)13594_storage": {
             "label": "struct TokenClaim.Claim",
             "members": [
               {
@@ -6098,7 +6143,7 @@
               },
               {
                 "label": "lock",
-                "type": "t_struct(Lock)13359_storage"
+                "type": "t_struct(Lock)13376_storage"
               },
               {
                 "label": "released",
@@ -6106,7 +6151,7 @@
               }
             ]
           },
-          "t_struct(Lock)13359_storage": {
+          "t_struct(Lock)13376_storage": {
             "label": "struct IERC20SOUL.Lock",
             "members": [
               {
@@ -6119,11 +6164,11 @@
               },
               {
                 "label": "schedules",
-                "type": "t_array(t_struct(Schedule)13364_storage)dyn_storage"
+                "type": "t_array(t_struct(Schedule)13381_storage)dyn_storage"
               }
             ]
           },
-          "t_struct(Schedule)13364_storage": {
+          "t_struct(Schedule)13381_storage": {
             "label": "struct IERC20SOUL.Schedule",
             "members": [
               {
@@ -8610,6 +8655,186 @@
           },
           "t_mapping(t_address,t_uint256)": {
             "label": "mapping(address => uint256)"
+          },
+          "t_uint256": {
+            "label": "uint256"
+          }
+        }
+      }
+    },
+    "c2ef20d52efb18164897e1c62a2f91d097a03d03db6c77518d632cee6206bd70": {
+      "address": "0xc9950cdCf7336053662b95d691C88ccC72eC6457",
+      "txHash": "0x584890c9d47ff53eb11bfe3f8a04ec92d4b98249b8258f59485c22e24133e2da",
+      "layout": {
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:39"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:44"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ContextUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:36"
+          },
+          {
+            "label": "_owner",
+            "offset": 0,
+            "slot": "51",
+            "type": "t_address",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:22"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "52",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:87"
+          },
+          {
+            "label": "_paused",
+            "offset": 0,
+            "slot": "101",
+            "type": "t_bool",
+            "contract": "PausableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol:29"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "102",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "PausableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol:102"
+          },
+          {
+            "label": "collateralToken",
+            "offset": 0,
+            "slot": "151",
+            "type": "t_contract(IERC20)3387",
+            "contract": "CreditManager",
+            "src": "contracts/Credit/CreditManager.sol:22"
+          },
+          {
+            "label": "creditRoles",
+            "offset": 0,
+            "slot": "152",
+            "type": "t_contract(ICreditRoles)9943",
+            "contract": "CreditManager",
+            "src": "contracts/Credit/CreditManager.sol:23"
+          },
+          {
+            "label": "oracle",
+            "offset": 0,
+            "slot": "153",
+            "type": "t_contract(IPriceOracle)9951",
+            "contract": "CreditManager",
+            "src": "contracts/Credit/CreditManager.sol:24"
+          },
+          {
+            "label": "totalStakedCollateral",
+            "offset": 0,
+            "slot": "154",
+            "type": "t_uint256",
+            "contract": "CreditManager",
+            "src": "contracts/Credit/CreditManager.sol:25"
+          },
+          {
+            "label": "minLTV",
+            "offset": 0,
+            "slot": "155",
+            "type": "t_uint256",
+            "contract": "CreditManager",
+            "src": "contracts/Credit/CreditManager.sol:26"
+          },
+          {
+            "label": "creditLineExpiration",
+            "offset": 0,
+            "slot": "156",
+            "type": "t_uint256",
+            "contract": "CreditManager",
+            "src": "contracts/Credit/CreditManager.sol:27"
+          },
+          {
+            "label": "creditLines",
+            "offset": 0,
+            "slot": "157",
+            "type": "t_mapping(t_address,t_mapping(t_address,t_struct(CreditLine)9577_storage))",
+            "contract": "CreditManager",
+            "src": "contracts/Credit/CreditManager.sol:29"
+          },
+          {
+            "label": "pools",
+            "offset": 0,
+            "slot": "158",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "CreditManager",
+            "src": "contracts/Credit/CreditManager.sol:31"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]"
+          },
+          "t_bool": {
+            "label": "bool"
+          },
+          "t_contract(ICreditRoles)9943": {
+            "label": "contract ICreditRoles"
+          },
+          "t_contract(IERC20)3387": {
+            "label": "contract IERC20"
+          },
+          "t_contract(IPriceOracle)9951": {
+            "label": "contract IPriceOracle"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)"
+          },
+          "t_mapping(t_address,t_mapping(t_address,t_struct(CreditLine)9577_storage))": {
+            "label": "mapping(address => mapping(address => struct ICreditManager.CreditLine))"
+          },
+          "t_mapping(t_address,t_struct(CreditLine)9577_storage)": {
+            "label": "mapping(address => struct ICreditManager.CreditLine)"
+          },
+          "t_struct(CreditLine)9577_storage": {
+            "label": "struct ICreditManager.CreditLine",
+            "members": [
+              {
+                "label": "creditPool",
+                "type": "t_address"
+              },
+              {
+                "label": "issueDate",
+                "type": "t_uint256"
+              },
+              {
+                "label": "creditLimit",
+                "type": "t_uint256"
+              }
+            ]
           },
           "t_uint256": {
             "label": "uint256"

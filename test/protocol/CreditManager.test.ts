@@ -141,7 +141,7 @@ describe("CreditRequest and CreditManager Tests", function () {
     expect(creditLimit).to.equal("100.0")
   })
   it("converts RSD amount to SOURCE value", async function () {
-    // Source at $0.50
+    // SOURCE at $0.50
     await (await contracts.priceOracle.setPrice(500)).wait()
 
     let collateralValue = ethers.utils.formatEther(
@@ -150,16 +150,18 @@ describe("CreditRequest and CreditManager Tests", function () {
         ethers.utils.parseUnits("1000.0", "mwei")
       )
     )
-    expect(collateralValue).to.equal("500.0")
+    expect(collateralValue).to.equal("2000.0")
 
-    // Source at $1.50
+    // SOURCE at $1.50
     await (await contracts.priceOracle.setPrice(1500)).wait()
-    collateralValue = ethers.utils.formatEther(
-      await contracts.creditManager.convertNetworkToCollateral(
-        contracts.RSD.address,
-        ethers.utils.parseUnits("1000.0", "mwei")
+    collateralValue = Number(
+      ethers.utils.formatEther(
+        await contracts.creditManager.convertNetworkToCollateral(
+          contracts.RSD.address,
+          ethers.utils.parseUnits("1000.0", "mwei")
+        )
       )
-    )
-    expect(collateralValue).to.equal("1500.0")
+    ).toFixed(2)
+    expect(collateralValue).to.equal("666.67")
   })
 })

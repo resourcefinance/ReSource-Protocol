@@ -322,13 +322,13 @@ describe("Protocol Tests", function () {
 
     // send funds from memberA to memberB
     await (
-      await contracts.sourceToken.transfer(memberA.address, ethers.utils.parseEther("100"))
+      await contracts.sourceToken.transfer(memberA.address, ethers.utils.parseEther("200"))
     ).wait()
     let sourceBalance = ethers.utils.formatEther(
       await contracts.sourceToken.balanceOf(memberA.address)
     )
 
-    expect(sourceBalance).to.equal("100.0")
+    expect(sourceBalance).to.equal("200.0")
 
     await (
       await contracts.sourceToken
@@ -342,6 +342,13 @@ describe("Protocol Tests", function () {
         .approve(contracts.creditPool.address, ethers.constants.MaxUint256)
     ).wait()
 
+    const fee = ethers.utils.formatEther(
+      await contracts.creditFeeManager.calculateFees(
+        contracts.RSD.address,
+        ethers.utils.parseUnits("1000", "mwei")
+      )
+    )
+
     await (
       await contracts.RSD.connect(memberA).transfer(
         memberB.address,
@@ -350,7 +357,7 @@ describe("Protocol Tests", function () {
     ).wait()
 
     sourceBalance = ethers.utils.formatEther(await contracts.sourceToken.balanceOf(memberA.address))
-    expect(sourceBalance).to.equal("50.0")
+    expect(sourceBalance).to.equal("0.0")
 
     // try claim creditFees as creditOperator
     await (await contracts.creditRoles.grantOperator(creditOperator.address)).wait()
@@ -368,6 +375,6 @@ describe("Protocol Tests", function () {
     sourceBalance = ethers.utils.formatEther(
       await contracts.sourceToken.balanceOf(contracts.creditPool.address)
     )
-    expect(sourceBalance).to.equal("50.0")
+    expect(sourceBalance).to.equal("200.0")
   })
 })

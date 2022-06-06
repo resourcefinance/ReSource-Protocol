@@ -1,0 +1,577 @@
+{
+  "address": "0x33d456322429CBf070081D668aA81297EA7a6c49",
+  "abi": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "member",
+          "type": "address"
+        }
+      ],
+      "name": "MemberAdded",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "previousOwner",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "OwnershipTransferred",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        },
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "previousAdminRole",
+          "type": "bytes32"
+        },
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "newAdminRole",
+          "type": "bytes32"
+        }
+      ],
+      "name": "RoleAdminChanged",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "sender",
+          "type": "address"
+        }
+      ],
+      "name": "RoleGranted",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "sender",
+          "type": "address"
+        }
+      ],
+      "name": "RoleRevoked",
+      "type": "event"
+    },
+    {
+      "inputs": [],
+      "name": "DEFAULT_ADMIN_ROLE",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        }
+      ],
+      "name": "getRoleAdmin",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_member",
+          "type": "address"
+        }
+      ],
+      "name": "grantMember",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_operator",
+          "type": "address"
+        }
+      ],
+      "name": "grantOperator",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "grantRole",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "hasRole",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address[]",
+          "name": "_operators",
+          "type": "address[]"
+        }
+      ],
+      "name": "initialize",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_member",
+          "type": "address"
+        }
+      ],
+      "name": "isMember",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_operator",
+          "type": "address"
+        }
+      ],
+      "name": "isNetworkOperator",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "owner",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "renounceOwnership",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "renounceRole",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_operator",
+          "type": "address"
+        }
+      ],
+      "name": "revokeOperator",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "revokeRole",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_network",
+          "type": "address"
+        }
+      ],
+      "name": "setNetwork",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes4",
+          "name": "interfaceId",
+          "type": "bytes4"
+        }
+      ],
+      "name": "supportsInterface",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "transferOwnership",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "transactionHash": "0xc16ce28444cfaa5db97c59b70fbf23c8a96898d92f1e6a8ec81f0f5935ee1403",
+  "receipt": {
+    "to": null,
+    "from": "0xdBef374FDf8d735e7589A9A9E2c5a091eB2dBE57",
+    "contractAddress": "0x33d456322429CBf070081D668aA81297EA7a6c49",
+    "transactionIndex": 0,
+    "gasUsed": "707916",
+    "logsBloom": "0x00000004000000000800000000000000480000000000000000000000000000000000200000008000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000800000000020000400000000000000800004000800000080000000000000000020000000000000000000000000000000000000000000000000000040000800008000000000000000004000000000000000000000000000000001000000000000000000060800000000000000000000000000000000400000900000000000020000000000000000000000004000000000000000002000000000000000000000000",
+    "blockHash": "0xd02635c610263cf2f9591bd617df9187c292b3775e83a0fc68d1b9792af5fff1",
+    "transactionHash": "0xc16ce28444cfaa5db97c59b70fbf23c8a96898d92f1e6a8ec81f0f5935ee1403",
+    "logs": [
+      {
+        "transactionIndex": 0,
+        "blockNumber": 13340357,
+        "transactionHash": "0xc16ce28444cfaa5db97c59b70fbf23c8a96898d92f1e6a8ec81f0f5935ee1403",
+        "address": "0x33d456322429CBf070081D668aA81297EA7a6c49",
+        "topics": [
+          "0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b",
+          "0x0000000000000000000000006e99d864ac187f81583af6a137032788edbc265a"
+        ],
+        "data": "0x",
+        "logIndex": 0,
+        "blockHash": "0xd02635c610263cf2f9591bd617df9187c292b3775e83a0fc68d1b9792af5fff1"
+      },
+      {
+        "transactionIndex": 0,
+        "blockNumber": 13340357,
+        "transactionHash": "0xc16ce28444cfaa5db97c59b70fbf23c8a96898d92f1e6a8ec81f0f5935ee1403",
+        "address": "0x33d456322429CBf070081D668aA81297EA7a6c49",
+        "topics": [
+          "0x2f8788117e7eff1d82e926ec794901d17c78024a50270940304540a733656f0d",
+          "0x0000000000000000000000000000000000000000000000000000000000000000",
+          "0x000000000000000000000000dbef374fdf8d735e7589a9a9e2c5a091eb2dbe57",
+          "0x000000000000000000000000dbef374fdf8d735e7589a9a9e2c5a091eb2dbe57"
+        ],
+        "data": "0x",
+        "logIndex": 1,
+        "blockHash": "0xd02635c610263cf2f9591bd617df9187c292b3775e83a0fc68d1b9792af5fff1"
+      },
+      {
+        "transactionIndex": 0,
+        "blockNumber": 13340357,
+        "transactionHash": "0xc16ce28444cfaa5db97c59b70fbf23c8a96898d92f1e6a8ec81f0f5935ee1403",
+        "address": "0x33d456322429CBf070081D668aA81297EA7a6c49",
+        "topics": [
+          "0x2f8788117e7eff1d82e926ec794901d17c78024a50270940304540a733656f0d",
+          "0x4f50455241544f52000000000000000000000000000000000000000000000000",
+          "0x000000000000000000000000dbef374fdf8d735e7589a9a9e2c5a091eb2dbe57",
+          "0x000000000000000000000000dbef374fdf8d735e7589a9a9e2c5a091eb2dbe57"
+        ],
+        "data": "0x",
+        "logIndex": 2,
+        "blockHash": "0xd02635c610263cf2f9591bd617df9187c292b3775e83a0fc68d1b9792af5fff1"
+      },
+      {
+        "transactionIndex": 0,
+        "blockNumber": 13340357,
+        "transactionHash": "0xc16ce28444cfaa5db97c59b70fbf23c8a96898d92f1e6a8ec81f0f5935ee1403",
+        "address": "0x33d456322429CBf070081D668aA81297EA7a6c49",
+        "topics": [
+          "0x2f8788117e7eff1d82e926ec794901d17c78024a50270940304540a733656f0d",
+          "0x4d454d4245520000000000000000000000000000000000000000000000000000",
+          "0x000000000000000000000000dbef374fdf8d735e7589a9a9e2c5a091eb2dbe57",
+          "0x000000000000000000000000dbef374fdf8d735e7589a9a9e2c5a091eb2dbe57"
+        ],
+        "data": "0x",
+        "logIndex": 3,
+        "blockHash": "0xd02635c610263cf2f9591bd617df9187c292b3775e83a0fc68d1b9792af5fff1"
+      },
+      {
+        "transactionIndex": 0,
+        "blockNumber": 13340357,
+        "transactionHash": "0xc16ce28444cfaa5db97c59b70fbf23c8a96898d92f1e6a8ec81f0f5935ee1403",
+        "address": "0x33d456322429CBf070081D668aA81297EA7a6c49",
+        "topics": [
+          "0xbd79b86ffe0ab8e8776151514217cd7cacd52c909f66475c3af44e129f0b00ff",
+          "0x4d454d4245520000000000000000000000000000000000000000000000000000",
+          "0x0000000000000000000000000000000000000000000000000000000000000000",
+          "0x4f50455241544f52000000000000000000000000000000000000000000000000"
+        ],
+        "data": "0x",
+        "logIndex": 4,
+        "blockHash": "0xd02635c610263cf2f9591bd617df9187c292b3775e83a0fc68d1b9792af5fff1"
+      },
+      {
+        "transactionIndex": 0,
+        "blockNumber": 13340357,
+        "transactionHash": "0xc16ce28444cfaa5db97c59b70fbf23c8a96898d92f1e6a8ec81f0f5935ee1403",
+        "address": "0x33d456322429CBf070081D668aA81297EA7a6c49",
+        "topics": [
+          "0x7e644d79422f17c01e4894b5f4f588d331ebfa28653d42ae832dc59e38c9798f"
+        ],
+        "data": "0x0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000c57f00b3202411af6457cc88372f6aa925f457b6",
+        "logIndex": 5,
+        "blockHash": "0xd02635c610263cf2f9591bd617df9187c292b3775e83a0fc68d1b9792af5fff1"
+      }
+    ],
+    "events": [
+      {
+        "transactionIndex": 0,
+        "blockNumber": 13340357,
+        "transactionHash": "0xc16ce28444cfaa5db97c59b70fbf23c8a96898d92f1e6a8ec81f0f5935ee1403",
+        "address": "0x33d456322429CBf070081D668aA81297EA7a6c49",
+        "topics": [
+          "0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b",
+          "0x0000000000000000000000006e99d864ac187f81583af6a137032788edbc265a"
+        ],
+        "data": "0x",
+        "logIndex": 0,
+        "blockHash": "0xd02635c610263cf2f9591bd617df9187c292b3775e83a0fc68d1b9792af5fff1",
+        "args": [
+          "0x6E99D864Ac187f81583aF6A137032788eDbc265a"
+        ],
+        "event": "Upgraded",
+        "eventSignature": "Upgraded(address)"
+      },
+      {
+        "transactionIndex": 0,
+        "blockNumber": 13340357,
+        "transactionHash": "0xc16ce28444cfaa5db97c59b70fbf23c8a96898d92f1e6a8ec81f0f5935ee1403",
+        "address": "0x33d456322429CBf070081D668aA81297EA7a6c49",
+        "topics": [
+          "0x2f8788117e7eff1d82e926ec794901d17c78024a50270940304540a733656f0d",
+          "0x0000000000000000000000000000000000000000000000000000000000000000",
+          "0x000000000000000000000000dbef374fdf8d735e7589a9a9e2c5a091eb2dbe57",
+          "0x000000000000000000000000dbef374fdf8d735e7589a9a9e2c5a091eb2dbe57"
+        ],
+        "data": "0x",
+        "logIndex": 1,
+        "blockHash": "0xd02635c610263cf2f9591bd617df9187c292b3775e83a0fc68d1b9792af5fff1"
+      },
+      {
+        "transactionIndex": 0,
+        "blockNumber": 13340357,
+        "transactionHash": "0xc16ce28444cfaa5db97c59b70fbf23c8a96898d92f1e6a8ec81f0f5935ee1403",
+        "address": "0x33d456322429CBf070081D668aA81297EA7a6c49",
+        "topics": [
+          "0x2f8788117e7eff1d82e926ec794901d17c78024a50270940304540a733656f0d",
+          "0x4f50455241544f52000000000000000000000000000000000000000000000000",
+          "0x000000000000000000000000dbef374fdf8d735e7589a9a9e2c5a091eb2dbe57",
+          "0x000000000000000000000000dbef374fdf8d735e7589a9a9e2c5a091eb2dbe57"
+        ],
+        "data": "0x",
+        "logIndex": 2,
+        "blockHash": "0xd02635c610263cf2f9591bd617df9187c292b3775e83a0fc68d1b9792af5fff1"
+      },
+      {
+        "transactionIndex": 0,
+        "blockNumber": 13340357,
+        "transactionHash": "0xc16ce28444cfaa5db97c59b70fbf23c8a96898d92f1e6a8ec81f0f5935ee1403",
+        "address": "0x33d456322429CBf070081D668aA81297EA7a6c49",
+        "topics": [
+          "0x2f8788117e7eff1d82e926ec794901d17c78024a50270940304540a733656f0d",
+          "0x4d454d4245520000000000000000000000000000000000000000000000000000",
+          "0x000000000000000000000000dbef374fdf8d735e7589a9a9e2c5a091eb2dbe57",
+          "0x000000000000000000000000dbef374fdf8d735e7589a9a9e2c5a091eb2dbe57"
+        ],
+        "data": "0x",
+        "logIndex": 3,
+        "blockHash": "0xd02635c610263cf2f9591bd617df9187c292b3775e83a0fc68d1b9792af5fff1"
+      },
+      {
+        "transactionIndex": 0,
+        "blockNumber": 13340357,
+        "transactionHash": "0xc16ce28444cfaa5db97c59b70fbf23c8a96898d92f1e6a8ec81f0f5935ee1403",
+        "address": "0x33d456322429CBf070081D668aA81297EA7a6c49",
+        "topics": [
+          "0xbd79b86ffe0ab8e8776151514217cd7cacd52c909f66475c3af44e129f0b00ff",
+          "0x4d454d4245520000000000000000000000000000000000000000000000000000",
+          "0x0000000000000000000000000000000000000000000000000000000000000000",
+          "0x4f50455241544f52000000000000000000000000000000000000000000000000"
+        ],
+        "data": "0x",
+        "logIndex": 4,
+        "blockHash": "0xd02635c610263cf2f9591bd617df9187c292b3775e83a0fc68d1b9792af5fff1"
+      },
+      {
+        "transactionIndex": 0,
+        "blockNumber": 13340357,
+        "transactionHash": "0xc16ce28444cfaa5db97c59b70fbf23c8a96898d92f1e6a8ec81f0f5935ee1403",
+        "address": "0x33d456322429CBf070081D668aA81297EA7a6c49",
+        "topics": [
+          "0x7e644d79422f17c01e4894b5f4f588d331ebfa28653d42ae832dc59e38c9798f"
+        ],
+        "data": "0x0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000c57f00b3202411af6457cc88372f6aa925f457b6",
+        "logIndex": 5,
+        "blockHash": "0xd02635c610263cf2f9591bd617df9187c292b3775e83a0fc68d1b9792af5fff1",
+        "args": [
+          "0x0000000000000000000000000000000000000000",
+          "0xC57F00B3202411aF6457cc88372f6aa925F457b6"
+        ],
+        "event": "AdminChanged",
+        "eventSignature": "AdminChanged(address,address)"
+      }
+    ],
+    "blockNumber": 13340357,
+    "cumulativeGasUsed": "707916",
+    "status": 1,
+    "byzantium": true
+  }
+}

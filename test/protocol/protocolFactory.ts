@@ -1,8 +1,7 @@
 import { upgrades, ethers, network } from "hardhat"
 import { SourceTokenV3 } from "../../types/SourceTokenV3"
-import { RestrictedCreditPool } from "../../types/RestrictedCreditPool"
 import {
-  CreditPool,
+  RestrictedCreditPool,
   CreditRequest,
   CreditRoles,
   PriceOracle,

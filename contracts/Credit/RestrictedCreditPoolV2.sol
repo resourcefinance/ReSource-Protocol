@@ -11,7 +11,7 @@ import "./interface/ICreditPool.sol";
 import "./interface/ICreditRoles.sol";
 import "./interface/ICreditManager.sol";
 
-contract RestrictedCreditPool is
+contract RestrictedCreditPoolV2 is
     ReentrancyGuardUpgradeable,
     OwnableUpgradeable,
     PausableUpgradeable,

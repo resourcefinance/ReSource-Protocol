@@ -31,6 +31,7 @@ import "./tasks/sendMock"
 import "./tasks/viewMock"
 import "./tasks/issueCredit"
 import "./tasks/grantMember"
+import "./tasks/revokeAPIRoles"
 
 import { CeloProvider } from "@celo-tools/celo-ethers-wrapper"
 

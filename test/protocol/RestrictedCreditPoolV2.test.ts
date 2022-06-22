@@ -83,7 +83,7 @@ describe("RestrictedCreditPoolV2 update active rewards duration test", function 
     rewardsDuration = ethers.utils.formatUnits(rewardData.rewardsDuration, "wei")
     periodFinish = ethers.utils.formatUnits(rewardData.periodFinish, "wei")
 
-    expect(rewardRate).to.equal("6430040325354")
+    expect(rewardRate).to.equal("6430040738808")
     expect(rewardsDuration).to.equal("15552000")
     currentBlock = (await deployer.provider?.getBlock(await deployer.provider?.getBlockNumber()))
       ?.timestamp!

@@ -241,16 +241,18 @@ contract RestrictedCreditPoolV2 is
         require(_rewardsDuration > 0, "Reward duration must be non-zero");
 
         uint256 currentDuration = rewardData[_rewardsToken].rewardsDuration;
-        uint256 remaining = rewardData[_rewardsToken].periodFinish - block.timestamp;
-        uint256 leftover = remaining * rewardData[_rewardsToken].rewardRate;
 
-        rewardData[_rewardsToken].rewardRate = leftover / _rewardsDuration;
+        uint256 oldRemaining = rewardData[_rewardsToken].periodFinish - block.timestamp;
 
         if (_rewardsDuration > currentDuration) {
             rewardData[_rewardsToken].periodFinish += _rewardsDuration - currentDuration;
         } else {
             rewardData[_rewardsToken].periodFinish -= currentDuration - _rewardsDuration;
         }
+
+        uint256 leftover = oldRemaining * rewardData[_rewardsToken].rewardRate;
+        uint256 newRemaining = rewardData[_rewardsToken].periodFinish - block.timestamp;
+        rewardData[_rewardsToken].rewardRate = leftover / newRemaining;
 
         rewardData[_rewardsToken].rewardsDuration = _rewardsDuration;
 

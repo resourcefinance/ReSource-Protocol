@@ -1,0 +1,83 @@
+{
+  "0xaC6dE9f16c7b9B44C4e5C9073C3a10fA45aB4d5a": {
+    "name": "Lexman",
+    "unlockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x0fe1c215e8f838e00000"
+    },
+    "lockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x1d7eb1872dae39bb0000"
+    },
+    "txHash": "0x1dc8675c101cbf3b95d228e938cb87d5924ebb7fe3a746ca4118faaba95b3726",
+    "schedules": [
+      {
+        "amount": "10714.285384615384615384",
+        "expirationBlock": 1656136800,
+        "expirationDate": "2022-06-25T06:00:00.000Z"
+      },
+      {
+        "amount": "10714.285384615384615384",
+        "expirationBlock": 1658728800,
+        "expirationDate": "2022-07-25T06:00:00.000Z"
+      },
+      {
+        "amount": "10714.285384615384615384",
+        "expirationBlock": 1661320800,
+        "expirationDate": "2022-08-24T06:00:00.000Z"
+      },
+      {
+        "amount": "10714.285384615384615384",
+        "expirationBlock": 1663912800,
+        "expirationDate": "2022-09-23T06:00:00.000Z"
+      },
+      {
+        "amount": "10714.285384615384615384",
+        "expirationBlock": 1666504800,
+        "expirationDate": "2022-10-23T06:00:00.000Z"
+      },
+      {
+        "amount": "10714.285384615384615384",
+        "expirationBlock": 1669096800,
+        "expirationDate": "2022-11-22T06:00:00.000Z"
+      },
+      {
+        "amount": "10714.285384615384615384",
+        "expirationBlock": 1671688800,
+        "expirationDate": "2022-12-22T06:00:00.000Z"
+      },
+      {
+        "amount": "10714.285384615384615384",
+        "expirationBlock": 1674280800,
+        "expirationDate": "2023-01-21T06:00:00.000Z"
+      },
+      {
+        "amount": "10714.285384615384615384",
+        "expirationBlock": 1676872800,
+        "expirationDate": "2023-02-20T06:00:00.000Z"
+      },
+      {
+        "amount": "10714.285384615384615384",
+        "expirationBlock": 1679464800,
+        "expirationDate": "2023-03-22T06:00:00.000Z"
+      },
+      {
+        "amount": "10714.285384615384615384",
+        "expirationBlock": 1682056800,
+        "expirationDate": "2023-04-21T06:00:00.000Z"
+      },
+      {
+        "amount": "10714.285384615384615384",
+        "expirationBlock": 1684648800,
+        "expirationDate": "2023-05-21T06:00:00.000Z"
+      },
+      {
+        "amount": "10714.285384615384615384",
+        "expirationBlock": 1687240800,
+        "expirationDate": "2023-06-20T06:00:00.000Z"
+      }
+    ],
+    "isSuccess": true,
+    "error": ""
+  }
+}

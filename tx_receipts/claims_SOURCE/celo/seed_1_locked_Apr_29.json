@@ -1,0 +1,23 @@
+{
+  "0xf93d4eC4cADeC63A68FE13aD5BB1Abed44ebb81c": {
+    "name": "Yoon Kim",
+    "unlockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x00"
+    },
+    "lockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x0ef97bed9c487caa0000"
+    },
+    "txHash": "0xaf8a67eacf283c5b7e8a5d0e86c80153af332bd7a2ca6f8b461f2c789e65f366",
+    "schedules": [
+      {
+        "amount": "70715.3",
+        "expirationBlock": 1669096800,
+        "expirationDate": "2022-11-22T06:00:00.000Z"
+      }
+    ],
+    "isSuccess": true,
+    "error": ""
+  }
+}

@@ -236,9 +236,9 @@ contract RestrictedCreditPoolV2 is
         );
         require(
             block.timestamp < rewardData[_rewardsToken].periodFinish,
-            "Reward period not active"
+            "CreditPool: Reward period not active"
         );
-        require(_rewardsDuration > 0, "Reward duration must be non-zero");
+        require(_rewardsDuration > 0, "CreditPool: Reward duration must be non-zero");
 
         uint256 currentDuration = rewardData[_rewardsToken].rewardsDuration;
 
@@ -249,6 +249,11 @@ contract RestrictedCreditPoolV2 is
         } else {
             rewardData[_rewardsToken].periodFinish -= currentDuration - _rewardsDuration;
         }
+
+        require(
+            rewardData[_rewardsToken].periodFinish > block.timestamp,
+            "CreditPool: new reward duration is expired"
+        );
 
         uint256 leftover = oldRemaining * rewardData[_rewardsToken].rewardRate;
         uint256 newRemaining = rewardData[_rewardsToken].periodFinish - block.timestamp;

@@ -229,7 +229,10 @@ contract RestrictedCreditPoolV2 is
         emit RewardsDurationUpdated(_rewardsToken, rewardData[_rewardsToken].rewardsDuration);
     }
 
-    function updateActiveRewardsDuration(address _rewardsToken, uint256 _rewardsDuration) external {
+    function updateActiveRewardsDuration(address _rewardsToken, uint256 _rewardsDuration)
+        external
+        updateReward(address(0))
+    {
         require(
             rewardData[_rewardsToken].rewardsDistributor == msg.sender,
             "CreditPool: caller is not rewards distributor"

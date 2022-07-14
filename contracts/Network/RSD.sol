@@ -8,7 +8,6 @@ import "./CIP36.sol";
 import "./interface/INetworkRoles.sol";
 import "../Credit/interface/ICreditFeeManager.sol";
 import "../Credit/interface/ICreditRoles.sol";
-import "hardhat/console.sol";
 
 contract RSD is CIP36, PausableUpgradeable, ERC2771ContextUpgradeable {
     /*

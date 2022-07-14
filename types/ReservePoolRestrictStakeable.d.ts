@@ -19,24 +19,27 @@ import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
-interface CreditPoolInterface extends ethers.utils.Interface {
+interface ReservePoolRestrictStakeableInterface extends ethers.utils.Interface {
   functions: {
+    "__ReservePoolRestrictStakeable_init(address,address)": FunctionFragment;
+    "__ReservePoolStakeable_init(address,address)": FunctionFragment;
+    "addRestriction(address)": FunctionFragment;
     "addReward(address,address,uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
+    "collateralToken()": FunctionFragment;
     "earned(address,address)": FunctionFragment;
     "exit()": FunctionFragment;
+    "feeManager()": FunctionFragment;
     "getReward()": FunctionFragment;
     "getRewardForDuration(address)": FunctionFragment;
-    "getTotalCredit()": FunctionFragment;
-    "getUnderwriter()": FunctionFragment;
-    "increaseTotalCredit(uint256)": FunctionFragment;
-    "initialize(address,address,address)": FunctionFragment;
+    "isRestricted(address)": FunctionFragment;
     "lastTimeRewardApplicable(address)": FunctionFragment;
+    "networkRoles()": FunctionFragment;
     "notifyRewardAmount(address,uint256)": FunctionFragment;
     "owner()": FunctionFragment;
     "paused()": FunctionFragment;
     "recoverERC20(address,uint256)": FunctionFragment;
-    "reduceTotalCredit(uint256)": FunctionFragment;
+    "removeRestriction(address)": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "rewardData(address)": FunctionFragment;
     "rewardPerToken(address)": FunctionFragment;
@@ -44,53 +47,63 @@ interface CreditPoolInterface extends ethers.utils.Interface {
     "rewards(address,address)": FunctionFragment;
     "setRewardsDistributor(address,address)": FunctionFragment;
     "setRewardsDuration(address,uint256)": FunctionFragment;
+    "stableCredit()": FunctionFragment;
     "stake(uint256)": FunctionFragment;
-    "stakeFor(address,uint256)": FunctionFragment;
-    "stakingToken()": FunctionFragment;
-    "totalCredit()": FunctionFragment;
-    "totalSupply()": FunctionFragment;
+    "totalCollateral()": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
-    "transferUnderwriter(address)": FunctionFragment;
-    "underwriter()": FunctionFragment;
+    "updateActiveRewardsDuration(address,uint256)": FunctionFragment;
     "userRewardPerTokenPaid(address,address)": FunctionFragment;
     "viewMapping(address)": FunctionFragment;
     "withdraw(uint256)": FunctionFragment;
+    "withdrawFeeManager(uint256)": FunctionFragment;
   };
 
+  encodeFunctionData(
+    functionFragment: "__ReservePoolRestrictStakeable_init",
+    values: [string, string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "__ReservePoolStakeable_init",
+    values: [string, string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "addRestriction",
+    values: [string]
+  ): string;
   encodeFunctionData(
     functionFragment: "addReward",
     values: [string, string, BigNumberish]
   ): string;
   encodeFunctionData(functionFragment: "balanceOf", values: [string]): string;
   encodeFunctionData(
+    functionFragment: "collateralToken",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "earned",
     values: [string, string]
   ): string;
   encodeFunctionData(functionFragment: "exit", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "feeManager",
+    values?: undefined
+  ): string;
   encodeFunctionData(functionFragment: "getReward", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "getRewardForDuration",
     values: [string]
   ): string;
   encodeFunctionData(
-    functionFragment: "getTotalCredit",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getUnderwriter",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "increaseTotalCredit",
-    values: [BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "initialize",
-    values: [string, string, string]
+    functionFragment: "isRestricted",
+    values: [string]
   ): string;
   encodeFunctionData(
     functionFragment: "lastTimeRewardApplicable",
     values: [string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "networkRoles",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "notifyRewardAmount",
@@ -103,8 +116,8 @@ interface CreditPoolInterface extends ethers.utils.Interface {
     values: [string, BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: "reduceTotalCredit",
-    values: [BigNumberish]
+    functionFragment: "removeRestriction",
+    values: [string]
   ): string;
   encodeFunctionData(
     functionFragment: "renounceOwnership",
@@ -131,21 +144,13 @@ interface CreditPoolInterface extends ethers.utils.Interface {
     functionFragment: "setRewardsDuration",
     values: [string, BigNumberish]
   ): string;
+  encodeFunctionData(
+    functionFragment: "stableCredit",
+    values?: undefined
+  ): string;
   encodeFunctionData(functionFragment: "stake", values: [BigNumberish]): string;
   encodeFunctionData(
-    functionFragment: "stakeFor",
-    values: [string, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "stakingToken",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "totalCredit",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "totalSupply",
+    functionFragment: "totalCollateral",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -153,12 +158,8 @@ interface CreditPoolInterface extends ethers.utils.Interface {
     values: [string]
   ): string;
   encodeFunctionData(
-    functionFragment: "transferUnderwriter",
-    values: [string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "underwriter",
-    values?: undefined
+    functionFragment: "updateActiveRewardsDuration",
+    values: [string, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "userRewardPerTokenPaid",
@@ -169,31 +170,47 @@ interface CreditPoolInterface extends ethers.utils.Interface {
     functionFragment: "withdraw",
     values: [BigNumberish]
   ): string;
+  encodeFunctionData(
+    functionFragment: "withdrawFeeManager",
+    values: [BigNumberish]
+  ): string;
 
+  decodeFunctionResult(
+    functionFragment: "__ReservePoolRestrictStakeable_init",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "__ReservePoolStakeable_init",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "addRestriction",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "addReward", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "collateralToken",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "earned", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "exit", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "feeManager", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "getReward", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "getRewardForDuration",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "getTotalCredit",
+    functionFragment: "isRestricted",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(
-    functionFragment: "getUnderwriter",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "increaseTotalCredit",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "lastTimeRewardApplicable",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "networkRoles",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -207,7 +224,7 @@ interface CreditPoolInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "reduceTotalCredit",
+    functionFragment: "removeRestriction",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -232,18 +249,13 @@ interface CreditPoolInterface extends ethers.utils.Interface {
     functionFragment: "setRewardsDuration",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "stableCredit",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "stake", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "stakeFor", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "stakingToken",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "totalCredit",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "totalSupply",
+    functionFragment: "totalCollateral",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -251,11 +263,7 @@ interface CreditPoolInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "transferUnderwriter",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "underwriter",
+    functionFragment: "updateActiveRewardsDuration",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -267,6 +275,10 @@ interface CreditPoolInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "withdraw", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "withdrawFeeManager",
+    data: BytesLike
+  ): Result;
 
   events: {
     "OwnershipTransferred(address,address)": EventFragment;
@@ -325,7 +337,7 @@ export type WithdrawnEvent = TypedEvent<
   [string, BigNumber] & { user: string; amount: BigNumber }
 >;
 
-export class CreditPool extends BaseContract {
+export class ReservePoolRestrictStakeable extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
@@ -366,9 +378,26 @@ export class CreditPool extends BaseContract {
     toBlock?: string | number | undefined
   ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
 
-  interface: CreditPoolInterface;
+  interface: ReservePoolRestrictStakeableInterface;
 
   functions: {
+    __ReservePoolRestrictStakeable_init(
+      _stableCredit: string,
+      _feeManager: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    __ReservePoolStakeable_init(
+      _stableCredit: string,
+      _feeManager: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    addRestriction(
+      _account: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     addReward(
       _rewardsToken: string,
       _rewardsDistributor: string,
@@ -381,6 +410,8 @@ export class CreditPool extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
+    collateralToken(overrides?: CallOverrides): Promise<[string]>;
+
     earned(
       account: string,
       _rewardsToken: string,
@@ -391,6 +422,8 @@ export class CreditPool extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    feeManager(overrides?: CallOverrides): Promise<[string]>;
+
     getReward(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
@@ -400,26 +433,14 @@ export class CreditPool extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
-    getTotalCredit(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    getUnderwriter(overrides?: CallOverrides): Promise<[string]>;
-
-    increaseTotalCredit(
-      _amountToRemove: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    initialize(
-      _creditManager: string,
-      _creditRoles: string,
-      _underwriter: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+    isRestricted(arg0: string, overrides?: CallOverrides): Promise<[boolean]>;
 
     lastTimeRewardApplicable(
       _rewardsToken: string,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
+
+    networkRoles(overrides?: CallOverrides): Promise<[string]>;
 
     notifyRewardAmount(
       _rewardsToken: string,
@@ -437,8 +458,8 @@ export class CreditPool extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    reduceTotalCredit(
-      _amountToAdd: BigNumberish,
+    removeRestriction(
+      _account: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -488,34 +509,25 @@ export class CreditPool extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    stableCredit(overrides?: CallOverrides): Promise<[string]>;
+
     stake(
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    stakeFor(
-      _staker: string,
-      _amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    stakingToken(overrides?: CallOverrides): Promise<[string]>;
-
-    totalCredit(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    totalSupply(overrides?: CallOverrides): Promise<[BigNumber]>;
+    totalCollateral(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     transferOwnership(
       newOwner: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    transferUnderwriter(
-      _underwriter: string,
+    updateActiveRewardsDuration(
+      _rewardsToken: string,
+      _rewardsDuration: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
-
-    underwriter(overrides?: CallOverrides): Promise<[string]>;
 
     userRewardPerTokenPaid(
       arg0: string,
@@ -543,7 +555,29 @@ export class CreditPool extends BaseContract {
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
+
+    withdrawFeeManager(
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
   };
+
+  __ReservePoolRestrictStakeable_init(
+    _stableCredit: string,
+    _feeManager: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  __ReservePoolStakeable_init(
+    _stableCredit: string,
+    _feeManager: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  addRestriction(
+    _account: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
 
   addReward(
     _rewardsToken: string,
@@ -553,6 +587,8 @@ export class CreditPool extends BaseContract {
   ): Promise<ContractTransaction>;
 
   balanceOf(_account: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+  collateralToken(overrides?: CallOverrides): Promise<string>;
 
   earned(
     account: string,
@@ -564,6 +600,8 @@ export class CreditPool extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  feeManager(overrides?: CallOverrides): Promise<string>;
+
   getReward(
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
@@ -573,26 +611,14 @@ export class CreditPool extends BaseContract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
-  getTotalCredit(overrides?: CallOverrides): Promise<BigNumber>;
-
-  getUnderwriter(overrides?: CallOverrides): Promise<string>;
-
-  increaseTotalCredit(
-    _amountToRemove: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  initialize(
-    _creditManager: string,
-    _creditRoles: string,
-    _underwriter: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  isRestricted(arg0: string, overrides?: CallOverrides): Promise<boolean>;
 
   lastTimeRewardApplicable(
     _rewardsToken: string,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
+
+  networkRoles(overrides?: CallOverrides): Promise<string>;
 
   notifyRewardAmount(
     _rewardsToken: string,
@@ -610,8 +636,8 @@ export class CreditPool extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  reduceTotalCredit(
-    _amountToAdd: BigNumberish,
+  removeRestriction(
+    _account: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -658,34 +684,25 @@ export class CreditPool extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  stableCredit(overrides?: CallOverrides): Promise<string>;
+
   stake(
     amount: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  stakeFor(
-    _staker: string,
-    _amount: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  stakingToken(overrides?: CallOverrides): Promise<string>;
-
-  totalCredit(overrides?: CallOverrides): Promise<BigNumber>;
-
-  totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
+  totalCollateral(overrides?: CallOverrides): Promise<BigNumber>;
 
   transferOwnership(
     newOwner: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  transferUnderwriter(
-    _underwriter: string,
+  updateActiveRewardsDuration(
+    _rewardsToken: string,
+    _rewardsDuration: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
-
-  underwriter(overrides?: CallOverrides): Promise<string>;
 
   userRewardPerTokenPaid(
     arg0: string,
@@ -712,7 +729,26 @@ export class CreditPool extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  withdrawFeeManager(
+    amount: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   callStatic: {
+    __ReservePoolRestrictStakeable_init(
+      _stableCredit: string,
+      _feeManager: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    __ReservePoolStakeable_init(
+      _stableCredit: string,
+      _feeManager: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    addRestriction(_account: string, overrides?: CallOverrides): Promise<void>;
+
     addReward(
       _rewardsToken: string,
       _rewardsDistributor: string,
@@ -722,6 +758,8 @@ export class CreditPool extends BaseContract {
 
     balanceOf(_account: string, overrides?: CallOverrides): Promise<BigNumber>;
 
+    collateralToken(overrides?: CallOverrides): Promise<string>;
+
     earned(
       account: string,
       _rewardsToken: string,
@@ -730,6 +768,8 @@ export class CreditPool extends BaseContract {
 
     exit(overrides?: CallOverrides): Promise<void>;
 
+    feeManager(overrides?: CallOverrides): Promise<string>;
+
     getReward(overrides?: CallOverrides): Promise<void>;
 
     getRewardForDuration(
@@ -737,26 +777,14 @@ export class CreditPool extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    getTotalCredit(overrides?: CallOverrides): Promise<BigNumber>;
-
-    getUnderwriter(overrides?: CallOverrides): Promise<string>;
-
-    increaseTotalCredit(
-      _amountToRemove: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    initialize(
-      _creditManager: string,
-      _creditRoles: string,
-      _underwriter: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    isRestricted(arg0: string, overrides?: CallOverrides): Promise<boolean>;
 
     lastTimeRewardApplicable(
       _rewardsToken: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    networkRoles(overrides?: CallOverrides): Promise<string>;
 
     notifyRewardAmount(
       _rewardsToken: string,
@@ -774,8 +802,8 @@ export class CreditPool extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    reduceTotalCredit(
-      _amountToAdd: BigNumberish,
+    removeRestriction(
+      _account: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -823,31 +851,22 @@ export class CreditPool extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    stableCredit(overrides?: CallOverrides): Promise<string>;
+
     stake(amount: BigNumberish, overrides?: CallOverrides): Promise<void>;
 
-    stakeFor(
-      _staker: string,
-      _amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    stakingToken(overrides?: CallOverrides): Promise<string>;
-
-    totalCredit(overrides?: CallOverrides): Promise<BigNumber>;
-
-    totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
+    totalCollateral(overrides?: CallOverrides): Promise<BigNumber>;
 
     transferOwnership(
       newOwner: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    transferUnderwriter(
-      _underwriter: string,
+    updateActiveRewardsDuration(
+      _rewardsToken: string,
+      _rewardsDuration: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
-
-    underwriter(overrides?: CallOverrides): Promise<string>;
 
     userRewardPerTokenPaid(
       arg0: string,
@@ -870,6 +889,11 @@ export class CreditPool extends BaseContract {
     >;
 
     withdraw(amount: BigNumberish, overrides?: CallOverrides): Promise<void>;
+
+    withdrawFeeManager(
+      amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
   };
 
   filters: {
@@ -993,6 +1017,23 @@ export class CreditPool extends BaseContract {
   };
 
   estimateGas: {
+    __ReservePoolRestrictStakeable_init(
+      _stableCredit: string,
+      _feeManager: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    __ReservePoolStakeable_init(
+      _stableCredit: string,
+      _feeManager: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    addRestriction(
+      _account: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     addReward(
       _rewardsToken: string,
       _rewardsDistributor: string,
@@ -1001,6 +1042,8 @@ export class CreditPool extends BaseContract {
     ): Promise<BigNumber>;
 
     balanceOf(_account: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    collateralToken(overrides?: CallOverrides): Promise<BigNumber>;
 
     earned(
       account: string,
@@ -1012,6 +1055,8 @@ export class CreditPool extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    feeManager(overrides?: CallOverrides): Promise<BigNumber>;
+
     getReward(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
@@ -1021,26 +1066,14 @@ export class CreditPool extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    getTotalCredit(overrides?: CallOverrides): Promise<BigNumber>;
-
-    getUnderwriter(overrides?: CallOverrides): Promise<BigNumber>;
-
-    increaseTotalCredit(
-      _amountToRemove: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    initialize(
-      _creditManager: string,
-      _creditRoles: string,
-      _underwriter: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    isRestricted(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     lastTimeRewardApplicable(
       _rewardsToken: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    networkRoles(overrides?: CallOverrides): Promise<BigNumber>;
 
     notifyRewardAmount(
       _rewardsToken: string,
@@ -1058,8 +1091,8 @@ export class CreditPool extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    reduceTotalCredit(
-      _amountToAdd: BigNumberish,
+    removeRestriction(
+      _account: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -1097,34 +1130,25 @@ export class CreditPool extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    stableCredit(overrides?: CallOverrides): Promise<BigNumber>;
+
     stake(
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    stakeFor(
-      _staker: string,
-      _amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    stakingToken(overrides?: CallOverrides): Promise<BigNumber>;
-
-    totalCredit(overrides?: CallOverrides): Promise<BigNumber>;
-
-    totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
+    totalCollateral(overrides?: CallOverrides): Promise<BigNumber>;
 
     transferOwnership(
       newOwner: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    transferUnderwriter(
-      _underwriter: string,
+    updateActiveRewardsDuration(
+      _rewardsToken: string,
+      _rewardsDuration: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
-
-    underwriter(overrides?: CallOverrides): Promise<BigNumber>;
 
     userRewardPerTokenPaid(
       arg0: string,
@@ -1141,9 +1165,31 @@ export class CreditPool extends BaseContract {
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
+
+    withdrawFeeManager(
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
   };
 
   populateTransaction: {
+    __ReservePoolRestrictStakeable_init(
+      _stableCredit: string,
+      _feeManager: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    __ReservePoolStakeable_init(
+      _stableCredit: string,
+      _feeManager: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    addRestriction(
+      _account: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
     addReward(
       _rewardsToken: string,
       _rewardsDistributor: string,
@@ -1156,6 +1202,8 @@ export class CreditPool extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    collateralToken(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     earned(
       account: string,
       _rewardsToken: string,
@@ -1166,6 +1214,8 @@ export class CreditPool extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
+    feeManager(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     getReward(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
@@ -1175,26 +1225,17 @@ export class CreditPool extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    getTotalCredit(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    getUnderwriter(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    increaseTotalCredit(
-      _amountToRemove: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    initialize(
-      _creditManager: string,
-      _creditRoles: string,
-      _underwriter: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+    isRestricted(
+      arg0: string,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     lastTimeRewardApplicable(
       _rewardsToken: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
+
+    networkRoles(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     notifyRewardAmount(
       _rewardsToken: string,
@@ -1212,8 +1253,8 @@ export class CreditPool extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    reduceTotalCredit(
-      _amountToAdd: BigNumberish,
+    removeRestriction(
+      _account: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -1254,34 +1295,25 @@ export class CreditPool extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
+    stableCredit(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     stake(
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    stakeFor(
-      _staker: string,
-      _amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    stakingToken(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    totalCredit(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    totalSupply(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    totalCollateral(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     transferOwnership(
       newOwner: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    transferUnderwriter(
-      _underwriter: string,
+    updateActiveRewardsDuration(
+      _rewardsToken: string,
+      _rewardsDuration: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
-
-    underwriter(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     userRewardPerTokenPaid(
       arg0: string,
@@ -1295,6 +1327,11 @@ export class CreditPool extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     withdraw(
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    withdrawFeeManager(
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;

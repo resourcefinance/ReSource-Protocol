@@ -1,22 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/math/MathUpgradeable.sol";
-import "./interface/ICreditPool.sol";
-import "./interface/ICreditRoles.sol";
-import "./interface/ICreditManager.sol";
+import "./ReservePool.sol";
 
-contract CreditPoolV1 is
-    ReentrancyGuardUpgradeable,
-    OwnableUpgradeable,
-    PausableUpgradeable,
-    ICreditPool
-{
+contract CreditPoolStakeable is PausableUpgradeable, ReservePool {
     using SafeERC20Upgradeable for IERC20Upgradeable;
 
     /* ========== STATE VARIABLES ========== */
@@ -30,39 +19,33 @@ contract CreditPoolV1 is
         uint256 rewardPerTokenStored;
     }
 
-    IERC20Upgradeable public stakingToken;
-    ICreditRoles private creditRoles;
     mapping(address => Reward) public rewardData;
     address[] public rewardTokens;
-    address public underwriter;
-    uint256 public totalCredit;
+    address public feeManager;
 
     // user -> reward token -> amount
     mapping(address => mapping(address => uint256)) public userRewardPerTokenPaid;
     mapping(address => mapping(address => uint256)) public rewards;
 
-    uint256 private _totalSupply;
-    mapping(address => uint256) private _balances;
+    mapping(address => uint256) internal _balances;
 
     /* ========== INITIALIZER ========== */
 
-    function initialize(
-        address _creditManager,
-        address _creditRoles,
-        address _underwriter
-    ) external virtual initializer {
+    function __ReservePoolStakeable_init(address _stableCredit, address _feeManager)
+        public
+        virtual
+        initializer
+    {
         __Pausable_init();
-        __ReentrancyGuard_init();
-        underwriter = _underwriter;
-        stakingToken = IERC20Upgradeable(ICreditManager(_creditManager).getCollateralToken());
-        creditRoles = ICreditRoles(_creditRoles);
+        __ReservePool_init(_stableCredit);
+        feeManager = _feeManager;
     }
 
     function addReward(
         address _rewardsToken,
         address _rewardsDistributor,
         uint256 _rewardsDuration
-    ) public onlyOwnerOrUnderwriter {
+    ) public onlyAuthorized {
         require(
             rewardData[_rewardsToken].rewardsDuration == 0,
             "CreditPool: reward token already exists"
@@ -77,11 +60,7 @@ contract CreditPoolV1 is
         return rewardData[_rewardsToken];
     }
 
-    function totalSupply() external view override returns (uint256) {
-        return _totalSupply;
-    }
-
-    function balanceOf(address _account) external view override returns (uint256) {
+    function balanceOf(address _account) external view returns (uint256) {
         return _balances[_account];
     }
 
@@ -90,17 +69,17 @@ contract CreditPoolV1 is
     }
 
     function rewardPerToken(address _rewardsToken) public view returns (uint256) {
-        if (_totalSupply == 0) {
+        if (_totalCollateral == 0) {
             return rewardData[_rewardsToken].rewardPerTokenStored;
         }
         return
             rewardData[_rewardsToken].rewardPerTokenStored +
             (((lastTimeRewardApplicable(_rewardsToken) - rewardData[_rewardsToken].lastUpdateTime) *
                 rewardData[_rewardsToken].rewardRate *
-                1e18) / _totalSupply);
+                1e18) / _totalCollateral);
     }
 
-    function earned(address account, address _rewardsToken) public view returns (uint256) {
+    function earned(address account, address _rewardsToken) public view virtual returns (uint256) {
         return (((_balances[account] *
             (rewardPerToken(_rewardsToken) - userRewardPerTokenPaid[account][_rewardsToken])) /
             1e18) + rewards[account][_rewardsToken]);
@@ -119,38 +98,28 @@ contract CreditPoolV1 is
         rewardData[_rewardsToken].rewardsDistributor = _rewardsDistributor;
     }
 
-    function stake(uint256 amount) external nonReentrant whenNotPaused updateReward(msg.sender) {
-        require(amount > 0, "Cannot stake 0");
-        _totalSupply = _totalSupply + amount;
-        _balances[msg.sender] += amount;
-        stakingToken.safeTransferFrom(msg.sender, address(this), amount);
-        emit Staked(msg.sender, amount);
-    }
-
-    function stakeFor(address _staker, uint256 _amount)
-        external
+    function stake(uint256 amount)
+        public
         override
         nonReentrant
         whenNotPaused
-        updateReward(_staker)
-        onlyOperator
+        updateReward(msg.sender)
     {
-        require(_amount > 0, "CreditPool: Cannot stake 0");
-        _totalSupply += _amount;
-        _balances[_staker] += _amount;
-        stakingToken.safeTransferFrom(_staker, address(this), _amount);
-        emit Staked(_staker, _amount);
+        _balances[msg.sender] += amount;
+        super.stake(amount);
     }
 
-    function withdraw(uint256 amount) public nonReentrant updateReward(msg.sender) {
-        require(amount > 0, "Cannot withdraw 0");
-        _totalSupply -= amount;
+    function withdraw(uint256 amount) public override nonReentrant updateReward(msg.sender) {
         _balances[msg.sender] -= amount;
-        stakingToken.safeTransfer(msg.sender, amount);
-        emit Withdrawn(msg.sender, amount);
+        super.withdraw(amount);
     }
 
-    function getReward() public nonReentrant updateReward(msg.sender) {
+    function withdrawFeeManager(uint256 amount) public onlyAuthorized {
+        _balances[feeManager] -= amount;
+        super.withdraw(amount);
+    }
+
+    function getReward() public virtual nonReentrant updateReward(msg.sender) {
         for (uint256 i; i < rewardTokens.length; i++) {
             address _rewardsToken = rewardTokens[i];
             uint256 reward = rewards[msg.sender][_rewardsToken];
@@ -171,12 +140,11 @@ contract CreditPoolV1 is
 
     function notifyRewardAmount(address _rewardsToken, uint256 reward)
         external
-        override
         updateReward(address(0))
     {
         require(
             rewardData[_rewardsToken].rewardsDistributor == msg.sender ||
-                creditRoles.isCreditOperator(msg.sender),
+                stableCredit.isAuthorized(msg.sender),
             "CreditPool: unauthorized caller"
         );
         // handle the transfer of reward tokens via `transferFrom` to reduce the number
@@ -203,47 +171,56 @@ contract CreditPoolV1 is
         emit RewardAdded(reward);
     }
 
-    // Added to support recovering LP Rewards from other systems such as BAL to be distributed to holders
-    function recoverERC20(address tokenAddress, uint256 tokenAmount) external onlyOwner {
-        require(tokenAddress != address(stakingToken), "Cannot withdraw staking token");
-        require(rewardData[tokenAddress].lastUpdateTime == 0, "Cannot withdraw reward token");
-        IERC20Upgradeable(tokenAddress).safeTransfer(owner(), tokenAmount);
-        emit Recovered(tokenAddress, tokenAmount);
-    }
-
     function setRewardsDuration(address _rewardsToken, uint256 _rewardsDuration) external {
         require(
             block.timestamp > rewardData[_rewardsToken].periodFinish,
             "Reward period still active"
         );
-        require(rewardData[_rewardsToken].rewardsDistributor == msg.sender);
+        require(
+            rewardData[_rewardsToken].rewardsDistributor == msg.sender,
+            "CreditPool: caller is not rewards distributor"
+        );
         require(_rewardsDuration > 0, "Reward duration must be non-zero");
         rewardData[_rewardsToken].rewardsDuration = _rewardsDuration;
         emit RewardsDurationUpdated(_rewardsToken, rewardData[_rewardsToken].rewardsDuration);
     }
 
-    function reduceTotalCredit(uint256 _amountToAdd) external override onlyOperator {
-        totalCredit -= _amountToAdd;
-    }
-
-    function increaseTotalCredit(uint256 _amountToRemove) external override onlyOperator {
-        totalCredit += _amountToRemove;
-    }
-
-    function transferUnderwriter(address _underwriter) external {
+    function updateActiveRewardsDuration(address _rewardsToken, uint256 _rewardsDuration)
+        external
+        updateReward(address(0))
+    {
         require(
-            msg.sender == underwriter || creditRoles.isCreditOperator(msg.sender),
-            "CreditPool: unauthorized"
+            rewardData[_rewardsToken].rewardsDistributor == msg.sender,
+            "CreditPool: caller is not rewards distributor"
         );
-        underwriter = _underwriter;
-    }
+        require(
+            block.timestamp < rewardData[_rewardsToken].periodFinish,
+            "CreditPool: Reward period not active"
+        );
+        require(_rewardsDuration > 0, "CreditPool: Reward duration must be non-zero");
 
-    function getUnderwriter() external view override returns (address) {
-        return underwriter;
-    }
+        uint256 currentDuration = rewardData[_rewardsToken].rewardsDuration;
 
-    function getTotalCredit() external view override returns (uint256) {
-        return totalCredit;
+        uint256 oldRemaining = rewardData[_rewardsToken].periodFinish - block.timestamp;
+
+        if (_rewardsDuration > currentDuration) {
+            rewardData[_rewardsToken].periodFinish += _rewardsDuration - currentDuration;
+        } else {
+            rewardData[_rewardsToken].periodFinish -= currentDuration - _rewardsDuration;
+        }
+
+        require(
+            rewardData[_rewardsToken].periodFinish > block.timestamp,
+            "CreditPool: new reward duration is expired"
+        );
+
+        uint256 leftover = oldRemaining * rewardData[_rewardsToken].rewardRate;
+        uint256 newRemaining = rewardData[_rewardsToken].periodFinish - block.timestamp;
+        rewardData[_rewardsToken].rewardRate = leftover / newRemaining;
+
+        rewardData[_rewardsToken].rewardsDuration = _rewardsDuration;
+
+        emit RewardsDurationUpdated(_rewardsToken, rewardData[_rewardsToken].rewardsDuration);
     }
 
     /* ========== MODIFIERS ========== */
@@ -261,25 +238,9 @@ contract CreditPoolV1 is
         _;
     }
 
-    modifier onlyOperator() {
-        require(creditRoles.isCreditOperator(msg.sender), "CreditPool: Caller must be an operator");
-        _;
-    }
-
-    modifier onlyOwnerOrUnderwriter() {
-        require(
-            msg.sender == owner() || creditRoles.isUnderwriter(msg.sender),
-            "CreditPool: Caller must be an underwriter"
-        );
-        _;
-    }
-
     /* ========== EVENTS ========== */
 
     event RewardAdded(uint256 reward);
-    event Staked(address indexed user, uint256 amount);
-    event Withdrawn(address indexed user, uint256 amount);
     event RewardPaid(address indexed user, address indexed rewardsToken, uint256 reward);
     event RewardsDurationUpdated(address token, uint256 newDuration);
-    event Recovered(address token, uint256 amount);
 }

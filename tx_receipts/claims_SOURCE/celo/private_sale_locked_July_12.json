@@ -1,0 +1,78 @@
+{
+  "0xdBef374FDf8d735e7589A9A9E2c5a091eB2dBE57": {
+    "name": "Bridger",
+    "unlockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x00"
+    },
+    "lockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x056bc75e2d63100000"
+    },
+    "txHash": "0x9d5e518ee692ac4e97827a7047ee5ba05ae865f10026497be8115625ad5ac718",
+    "schedules": [
+      {
+        "amount": "8.333333333333333333",
+        "expirationBlock": 1669096800,
+        "expirationDate": "2022-11-22T06:00:00.000Z"
+      },
+      {
+        "amount": "8.333333333333333333",
+        "expirationBlock": 1671688800,
+        "expirationDate": "2022-12-22T06:00:00.000Z"
+      },
+      {
+        "amount": "8.333333333333333333",
+        "expirationBlock": 1674280800,
+        "expirationDate": "2023-01-21T06:00:00.000Z"
+      },
+      {
+        "amount": "8.333333333333333333",
+        "expirationBlock": 1676872800,
+        "expirationDate": "2023-02-20T06:00:00.000Z"
+      },
+      {
+        "amount": "8.333333333333333333",
+        "expirationBlock": 1679464800,
+        "expirationDate": "2023-03-22T06:00:00.000Z"
+      },
+      {
+        "amount": "8.333333333333333333",
+        "expirationBlock": 1682056800,
+        "expirationDate": "2023-04-21T06:00:00.000Z"
+      },
+      {
+        "amount": "8.333333333333333333",
+        "expirationBlock": 1684648800,
+        "expirationDate": "2023-05-21T06:00:00.000Z"
+      },
+      {
+        "amount": "8.333333333333333333",
+        "expirationBlock": 1687240800,
+        "expirationDate": "2023-06-20T06:00:00.000Z"
+      },
+      {
+        "amount": "8.333333333333333333",
+        "expirationBlock": 1689832800,
+        "expirationDate": "2023-07-20T06:00:00.000Z"
+      },
+      {
+        "amount": "8.333333333333333333",
+        "expirationBlock": 1692424800,
+        "expirationDate": "2023-08-19T06:00:00.000Z"
+      },
+      {
+        "amount": "8.333333333333333333",
+        "expirationBlock": 1695016800,
+        "expirationDate": "2023-09-18T06:00:00.000Z"
+      },
+      {
+        "amount": "8.333333333333333333",
+        "expirationBlock": 1697608800,
+        "expirationDate": "2023-10-18T06:00:00.000Z"
+      }
+    ],
+    "isSuccess": true,
+    "error": ""
+  }
+}

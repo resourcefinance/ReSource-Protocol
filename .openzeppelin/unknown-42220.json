@@ -2278,7 +2278,7 @@
             "label": "creditRoles",
             "offset": 0,
             "slot": "202",
-            "type": "t_contract(ICreditRoles)9943",
+            "type": "t_contract(ICreditRoles)11080",
             "contract": "RestrictedCreditPool",
             "src": "contracts/Credit/RestrictedCreditPool.sol:34"
           },
@@ -2371,7 +2371,7 @@
           "t_bool": {
             "label": "bool"
           },
-          "t_contract(ICreditRoles)9943": {
+          "t_contract(ICreditRoles)11080": {
             "label": "contract ICreditRoles"
           },
           "t_contract(IERC20Upgradeable)1460": {
@@ -2761,6 +2761,241 @@
           },
           "t_uint128": {
             "label": "uint128"
+          },
+          "t_uint256": {
+            "label": "uint256"
+          }
+        }
+      }
+    },
+    "434a58e03d25aa96f0a532caa9a7eb120175a77c6a9b75c884bfc526c4da8c5c": {
+      "address": "0xD0881E9DAf0cdB55dcBf4F2a259027225450d1B7",
+      "txHash": "0x0007b1b4d7b004dcbc8c18114b7fbebea9ea7badb8dcf4b357226030733fbdbf",
+      "layout": {
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:39"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:44"
+          },
+          {
+            "label": "_status",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_uint256",
+            "contract": "ReentrancyGuardUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol:38"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "ReentrancyGuardUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol:74"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "51",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ContextUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:36"
+          },
+          {
+            "label": "_owner",
+            "offset": 0,
+            "slot": "101",
+            "type": "t_address",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:22"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "102",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:87"
+          },
+          {
+            "label": "_paused",
+            "offset": 0,
+            "slot": "151",
+            "type": "t_bool",
+            "contract": "PausableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol:29"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "152",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "PausableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol:102"
+          },
+          {
+            "label": "stakingToken",
+            "offset": 0,
+            "slot": "201",
+            "type": "t_contract(IERC20Upgradeable)445",
+            "contract": "RestrictedCreditPoolV2",
+            "src": "contracts/Credit/RestrictedCreditPoolV2.sol:33"
+          },
+          {
+            "label": "creditRoles",
+            "offset": 0,
+            "slot": "202",
+            "type": "t_contract(ICreditRoles)2501",
+            "contract": "RestrictedCreditPoolV2",
+            "src": "contracts/Credit/RestrictedCreditPoolV2.sol:34"
+          },
+          {
+            "label": "rewardData",
+            "offset": 0,
+            "slot": "203",
+            "type": "t_mapping(t_address,t_struct(Reward)1078_storage)",
+            "contract": "RestrictedCreditPoolV2",
+            "src": "contracts/Credit/RestrictedCreditPoolV2.sol:35"
+          },
+          {
+            "label": "rewardTokens",
+            "offset": 0,
+            "slot": "204",
+            "type": "t_array(t_address)dyn_storage",
+            "contract": "RestrictedCreditPoolV2",
+            "src": "contracts/Credit/RestrictedCreditPoolV2.sol:36"
+          },
+          {
+            "label": "underwriter",
+            "offset": 0,
+            "slot": "205",
+            "type": "t_address",
+            "contract": "RestrictedCreditPoolV2",
+            "src": "contracts/Credit/RestrictedCreditPoolV2.sol:37"
+          },
+          {
+            "label": "totalCredit",
+            "offset": 0,
+            "slot": "206",
+            "type": "t_uint256",
+            "contract": "RestrictedCreditPoolV2",
+            "src": "contracts/Credit/RestrictedCreditPoolV2.sol:38"
+          },
+          {
+            "label": "isRestricted",
+            "offset": 0,
+            "slot": "207",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "RestrictedCreditPoolV2",
+            "src": "contracts/Credit/RestrictedCreditPoolV2.sol:40"
+          },
+          {
+            "label": "userRewardPerTokenPaid",
+            "offset": 0,
+            "slot": "208",
+            "type": "t_mapping(t_address,t_mapping(t_address,t_uint256))",
+            "contract": "RestrictedCreditPoolV2",
+            "src": "contracts/Credit/RestrictedCreditPoolV2.sol:43"
+          },
+          {
+            "label": "rewards",
+            "offset": 0,
+            "slot": "209",
+            "type": "t_mapping(t_address,t_mapping(t_address,t_uint256))",
+            "contract": "RestrictedCreditPoolV2",
+            "src": "contracts/Credit/RestrictedCreditPoolV2.sol:44"
+          },
+          {
+            "label": "_totalSupply",
+            "offset": 0,
+            "slot": "210",
+            "type": "t_uint256",
+            "contract": "RestrictedCreditPoolV2",
+            "src": "contracts/Credit/RestrictedCreditPoolV2.sol:46"
+          },
+          {
+            "label": "_balances",
+            "offset": 0,
+            "slot": "211",
+            "type": "t_mapping(t_address,t_uint256)",
+            "contract": "RestrictedCreditPoolV2",
+            "src": "contracts/Credit/RestrictedCreditPoolV2.sol:47"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address"
+          },
+          "t_array(t_address)dyn_storage": {
+            "label": "address[]"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]"
+          },
+          "t_bool": {
+            "label": "bool"
+          },
+          "t_contract(ICreditRoles)2501": {
+            "label": "contract ICreditRoles"
+          },
+          "t_contract(IERC20Upgradeable)445": {
+            "label": "contract IERC20Upgradeable"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)"
+          },
+          "t_mapping(t_address,t_mapping(t_address,t_uint256))": {
+            "label": "mapping(address => mapping(address => uint256))"
+          },
+          "t_mapping(t_address,t_struct(Reward)1078_storage)": {
+            "label": "mapping(address => struct RestrictedCreditPoolV2.Reward)"
+          },
+          "t_mapping(t_address,t_uint256)": {
+            "label": "mapping(address => uint256)"
+          },
+          "t_struct(Reward)1078_storage": {
+            "label": "struct RestrictedCreditPoolV2.Reward",
+            "members": [
+              {
+                "label": "rewardsDistributor",
+                "type": "t_address"
+              },
+              {
+                "label": "rewardsDuration",
+                "type": "t_uint256"
+              },
+              {
+                "label": "periodFinish",
+                "type": "t_uint256"
+              },
+              {
+                "label": "rewardRate",
+                "type": "t_uint256"
+              },
+              {
+                "label": "lastUpdateTime",
+                "type": "t_uint256"
+              },
+              {
+                "label": "rewardPerTokenStored",
+                "type": "t_uint256"
+              }
+            ]
           },
           "t_uint256": {
             "label": "uint256"

@@ -21,30 +21,28 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface FeeManagerInterface extends ethers.utils.Interface {
   functions: {
-    "collateralToken()": FunctionFragment;
+    "access()": FunctionFragment;
     "collectFees(address,address,uint256)": FunctionFragment;
     "collectedFees()": FunctionFragment;
     "distributeFees()": FunctionFragment;
-    "initialize(address,address,address,address,address,address,uint256,uint256)": FunctionFragment;
-    "networkFeePercent()": FunctionFragment;
-    "networkRoles()": FunctionFragment;
+    "feeToken()": FunctionFragment;
+    "initialize(address,address,address,address,uint256)": FunctionFragment;
     "owner()": FunctionFragment;
-    "protocolAddress()": FunctionFragment;
-    "protocolFeePercent()": FunctionFragment;
+    "pauseFees()": FunctionFragment;
+    "paused()": FunctionFragment;
     "recoverERC20(address,uint256)": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "reservePool()": FunctionFragment;
+    "rserveFeePercent()": FunctionFragment;
     "savingsFeePercent()": FunctionFragment;
     "savingsPool()": FunctionFragment;
     "stableCredit()": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
-    "updateFeePercents(uint256,uint256)": FunctionFragment;
+    "unpauseFees()": FunctionFragment;
+    "updateFeePercents(uint256)": FunctionFragment;
   };
 
-  encodeFunctionData(
-    functionFragment: "collateralToken",
-    values?: undefined
-  ): string;
+  encodeFunctionData(functionFragment: "access", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "collectFees",
     values: [string, string, BigNumberish]
@@ -57,36 +55,14 @@ interface FeeManagerInterface extends ethers.utils.Interface {
     functionFragment: "distributeFees",
     values?: undefined
   ): string;
+  encodeFunctionData(functionFragment: "feeToken", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "initialize",
-    values: [
-      string,
-      string,
-      string,
-      string,
-      string,
-      string,
-      BigNumberish,
-      BigNumberish
-    ]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "networkFeePercent",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "networkRoles",
-    values?: undefined
+    values: [string, string, string, string, BigNumberish]
   ): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "protocolAddress",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "protocolFeePercent",
-    values?: undefined
-  ): string;
+  encodeFunctionData(functionFragment: "pauseFees", values?: undefined): string;
+  encodeFunctionData(functionFragment: "paused", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "recoverERC20",
     values: [string, BigNumberish]
@@ -97,6 +73,10 @@ interface FeeManagerInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "reservePool",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "rserveFeePercent",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -116,14 +96,15 @@ interface FeeManagerInterface extends ethers.utils.Interface {
     values: [string]
   ): string;
   encodeFunctionData(
+    functionFragment: "unpauseFees",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "updateFeePercents",
-    values: [BigNumberish, BigNumberish]
+    values: [BigNumberish]
   ): string;
 
-  decodeFunctionResult(
-    functionFragment: "collateralToken",
-    data: BytesLike
-  ): Result;
+  decodeFunctionResult(functionFragment: "access", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "collectFees",
     data: BytesLike
@@ -136,24 +117,11 @@ interface FeeManagerInterface extends ethers.utils.Interface {
     functionFragment: "distributeFees",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "feeToken", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "networkFeePercent",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "networkRoles",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "protocolAddress",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "protocolFeePercent",
-    data: BytesLike
-  ): Result;
+  decodeFunctionResult(functionFragment: "pauseFees", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "paused", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "recoverERC20",
     data: BytesLike
@@ -164,6 +132,10 @@ interface FeeManagerInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "reservePool",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "rserveFeePercent",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -183,6 +155,10 @@ interface FeeManagerInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "unpauseFees",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "updateFeePercents",
     data: BytesLike
   ): Result;
@@ -190,10 +166,14 @@ interface FeeManagerInterface extends ethers.utils.Interface {
   events: {
     "FeesCollected(address,uint256)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
+    "Paused(address)": EventFragment;
+    "Unpaused(address)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "FeesCollected"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "Paused"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "Unpaused"): EventFragment;
 }
 
 export type FeesCollectedEvent = TypedEvent<
@@ -203,6 +183,10 @@ export type FeesCollectedEvent = TypedEvent<
 export type OwnershipTransferredEvent = TypedEvent<
   [string, string] & { previousOwner: string; newOwner: string }
 >;
+
+export type PausedEvent = TypedEvent<[string] & { account: string }>;
+
+export type UnpausedEvent = TypedEvent<[string] & { account: string }>;
 
 export class FeeManager extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -248,7 +232,7 @@ export class FeeManager extends BaseContract {
   interface: FeeManagerInterface;
 
   functions: {
-    collateralToken(overrides?: CallOverrides): Promise<[string]>;
+    access(overrides?: CallOverrides): Promise<[string]>;
 
     collectFees(
       sender: string,
@@ -263,27 +247,24 @@ export class FeeManager extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    feeToken(overrides?: CallOverrides): Promise<[string]>;
+
     initialize(
-      _collateraltoken: string,
-      _networkRoles: string,
+      _accessManager: string,
       _stableCredit: string,
       _savingsPool: string,
       _reservePool: string,
-      _protocolAddress: string,
       _savingsFeePercent: BigNumberish,
-      _protocolFeePercent: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    networkFeePercent(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    networkRoles(overrides?: CallOverrides): Promise<[string]>;
-
     owner(overrides?: CallOverrides): Promise<[string]>;
 
-    protocolAddress(overrides?: CallOverrides): Promise<[string]>;
+    pauseFees(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
 
-    protocolFeePercent(overrides?: CallOverrides): Promise<[BigNumber]>;
+    paused(overrides?: CallOverrides): Promise<[boolean]>;
 
     recoverERC20(
       tokenAddress: string,
@@ -297,6 +278,8 @@ export class FeeManager extends BaseContract {
 
     reservePool(overrides?: CallOverrides): Promise<[string]>;
 
+    rserveFeePercent(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     savingsFeePercent(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     savingsPool(overrides?: CallOverrides): Promise<[string]>;
@@ -308,14 +291,17 @@ export class FeeManager extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    unpauseFees(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     updateFeePercents(
       _savingsFeePercent: BigNumberish,
-      _protocolFeePercent: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
   };
 
-  collateralToken(overrides?: CallOverrides): Promise<string>;
+  access(overrides?: CallOverrides): Promise<string>;
 
   collectFees(
     sender: string,
@@ -330,27 +316,24 @@ export class FeeManager extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  feeToken(overrides?: CallOverrides): Promise<string>;
+
   initialize(
-    _collateraltoken: string,
-    _networkRoles: string,
+    _accessManager: string,
     _stableCredit: string,
     _savingsPool: string,
     _reservePool: string,
-    _protocolAddress: string,
     _savingsFeePercent: BigNumberish,
-    _protocolFeePercent: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  networkFeePercent(overrides?: CallOverrides): Promise<BigNumber>;
-
-  networkRoles(overrides?: CallOverrides): Promise<string>;
-
   owner(overrides?: CallOverrides): Promise<string>;
 
-  protocolAddress(overrides?: CallOverrides): Promise<string>;
+  pauseFees(
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
 
-  protocolFeePercent(overrides?: CallOverrides): Promise<BigNumber>;
+  paused(overrides?: CallOverrides): Promise<boolean>;
 
   recoverERC20(
     tokenAddress: string,
@@ -364,6 +347,8 @@ export class FeeManager extends BaseContract {
 
   reservePool(overrides?: CallOverrides): Promise<string>;
 
+  rserveFeePercent(overrides?: CallOverrides): Promise<BigNumber>;
+
   savingsFeePercent(overrides?: CallOverrides): Promise<BigNumber>;
 
   savingsPool(overrides?: CallOverrides): Promise<string>;
@@ -375,14 +360,17 @@ export class FeeManager extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  unpauseFees(
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   updateFeePercents(
     _savingsFeePercent: BigNumberish,
-    _protocolFeePercent: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   callStatic: {
-    collateralToken(overrides?: CallOverrides): Promise<string>;
+    access(overrides?: CallOverrides): Promise<string>;
 
     collectFees(
       sender: string,
@@ -395,27 +383,22 @@ export class FeeManager extends BaseContract {
 
     distributeFees(overrides?: CallOverrides): Promise<void>;
 
+    feeToken(overrides?: CallOverrides): Promise<string>;
+
     initialize(
-      _collateraltoken: string,
-      _networkRoles: string,
+      _accessManager: string,
       _stableCredit: string,
       _savingsPool: string,
       _reservePool: string,
-      _protocolAddress: string,
       _savingsFeePercent: BigNumberish,
-      _protocolFeePercent: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    networkFeePercent(overrides?: CallOverrides): Promise<BigNumber>;
-
-    networkRoles(overrides?: CallOverrides): Promise<string>;
-
     owner(overrides?: CallOverrides): Promise<string>;
 
-    protocolAddress(overrides?: CallOverrides): Promise<string>;
+    pauseFees(overrides?: CallOverrides): Promise<void>;
 
-    protocolFeePercent(overrides?: CallOverrides): Promise<BigNumber>;
+    paused(overrides?: CallOverrides): Promise<boolean>;
 
     recoverERC20(
       tokenAddress: string,
@@ -426,6 +409,8 @@ export class FeeManager extends BaseContract {
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
 
     reservePool(overrides?: CallOverrides): Promise<string>;
+
+    rserveFeePercent(overrides?: CallOverrides): Promise<BigNumber>;
 
     savingsFeePercent(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -438,9 +423,10 @@ export class FeeManager extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    unpauseFees(overrides?: CallOverrides): Promise<void>;
+
     updateFeePercents(
       _savingsFeePercent: BigNumberish,
-      _protocolFeePercent: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
   };
@@ -477,10 +463,22 @@ export class FeeManager extends BaseContract {
       [string, string],
       { previousOwner: string; newOwner: string }
     >;
+
+    "Paused(address)"(
+      account?: null
+    ): TypedEventFilter<[string], { account: string }>;
+
+    Paused(account?: null): TypedEventFilter<[string], { account: string }>;
+
+    "Unpaused(address)"(
+      account?: null
+    ): TypedEventFilter<[string], { account: string }>;
+
+    Unpaused(account?: null): TypedEventFilter<[string], { account: string }>;
   };
 
   estimateGas: {
-    collateralToken(overrides?: CallOverrides): Promise<BigNumber>;
+    access(overrides?: CallOverrides): Promise<BigNumber>;
 
     collectFees(
       sender: string,
@@ -495,27 +493,24 @@ export class FeeManager extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    feeToken(overrides?: CallOverrides): Promise<BigNumber>;
+
     initialize(
-      _collateraltoken: string,
-      _networkRoles: string,
+      _accessManager: string,
       _stableCredit: string,
       _savingsPool: string,
       _reservePool: string,
-      _protocolAddress: string,
       _savingsFeePercent: BigNumberish,
-      _protocolFeePercent: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    networkFeePercent(overrides?: CallOverrides): Promise<BigNumber>;
-
-    networkRoles(overrides?: CallOverrides): Promise<BigNumber>;
-
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
-    protocolAddress(overrides?: CallOverrides): Promise<BigNumber>;
+    pauseFees(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
 
-    protocolFeePercent(overrides?: CallOverrides): Promise<BigNumber>;
+    paused(overrides?: CallOverrides): Promise<BigNumber>;
 
     recoverERC20(
       tokenAddress: string,
@@ -529,6 +524,8 @@ export class FeeManager extends BaseContract {
 
     reservePool(overrides?: CallOverrides): Promise<BigNumber>;
 
+    rserveFeePercent(overrides?: CallOverrides): Promise<BigNumber>;
+
     savingsFeePercent(overrides?: CallOverrides): Promise<BigNumber>;
 
     savingsPool(overrides?: CallOverrides): Promise<BigNumber>;
@@ -540,15 +537,18 @@ export class FeeManager extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    unpauseFees(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     updateFeePercents(
       _savingsFeePercent: BigNumberish,
-      _protocolFeePercent: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    collateralToken(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    access(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     collectFees(
       sender: string,
@@ -563,29 +563,24 @@ export class FeeManager extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
+    feeToken(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     initialize(
-      _collateraltoken: string,
-      _networkRoles: string,
+      _accessManager: string,
       _stableCredit: string,
       _savingsPool: string,
       _reservePool: string,
-      _protocolAddress: string,
       _savingsFeePercent: BigNumberish,
-      _protocolFeePercent: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    networkFeePercent(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    networkRoles(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    protocolAddress(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    protocolFeePercent(
-      overrides?: CallOverrides
+    pauseFees(
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
+
+    paused(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     recoverERC20(
       tokenAddress: string,
@@ -599,6 +594,8 @@ export class FeeManager extends BaseContract {
 
     reservePool(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    rserveFeePercent(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     savingsFeePercent(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     savingsPool(overrides?: CallOverrides): Promise<PopulatedTransaction>;
@@ -610,9 +607,12 @@ export class FeeManager extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
+    unpauseFees(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
     updateFeePercents(
       _savingsFeePercent: BigNumberish,
-      _protocolFeePercent: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
   };

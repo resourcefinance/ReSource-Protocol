@@ -19,43 +19,25 @@ import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
-interface IReservePoolInterface extends ethers.utils.Interface {
+interface IUniswapV3SwapCallbackInterface extends ethers.utils.Interface {
   functions: {
-    "depositFees(uint256)": FunctionFragment;
-    "reimburseMember(address,uint256)": FunctionFragment;
-    "reimburseSavings(uint256)": FunctionFragment;
+    "uniswapV3SwapCallback(int256,int256,bytes)": FunctionFragment;
   };
 
   encodeFunctionData(
-    functionFragment: "depositFees",
-    values: [BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "reimburseMember",
-    values: [string, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "reimburseSavings",
-    values: [BigNumberish]
+    functionFragment: "uniswapV3SwapCallback",
+    values: [BigNumberish, BigNumberish, BytesLike]
   ): string;
 
   decodeFunctionResult(
-    functionFragment: "depositFees",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "reimburseMember",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "reimburseSavings",
+    functionFragment: "uniswapV3SwapCallback",
     data: BytesLike
   ): Result;
 
   events: {};
 }
 
-export class IReservePool extends BaseContract {
+export class IUniswapV3SwapCallback extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
@@ -96,53 +78,29 @@ export class IReservePool extends BaseContract {
     toBlock?: string | number | undefined
   ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
 
-  interface: IReservePoolInterface;
+  interface: IUniswapV3SwapCallbackInterface;
 
   functions: {
-    depositFees(
-      amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    reimburseMember(
-      account: string,
-      amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    reimburseSavings(
-      amount: BigNumberish,
+    uniswapV3SwapCallback(
+      amount0Delta: BigNumberish,
+      amount1Delta: BigNumberish,
+      data: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
   };
 
-  depositFees(
-    amount: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  reimburseMember(
-    account: string,
-    amount: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  reimburseSavings(
-    amount: BigNumberish,
+  uniswapV3SwapCallback(
+    amount0Delta: BigNumberish,
+    amount1Delta: BigNumberish,
+    data: BytesLike,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   callStatic: {
-    depositFees(amount: BigNumberish, overrides?: CallOverrides): Promise<void>;
-
-    reimburseMember(
-      account: string,
-      amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    reimburseSavings(
-      amount: BigNumberish,
+    uniswapV3SwapCallback(
+      amount0Delta: BigNumberish,
+      amount1Delta: BigNumberish,
+      data: BytesLike,
       overrides?: CallOverrides
     ): Promise<void>;
   };
@@ -150,37 +108,19 @@ export class IReservePool extends BaseContract {
   filters: {};
 
   estimateGas: {
-    depositFees(
-      amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    reimburseMember(
-      account: string,
-      amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    reimburseSavings(
-      amount: BigNumberish,
+    uniswapV3SwapCallback(
+      amount0Delta: BigNumberish,
+      amount1Delta: BigNumberish,
+      data: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    depositFees(
-      amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    reimburseMember(
-      account: string,
-      amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    reimburseSavings(
-      amount: BigNumberish,
+    uniswapV3SwapCallback(
+      amount0Delta: BigNumberish,
+      amount1Delta: BigNumberish,
+      data: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
   };

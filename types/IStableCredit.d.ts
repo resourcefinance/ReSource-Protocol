@@ -11,7 +11,6 @@ import {
   PopulatedTransaction,
   BaseContract,
   ContractTransaction,
-  Overrides,
   CallOverrides,
 } from "ethers";
 import { BytesLike } from "@ethersproject/bytes";
@@ -22,21 +21,19 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 interface IStableCreditInterface extends ethers.utils.Interface {
   functions: {
     "balanceOf(address)": FunctionFragment;
-    "convertToCollateral(uint256)": FunctionFragment;
-    "getCollateralToken()": FunctionFragment;
+    "convertCreditToFeeToken(uint256)": FunctionFragment;
+    "getFeeToken()": FunctionFragment;
     "getRoles()": FunctionFragment;
     "isAuthorized(address)": FunctionFragment;
-    "transfer(address,uint256)": FunctionFragment;
-    "transferFrom(address,address,uint256)": FunctionFragment;
   };
 
   encodeFunctionData(functionFragment: "balanceOf", values: [string]): string;
   encodeFunctionData(
-    functionFragment: "convertToCollateral",
+    functionFragment: "convertCreditToFeeToken",
     values: [BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: "getCollateralToken",
+    functionFragment: "getFeeToken",
     values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "getRoles", values?: undefined): string;
@@ -44,22 +41,14 @@ interface IStableCreditInterface extends ethers.utils.Interface {
     functionFragment: "isAuthorized",
     values: [string]
   ): string;
-  encodeFunctionData(
-    functionFragment: "transfer",
-    values: [string, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "transferFrom",
-    values: [string, string, BigNumberish]
-  ): string;
 
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "convertToCollateral",
+    functionFragment: "convertCreditToFeeToken",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "getCollateralToken",
+    functionFragment: "getFeeToken",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "getRoles", data: BytesLike): Result;
@@ -67,14 +56,9 @@ interface IStableCreditInterface extends ethers.utils.Interface {
     functionFragment: "isAuthorized",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "transfer", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "transferFrom",
-    data: BytesLike
-  ): Result;
 
   events: {
-    "CreditLineCreated(address,address,uint256,uint256)": EventFragment;
+    "CreditLineCreated(address,uint256,uint256)": EventFragment;
     "CreditLineDefault(address)": EventFragment;
     "CreditLineLimitUpdated(address,uint256)": EventFragment;
   };
@@ -85,9 +69,8 @@ interface IStableCreditInterface extends ethers.utils.Interface {
 }
 
 export type CreditLineCreatedEvent = TypedEvent<
-  [string, string, BigNumber, BigNumber] & {
+  [string, BigNumber, BigNumber] & {
     member: string;
-    pool: string;
     creditLimit: BigNumber;
     timestamp: BigNumber;
   }
@@ -145,12 +128,12 @@ export class IStableCredit extends BaseContract {
   functions: {
     balanceOf(_member: string, overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    convertToCollateral(
+    convertCreditToFeeToken(
       amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
-    getCollateralToken(overrides?: CallOverrides): Promise<[string]>;
+    getFeeToken(overrides?: CallOverrides): Promise<[string]>;
 
     getRoles(overrides?: CallOverrides): Promise<[string]>;
 
@@ -158,104 +141,53 @@ export class IStableCredit extends BaseContract {
       account: string,
       overrides?: CallOverrides
     ): Promise<[boolean]>;
-
-    transfer(
-      to: string,
-      amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    transferFrom(
-      from: string,
-      to: string,
-      amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
   };
 
   balanceOf(_member: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-  convertToCollateral(
+  convertCreditToFeeToken(
     amount: BigNumberish,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
-  getCollateralToken(overrides?: CallOverrides): Promise<string>;
+  getFeeToken(overrides?: CallOverrides): Promise<string>;
 
   getRoles(overrides?: CallOverrides): Promise<string>;
 
   isAuthorized(account: string, overrides?: CallOverrides): Promise<boolean>;
 
-  transfer(
-    to: string,
-    amount: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  transferFrom(
-    from: string,
-    to: string,
-    amount: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
   callStatic: {
     balanceOf(_member: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    convertToCollateral(
+    convertCreditToFeeToken(
       amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    getCollateralToken(overrides?: CallOverrides): Promise<string>;
+    getFeeToken(overrides?: CallOverrides): Promise<string>;
 
     getRoles(overrides?: CallOverrides): Promise<string>;
 
     isAuthorized(account: string, overrides?: CallOverrides): Promise<boolean>;
-
-    transfer(
-      to: string,
-      amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
-
-    transferFrom(
-      from: string,
-      to: string,
-      amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
   };
 
   filters: {
-    "CreditLineCreated(address,address,uint256,uint256)"(
+    "CreditLineCreated(address,uint256,uint256)"(
       member?: null,
-      pool?: null,
       creditLimit?: null,
       timestamp?: null
     ): TypedEventFilter<
-      [string, string, BigNumber, BigNumber],
-      {
-        member: string;
-        pool: string;
-        creditLimit: BigNumber;
-        timestamp: BigNumber;
-      }
+      [string, BigNumber, BigNumber],
+      { member: string; creditLimit: BigNumber; timestamp: BigNumber }
     >;
 
     CreditLineCreated(
       member?: null,
-      pool?: null,
       creditLimit?: null,
       timestamp?: null
     ): TypedEventFilter<
-      [string, string, BigNumber, BigNumber],
-      {
-        member: string;
-        pool: string;
-        creditLimit: BigNumber;
-        timestamp: BigNumber;
-      }
+      [string, BigNumber, BigNumber],
+      { member: string; creditLimit: BigNumber; timestamp: BigNumber }
     >;
 
     "CreditLineDefault(address)"(
@@ -286,31 +218,18 @@ export class IStableCredit extends BaseContract {
   estimateGas: {
     balanceOf(_member: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    convertToCollateral(
+    convertCreditToFeeToken(
       amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    getCollateralToken(overrides?: CallOverrides): Promise<BigNumber>;
+    getFeeToken(overrides?: CallOverrides): Promise<BigNumber>;
 
     getRoles(overrides?: CallOverrides): Promise<BigNumber>;
 
     isAuthorized(
       account: string,
       overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    transfer(
-      to: string,
-      amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    transferFrom(
-      from: string,
-      to: string,
-      amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
   };
 
@@ -320,33 +239,18 @@ export class IStableCredit extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    convertToCollateral(
+    convertCreditToFeeToken(
       amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    getCollateralToken(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    getFeeToken(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     getRoles(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     isAuthorized(
       account: string,
       overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    transfer(
-      to: string,
-      amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    transferFrom(
-      from: string,
-      to: string,
-      amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
   };
 }

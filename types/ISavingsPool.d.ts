@@ -21,18 +21,30 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface ISavingsPoolInterface extends ethers.utils.Interface {
   functions: {
+    "demurrage(address,uint256)": FunctionFragment;
     "notifyRewardAmount(uint256)": FunctionFragment;
+    "reimburse(uint256)": FunctionFragment;
   };
 
+  encodeFunctionData(
+    functionFragment: "demurrage",
+    values: [string, BigNumberish]
+  ): string;
   encodeFunctionData(
     functionFragment: "notifyRewardAmount",
     values: [BigNumberish]
   ): string;
+  encodeFunctionData(
+    functionFragment: "reimburse",
+    values: [BigNumberish]
+  ): string;
 
+  decodeFunctionResult(functionFragment: "demurrage", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "notifyRewardAmount",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "reimburse", data: BytesLike): Result;
 
   events: {};
 }
@@ -81,35 +93,87 @@ export class ISavingsPool extends BaseContract {
   interface: ISavingsPoolInterface;
 
   functions: {
+    demurrage(
+      account: string,
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     notifyRewardAmount(
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
+
+    reimburse(
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
   };
+
+  demurrage(
+    account: string,
+    amount: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
 
   notifyRewardAmount(
     amount: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  reimburse(
+    amount: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   callStatic: {
+    demurrage(
+      account: string,
+      amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     notifyRewardAmount(
       amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    reimburse(amount: BigNumberish, overrides?: CallOverrides): Promise<void>;
   };
 
   filters: {};
 
   estimateGas: {
+    demurrage(
+      account: string,
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     notifyRewardAmount(
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    reimburse(
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
+    demurrage(
+      account: string,
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
     notifyRewardAmount(
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    reimburse(
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;

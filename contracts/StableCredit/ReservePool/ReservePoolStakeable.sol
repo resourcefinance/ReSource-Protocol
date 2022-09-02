@@ -21,7 +21,6 @@ contract CreditPoolStakeable is PausableUpgradeable, ReservePool {
 
     mapping(address => Reward) public rewardData;
     address[] public rewardTokens;
-    address public feeManager;
 
     // user -> reward token -> amount
     mapping(address => mapping(address => uint256)) public userRewardPerTokenPaid;
@@ -31,14 +30,23 @@ contract CreditPoolStakeable is PausableUpgradeable, ReservePool {
 
     /* ========== INITIALIZER ========== */
 
-    function __ReservePoolStakeable_init(address _stableCredit, address _feeManager)
-        public
-        virtual
-        initializer
-    {
+    function __ReservePoolStakeable_init(
+        address _stableCredit,
+        address _savingsPool,
+        address _sourceAddress,
+        address _swapRouter,
+        uint256 _sourceSyncPercent,
+        uint256 _operatorPercent
+    ) public virtual initializer {
         __Pausable_init();
-        __ReservePool_init(_stableCredit);
-        feeManager = _feeManager;
+        __ReservePool_init(
+            _stableCredit,
+            _savingsPool,
+            _sourceAddress,
+            _swapRouter,
+            _sourceSyncPercent,
+            _operatorPercent
+        );
     }
 
     function addReward(
@@ -69,14 +77,14 @@ contract CreditPoolStakeable is PausableUpgradeable, ReservePool {
     }
 
     function rewardPerToken(address _rewardsToken) public view returns (uint256) {
-        if (_totalCollateral == 0) {
+        if (collateral == 0) {
             return rewardData[_rewardsToken].rewardPerTokenStored;
         }
         return
             rewardData[_rewardsToken].rewardPerTokenStored +
             (((lastTimeRewardApplicable(_rewardsToken) - rewardData[_rewardsToken].lastUpdateTime) *
                 rewardData[_rewardsToken].rewardRate *
-                1e18) / _totalCollateral);
+                1e18) / collateral);
     }
 
     function earned(address account, address _rewardsToken) public view virtual returns (uint256) {
@@ -98,25 +106,18 @@ contract CreditPoolStakeable is PausableUpgradeable, ReservePool {
         rewardData[_rewardsToken].rewardsDistributor = _rewardsDistributor;
     }
 
-    function stake(uint256 amount)
-        public
-        override
-        nonReentrant
-        whenNotPaused
-        updateReward(msg.sender)
-    {
+    function deposit(uint256 amount) public nonReentrant whenNotPaused updateReward(msg.sender) {
         _balances[msg.sender] += amount;
-        super.stake(amount);
+        depositCollateral(amount);
+        (amount);
     }
 
-    function withdraw(uint256 amount) public override nonReentrant updateReward(msg.sender) {
+    function withdraw(uint256 amount) public nonReentrant updateReward(msg.sender) {
+        require(amount > 0, "ReservePool: Cannot withdraw 0");
         _balances[msg.sender] -= amount;
-        super.withdraw(amount);
-    }
-
-    function withdrawFeeManager(uint256 amount) public onlyAuthorized {
-        _balances[feeManager] -= amount;
-        super.withdraw(amount);
+        collateral -= amount;
+        feeToken.safeTransfer(msg.sender, amount);
+        emit Withdrawn(msg.sender, amount);
     }
 
     function getReward() public virtual nonReentrant updateReward(msg.sender) {

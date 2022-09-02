@@ -21,42 +21,58 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface CreditPoolStakeableInterface extends ethers.utils.Interface {
   functions: {
-    "__ReservePoolStakeable_init(address,address)": FunctionFragment;
+    "__ReservePoolStakeable_init(address,address,address,address,uint256,uint256)": FunctionFragment;
+    "__ReservePool_init(address,address,address,address,uint256,uint256)": FunctionFragment;
     "addReward(address,address,uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
-    "collateralToken()": FunctionFragment;
+    "collateralPercent()": FunctionFragment;
+    "deposit(uint256)": FunctionFragment;
+    "depositCollateral(uint256)": FunctionFragment;
+    "depositFees(uint256)": FunctionFragment;
+    "depositOperator(uint256)": FunctionFragment;
     "earned(address,address)": FunctionFragment;
     "exit()": FunctionFragment;
-    "feeManager()": FunctionFragment;
+    "feeToken()": FunctionFragment;
     "getReward()": FunctionFragment;
     "getRewardForDuration(address)": FunctionFragment;
     "lastTimeRewardApplicable(address)": FunctionFragment;
-    "networkRoles()": FunctionFragment;
     "notifyRewardAmount(address,uint256)": FunctionFragment;
+    "operatorPercent()": FunctionFragment;
     "owner()": FunctionFragment;
     "paused()": FunctionFragment;
+    "poolFee()": FunctionFragment;
     "recoverERC20(address,uint256)": FunctionFragment;
+    "reimburseMember(address,uint256)": FunctionFragment;
+    "reimburseSavings(uint256)": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "rewardData(address)": FunctionFragment;
     "rewardPerToken(address)": FunctionFragment;
     "rewardTokens(uint256)": FunctionFragment;
     "rewards(address,address)": FunctionFragment;
+    "savingsPool()": FunctionFragment;
+    "setPoofFee(uint24)": FunctionFragment;
     "setRewardsDistributor(address,address)": FunctionFragment;
     "setRewardsDuration(address,uint256)": FunctionFragment;
+    "setSource(address)": FunctionFragment;
+    "sourceSyncPercent()": FunctionFragment;
     "stableCredit()": FunctionFragment;
-    "stake(uint256)": FunctionFragment;
-    "totalCollateral()": FunctionFragment;
+    "swapRouter()": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
     "updateActiveRewardsDuration(address,uint256)": FunctionFragment;
+    "updatePercents(uint256,uint256)": FunctionFragment;
     "userRewardPerTokenPaid(address,address)": FunctionFragment;
     "viewMapping(address)": FunctionFragment;
     "withdraw(uint256)": FunctionFragment;
-    "withdrawFeeManager(uint256)": FunctionFragment;
+    "withdrawOperator(uint256)": FunctionFragment;
   };
 
   encodeFunctionData(
     functionFragment: "__ReservePoolStakeable_init",
-    values: [string, string]
+    values: [string, string, string, string, BigNumberish, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "__ReservePool_init",
+    values: [string, string, string, string, BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "addReward",
@@ -64,18 +80,31 @@ interface CreditPoolStakeableInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(functionFragment: "balanceOf", values: [string]): string;
   encodeFunctionData(
-    functionFragment: "collateralToken",
+    functionFragment: "collateralPercent",
     values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "deposit",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "depositCollateral",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "depositFees",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "depositOperator",
+    values: [BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "earned",
     values: [string, string]
   ): string;
   encodeFunctionData(functionFragment: "exit", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "feeManager",
-    values?: undefined
-  ): string;
+  encodeFunctionData(functionFragment: "feeToken", values?: undefined): string;
   encodeFunctionData(functionFragment: "getReward", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "getRewardForDuration",
@@ -86,18 +115,27 @@ interface CreditPoolStakeableInterface extends ethers.utils.Interface {
     values: [string]
   ): string;
   encodeFunctionData(
-    functionFragment: "networkRoles",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
     functionFragment: "notifyRewardAmount",
     values: [string, BigNumberish]
   ): string;
+  encodeFunctionData(
+    functionFragment: "operatorPercent",
+    values?: undefined
+  ): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(functionFragment: "paused", values?: undefined): string;
+  encodeFunctionData(functionFragment: "poolFee", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "recoverERC20",
     values: [string, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "reimburseMember",
+    values: [string, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "reimburseSavings",
+    values: [BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "renounceOwnership",
@@ -117,6 +155,14 @@ interface CreditPoolStakeableInterface extends ethers.utils.Interface {
     values: [string, string]
   ): string;
   encodeFunctionData(
+    functionFragment: "savingsPool",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "setPoofFee",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
     functionFragment: "setRewardsDistributor",
     values: [string, string]
   ): string;
@@ -124,13 +170,17 @@ interface CreditPoolStakeableInterface extends ethers.utils.Interface {
     functionFragment: "setRewardsDuration",
     values: [string, BigNumberish]
   ): string;
+  encodeFunctionData(functionFragment: "setSource", values: [string]): string;
+  encodeFunctionData(
+    functionFragment: "sourceSyncPercent",
+    values?: undefined
+  ): string;
   encodeFunctionData(
     functionFragment: "stableCredit",
     values?: undefined
   ): string;
-  encodeFunctionData(functionFragment: "stake", values: [BigNumberish]): string;
   encodeFunctionData(
-    functionFragment: "totalCollateral",
+    functionFragment: "swapRouter",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -142,6 +192,10 @@ interface CreditPoolStakeableInterface extends ethers.utils.Interface {
     values: [string, BigNumberish]
   ): string;
   encodeFunctionData(
+    functionFragment: "updatePercents",
+    values: [BigNumberish, BigNumberish]
+  ): string;
+  encodeFunctionData(
     functionFragment: "userRewardPerTokenPaid",
     values: [string, string]
   ): string;
@@ -151,7 +205,7 @@ interface CreditPoolStakeableInterface extends ethers.utils.Interface {
     values: [BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: "withdrawFeeManager",
+    functionFragment: "withdrawOperator",
     values: [BigNumberish]
   ): string;
 
@@ -159,15 +213,32 @@ interface CreditPoolStakeableInterface extends ethers.utils.Interface {
     functionFragment: "__ReservePoolStakeable_init",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "__ReservePool_init",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "addReward", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "collateralToken",
+    functionFragment: "collateralPercent",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "deposit", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "depositCollateral",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "depositFees",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "depositOperator",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "earned", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "exit", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "feeManager", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "feeToken", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "getReward", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "getRewardForDuration",
@@ -178,17 +249,26 @@ interface CreditPoolStakeableInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "networkRoles",
+    functionFragment: "notifyRewardAmount",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "notifyRewardAmount",
+    functionFragment: "operatorPercent",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "paused", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "poolFee", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "recoverERC20",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "reimburseMember",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "reimburseSavings",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -206,6 +286,11 @@ interface CreditPoolStakeableInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "rewards", data: BytesLike): Result;
   decodeFunctionResult(
+    functionFragment: "savingsPool",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "setPoofFee", data: BytesLike): Result;
+  decodeFunctionResult(
     functionFragment: "setRewardsDistributor",
     data: BytesLike
   ): Result;
@@ -213,21 +298,26 @@ interface CreditPoolStakeableInterface extends ethers.utils.Interface {
     functionFragment: "setRewardsDuration",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "setSource", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "sourceSyncPercent",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "stableCredit",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "stake", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "totalCollateral",
-    data: BytesLike
-  ): Result;
+  decodeFunctionResult(functionFragment: "swapRouter", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "transferOwnership",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
     functionFragment: "updateActiveRewardsDuration",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "updatePercents",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -240,7 +330,7 @@ interface CreditPoolStakeableInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "withdraw", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "withdrawFeeManager",
+    functionFragment: "withdrawOperator",
     data: BytesLike
   ): Result;
 
@@ -347,7 +437,21 @@ export class CreditPoolStakeable extends BaseContract {
   functions: {
     __ReservePoolStakeable_init(
       _stableCredit: string,
-      _feeManager: string,
+      _savingsPool: string,
+      _sourceAddress: string,
+      _swapRouter: string,
+      _sourceSyncPercent: BigNumberish,
+      _operatorPercent: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    __ReservePool_init(
+      _stableCredit: string,
+      _savingsPool: string,
+      _sourceAddress: string,
+      _swapRouter: string,
+      _sourceSyncPercent: BigNumberish,
+      _operatorPercent: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -363,7 +467,27 @@ export class CreditPoolStakeable extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
-    collateralToken(overrides?: CallOverrides): Promise<[string]>;
+    collateralPercent(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    deposit(
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    depositCollateral(
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    depositFees(
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    depositOperator(
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
 
     earned(
       account: string,
@@ -375,7 +499,7 @@ export class CreditPoolStakeable extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    feeManager(overrides?: CallOverrides): Promise<[string]>;
+    feeToken(overrides?: CallOverrides): Promise<[string]>;
 
     getReward(
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -391,21 +515,34 @@ export class CreditPoolStakeable extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
-    networkRoles(overrides?: CallOverrides): Promise<[string]>;
-
     notifyRewardAmount(
       _rewardsToken: string,
       reward: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    operatorPercent(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     owner(overrides?: CallOverrides): Promise<[string]>;
 
     paused(overrides?: CallOverrides): Promise<[boolean]>;
 
+    poolFee(overrides?: CallOverrides): Promise<[number]>;
+
     recoverERC20(
       tokenAddress: string,
       tokenAmount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    reimburseMember(
+      account: string,
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    reimburseSavings(
+      amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -443,6 +580,13 @@ export class CreditPoolStakeable extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
+    savingsPool(overrides?: CallOverrides): Promise<[string]>;
+
+    setPoofFee(
+      _poolFee: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     setRewardsDistributor(
       _rewardsToken: string,
       _rewardsDistributor: string,
@@ -455,14 +599,16 @@ export class CreditPoolStakeable extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    stableCredit(overrides?: CallOverrides): Promise<[string]>;
-
-    stake(
-      amount: BigNumberish,
+    setSource(
+      _sourceAddress: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    totalCollateral(overrides?: CallOverrides): Promise<[BigNumber]>;
+    sourceSyncPercent(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    stableCredit(overrides?: CallOverrides): Promise<[string]>;
+
+    swapRouter(overrides?: CallOverrides): Promise<[string]>;
 
     transferOwnership(
       newOwner: string,
@@ -472,6 +618,12 @@ export class CreditPoolStakeable extends BaseContract {
     updateActiveRewardsDuration(
       _rewardsToken: string,
       _rewardsDuration: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    updatePercents(
+      _sourceSyncPercent: BigNumberish,
+      _operatorPercent: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -502,7 +654,7 @@ export class CreditPoolStakeable extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    withdrawFeeManager(
+    withdrawOperator(
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
@@ -510,7 +662,21 @@ export class CreditPoolStakeable extends BaseContract {
 
   __ReservePoolStakeable_init(
     _stableCredit: string,
-    _feeManager: string,
+    _savingsPool: string,
+    _sourceAddress: string,
+    _swapRouter: string,
+    _sourceSyncPercent: BigNumberish,
+    _operatorPercent: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  __ReservePool_init(
+    _stableCredit: string,
+    _savingsPool: string,
+    _sourceAddress: string,
+    _swapRouter: string,
+    _sourceSyncPercent: BigNumberish,
+    _operatorPercent: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -523,7 +689,27 @@ export class CreditPoolStakeable extends BaseContract {
 
   balanceOf(_account: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-  collateralToken(overrides?: CallOverrides): Promise<string>;
+  collateralPercent(overrides?: CallOverrides): Promise<BigNumber>;
+
+  deposit(
+    amount: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  depositCollateral(
+    amount: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  depositFees(
+    amount: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  depositOperator(
+    amount: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
 
   earned(
     account: string,
@@ -535,7 +721,7 @@ export class CreditPoolStakeable extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  feeManager(overrides?: CallOverrides): Promise<string>;
+  feeToken(overrides?: CallOverrides): Promise<string>;
 
   getReward(
     overrides?: Overrides & { from?: string | Promise<string> }
@@ -551,21 +737,34 @@ export class CreditPoolStakeable extends BaseContract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
-  networkRoles(overrides?: CallOverrides): Promise<string>;
-
   notifyRewardAmount(
     _rewardsToken: string,
     reward: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  operatorPercent(overrides?: CallOverrides): Promise<BigNumber>;
+
   owner(overrides?: CallOverrides): Promise<string>;
 
   paused(overrides?: CallOverrides): Promise<boolean>;
 
+  poolFee(overrides?: CallOverrides): Promise<number>;
+
   recoverERC20(
     tokenAddress: string,
     tokenAmount: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  reimburseMember(
+    account: string,
+    amount: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  reimburseSavings(
+    amount: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -600,6 +799,13 @@ export class CreditPoolStakeable extends BaseContract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
+  savingsPool(overrides?: CallOverrides): Promise<string>;
+
+  setPoofFee(
+    _poolFee: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   setRewardsDistributor(
     _rewardsToken: string,
     _rewardsDistributor: string,
@@ -612,14 +818,16 @@ export class CreditPoolStakeable extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  stableCredit(overrides?: CallOverrides): Promise<string>;
-
-  stake(
-    amount: BigNumberish,
+  setSource(
+    _sourceAddress: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  totalCollateral(overrides?: CallOverrides): Promise<BigNumber>;
+  sourceSyncPercent(overrides?: CallOverrides): Promise<BigNumber>;
+
+  stableCredit(overrides?: CallOverrides): Promise<string>;
+
+  swapRouter(overrides?: CallOverrides): Promise<string>;
 
   transferOwnership(
     newOwner: string,
@@ -629,6 +837,12 @@ export class CreditPoolStakeable extends BaseContract {
   updateActiveRewardsDuration(
     _rewardsToken: string,
     _rewardsDuration: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  updatePercents(
+    _sourceSyncPercent: BigNumberish,
+    _operatorPercent: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -657,7 +871,7 @@ export class CreditPoolStakeable extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  withdrawFeeManager(
+  withdrawOperator(
     amount: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
@@ -665,7 +879,21 @@ export class CreditPoolStakeable extends BaseContract {
   callStatic: {
     __ReservePoolStakeable_init(
       _stableCredit: string,
-      _feeManager: string,
+      _savingsPool: string,
+      _sourceAddress: string,
+      _swapRouter: string,
+      _sourceSyncPercent: BigNumberish,
+      _operatorPercent: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    __ReservePool_init(
+      _stableCredit: string,
+      _savingsPool: string,
+      _sourceAddress: string,
+      _swapRouter: string,
+      _sourceSyncPercent: BigNumberish,
+      _operatorPercent: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -678,7 +906,21 @@ export class CreditPoolStakeable extends BaseContract {
 
     balanceOf(_account: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    collateralToken(overrides?: CallOverrides): Promise<string>;
+    collateralPercent(overrides?: CallOverrides): Promise<BigNumber>;
+
+    deposit(amount: BigNumberish, overrides?: CallOverrides): Promise<void>;
+
+    depositCollateral(
+      amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    depositFees(amount: BigNumberish, overrides?: CallOverrides): Promise<void>;
+
+    depositOperator(
+      amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     earned(
       account: string,
@@ -688,7 +930,7 @@ export class CreditPoolStakeable extends BaseContract {
 
     exit(overrides?: CallOverrides): Promise<void>;
 
-    feeManager(overrides?: CallOverrides): Promise<string>;
+    feeToken(overrides?: CallOverrides): Promise<string>;
 
     getReward(overrides?: CallOverrides): Promise<void>;
 
@@ -702,21 +944,34 @@ export class CreditPoolStakeable extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    networkRoles(overrides?: CallOverrides): Promise<string>;
-
     notifyRewardAmount(
       _rewardsToken: string,
       reward: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
+    operatorPercent(overrides?: CallOverrides): Promise<BigNumber>;
+
     owner(overrides?: CallOverrides): Promise<string>;
 
     paused(overrides?: CallOverrides): Promise<boolean>;
 
+    poolFee(overrides?: CallOverrides): Promise<number>;
+
     recoverERC20(
       tokenAddress: string,
       tokenAmount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    reimburseMember(
+      account: string,
+      amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    reimburseSavings(
+      amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -752,6 +1007,13 @@ export class CreditPoolStakeable extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    savingsPool(overrides?: CallOverrides): Promise<string>;
+
+    setPoofFee(
+      _poolFee: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     setRewardsDistributor(
       _rewardsToken: string,
       _rewardsDistributor: string,
@@ -764,11 +1026,13 @@ export class CreditPoolStakeable extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    setSource(_sourceAddress: string, overrides?: CallOverrides): Promise<void>;
+
+    sourceSyncPercent(overrides?: CallOverrides): Promise<BigNumber>;
+
     stableCredit(overrides?: CallOverrides): Promise<string>;
 
-    stake(amount: BigNumberish, overrides?: CallOverrides): Promise<void>;
-
-    totalCollateral(overrides?: CallOverrides): Promise<BigNumber>;
+    swapRouter(overrides?: CallOverrides): Promise<string>;
 
     transferOwnership(
       newOwner: string,
@@ -778,6 +1042,12 @@ export class CreditPoolStakeable extends BaseContract {
     updateActiveRewardsDuration(
       _rewardsToken: string,
       _rewardsDuration: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    updatePercents(
+      _sourceSyncPercent: BigNumberish,
+      _operatorPercent: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -803,7 +1073,7 @@ export class CreditPoolStakeable extends BaseContract {
 
     withdraw(amount: BigNumberish, overrides?: CallOverrides): Promise<void>;
 
-    withdrawFeeManager(
+    withdrawOperator(
       amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
@@ -932,7 +1202,21 @@ export class CreditPoolStakeable extends BaseContract {
   estimateGas: {
     __ReservePoolStakeable_init(
       _stableCredit: string,
-      _feeManager: string,
+      _savingsPool: string,
+      _sourceAddress: string,
+      _swapRouter: string,
+      _sourceSyncPercent: BigNumberish,
+      _operatorPercent: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    __ReservePool_init(
+      _stableCredit: string,
+      _savingsPool: string,
+      _sourceAddress: string,
+      _swapRouter: string,
+      _sourceSyncPercent: BigNumberish,
+      _operatorPercent: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -945,7 +1229,27 @@ export class CreditPoolStakeable extends BaseContract {
 
     balanceOf(_account: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    collateralToken(overrides?: CallOverrides): Promise<BigNumber>;
+    collateralPercent(overrides?: CallOverrides): Promise<BigNumber>;
+
+    deposit(
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    depositCollateral(
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    depositFees(
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    depositOperator(
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
 
     earned(
       account: string,
@@ -957,7 +1261,7 @@ export class CreditPoolStakeable extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    feeManager(overrides?: CallOverrides): Promise<BigNumber>;
+    feeToken(overrides?: CallOverrides): Promise<BigNumber>;
 
     getReward(
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -973,21 +1277,34 @@ export class CreditPoolStakeable extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    networkRoles(overrides?: CallOverrides): Promise<BigNumber>;
-
     notifyRewardAmount(
       _rewardsToken: string,
       reward: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    operatorPercent(overrides?: CallOverrides): Promise<BigNumber>;
+
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
     paused(overrides?: CallOverrides): Promise<BigNumber>;
 
+    poolFee(overrides?: CallOverrides): Promise<BigNumber>;
+
     recoverERC20(
       tokenAddress: string,
       tokenAmount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    reimburseMember(
+      account: string,
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    reimburseSavings(
+      amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -1013,6 +1330,13 @@ export class CreditPoolStakeable extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    savingsPool(overrides?: CallOverrides): Promise<BigNumber>;
+
+    setPoofFee(
+      _poolFee: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     setRewardsDistributor(
       _rewardsToken: string,
       _rewardsDistributor: string,
@@ -1025,14 +1349,16 @@ export class CreditPoolStakeable extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    stableCredit(overrides?: CallOverrides): Promise<BigNumber>;
-
-    stake(
-      amount: BigNumberish,
+    setSource(
+      _sourceAddress: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    totalCollateral(overrides?: CallOverrides): Promise<BigNumber>;
+    sourceSyncPercent(overrides?: CallOverrides): Promise<BigNumber>;
+
+    stableCredit(overrides?: CallOverrides): Promise<BigNumber>;
+
+    swapRouter(overrides?: CallOverrides): Promise<BigNumber>;
 
     transferOwnership(
       newOwner: string,
@@ -1042,6 +1368,12 @@ export class CreditPoolStakeable extends BaseContract {
     updateActiveRewardsDuration(
       _rewardsToken: string,
       _rewardsDuration: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    updatePercents(
+      _sourceSyncPercent: BigNumberish,
+      _operatorPercent: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -1061,7 +1393,7 @@ export class CreditPoolStakeable extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    withdrawFeeManager(
+    withdrawOperator(
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
@@ -1070,7 +1402,21 @@ export class CreditPoolStakeable extends BaseContract {
   populateTransaction: {
     __ReservePoolStakeable_init(
       _stableCredit: string,
-      _feeManager: string,
+      _savingsPool: string,
+      _sourceAddress: string,
+      _swapRouter: string,
+      _sourceSyncPercent: BigNumberish,
+      _operatorPercent: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    __ReservePool_init(
+      _stableCredit: string,
+      _savingsPool: string,
+      _sourceAddress: string,
+      _swapRouter: string,
+      _sourceSyncPercent: BigNumberish,
+      _operatorPercent: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -1086,7 +1432,27 @@ export class CreditPoolStakeable extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    collateralToken(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    collateralPercent(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    deposit(
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    depositCollateral(
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    depositFees(
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    depositOperator(
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
 
     earned(
       account: string,
@@ -1098,7 +1464,7 @@ export class CreditPoolStakeable extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    feeManager(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    feeToken(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     getReward(
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -1114,21 +1480,34 @@ export class CreditPoolStakeable extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    networkRoles(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     notifyRewardAmount(
       _rewardsToken: string,
       reward: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
+    operatorPercent(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     paused(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    poolFee(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     recoverERC20(
       tokenAddress: string,
       tokenAmount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    reimburseMember(
+      account: string,
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    reimburseSavings(
+      amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -1157,6 +1536,13 @@ export class CreditPoolStakeable extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    savingsPool(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    setPoofFee(
+      _poolFee: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
     setRewardsDistributor(
       _rewardsToken: string,
       _rewardsDistributor: string,
@@ -1169,14 +1555,16 @@ export class CreditPoolStakeable extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    stableCredit(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    stake(
-      amount: BigNumberish,
+    setSource(
+      _sourceAddress: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    totalCollateral(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    sourceSyncPercent(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    stableCredit(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    swapRouter(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     transferOwnership(
       newOwner: string,
@@ -1186,6 +1574,12 @@ export class CreditPoolStakeable extends BaseContract {
     updateActiveRewardsDuration(
       _rewardsToken: string,
       _rewardsDuration: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    updatePercents(
+      _sourceSyncPercent: BigNumberish,
+      _operatorPercent: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -1205,7 +1599,7 @@ export class CreditPoolStakeable extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    withdrawFeeManager(
+    withdrawOperator(
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;

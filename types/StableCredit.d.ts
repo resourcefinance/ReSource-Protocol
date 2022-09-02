@@ -22,58 +22,63 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 interface StableCreditInterface extends ethers.utils.Interface {
   functions: {
     "__CIP36_init(string,string)": FunctionFragment;
-    "__StableCredit_init(address,address,address)": FunctionFragment;
+    "access()": FunctionFragment;
     "allowance(address,address)": FunctionFragment;
     "approve(address,uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
     "bulkTransfer(address[],uint256[])": FunctionFragment;
     "burn(uint256)": FunctionFragment;
+    "burnDemurraged(address)": FunctionFragment;
     "burnFrom(address,uint256)": FunctionFragment;
-    "canRequestCredit(address,address)": FunctionFragment;
-    "collateralToken()": FunctionFragment;
-    "convertToCollateral(uint256)": FunctionFragment;
-    "createCreditLine(address,address,uint256)": FunctionFragment;
+    "conversionRate()": FunctionFragment;
+    "convertCreditToFeeToken(uint256)": FunctionFragment;
+    "createCreditLine(address,uint256)": FunctionFragment;
     "creditBalanceOf(address)": FunctionFragment;
+    "creditExpiration()": FunctionFragment;
+    "creditIssuance(address)": FunctionFragment;
     "creditLimitLeftOf(address)": FunctionFragment;
     "creditLimitOf(address)": FunctionFragment;
-    "creditLineExpiration()": FunctionFragment;
-    "creditLines(address)": FunctionFragment;
     "decimals()": FunctionFragment;
     "decreaseAllowance(address,uint256)": FunctionFragment;
+    "demurraged()": FunctionFragment;
+    "demurragedBalanceOf(address)": FunctionFragment;
     "extendCreditLine(address,uint256)": FunctionFragment;
     "feeManager()": FunctionFragment;
-    "getCollateralToken()": FunctionFragment;
+    "feeToken()": FunctionFragment;
+    "getFeeToken()": FunctionFragment;
     "getRoles()": FunctionFragment;
+    "inDefault(address)": FunctionFragment;
     "increaseAllowance(address,uint256)": FunctionFragment;
+    "initialize(address,address,string,string)": FunctionFragment;
     "isAuthorized(address)": FunctionFragment;
-    "minLTV()": FunctionFragment;
+    "isPastDue(address)": FunctionFragment;
     "name()": FunctionFragment;
-    "networkRoles()": FunctionFragment;
-    "oracle()": FunctionFragment;
     "owner()": FunctionFragment;
-    "pauseFees()": FunctionFragment;
-    "paused()": FunctionFragment;
+    "pastDueExpiration()": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
+    "repayCreditBalance(uint32)": FunctionFragment;
+    "reservePool()": FunctionFragment;
+    "savingsPool()": FunctionFragment;
+    "setCreditExpiration(uint256)": FunctionFragment;
     "setCreditLimit(address,uint256)": FunctionFragment;
-    "setCreditLineExpirationDays(uint32)": FunctionFragment;
-    "setMinLTV(uint32)": FunctionFragment;
+    "setFeeManager(address)": FunctionFragment;
+    "setPastDueExpiration(uint256)": FunctionFragment;
+    "setReservePool(address)": FunctionFragment;
+    "setSavingsPool(address)": FunctionFragment;
     "symbol()": FunctionFragment;
-    "totalCredit()": FunctionFragment;
+    "testBalanceOf(address)": FunctionFragment;
     "totalSupply()": FunctionFragment;
     "transfer(address,uint256)": FunctionFragment;
     "transferFrom(address,address,uint256)": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
-    "unpauseFees()": FunctionFragment;
+    "validateCreditLine(address)": FunctionFragment;
   };
 
   encodeFunctionData(
     functionFragment: "__CIP36_init",
     values: [string, string]
   ): string;
-  encodeFunctionData(
-    functionFragment: "__StableCredit_init",
-    values: [string, string, string]
-  ): string;
+  encodeFunctionData(functionFragment: "access", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "allowance",
     values: [string, string]
@@ -89,27 +94,35 @@ interface StableCreditInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(functionFragment: "burn", values: [BigNumberish]): string;
   encodeFunctionData(
+    functionFragment: "burnDemurraged",
+    values: [string]
+  ): string;
+  encodeFunctionData(
     functionFragment: "burnFrom",
     values: [string, BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: "canRequestCredit",
-    values: [string, string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "collateralToken",
+    functionFragment: "conversionRate",
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "convertToCollateral",
+    functionFragment: "convertCreditToFeeToken",
     values: [BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "createCreditLine",
-    values: [string, string, BigNumberish]
+    values: [string, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "creditBalanceOf",
+    values: [string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "creditExpiration",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "creditIssuance",
     values: [string]
   ): string;
   encodeFunctionData(
@@ -120,15 +133,18 @@ interface StableCreditInterface extends ethers.utils.Interface {
     functionFragment: "creditLimitOf",
     values: [string]
   ): string;
-  encodeFunctionData(
-    functionFragment: "creditLineExpiration",
-    values?: undefined
-  ): string;
-  encodeFunctionData(functionFragment: "creditLines", values: [string]): string;
   encodeFunctionData(functionFragment: "decimals", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "decreaseAllowance",
     values: [string, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "demurraged",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "demurragedBalanceOf",
+    values: [string]
   ): string;
   encodeFunctionData(
     functionFragment: "extendCreditLine",
@@ -138,49 +154,76 @@ interface StableCreditInterface extends ethers.utils.Interface {
     functionFragment: "feeManager",
     values?: undefined
   ): string;
+  encodeFunctionData(functionFragment: "feeToken", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "getCollateralToken",
+    functionFragment: "getFeeToken",
     values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "getRoles", values?: undefined): string;
+  encodeFunctionData(functionFragment: "inDefault", values: [string]): string;
   encodeFunctionData(
     functionFragment: "increaseAllowance",
     values: [string, BigNumberish]
   ): string;
   encodeFunctionData(
+    functionFragment: "initialize",
+    values: [string, string, string, string]
+  ): string;
+  encodeFunctionData(
     functionFragment: "isAuthorized",
     values: [string]
   ): string;
-  encodeFunctionData(functionFragment: "minLTV", values?: undefined): string;
+  encodeFunctionData(functionFragment: "isPastDue", values: [string]): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
+  encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "networkRoles",
+    functionFragment: "pastDueExpiration",
     values?: undefined
   ): string;
-  encodeFunctionData(functionFragment: "oracle", values?: undefined): string;
-  encodeFunctionData(functionFragment: "owner", values?: undefined): string;
-  encodeFunctionData(functionFragment: "pauseFees", values?: undefined): string;
-  encodeFunctionData(functionFragment: "paused", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "renounceOwnership",
     values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "repayCreditBalance",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "reservePool",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "savingsPool",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "setCreditExpiration",
+    values: [BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "setCreditLimit",
     values: [string, BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: "setCreditLineExpirationDays",
+    functionFragment: "setFeeManager",
+    values: [string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "setPastDueExpiration",
     values: [BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: "setMinLTV",
-    values: [BigNumberish]
+    functionFragment: "setReservePool",
+    values: [string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "setSavingsPool",
+    values: [string]
   ): string;
   encodeFunctionData(functionFragment: "symbol", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "totalCredit",
-    values?: undefined
+    functionFragment: "testBalanceOf",
+    values: [string]
   ): string;
   encodeFunctionData(
     functionFragment: "totalSupply",
@@ -199,18 +242,15 @@ interface StableCreditInterface extends ethers.utils.Interface {
     values: [string]
   ): string;
   encodeFunctionData(
-    functionFragment: "unpauseFees",
-    values?: undefined
+    functionFragment: "validateCreditLine",
+    values: [string]
   ): string;
 
   decodeFunctionResult(
     functionFragment: "__CIP36_init",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(
-    functionFragment: "__StableCredit_init",
-    data: BytesLike
-  ): Result;
+  decodeFunctionResult(functionFragment: "access", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "allowance", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
@@ -219,17 +259,17 @@ interface StableCreditInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "burn", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "burnDemurraged",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "burnFrom", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "canRequestCredit",
+    functionFragment: "conversionRate",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "collateralToken",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "convertToCollateral",
+    functionFragment: "convertCreditToFeeToken",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -241,6 +281,14 @@ interface StableCreditInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "creditExpiration",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "creditIssuance",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "creditLimitLeftOf",
     data: BytesLike
   ): Result;
@@ -248,17 +296,14 @@ interface StableCreditInterface extends ethers.utils.Interface {
     functionFragment: "creditLimitOf",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(
-    functionFragment: "creditLineExpiration",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "creditLines",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "decimals", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "decreaseAllowance",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "demurraged", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "demurragedBalanceOf",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -266,31 +311,47 @@ interface StableCreditInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "feeManager", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "feeToken", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "getCollateralToken",
+    functionFragment: "getFeeToken",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "getRoles", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "inDefault", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "increaseAllowance",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "isAuthorized",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "minLTV", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "isPastDue", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "networkRoles",
+    functionFragment: "pastDueExpiration",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "oracle", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "pauseFees", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "paused", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "renounceOwnership",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "repayCreditBalance",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "reservePool",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "savingsPool",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "setCreditExpiration",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -298,13 +359,24 @@ interface StableCreditInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "setCreditLineExpirationDays",
+    functionFragment: "setFeeManager",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "setMinLTV", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "setPastDueExpiration",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "setReservePool",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "setSavingsPool",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "symbol", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "totalCredit",
+    functionFragment: "testBalanceOf",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -321,20 +393,18 @@ interface StableCreditInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "unpauseFees",
+    functionFragment: "validateCreditLine",
     data: BytesLike
   ): Result;
 
   events: {
     "Approval(address,address,uint256)": EventFragment;
     "CreditLimitUpdate(address,uint256)": EventFragment;
-    "CreditLineCreated(address,address,uint256,uint256)": EventFragment;
+    "CreditLineCreated(address,uint256,uint256)": EventFragment;
     "CreditLineDefault(address)": EventFragment;
     "CreditLineLimitUpdated(address,uint256)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
-    "Paused(address)": EventFragment;
     "Transfer(address,address,uint256)": EventFragment;
-    "Unpaused(address)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "Approval"): EventFragment;
@@ -343,9 +413,7 @@ interface StableCreditInterface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: "CreditLineDefault"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "CreditLineLimitUpdated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "Paused"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Transfer"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "Unpaused"): EventFragment;
 }
 
 export type ApprovalEvent = TypedEvent<
@@ -361,9 +429,8 @@ export type CreditLimitUpdateEvent = TypedEvent<
 >;
 
 export type CreditLineCreatedEvent = TypedEvent<
-  [string, string, BigNumber, BigNumber] & {
+  [string, BigNumber, BigNumber] & {
     member: string;
-    pool: string;
     creditLimit: BigNumber;
     timestamp: BigNumber;
   }
@@ -379,13 +446,9 @@ export type OwnershipTransferredEvent = TypedEvent<
   [string, string] & { previousOwner: string; newOwner: string }
 >;
 
-export type PausedEvent = TypedEvent<[string] & { account: string }>;
-
 export type TransferEvent = TypedEvent<
   [string, string, BigNumber] & { from: string; to: string; value: BigNumber }
 >;
-
-export type UnpausedEvent = TypedEvent<[string] & { account: string }>;
 
 export class StableCredit extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -437,12 +500,7 @@ export class StableCredit extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    __StableCredit_init(
-      _feeManager: string,
-      _collateralToken: string,
-      _networkRoles: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+    access(overrides?: CallOverrides): Promise<[string]>;
 
     allowance(
       owner: string,
@@ -469,34 +527,39 @@ export class StableCredit extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    burnDemurraged(
+      _member: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     burnFrom(
       account: string,
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    canRequestCredit(
-      arg0: string,
-      arg1: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+    conversionRate(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    collateralToken(overrides?: CallOverrides): Promise<[string]>;
-
-    convertToCollateral(
+    convertCreditToFeeToken(
       amount: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
+    ): Promise<[BigNumber] & { conversion: BigNumber }>;
 
     createCreditLine(
       _member: string,
-      _pool: string,
       _creditLimit: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     creditBalanceOf(
       _member: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    creditExpiration(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    creditIssuance(
+      arg0: string,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
@@ -510,19 +573,6 @@ export class StableCredit extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
-    creditLineExpiration(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    creditLines(
-      arg0: string,
-      overrides?: CallOverrides
-    ): Promise<
-      [string, BigNumber, boolean] & {
-        creditPool: string;
-        issueDate: BigNumber;
-        deled: boolean;
-      }
-    >;
-
     decimals(overrides?: CallOverrides): Promise<[number]>;
 
     decreaseAllowance(
@@ -530,6 +580,13 @@ export class StableCredit extends BaseContract {
       subtractedValue: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
+
+    demurraged(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    demurragedBalanceOf(
+      _member: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
 
     extendCreditLine(
       _member: string,
@@ -539,9 +596,13 @@ export class StableCredit extends BaseContract {
 
     feeManager(overrides?: CallOverrides): Promise<[string]>;
 
-    getCollateralToken(overrides?: CallOverrides): Promise<[string]>;
+    feeToken(overrides?: CallOverrides): Promise<[string]>;
+
+    getFeeToken(overrides?: CallOverrides): Promise<[string]>;
 
     getRoles(overrides?: CallOverrides): Promise<[string]>;
+
+    inDefault(_member: string, overrides?: CallOverrides): Promise<[boolean]>;
 
     increaseAllowance(
       spender: string,
@@ -549,28 +610,42 @@ export class StableCredit extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    isAuthorized(
-      account: string,
-      overrides?: CallOverrides
-    ): Promise<[boolean]>;
-
-    minLTV(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    name(overrides?: CallOverrides): Promise<[string]>;
-
-    networkRoles(overrides?: CallOverrides): Promise<[string]>;
-
-    oracle(overrides?: CallOverrides): Promise<[string]>;
-
-    owner(overrides?: CallOverrides): Promise<[string]>;
-
-    pauseFees(
+    initialize(
+      _accessManager: string,
+      _feeToken: string,
+      name_: string,
+      symbol_: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    paused(overrides?: CallOverrides): Promise<[boolean]>;
+    isAuthorized(
+      _member: string,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
+    isPastDue(_member: string, overrides?: CallOverrides): Promise<[boolean]>;
+
+    name(overrides?: CallOverrides): Promise<[string]>;
+
+    owner(overrides?: CallOverrides): Promise<[string]>;
+
+    pastDueExpiration(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     renounceOwnership(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    repayCreditBalance(
+      _amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    reservePool(overrides?: CallOverrides): Promise<[string]>;
+
+    savingsPool(overrides?: CallOverrides): Promise<[string]>;
+
+    setCreditExpiration(
+      _seconds: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -580,19 +655,32 @@ export class StableCredit extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    setCreditLineExpirationDays(
-      _days: BigNumberish,
+    setFeeManager(
+      _feeManager: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    setMinLTV(
-      _percentage: BigNumberish,
+    setPastDueExpiration(
+      _seconds: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    setReservePool(
+      _reservePool: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    setSavingsPool(
+      _savingsPool: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     symbol(overrides?: CallOverrides): Promise<[string]>;
 
-    totalCredit(overrides?: CallOverrides): Promise<[BigNumber]>;
+    testBalanceOf(
+      _member: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
 
     totalSupply(overrides?: CallOverrides): Promise<[BigNumber]>;
 
@@ -614,7 +702,8 @@ export class StableCredit extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    unpauseFees(
+    validateCreditLine(
+      _member: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
   };
@@ -625,12 +714,7 @@ export class StableCredit extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  __StableCredit_init(
-    _feeManager: string,
-    _collateralToken: string,
-    _networkRoles: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  access(overrides?: CallOverrides): Promise<string>;
 
   allowance(
     owner: string,
@@ -657,28 +741,26 @@ export class StableCredit extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  burnDemurraged(
+    _member: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   burnFrom(
     account: string,
     amount: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  canRequestCredit(
-    arg0: string,
-    arg1: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  conversionRate(overrides?: CallOverrides): Promise<BigNumber>;
 
-  collateralToken(overrides?: CallOverrides): Promise<string>;
-
-  convertToCollateral(
+  convertCreditToFeeToken(
     amount: BigNumberish,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
   createCreditLine(
     _member: string,
-    _pool: string,
     _creditLimit: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
@@ -688,25 +770,16 @@ export class StableCredit extends BaseContract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
+  creditExpiration(overrides?: CallOverrides): Promise<BigNumber>;
+
+  creditIssuance(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
+
   creditLimitLeftOf(
     _member: string,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
   creditLimitOf(_member: string, overrides?: CallOverrides): Promise<BigNumber>;
-
-  creditLineExpiration(overrides?: CallOverrides): Promise<BigNumber>;
-
-  creditLines(
-    arg0: string,
-    overrides?: CallOverrides
-  ): Promise<
-    [string, BigNumber, boolean] & {
-      creditPool: string;
-      issueDate: BigNumber;
-      deled: boolean;
-    }
-  >;
 
   decimals(overrides?: CallOverrides): Promise<number>;
 
@@ -716,6 +789,13 @@ export class StableCredit extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  demurraged(overrides?: CallOverrides): Promise<BigNumber>;
+
+  demurragedBalanceOf(
+    _member: string,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
   extendCreditLine(
     _member: string,
     _creditLimit: BigNumberish,
@@ -724,9 +804,13 @@ export class StableCredit extends BaseContract {
 
   feeManager(overrides?: CallOverrides): Promise<string>;
 
-  getCollateralToken(overrides?: CallOverrides): Promise<string>;
+  feeToken(overrides?: CallOverrides): Promise<string>;
+
+  getFeeToken(overrides?: CallOverrides): Promise<string>;
 
   getRoles(overrides?: CallOverrides): Promise<string>;
+
+  inDefault(_member: string, overrides?: CallOverrides): Promise<boolean>;
 
   increaseAllowance(
     spender: string,
@@ -734,25 +818,39 @@ export class StableCredit extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  isAuthorized(account: string, overrides?: CallOverrides): Promise<boolean>;
-
-  minLTV(overrides?: CallOverrides): Promise<BigNumber>;
-
-  name(overrides?: CallOverrides): Promise<string>;
-
-  networkRoles(overrides?: CallOverrides): Promise<string>;
-
-  oracle(overrides?: CallOverrides): Promise<string>;
-
-  owner(overrides?: CallOverrides): Promise<string>;
-
-  pauseFees(
+  initialize(
+    _accessManager: string,
+    _feeToken: string,
+    name_: string,
+    symbol_: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  paused(overrides?: CallOverrides): Promise<boolean>;
+  isAuthorized(_member: string, overrides?: CallOverrides): Promise<boolean>;
+
+  isPastDue(_member: string, overrides?: CallOverrides): Promise<boolean>;
+
+  name(overrides?: CallOverrides): Promise<string>;
+
+  owner(overrides?: CallOverrides): Promise<string>;
+
+  pastDueExpiration(overrides?: CallOverrides): Promise<BigNumber>;
 
   renounceOwnership(
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  repayCreditBalance(
+    _amount: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  reservePool(overrides?: CallOverrides): Promise<string>;
+
+  savingsPool(overrides?: CallOverrides): Promise<string>;
+
+  setCreditExpiration(
+    _seconds: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -762,19 +860,29 @@ export class StableCredit extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  setCreditLineExpirationDays(
-    _days: BigNumberish,
+  setFeeManager(
+    _feeManager: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  setMinLTV(
-    _percentage: BigNumberish,
+  setPastDueExpiration(
+    _seconds: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  setReservePool(
+    _reservePool: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  setSavingsPool(
+    _savingsPool: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   symbol(overrides?: CallOverrides): Promise<string>;
 
-  totalCredit(overrides?: CallOverrides): Promise<BigNumber>;
+  testBalanceOf(_member: string, overrides?: CallOverrides): Promise<BigNumber>;
 
   totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -796,7 +904,8 @@ export class StableCredit extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  unpauseFees(
+  validateCreditLine(
+    _member: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -807,12 +916,7 @@ export class StableCredit extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    __StableCredit_init(
-      _feeManager: string,
-      _collateralToken: string,
-      _networkRoles: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    access(overrides?: CallOverrides): Promise<string>;
 
     allowance(
       owner: string,
@@ -836,28 +940,26 @@ export class StableCredit extends BaseContract {
 
     burn(amount: BigNumberish, overrides?: CallOverrides): Promise<void>;
 
+    burnDemurraged(
+      _member: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     burnFrom(
       account: string,
       amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    canRequestCredit(
-      arg0: string,
-      arg1: string,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
+    conversionRate(overrides?: CallOverrides): Promise<BigNumber>;
 
-    collateralToken(overrides?: CallOverrides): Promise<string>;
-
-    convertToCollateral(
+    convertCreditToFeeToken(
       amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     createCreditLine(
       _member: string,
-      _pool: string,
       _creditLimit: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
@@ -866,6 +968,10 @@ export class StableCredit extends BaseContract {
       _member: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    creditExpiration(overrides?: CallOverrides): Promise<BigNumber>;
+
+    creditIssuance(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     creditLimitLeftOf(
       _member: string,
@@ -877,19 +983,6 @@ export class StableCredit extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    creditLineExpiration(overrides?: CallOverrides): Promise<BigNumber>;
-
-    creditLines(
-      arg0: string,
-      overrides?: CallOverrides
-    ): Promise<
-      [string, BigNumber, boolean] & {
-        creditPool: string;
-        issueDate: BigNumber;
-        deled: boolean;
-      }
-    >;
-
     decimals(overrides?: CallOverrides): Promise<number>;
 
     decreaseAllowance(
@@ -897,6 +990,13 @@ export class StableCredit extends BaseContract {
       subtractedValue: BigNumberish,
       overrides?: CallOverrides
     ): Promise<boolean>;
+
+    demurraged(overrides?: CallOverrides): Promise<BigNumber>;
+
+    demurragedBalanceOf(
+      _member: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     extendCreditLine(
       _member: string,
@@ -906,9 +1006,13 @@ export class StableCredit extends BaseContract {
 
     feeManager(overrides?: CallOverrides): Promise<string>;
 
-    getCollateralToken(overrides?: CallOverrides): Promise<string>;
+    feeToken(overrides?: CallOverrides): Promise<string>;
+
+    getFeeToken(overrides?: CallOverrides): Promise<string>;
 
     getRoles(overrides?: CallOverrides): Promise<string>;
+
+    inDefault(_member: string, overrides?: CallOverrides): Promise<boolean>;
 
     increaseAllowance(
       spender: string,
@@ -916,23 +1020,39 @@ export class StableCredit extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    isAuthorized(account: string, overrides?: CallOverrides): Promise<boolean>;
+    initialize(
+      _accessManager: string,
+      _feeToken: string,
+      name_: string,
+      symbol_: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
-    minLTV(overrides?: CallOverrides): Promise<BigNumber>;
+    isAuthorized(_member: string, overrides?: CallOverrides): Promise<boolean>;
+
+    isPastDue(_member: string, overrides?: CallOverrides): Promise<boolean>;
 
     name(overrides?: CallOverrides): Promise<string>;
 
-    networkRoles(overrides?: CallOverrides): Promise<string>;
-
-    oracle(overrides?: CallOverrides): Promise<string>;
-
     owner(overrides?: CallOverrides): Promise<string>;
 
-    pauseFees(overrides?: CallOverrides): Promise<void>;
-
-    paused(overrides?: CallOverrides): Promise<boolean>;
+    pastDueExpiration(overrides?: CallOverrides): Promise<BigNumber>;
 
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
+
+    repayCreditBalance(
+      _amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    reservePool(overrides?: CallOverrides): Promise<string>;
+
+    savingsPool(overrides?: CallOverrides): Promise<string>;
+
+    setCreditExpiration(
+      _seconds: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     setCreditLimit(
       _member: string,
@@ -940,19 +1060,32 @@ export class StableCredit extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    setCreditLineExpirationDays(
-      _days: BigNumberish,
+    setFeeManager(
+      _feeManager: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    setMinLTV(
-      _percentage: BigNumberish,
+    setPastDueExpiration(
+      _seconds: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    setReservePool(
+      _reservePool: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    setSavingsPool(
+      _savingsPool: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
     symbol(overrides?: CallOverrides): Promise<string>;
 
-    totalCredit(overrides?: CallOverrides): Promise<BigNumber>;
+    testBalanceOf(
+      _member: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -974,7 +1107,10 @@ export class StableCredit extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    unpauseFees(overrides?: CallOverrides): Promise<void>;
+    validateCreditLine(
+      _member: string,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
   };
 
   filters: {
@@ -1012,34 +1148,22 @@ export class StableCredit extends BaseContract {
       { member: string; limit: BigNumber }
     >;
 
-    "CreditLineCreated(address,address,uint256,uint256)"(
+    "CreditLineCreated(address,uint256,uint256)"(
       member?: null,
-      pool?: null,
       creditLimit?: null,
       timestamp?: null
     ): TypedEventFilter<
-      [string, string, BigNumber, BigNumber],
-      {
-        member: string;
-        pool: string;
-        creditLimit: BigNumber;
-        timestamp: BigNumber;
-      }
+      [string, BigNumber, BigNumber],
+      { member: string; creditLimit: BigNumber; timestamp: BigNumber }
     >;
 
     CreditLineCreated(
       member?: null,
-      pool?: null,
       creditLimit?: null,
       timestamp?: null
     ): TypedEventFilter<
-      [string, string, BigNumber, BigNumber],
-      {
-        member: string;
-        pool: string;
-        creditLimit: BigNumber;
-        timestamp: BigNumber;
-      }
+      [string, BigNumber, BigNumber],
+      { member: string; creditLimit: BigNumber; timestamp: BigNumber }
     >;
 
     "CreditLineDefault(address)"(
@@ -1082,12 +1206,6 @@ export class StableCredit extends BaseContract {
       { previousOwner: string; newOwner: string }
     >;
 
-    "Paused(address)"(
-      account?: null
-    ): TypedEventFilter<[string], { account: string }>;
-
-    Paused(account?: null): TypedEventFilter<[string], { account: string }>;
-
     "Transfer(address,address,uint256)"(
       from?: string | null,
       to?: string | null,
@@ -1105,12 +1223,6 @@ export class StableCredit extends BaseContract {
       [string, string, BigNumber],
       { from: string; to: string; value: BigNumber }
     >;
-
-    "Unpaused(address)"(
-      account?: null
-    ): TypedEventFilter<[string], { account: string }>;
-
-    Unpaused(account?: null): TypedEventFilter<[string], { account: string }>;
   };
 
   estimateGas: {
@@ -1120,12 +1232,7 @@ export class StableCredit extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    __StableCredit_init(
-      _feeManager: string,
-      _collateralToken: string,
-      _networkRoles: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    access(overrides?: CallOverrides): Promise<BigNumber>;
 
     allowance(
       owner: string,
@@ -1152,28 +1259,26 @@ export class StableCredit extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    burnDemurraged(
+      _member: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     burnFrom(
       account: string,
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    canRequestCredit(
-      arg0: string,
-      arg1: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    conversionRate(overrides?: CallOverrides): Promise<BigNumber>;
 
-    collateralToken(overrides?: CallOverrides): Promise<BigNumber>;
-
-    convertToCollateral(
+    convertCreditToFeeToken(
       amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     createCreditLine(
       _member: string,
-      _pool: string,
       _creditLimit: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
@@ -1182,6 +1287,10 @@ export class StableCredit extends BaseContract {
       _member: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    creditExpiration(overrides?: CallOverrides): Promise<BigNumber>;
+
+    creditIssuance(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     creditLimitLeftOf(
       _member: string,
@@ -1193,16 +1302,19 @@ export class StableCredit extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    creditLineExpiration(overrides?: CallOverrides): Promise<BigNumber>;
-
-    creditLines(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
-
     decimals(overrides?: CallOverrides): Promise<BigNumber>;
 
     decreaseAllowance(
       spender: string,
       subtractedValue: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    demurraged(overrides?: CallOverrides): Promise<BigNumber>;
+
+    demurragedBalanceOf(
+      _member: string,
+      overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     extendCreditLine(
@@ -1213,9 +1325,13 @@ export class StableCredit extends BaseContract {
 
     feeManager(overrides?: CallOverrides): Promise<BigNumber>;
 
-    getCollateralToken(overrides?: CallOverrides): Promise<BigNumber>;
+    feeToken(overrides?: CallOverrides): Promise<BigNumber>;
+
+    getFeeToken(overrides?: CallOverrides): Promise<BigNumber>;
 
     getRoles(overrides?: CallOverrides): Promise<BigNumber>;
+
+    inDefault(_member: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     increaseAllowance(
       spender: string,
@@ -1223,28 +1339,42 @@ export class StableCredit extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    isAuthorized(
-      account: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    minLTV(overrides?: CallOverrides): Promise<BigNumber>;
-
-    name(overrides?: CallOverrides): Promise<BigNumber>;
-
-    networkRoles(overrides?: CallOverrides): Promise<BigNumber>;
-
-    oracle(overrides?: CallOverrides): Promise<BigNumber>;
-
-    owner(overrides?: CallOverrides): Promise<BigNumber>;
-
-    pauseFees(
+    initialize(
+      _accessManager: string,
+      _feeToken: string,
+      name_: string,
+      symbol_: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    paused(overrides?: CallOverrides): Promise<BigNumber>;
+    isAuthorized(
+      _member: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    isPastDue(_member: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    name(overrides?: CallOverrides): Promise<BigNumber>;
+
+    owner(overrides?: CallOverrides): Promise<BigNumber>;
+
+    pastDueExpiration(overrides?: CallOverrides): Promise<BigNumber>;
 
     renounceOwnership(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    repayCreditBalance(
+      _amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    reservePool(overrides?: CallOverrides): Promise<BigNumber>;
+
+    savingsPool(overrides?: CallOverrides): Promise<BigNumber>;
+
+    setCreditExpiration(
+      _seconds: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -1254,19 +1384,32 @@ export class StableCredit extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    setCreditLineExpirationDays(
-      _days: BigNumberish,
+    setFeeManager(
+      _feeManager: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    setMinLTV(
-      _percentage: BigNumberish,
+    setPastDueExpiration(
+      _seconds: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    setReservePool(
+      _reservePool: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    setSavingsPool(
+      _savingsPool: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     symbol(overrides?: CallOverrides): Promise<BigNumber>;
 
-    totalCredit(overrides?: CallOverrides): Promise<BigNumber>;
+    testBalanceOf(
+      _member: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1288,7 +1431,8 @@ export class StableCredit extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    unpauseFees(
+    validateCreditLine(
+      _member: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
   };
@@ -1300,12 +1444,7 @@ export class StableCredit extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    __StableCredit_init(
-      _feeManager: string,
-      _collateralToken: string,
-      _networkRoles: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
+    access(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     allowance(
       owner: string,
@@ -1335,34 +1474,39 @@ export class StableCredit extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
+    burnDemurraged(
+      _member: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
     burnFrom(
       account: string,
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    canRequestCredit(
-      arg0: string,
-      arg1: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
+    conversionRate(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    collateralToken(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    convertToCollateral(
+    convertCreditToFeeToken(
       amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     createCreditLine(
       _member: string,
-      _pool: string,
       _creditLimit: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     creditBalanceOf(
       _member: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    creditExpiration(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    creditIssuance(
+      arg0: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -1376,21 +1520,19 @@ export class StableCredit extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    creditLineExpiration(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    creditLines(
-      arg0: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     decimals(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     decreaseAllowance(
       spender: string,
       subtractedValue: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    demurraged(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    demurragedBalanceOf(
+      _member: string,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     extendCreditLine(
@@ -1401,11 +1543,16 @@ export class StableCredit extends BaseContract {
 
     feeManager(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    getCollateralToken(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    feeToken(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    getFeeToken(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     getRoles(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    inDefault(
+      _member: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
     increaseAllowance(
       spender: string,
@@ -1413,28 +1560,45 @@ export class StableCredit extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    isAuthorized(
-      account: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    minLTV(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    networkRoles(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    oracle(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    pauseFees(
+    initialize(
+      _accessManager: string,
+      _feeToken: string,
+      name_: string,
+      symbol_: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    paused(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    isAuthorized(
+      _member: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    isPastDue(
+      _member: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    pastDueExpiration(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     renounceOwnership(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    repayCreditBalance(
+      _amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    reservePool(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    savingsPool(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    setCreditExpiration(
+      _seconds: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -1444,19 +1608,32 @@ export class StableCredit extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    setCreditLineExpirationDays(
-      _days: BigNumberish,
+    setFeeManager(
+      _feeManager: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    setMinLTV(
-      _percentage: BigNumberish,
+    setPastDueExpiration(
+      _seconds: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    setReservePool(
+      _reservePool: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    setSavingsPool(
+      _savingsPool: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     symbol(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    totalCredit(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    testBalanceOf(
+      _member: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
     totalSupply(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
@@ -1478,7 +1655,8 @@ export class StableCredit extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    unpauseFees(
+    validateCreditLine(
+      _member: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
   };

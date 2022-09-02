@@ -21,23 +21,32 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface SavingsPoolInterface extends ethers.utils.Interface {
   functions: {
-    "__SavingsPool_init(address,address)": FunctionFragment;
+    "access()": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
-    "collateralToken()": FunctionFragment;
-    "earned(address)": FunctionFragment;
+    "claim()": FunctionFragment;
+    "claimReimbursement()": FunctionFragment;
+    "claimReward()": FunctionFragment;
+    "conversionRate()": FunctionFragment;
+    "demurrage(address,uint256)": FunctionFragment;
+    "demurrageIndex()": FunctionFragment;
+    "demurraged()": FunctionFragment;
+    "demurragedBalanceOf(address)": FunctionFragment;
+    "earnedReimbursement(address)": FunctionFragment;
+    "earnedRewards(address)": FunctionFragment;
     "exit()": FunctionFragment;
-    "getReward()": FunctionFragment;
+    "feeToken()": FunctionFragment;
     "getRewardForDuration()": FunctionFragment;
+    "initialize(address,address)": FunctionFragment;
     "lastTimeRewardApplicable()": FunctionFragment;
     "lastUpdateTime()": FunctionFragment;
-    "networkRoles()": FunctionFragment;
     "notifyRewardAmount(uint256)": FunctionFragment;
     "paused()": FunctionFragment;
     "periodFinish()": FunctionFragment;
+    "reimburse(uint256)": FunctionFragment;
+    "reimbursements()": FunctionFragment;
     "rewardPerToken()": FunctionFragment;
     "rewardPerTokenStored()": FunctionFragment;
     "rewardRate()": FunctionFragment;
-    "rewardToken()": FunctionFragment;
     "rewards(address)": FunctionFragment;
     "rewardsDuration()": FunctionFragment;
     "setRewardsDuration(address,uint256)": FunctionFragment;
@@ -49,21 +58,54 @@ interface SavingsPoolInterface extends ethers.utils.Interface {
     "withdraw(uint256)": FunctionFragment;
   };
 
-  encodeFunctionData(
-    functionFragment: "__SavingsPool_init",
-    values: [string, string]
-  ): string;
+  encodeFunctionData(functionFragment: "access", values?: undefined): string;
   encodeFunctionData(functionFragment: "balanceOf", values: [string]): string;
+  encodeFunctionData(functionFragment: "claim", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "collateralToken",
+    functionFragment: "claimReimbursement",
     values?: undefined
   ): string;
-  encodeFunctionData(functionFragment: "earned", values: [string]): string;
+  encodeFunctionData(
+    functionFragment: "claimReward",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "conversionRate",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "demurrage",
+    values: [string, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "demurrageIndex",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "demurraged",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "demurragedBalanceOf",
+    values: [string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "earnedReimbursement",
+    values: [string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "earnedRewards",
+    values: [string]
+  ): string;
   encodeFunctionData(functionFragment: "exit", values?: undefined): string;
-  encodeFunctionData(functionFragment: "getReward", values?: undefined): string;
+  encodeFunctionData(functionFragment: "feeToken", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "getRewardForDuration",
     values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "initialize",
+    values: [string, string]
   ): string;
   encodeFunctionData(
     functionFragment: "lastTimeRewardApplicable",
@@ -71,10 +113,6 @@ interface SavingsPoolInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "lastUpdateTime",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "networkRoles",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -87,6 +125,14 @@ interface SavingsPoolInterface extends ethers.utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
+    functionFragment: "reimburse",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "reimbursements",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "rewardPerToken",
     values?: undefined
   ): string;
@@ -96,10 +142,6 @@ interface SavingsPoolInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "rewardRate",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "rewardToken",
     values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "rewards", values: [string]): string;
@@ -133,32 +175,52 @@ interface SavingsPoolInterface extends ethers.utils.Interface {
     values: [BigNumberish]
   ): string;
 
-  decodeFunctionResult(
-    functionFragment: "__SavingsPool_init",
-    data: BytesLike
-  ): Result;
+  decodeFunctionResult(functionFragment: "access", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "claim", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "collateralToken",
+    functionFragment: "claimReimbursement",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "earned", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "claimReward",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "conversionRate",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "demurrage", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "demurrageIndex",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "demurraged", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "demurragedBalanceOf",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "earnedReimbursement",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "earnedRewards",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "exit", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "getReward", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "feeToken", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "getRewardForDuration",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "lastTimeRewardApplicable",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
     functionFragment: "lastUpdateTime",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "networkRoles",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -170,6 +232,11 @@ interface SavingsPoolInterface extends ethers.utils.Interface {
     functionFragment: "periodFinish",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "reimburse", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "reimbursements",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "rewardPerToken",
     data: BytesLike
@@ -179,10 +246,6 @@ interface SavingsPoolInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "rewardRate", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "rewardToken",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "rewards", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "rewardsDuration",
@@ -302,36 +365,66 @@ export class SavingsPool extends BaseContract {
   interface: SavingsPoolInterface;
 
   functions: {
-    __SavingsPool_init(
-      _stableCredit: string,
-      _networkRoles: string,
+    access(overrides?: CallOverrides): Promise<[string]>;
+
+    balanceOf(_member: string, overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    claim(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    balanceOf(
-      _account: string,
+    claimReimbursement(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    claimReward(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    conversionRate(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    demurrage(
+      account: string,
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    demurrageIndex(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    demurraged(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    demurragedBalanceOf(
+      _member: string,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
-    collateralToken(overrides?: CallOverrides): Promise<[string]>;
+    earnedReimbursement(
+      account: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
 
-    earned(account: string, overrides?: CallOverrides): Promise<[BigNumber]>;
+    earnedRewards(
+      account: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
 
     exit(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    getReward(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+    feeToken(overrides?: CallOverrides): Promise<[string]>;
 
     getRewardForDuration(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    initialize(
+      _stableCredit: string,
+      _accessManager: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
 
     lastTimeRewardApplicable(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     lastUpdateTime(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    networkRoles(overrides?: CallOverrides): Promise<[string]>;
 
     notifyRewardAmount(
       reward: BigNumberish,
@@ -342,13 +435,18 @@ export class SavingsPool extends BaseContract {
 
     periodFinish(overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    reimburse(
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    reimbursements(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     rewardPerToken(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     rewardPerTokenStored(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     rewardRate(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    rewardToken(overrides?: CallOverrides): Promise<[string]>;
 
     rewards(arg0: string, overrides?: CallOverrides): Promise<[BigNumber]>;
 
@@ -386,33 +484,63 @@ export class SavingsPool extends BaseContract {
     ): Promise<ContractTransaction>;
   };
 
-  __SavingsPool_init(
-    _stableCredit: string,
-    _networkRoles: string,
+  access(overrides?: CallOverrides): Promise<string>;
+
+  balanceOf(_member: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+  claim(
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  balanceOf(_account: string, overrides?: CallOverrides): Promise<BigNumber>;
+  claimReimbursement(
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
 
-  collateralToken(overrides?: CallOverrides): Promise<string>;
+  claimReward(
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
 
-  earned(account: string, overrides?: CallOverrides): Promise<BigNumber>;
+  conversionRate(overrides?: CallOverrides): Promise<BigNumber>;
+
+  demurrage(
+    account: string,
+    amount: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  demurrageIndex(overrides?: CallOverrides): Promise<BigNumber>;
+
+  demurraged(overrides?: CallOverrides): Promise<BigNumber>;
+
+  demurragedBalanceOf(
+    _member: string,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  earnedReimbursement(
+    account: string,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  earnedRewards(account: string, overrides?: CallOverrides): Promise<BigNumber>;
 
   exit(
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  getReward(
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  feeToken(overrides?: CallOverrides): Promise<string>;
 
   getRewardForDuration(overrides?: CallOverrides): Promise<BigNumber>;
+
+  initialize(
+    _stableCredit: string,
+    _accessManager: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
 
   lastTimeRewardApplicable(overrides?: CallOverrides): Promise<BigNumber>;
 
   lastUpdateTime(overrides?: CallOverrides): Promise<BigNumber>;
-
-  networkRoles(overrides?: CallOverrides): Promise<string>;
 
   notifyRewardAmount(
     reward: BigNumberish,
@@ -423,13 +551,18 @@ export class SavingsPool extends BaseContract {
 
   periodFinish(overrides?: CallOverrides): Promise<BigNumber>;
 
+  reimburse(
+    amount: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  reimbursements(overrides?: CallOverrides): Promise<BigNumber>;
+
   rewardPerToken(overrides?: CallOverrides): Promise<BigNumber>;
 
   rewardPerTokenStored(overrides?: CallOverrides): Promise<BigNumber>;
 
   rewardRate(overrides?: CallOverrides): Promise<BigNumber>;
-
-  rewardToken(overrides?: CallOverrides): Promise<string>;
 
   rewards(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -467,29 +600,58 @@ export class SavingsPool extends BaseContract {
   ): Promise<ContractTransaction>;
 
   callStatic: {
-    __SavingsPool_init(
-      _stableCredit: string,
-      _networkRoles: string,
+    access(overrides?: CallOverrides): Promise<string>;
+
+    balanceOf(_member: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    claim(overrides?: CallOverrides): Promise<void>;
+
+    claimReimbursement(overrides?: CallOverrides): Promise<void>;
+
+    claimReward(overrides?: CallOverrides): Promise<void>;
+
+    conversionRate(overrides?: CallOverrides): Promise<BigNumber>;
+
+    demurrage(
+      account: string,
+      amount: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<void>;
+    ): Promise<BigNumber>;
 
-    balanceOf(_account: string, overrides?: CallOverrides): Promise<BigNumber>;
+    demurrageIndex(overrides?: CallOverrides): Promise<BigNumber>;
 
-    collateralToken(overrides?: CallOverrides): Promise<string>;
+    demurraged(overrides?: CallOverrides): Promise<BigNumber>;
 
-    earned(account: string, overrides?: CallOverrides): Promise<BigNumber>;
+    demurragedBalanceOf(
+      _member: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    earnedReimbursement(
+      account: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    earnedRewards(
+      account: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     exit(overrides?: CallOverrides): Promise<void>;
 
-    getReward(overrides?: CallOverrides): Promise<void>;
+    feeToken(overrides?: CallOverrides): Promise<string>;
 
     getRewardForDuration(overrides?: CallOverrides): Promise<BigNumber>;
+
+    initialize(
+      _stableCredit: string,
+      _accessManager: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     lastTimeRewardApplicable(overrides?: CallOverrides): Promise<BigNumber>;
 
     lastUpdateTime(overrides?: CallOverrides): Promise<BigNumber>;
-
-    networkRoles(overrides?: CallOverrides): Promise<string>;
 
     notifyRewardAmount(
       reward: BigNumberish,
@@ -500,13 +662,15 @@ export class SavingsPool extends BaseContract {
 
     periodFinish(overrides?: CallOverrides): Promise<BigNumber>;
 
+    reimburse(amount: BigNumberish, overrides?: CallOverrides): Promise<void>;
+
+    reimbursements(overrides?: CallOverrides): Promise<BigNumber>;
+
     rewardPerToken(overrides?: CallOverrides): Promise<BigNumber>;
 
     rewardPerTokenStored(overrides?: CallOverrides): Promise<BigNumber>;
 
     rewardRate(overrides?: CallOverrides): Promise<BigNumber>;
-
-    rewardToken(overrides?: CallOverrides): Promise<string>;
 
     rewards(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -641,33 +805,66 @@ export class SavingsPool extends BaseContract {
   };
 
   estimateGas: {
-    __SavingsPool_init(
-      _stableCredit: string,
-      _networkRoles: string,
+    access(overrides?: CallOverrides): Promise<BigNumber>;
+
+    balanceOf(_member: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    claim(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    balanceOf(_account: string, overrides?: CallOverrides): Promise<BigNumber>;
+    claimReimbursement(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
 
-    collateralToken(overrides?: CallOverrides): Promise<BigNumber>;
+    claimReward(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
 
-    earned(account: string, overrides?: CallOverrides): Promise<BigNumber>;
+    conversionRate(overrides?: CallOverrides): Promise<BigNumber>;
+
+    demurrage(
+      account: string,
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    demurrageIndex(overrides?: CallOverrides): Promise<BigNumber>;
+
+    demurraged(overrides?: CallOverrides): Promise<BigNumber>;
+
+    demurragedBalanceOf(
+      _member: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    earnedReimbursement(
+      account: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    earnedRewards(
+      account: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     exit(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    getReward(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    feeToken(overrides?: CallOverrides): Promise<BigNumber>;
 
     getRewardForDuration(overrides?: CallOverrides): Promise<BigNumber>;
+
+    initialize(
+      _stableCredit: string,
+      _accessManager: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
 
     lastTimeRewardApplicable(overrides?: CallOverrides): Promise<BigNumber>;
 
     lastUpdateTime(overrides?: CallOverrides): Promise<BigNumber>;
-
-    networkRoles(overrides?: CallOverrides): Promise<BigNumber>;
 
     notifyRewardAmount(
       reward: BigNumberish,
@@ -678,13 +875,18 @@ export class SavingsPool extends BaseContract {
 
     periodFinish(overrides?: CallOverrides): Promise<BigNumber>;
 
+    reimburse(
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    reimbursements(overrides?: CallOverrides): Promise<BigNumber>;
+
     rewardPerToken(overrides?: CallOverrides): Promise<BigNumber>;
 
     rewardPerTokenStored(overrides?: CallOverrides): Promise<BigNumber>;
 
     rewardRate(overrides?: CallOverrides): Promise<BigNumber>;
-
-    rewardToken(overrides?: CallOverrides): Promise<BigNumber>;
 
     rewards(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -723,20 +925,48 @@ export class SavingsPool extends BaseContract {
   };
 
   populateTransaction: {
-    __SavingsPool_init(
-      _stableCredit: string,
-      _networkRoles: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
+    access(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     balanceOf(
-      _account: string,
+      _member: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    collateralToken(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    claim(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
 
-    earned(
+    claimReimbursement(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    claimReward(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    conversionRate(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    demurrage(
+      account: string,
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    demurrageIndex(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    demurraged(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    demurragedBalanceOf(
+      _member: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    earnedReimbursement(
+      account: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    earnedRewards(
       account: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
@@ -745,12 +975,16 @@ export class SavingsPool extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    getReward(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
+    feeToken(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     getRewardForDuration(
       overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    initialize(
+      _stableCredit: string,
+      _accessManager: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     lastTimeRewardApplicable(
@@ -758,8 +992,6 @@ export class SavingsPool extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     lastUpdateTime(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    networkRoles(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     notifyRewardAmount(
       reward: BigNumberish,
@@ -770,6 +1002,13 @@ export class SavingsPool extends BaseContract {
 
     periodFinish(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    reimburse(
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    reimbursements(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     rewardPerToken(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     rewardPerTokenStored(
@@ -777,8 +1016,6 @@ export class SavingsPool extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     rewardRate(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    rewardToken(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     rewards(
       arg0: string,

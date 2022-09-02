@@ -27,7 +27,6 @@ interface CIP36UpgradeableInterface extends ethers.utils.Interface {
     "balanceOf(address)": FunctionFragment;
     "burn(uint256)": FunctionFragment;
     "burnFrom(address,uint256)": FunctionFragment;
-    "canRequestCredit(address,address)": FunctionFragment;
     "creditBalanceOf(address)": FunctionFragment;
     "creditLimitLeftOf(address)": FunctionFragment;
     "creditLimitOf(address)": FunctionFragment;
@@ -62,10 +61,6 @@ interface CIP36UpgradeableInterface extends ethers.utils.Interface {
   encodeFunctionData(
     functionFragment: "burnFrom",
     values: [string, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "canRequestCredit",
-    values: [string, string]
   ): string;
   encodeFunctionData(
     functionFragment: "creditBalanceOf",
@@ -125,10 +120,6 @@ interface CIP36UpgradeableInterface extends ethers.utils.Interface {
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "burn", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "burnFrom", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "canRequestCredit",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(
     functionFragment: "creditBalanceOf",
     data: BytesLike
@@ -283,12 +274,6 @@ export class CIP36Upgradeable extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    canRequestCredit(
-      arg0: string,
-      arg1: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
     creditBalanceOf(
       _member: string,
       overrides?: CallOverrides
@@ -386,12 +371,6 @@ export class CIP36Upgradeable extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  canRequestCredit(
-    arg0: string,
-    arg1: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
   creditBalanceOf(
     _member: string,
     overrides?: CallOverrides
@@ -482,12 +461,6 @@ export class CIP36Upgradeable extends BaseContract {
       amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
-
-    canRequestCredit(
-      arg0: string,
-      arg1: string,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
 
     creditBalanceOf(
       _member: string,
@@ -655,12 +628,6 @@ export class CIP36Upgradeable extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    canRequestCredit(
-      arg0: string,
-      arg1: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
     creditBalanceOf(
       _member: string,
       overrides?: CallOverrides
@@ -759,12 +726,6 @@ export class CIP36Upgradeable extends BaseContract {
     burnFrom(
       account: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    canRequestCredit(
-      arg0: string,
-      arg1: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 

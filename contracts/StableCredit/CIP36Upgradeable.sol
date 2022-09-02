@@ -13,7 +13,7 @@ contract CIP36Upgradeable is OwnableUpgradeable, ERC20BurnableUpgradeable {
         uint128 creditLimit;
     }
 
-    mapping(address => Member) private _members;
+    mapping(address => Member) internal _members;
 
     event CreditLimitUpdate(address member, uint256 limit);
 
@@ -50,13 +50,6 @@ contract CIP36Upgradeable is OwnableUpgradeable, ERC20BurnableUpgradeable {
     function setCreditLimit(address _member, uint256 _limit) public virtual onlyAuthorized {
         _members[_member].creditLimit = _limit.toUInt128();
         emit CreditLimitUpdate(_member, _limit);
-    }
-
-    function canRequestCredit(
-        address, /*_requester*/
-        address /*_member*/
-    ) public virtual returns (bool) {
-        return true;
     }
 
     function _transfer(

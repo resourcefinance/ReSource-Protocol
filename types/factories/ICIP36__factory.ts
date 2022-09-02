@@ -11,30 +11,6 @@ const _abi = [
     inputs: [
       {
         internalType: "address",
-        name: "_requester",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "_member",
-        type: "address",
-      },
-    ],
-    name: "canRequestCredit",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
         name: "_member",
         type: "address",
       },

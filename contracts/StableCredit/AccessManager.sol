@@ -3,14 +3,9 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
-import "./interface/INetworkRoles.sol";
-import "./interface/ICIP36.sol";
+import "./interface/IAccessManager.sol";
 
-contract NetworkRoles is AccessControlUpgradeable, OwnableUpgradeable, INetworkRoles {
-    /* ========== STATE VARIABLES ========== */
-
-    address network;
-
+contract AccessManager is AccessControlUpgradeable, OwnableUpgradeable, IAccessManager {
     /* ========== INITIALIZER ========== */
 
     function initialize(address[] memory _operators) external initializer {
@@ -22,7 +17,7 @@ contract NetworkRoles is AccessControlUpgradeable, OwnableUpgradeable, INetworkR
         _setRoleAdmin("MEMBER", "OPERATOR");
 
         for (uint256 j = 0; j < _operators.length; j++) {
-            require(_operators[j] != address(0), "NetworkRoles: invalid operator supplied");
+            require(_operators[j] != address(0), "AccessManager: invalid operator supplied");
             grantRole("OPERATOR", _operators[j]);
         }
     }
@@ -48,10 +43,6 @@ contract NetworkRoles is AccessControlUpgradeable, OwnableUpgradeable, INetworkR
         revokeRole("OPERATOR", _operator);
     }
 
-    function setNetwork(address _network) external onlyNetworkOperator {
-        network = _network;
-    }
-
     /* ========== VIEWS ========== */
 
     function isMember(address _member) external view override returns (bool) {
@@ -65,22 +56,22 @@ contract NetworkRoles is AccessControlUpgradeable, OwnableUpgradeable, INetworkR
     /* ========== MODIFIERS ========== */
 
     modifier memberExists(address _member) {
-        require(hasRole("MEMBER", _member), "NetworkRoles: member does not exist");
+        require(hasRole("MEMBER", _member), "AccessManager: member does not exist");
         _;
     }
 
     modifier operatorDoesNotExist(address _operator) {
-        require(!hasRole("OPERATOR", _operator), "NetworkRoles: operator already exists");
+        require(!hasRole("OPERATOR", _operator), "AccessManager: operator already exists");
         _;
     }
 
     modifier onlyNetworkOperator() {
-        require(hasRole("OPERATOR", msg.sender), "NetworkRoles: operator does not exist");
+        require(hasRole("OPERATOR", msg.sender), "AccessManager: operator does not exist");
         _;
     }
 
     modifier onlyAdmin() {
-        require(hasRole(DEFAULT_ADMIN_ROLE, msg.sender), "NetworkRoles: Only admin can call");
+        require(hasRole(DEFAULT_ADMIN_ROLE, msg.sender), "AccessManager: Only admin can call");
         _;
     }
 

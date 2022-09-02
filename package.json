@@ -33,6 +33,7 @@
     "@openzeppelin/contracts-upgradeable": "^4.1.0",
     "@openzeppelin/hardhat-upgrades": "^1.8.2",
     "@tenderly/hardhat-tenderly": "^1.0.10",
+    "@uniswap/v3-periphery": "^1.4.1",
     "chalk": "^4.1.0",
     "ethereum-waffle": "^3.1.1",
     "ethers": "^5.4.4",
@@ -52,7 +53,9 @@
   "scripts": {
     "chain": "yarn hardhat node --network hardhat --no-deploy",
     "fork": "yarn hardhat node --no-deploy --network hardhat --fork https://mainnet.infura.io/v3/460f40a260564ac4a4f4b3fffb032dad",
+    "pretest": "yarn typechain",
     "test": "yarn hardhat test --network hardhat",
+    "postcompile": "yarn typechain",
     "compile": "yarn hardhat compile",
     "coverage": "yarn hardhat coverage --testfiles 'test/**/*.ts' --network ganache",
     "typechain": "yarn hardhat typechain",

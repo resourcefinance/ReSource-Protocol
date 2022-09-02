@@ -11,11 +11,22 @@ contract ReservePoolRestrictStakeable is CreditPoolStakeable {
 
     /* ========== INITIALIZER ========== */
 
-    function __ReservePoolRestrictStakeable_init(address _stableCredit, address _feeManager)
-        external
-        initializer
-    {
-        __ReservePoolStakeable_init(_stableCredit, _feeManager);
+    function __ReservePoolRestrictStakeable_init(
+        address _stableCredit,
+        address _savingsPool,
+        address _sourceAddress,
+        address _swapRouter,
+        uint256 _sourceSyncPercent,
+        uint256 _operatorPercent
+    ) public initializer {
+        __ReservePoolStakeable_init(
+            _stableCredit,
+            _savingsPool,
+            _sourceAddress,
+            _swapRouter,
+            _sourceSyncPercent,
+            _operatorPercent
+        );
     }
 
     function earned(address account, address _rewardsToken) public view override returns (uint256) {

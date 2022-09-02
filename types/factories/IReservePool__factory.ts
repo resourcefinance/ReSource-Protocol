@@ -15,22 +15,40 @@ const _abi = [
         type: "uint256",
       },
     ],
-    name: "stake",
+    name: "depositFees",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
   },
   {
-    inputs: [],
-    name: "totalCollateral",
-    outputs: [
+    inputs: [
+      {
+        internalType: "address",
+        name: "account",
+        type: "address",
+      },
       {
         internalType: "uint256",
-        name: "",
+        name: "amount",
         type: "uint256",
       },
     ],
-    stateMutability: "view",
+    name: "reimburseMember",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "amount",
+        type: "uint256",
+      },
+    ],
+    name: "reimburseSavings",
+    outputs: [],
+    stateMutability: "nonpayable",
     type: "function",
   },
 ];

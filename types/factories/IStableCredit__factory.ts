@@ -18,12 +18,6 @@ const _abi = [
       },
       {
         indexed: false,
-        internalType: "address",
-        name: "pool",
-        type: "address",
-      },
-      {
-        indexed: false,
         internalType: "uint256",
         name: "creditLimit",
         type: "uint256",
@@ -97,7 +91,7 @@ const _abi = [
         type: "uint256",
       },
     ],
-    name: "convertToCollateral",
+    name: "convertCreditToFeeToken",
     outputs: [
       {
         internalType: "uint256",
@@ -110,7 +104,7 @@ const _abi = [
   },
   {
     inputs: [],
-    name: "getCollateralToken",
+    name: "getFeeToken",
     outputs: [
       {
         internalType: "address",
@@ -151,59 +145,6 @@ const _abi = [
       },
     ],
     stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "to",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256",
-      },
-    ],
-    name: "transfer",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "from",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "to",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256",
-      },
-    ],
-    name: "transferFrom",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
-    stateMutability: "nonpayable",
     type: "function",
   },
 ];

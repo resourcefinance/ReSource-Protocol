@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-interface INetworkRoles {
+interface IAccessManager {
     event MemberAdded(address member);
 
     function isMember(address _member) external view returns (bool);

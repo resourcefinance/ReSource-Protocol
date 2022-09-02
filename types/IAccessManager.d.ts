@@ -19,43 +19,40 @@ import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
-interface IReservePoolInterface extends ethers.utils.Interface {
+interface IAccessManagerInterface extends ethers.utils.Interface {
   functions: {
-    "depositFees(uint256)": FunctionFragment;
-    "reimburseMember(address,uint256)": FunctionFragment;
-    "reimburseSavings(uint256)": FunctionFragment;
+    "grantMember(address)": FunctionFragment;
+    "isMember(address)": FunctionFragment;
+    "isNetworkOperator(address)": FunctionFragment;
   };
 
+  encodeFunctionData(functionFragment: "grantMember", values: [string]): string;
+  encodeFunctionData(functionFragment: "isMember", values: [string]): string;
   encodeFunctionData(
-    functionFragment: "depositFees",
-    values: [BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "reimburseMember",
-    values: [string, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "reimburseSavings",
-    values: [BigNumberish]
+    functionFragment: "isNetworkOperator",
+    values: [string]
   ): string;
 
   decodeFunctionResult(
-    functionFragment: "depositFees",
+    functionFragment: "grantMember",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "isMember", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "reimburseMember",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "reimburseSavings",
+    functionFragment: "isNetworkOperator",
     data: BytesLike
   ): Result;
 
-  events: {};
+  events: {
+    "MemberAdded(address)": EventFragment;
+  };
+
+  getEvent(nameOrSignatureOrTopic: "MemberAdded"): EventFragment;
 }
 
-export class IReservePool extends BaseContract {
+export type MemberAddedEvent = TypedEvent<[string] & { member: string }>;
+
+export class IAccessManager extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
@@ -96,92 +93,81 @@ export class IReservePool extends BaseContract {
     toBlock?: string | number | undefined
   ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
 
-  interface: IReservePoolInterface;
+  interface: IAccessManagerInterface;
 
   functions: {
-    depositFees(
-      amount: BigNumberish,
+    grantMember(
+      _member: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    reimburseMember(
-      account: string,
-      amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+    isMember(_member: string, overrides?: CallOverrides): Promise<[boolean]>;
 
-    reimburseSavings(
-      amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+    isNetworkOperator(
+      _operator: string,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
   };
 
-  depositFees(
-    amount: BigNumberish,
+  grantMember(
+    _member: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  reimburseMember(
-    account: string,
-    amount: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  isMember(_member: string, overrides?: CallOverrides): Promise<boolean>;
 
-  reimburseSavings(
-    amount: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  isNetworkOperator(
+    _operator: string,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
 
   callStatic: {
-    depositFees(amount: BigNumberish, overrides?: CallOverrides): Promise<void>;
+    grantMember(_member: string, overrides?: CallOverrides): Promise<void>;
 
-    reimburseMember(
-      account: string,
-      amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    isMember(_member: string, overrides?: CallOverrides): Promise<boolean>;
 
-    reimburseSavings(
-      amount: BigNumberish,
+    isNetworkOperator(
+      _operator: string,
       overrides?: CallOverrides
-    ): Promise<void>;
+    ): Promise<boolean>;
   };
 
-  filters: {};
+  filters: {
+    "MemberAdded(address)"(
+      member?: null
+    ): TypedEventFilter<[string], { member: string }>;
+
+    MemberAdded(member?: null): TypedEventFilter<[string], { member: string }>;
+  };
 
   estimateGas: {
-    depositFees(
-      amount: BigNumberish,
+    grantMember(
+      _member: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    reimburseMember(
-      account: string,
-      amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    isMember(_member: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    reimburseSavings(
-      amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+    isNetworkOperator(
+      _operator: string,
+      overrides?: CallOverrides
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    depositFees(
-      amount: BigNumberish,
+    grantMember(
+      _member: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    reimburseMember(
-      account: string,
-      amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+    isMember(
+      _member: string,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    reimburseSavings(
-      amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+    isNetworkOperator(
+      _operator: string,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
   };
 }

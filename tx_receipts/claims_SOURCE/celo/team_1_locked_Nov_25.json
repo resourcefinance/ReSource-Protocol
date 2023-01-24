@@ -1,0 +1,23 @@
+{
+  "0x139F2d11C66f1A4a5c985D7A1c101BeBb1eC27ba": {
+    "name": "Mark Joseph",
+    "unlockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x01202e51ea9ff8900000"
+    },
+    "lockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x00"
+    },
+    "txHash": "0xe0ba8499f9229fbd9e9a8b14b79031238b10a3f79c025363bca7e09bdc2e51e3",
+    "schedules": [
+      {
+        "amount": "0.0",
+        "expirationBlock": 1669096800,
+        "expirationDate": "2022-11-22T06:00:00.000Z"
+      }
+    ],
+    "isSuccess": true,
+    "error": ""
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "0x4dA94e682326BD14997D1E1c62350654D8e44c5d": {
+    "name": "Revaz Shmertz",
+    "unlockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x00"
+    },
+    "lockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x077cbdef97de09702000"
+    },
+    "txHash": "0x7b54621ad85d6a3520243df595b78d538327a0fd68c3c142729b53f370a729d9",
+    "schedules": [
+      {
+        "amount": "35357.64797",
+        "expirationBlock": 1669096800,
+        "expirationDate": "2022-11-22T06:00:00.000Z"
+      }
+    ],
+    "isSuccess": true,
+    "error": ""
+  }
+}

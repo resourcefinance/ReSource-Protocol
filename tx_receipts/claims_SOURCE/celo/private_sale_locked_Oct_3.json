@@ -1,0 +1,78 @@
+{
+  "0xbEaad599567F2747A43f190297C80efC6dF6E93c": {
+    "name": "Arianne Flemming",
+    "unlockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x00"
+    },
+    "lockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x0d3c21bcecceda100000"
+    },
+    "txHash": "0xf5c215166edbf30e5bb81e03613838838e24a54deebf91a6b7465634afda9919",
+    "schedules": [
+      {
+        "amount": "5208.333333333333333333",
+        "expirationBlock": 1675663200,
+        "expirationDate": "2023-02-06T06:00:00.000Z"
+      },
+      {
+        "amount": "5208.333333333333333333",
+        "expirationBlock": 1678255200,
+        "expirationDate": "2023-03-08T06:00:00.000Z"
+      },
+      {
+        "amount": "5208.333333333333333333",
+        "expirationBlock": 1680847200,
+        "expirationDate": "2023-04-07T06:00:00.000Z"
+      },
+      {
+        "amount": "5208.333333333333333333",
+        "expirationBlock": 1683439200,
+        "expirationDate": "2023-05-07T06:00:00.000Z"
+      },
+      {
+        "amount": "5208.333333333333333333",
+        "expirationBlock": 1686031200,
+        "expirationDate": "2023-06-06T06:00:00.000Z"
+      },
+      {
+        "amount": "5208.333333333333333333",
+        "expirationBlock": 1688623200,
+        "expirationDate": "2023-07-06T06:00:00.000Z"
+      },
+      {
+        "amount": "5208.333333333333333333",
+        "expirationBlock": 1691215200,
+        "expirationDate": "2023-08-05T06:00:00.000Z"
+      },
+      {
+        "amount": "5208.333333333333333333",
+        "expirationBlock": 1693807200,
+        "expirationDate": "2023-09-04T06:00:00.000Z"
+      },
+      {
+        "amount": "5208.333333333333333333",
+        "expirationBlock": 1696399200,
+        "expirationDate": "2023-10-04T06:00:00.000Z"
+      },
+      {
+        "amount": "5208.333333333333333333",
+        "expirationBlock": 1698991200,
+        "expirationDate": "2023-11-03T06:00:00.000Z"
+      },
+      {
+        "amount": "5208.333333333333333333",
+        "expirationBlock": 1701583200,
+        "expirationDate": "2023-12-03T06:00:00.000Z"
+      },
+      {
+        "amount": "5208.333333333333333333",
+        "expirationBlock": 1704175200,
+        "expirationDate": "2024-01-02T06:00:00.000Z"
+      }
+    ],
+    "isSuccess": true,
+    "error": ""
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "0x034777CBeCECbE88e911DC52F619C7Dbc92578A8": {
+    "name": "German Casal",
+    "unlockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x284540e228b6ae0000"
+    },
+    "lockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x252c234bf3e51b0000"
+    },
+    "txHash": "0x5908df60ad646b71eae739521bc3c1781abf477f95ca384ac7c99d2e38fd2da1",
+    "schedules": [
+      {
+        "amount": "85.71375",
+        "expirationBlock": 1669096800,
+        "expirationDate": "2022-11-22T06:00:00.000Z"
+      },
+      {
+        "amount": "85.71375",
+        "expirationBlock": 1671688800,
+        "expirationDate": "2022-12-22T06:00:00.000Z"
+      },
+      {
+        "amount": "85.71375",
+        "expirationBlock": 1674280800,
+        "expirationDate": "2023-01-21T06:00:00.000Z"
+      },
+      {
+        "amount": "85.71375",
+        "expirationBlock": 1676872800,
+        "expirationDate": "2023-02-20T06:00:00.000Z"
+      },
+      {
+        "amount": "85.71375",
+        "expirationBlock": 1679464800,
+        "expirationDate": "2023-03-22T06:00:00.000Z"
+      },
+      {
+        "amount": "85.71375",
+        "expirationBlock": 1682056800,
+        "expirationDate": "2023-04-21T06:00:00.000Z"
+      },
+      {
+        "amount": "85.71375",
+        "expirationBlock": 1684648800,
+        "expirationDate": "2023-05-21T06:00:00.000Z"
+      },
+      {
+        "amount": "85.71375",
+        "expirationBlock": 1687240800,
+        "expirationDate": "2023-06-20T06:00:00.000Z"
+      }
+    ],
+    "isSuccess": true,
+    "error": ""
+  }
+}

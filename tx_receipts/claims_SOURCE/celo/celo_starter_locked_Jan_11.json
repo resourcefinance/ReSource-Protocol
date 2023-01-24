@@ -1,0 +1,73 @@
+{
+  "0x04E151e8990D300dA625340592fDfF30C3332081": {
+    "name": "ANTHONY PRAWIRA",
+    "unlockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x1221b424e6e8e70000"
+    },
+    "lockedAmount": {
+      "type": "BigNumber",
+      "hex": "0xc772bd95ec01ed0000"
+    },
+    "txHash": "0xe87f6c332b485c448e81e7ee1840ff4fbec87d317760cea2f4ec3151b69f99dd",
+    "schedules": [
+      {
+        "amount": "334.47",
+        "expirationBlock": 1674367200,
+        "expirationDate": "2023-01-22T06:00:00.000Z"
+      },
+      {
+        "amount": "334.47",
+        "expirationBlock": 1676959200,
+        "expirationDate": "2023-02-21T06:00:00.000Z"
+      },
+      {
+        "amount": "334.47",
+        "expirationBlock": 1679551200,
+        "expirationDate": "2023-03-23T06:00:00.000Z"
+      },
+      {
+        "amount": "334.47",
+        "expirationBlock": 1682143200,
+        "expirationDate": "2023-04-22T06:00:00.000Z"
+      },
+      {
+        "amount": "334.47",
+        "expirationBlock": 1684735200,
+        "expirationDate": "2023-05-22T06:00:00.000Z"
+      },
+      {
+        "amount": "334.47",
+        "expirationBlock": 1687327200,
+        "expirationDate": "2023-06-21T06:00:00.000Z"
+      },
+      {
+        "amount": "334.47",
+        "expirationBlock": 1689919200,
+        "expirationDate": "2023-07-21T06:00:00.000Z"
+      },
+      {
+        "amount": "334.47",
+        "expirationBlock": 1692511200,
+        "expirationDate": "2023-08-20T06:00:00.000Z"
+      },
+      {
+        "amount": "334.47",
+        "expirationBlock": 1695103200,
+        "expirationDate": "2023-09-19T06:00:00.000Z"
+      },
+      {
+        "amount": "334.47",
+        "expirationBlock": 1697695200,
+        "expirationDate": "2023-10-19T06:00:00.000Z"
+      },
+      {
+        "amount": "334.47",
+        "expirationBlock": 1700287200,
+        "expirationDate": "2023-11-18T06:00:00.000Z"
+      }
+    ],
+    "isSuccess": true,
+    "error": ""
+  }
+}

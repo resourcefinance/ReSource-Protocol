@@ -1,0 +1,48 @@
+{
+  "0x00B98f7A19a2d5504f0F10F770939C8e2D1597Be": {
+    "name": "Danielle Brenan",
+    "unlockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x011c9a62d04ed0c80000"
+    },
+    "lockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x04138b6a5120fd880000"
+    },
+    "txHash": "0x8371cb8c64d8246a50363bb0ab60b2c3458e6ef4069a764e31844f3e2002e756",
+    "schedules": [
+      {
+        "amount": "3208.333333333333333333",
+        "expirationBlock": 1663308000,
+        "expirationDate": "2022-09-16T06:00:00.000Z"
+      },
+      {
+        "amount": "3208.333333333333333333",
+        "expirationBlock": 1665900000,
+        "expirationDate": "2022-10-16T06:00:00.000Z"
+      },
+      {
+        "amount": "3208.333333333333333333",
+        "expirationBlock": 1668492000,
+        "expirationDate": "2022-11-15T06:00:00.000Z"
+      },
+      {
+        "amount": "3208.333333333333333333",
+        "expirationBlock": 1671084000,
+        "expirationDate": "2022-12-15T06:00:00.000Z"
+      },
+      {
+        "amount": "3208.333333333333333333",
+        "expirationBlock": 1673676000,
+        "expirationDate": "2023-01-14T06:00:00.000Z"
+      },
+      {
+        "amount": "3208.333333333333333333",
+        "expirationBlock": 1676268000,
+        "expirationDate": "2023-02-13T06:00:00.000Z"
+      }
+    ],
+    "isSuccess": true,
+    "error": ""
+  }
+}

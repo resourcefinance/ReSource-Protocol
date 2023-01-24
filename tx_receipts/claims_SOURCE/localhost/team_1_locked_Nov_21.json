@@ -1,0 +1,65 @@
+{
+  "0xb6E84847379eF15FB0f2A9c410EC8Da70bAa7F5b": {
+    "name": "Joaquin",
+    "unlockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x00"
+    },
+    "lockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x163c0fb846284fa00000"
+    },
+    "txHash": "0x300dab286de910663e9796b88d98ebde371c76d6e559ef12987d1aa2d77d9af4",
+    "schedules": [
+      {
+        "amount": "105000.0",
+        "expirationBlock": 1669096800,
+        "expirationDate": "2022-11-22T06:00:00.000Z"
+      }
+    ],
+    "isSuccess": true,
+    "error": ""
+  },
+  "0xAD20d523c4792d2eB86D1E6f575c6A7aDa661580": {
+    "name": "Julian",
+    "unlockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x00"
+    },
+    "lockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x130ee8e7179044400000"
+    },
+    "txHash": "0x01da5158fa1329300b660df352b94b6080bb1bd2b61ce1ebb26c2c895e846bc7",
+    "schedules": [
+      {
+        "amount": "90000.0",
+        "expirationBlock": 1669096800,
+        "expirationDate": "2022-11-22T06:00:00.000Z"
+      }
+    ],
+    "isSuccess": true,
+    "error": ""
+  },
+  "0xe2038a3e0FC17Bd8b33D8EfEcfF6D79ba5d397B0": {
+    "name": "Anna",
+    "unlockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x00"
+    },
+    "lockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x0ccb364e5503d7640000"
+    },
+    "txHash": "0x8d3e0593df838de30840763a9df6a1c4945256a31e51690ad689041b99158ea8",
+    "schedules": [
+      {
+        "amount": "60417.0",
+        "expirationBlock": 1669096800,
+        "expirationDate": "2022-11-22T06:00:00.000Z"
+      }
+    ],
+    "isSuccess": true,
+    "error": ""
+  }
+}

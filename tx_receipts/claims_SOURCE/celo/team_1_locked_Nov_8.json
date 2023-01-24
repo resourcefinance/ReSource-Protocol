@@ -1,0 +1,254 @@
+{
+  "0x683D03a50BB5BaD779b1db819d8a25a2bCCC4CD8": {
+    "name": "Anisa Gillian",
+    "unlockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x00"
+    },
+    "lockedAmount": {
+      "type": "BigNumber",
+      "hex": "0xc7455c363f42660000"
+    },
+    "txHash": "0x1752bf37d0a1e7bfa4b632b6b57c5931f39955a09f7f334f170b87fcfbe3a359",
+    "schedules": [
+      {
+        "amount": "3675.9",
+        "expirationBlock": 1669096800,
+        "expirationDate": "2022-11-22T06:00:00.000Z"
+      }
+    ],
+    "isSuccess": true,
+    "error": ""
+  },
+  "0x84C93B9D802F4A871F51Ac8e57Cc9579751eAb29": {
+    "name": "Nir Asaf",
+    "unlockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x00"
+    },
+    "lockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x04c3ba39c5e411100000"
+    },
+    "txHash": "0xc492fc2cee44e26ef2a38cff027cca30d7fee726c679716843fff474b144a0e3",
+    "schedules": [
+      {
+        "amount": "22500.0",
+        "expirationBlock": 1669096800,
+        "expirationDate": "2022-11-22T06:00:00.000Z"
+      }
+    ],
+    "isSuccess": true,
+    "error": ""
+  },
+  "0xb5b320D8913AA1fF3eD0C66cc96CA9f61b8E910E": {
+    "name": "Jonathan Bauer",
+    "unlockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x00"
+    },
+    "lockedAmount": {
+      "type": "BigNumber",
+      "hex": "0xe1e09415e0941e0000"
+    },
+    "txHash": "0x115c9daac27221af3be1d640114c51817f006f19191f515cd634534d7257eec1",
+    "schedules": [
+      {
+        "amount": "4166.7",
+        "expirationBlock": 1669096800,
+        "expirationDate": "2022-11-22T06:00:00.000Z"
+      }
+    ],
+    "isSuccess": true,
+    "error": ""
+  },
+  "0xA974A946D4BF263a0B9e58C071dC5c4839e408c6": {
+    "name": "Alison Sher",
+    "unlockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x00"
+    },
+    "lockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x01eccd6af7efde040000"
+    },
+    "txHash": "0x26a9abe6143ea2d8b67f5676749572fc465bc915085d5f145cc4e3cbb1d3a426",
+    "schedules": [
+      {
+        "amount": "9090.6",
+        "expirationBlock": 1669096800,
+        "expirationDate": "2022-11-22T06:00:00.000Z"
+      }
+    ],
+    "isSuccess": true,
+    "error": ""
+  },
+  "0x87C0Ef49eb9637887a1748C964f6f14AFE13C93D": {
+    "name": "Rachel Hinds",
+    "unlockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x00"
+    },
+    "lockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x025395b41a7f9aa40000"
+    },
+    "txHash": "0x77c0262997381fd04c5120c21ca4b6fd0597041517c99d028945d71fbe2c835b",
+    "schedules": [
+      {
+        "amount": "10986.6",
+        "expirationBlock": 1669096800,
+        "expirationDate": "2022-11-22T06:00:00.000Z"
+      }
+    ],
+    "isSuccess": true,
+    "error": ""
+  },
+  "0xc151C0326dbF46F6D688C9Cb3DEb90c464E66192": {
+    "name": "Nathan Phillips",
+    "unlockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x00"
+    },
+    "lockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x02e6b33e7c2b79b80000"
+    },
+    "txHash": "0xf22b3888a658d8e7b41733cd27cf1c88fb0158954d9d07173730da907be74e9f",
+    "schedules": [
+      {
+        "amount": "13700.4",
+        "expirationBlock": 1669096800,
+        "expirationDate": "2022-11-22T06:00:00.000Z"
+      }
+    ],
+    "isSuccess": true,
+    "error": ""
+  },
+  "0xB42E406Ac5D30512D90262fc1C554826D280FdA5": {
+    "name": "Joe Sobrero",
+    "unlockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x00"
+    },
+    "lockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x056efe521933bcaa0000"
+    },
+    "txHash": "0xbee49876b99bee23b201187d3136d9e0bbeea6451efb10bd3ac819968e3838ff",
+    "schedules": [
+      {
+        "amount": "25659.3",
+        "expirationBlock": 1669096800,
+        "expirationDate": "2022-11-22T06:00:00.000Z"
+      }
+    ],
+    "isSuccess": true,
+    "error": ""
+  },
+  "0x55d868A197B9008bda24E56F8962c36fe8b11494": {
+    "name": "Gigi Douglas",
+    "unlockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x00"
+    },
+    "lockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x01ade1783396d21e0000"
+    },
+    "txHash": "0x06958bb1bd64fb86e5bd064e86346760138c98d782f1152c609de82760bbe561",
+    "schedules": [
+      {
+        "amount": "7929.9",
+        "expirationBlock": 1669096800,
+        "expirationDate": "2022-11-22T06:00:00.000Z"
+      }
+    ],
+    "isSuccess": true,
+    "error": ""
+  },
+  "0x2c43C68fd0138bEce007c5ac6684425103eE68b1": {
+    "name": "Jon Gillon",
+    "unlockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x00"
+    },
+    "lockedAmount": {
+      "type": "BigNumber",
+      "hex": "0xcb49b44ba602d80000"
+    },
+    "txHash": "0x4864575d6118a00c1ba3889c59a1891ce5ebf234b7639683a93c282a3912f253",
+    "schedules": [
+      {
+        "amount": "3750.0",
+        "expirationBlock": 1669096800,
+        "expirationDate": "2022-11-22T06:00:00.000Z"
+      }
+    ],
+    "isSuccess": true,
+    "error": ""
+  },
+  "0x094c094B46Bf102fDD6cE622A8dC723FEaaeAd00": {
+    "name": "Syoma Pirutin",
+    "unlockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x00"
+    },
+    "lockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x5150ae84a8cdf00000"
+    },
+    "txHash": "0x0fc1abdd3c42b2d787bcc5f604e1a31735ab120f37d226990b63560bc02c84c8",
+    "schedules": [
+      {
+        "amount": "1500.0",
+        "expirationBlock": 1669096800,
+        "expirationDate": "2022-11-22T06:00:00.000Z"
+      }
+    ],
+    "isSuccess": true,
+    "error": ""
+  },
+  "0x6c41a449383B7bfAd020D400b932cf69365DDD22": {
+    "name": "April Stolartz",
+    "unlockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x00"
+    },
+    "lockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x010f0a29d9ec9e0c0000"
+    },
+    "txHash": "0x2054174c5c1f6ac0caeec99c5714ed59609fff48ad09c24fbb1e8ab7b30576e3",
+    "schedules": [
+      {
+        "amount": "4999.8",
+        "expirationBlock": 1669096800,
+        "expirationDate": "2022-11-22T06:00:00.000Z"
+      }
+    ],
+    "isSuccess": true,
+    "error": ""
+  },
+  "0xA98C86f9f143027C7A7484FaBeE45E7e337a76cb": {
+    "name": "Jimmy García",
+    "unlockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x00"
+    },
+    "lockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x43c49f5eafb3d20000"
+    },
+    "txHash": "0xe3a87a4cf60db28b0279c00fdcb552fc1aa296366fbfb46bbe032fa5113a4386",
+    "schedules": [
+      {
+        "amount": "1250.1",
+        "expirationBlock": 1669096800,
+        "expirationDate": "2022-11-22T06:00:00.000Z"
+      }
+    ],
+    "isSuccess": true,
+    "error": ""
+  }
+}

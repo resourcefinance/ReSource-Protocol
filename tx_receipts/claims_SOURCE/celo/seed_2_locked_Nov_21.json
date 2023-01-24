@@ -1,0 +1,682 @@
+{
+  "0x6C4F54dfc0a6245201969150524D58Db57A87BCA": {
+    "name": "Jeanne Lim",
+    "unlockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x00"
+    },
+    "lockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x5d65c357ca61000000"
+    },
+    "txHash": "0x44f2319419d0cc1d845b2d4eed88c490b2f0e37486e6445cdd0051ca25b41052",
+    "schedules": [
+      {
+        "amount": "71.786666666666666666",
+        "expirationBlock": 1671688800,
+        "expirationDate": "2022-12-22T06:00:00.000Z"
+      },
+      {
+        "amount": "71.786666666666666666",
+        "expirationBlock": 1674280800,
+        "expirationDate": "2023-01-21T06:00:00.000Z"
+      },
+      {
+        "amount": "71.786666666666666666",
+        "expirationBlock": 1676872800,
+        "expirationDate": "2023-02-20T06:00:00.000Z"
+      },
+      {
+        "amount": "71.786666666666666666",
+        "expirationBlock": 1679464800,
+        "expirationDate": "2023-03-22T06:00:00.000Z"
+      },
+      {
+        "amount": "71.786666666666666666",
+        "expirationBlock": 1682056800,
+        "expirationDate": "2023-04-21T06:00:00.000Z"
+      },
+      {
+        "amount": "71.786666666666666666",
+        "expirationBlock": 1684648800,
+        "expirationDate": "2023-05-21T06:00:00.000Z"
+      },
+      {
+        "amount": "71.786666666666666666",
+        "expirationBlock": 1687240800,
+        "expirationDate": "2023-06-20T06:00:00.000Z"
+      },
+      {
+        "amount": "71.786666666666666666",
+        "expirationBlock": 1689832800,
+        "expirationDate": "2023-07-20T06:00:00.000Z"
+      },
+      {
+        "amount": "71.786666666666666666",
+        "expirationBlock": 1692424800,
+        "expirationDate": "2023-08-19T06:00:00.000Z"
+      },
+      {
+        "amount": "71.786666666666666666",
+        "expirationBlock": 1695016800,
+        "expirationDate": "2023-09-18T06:00:00.000Z"
+      },
+      {
+        "amount": "71.786666666666666666",
+        "expirationBlock": 1697608800,
+        "expirationDate": "2023-10-18T06:00:00.000Z"
+      },
+      {
+        "amount": "71.786666666666666666",
+        "expirationBlock": 1700200800,
+        "expirationDate": "2023-11-17T06:00:00.000Z"
+      },
+      {
+        "amount": "71.786666666666666666",
+        "expirationBlock": 1702792800,
+        "expirationDate": "2023-12-17T06:00:00.000Z"
+      },
+      {
+        "amount": "71.786666666666666666",
+        "expirationBlock": 1705384800,
+        "expirationDate": "2024-01-16T06:00:00.000Z"
+      },
+      {
+        "amount": "71.786666666666666666",
+        "expirationBlock": 1707976800,
+        "expirationDate": "2024-02-15T06:00:00.000Z"
+      },
+      {
+        "amount": "71.786666666666666666",
+        "expirationBlock": 1710568800,
+        "expirationDate": "2024-03-16T06:00:00.000Z"
+      },
+      {
+        "amount": "71.786666666666666666",
+        "expirationBlock": 1713160800,
+        "expirationDate": "2024-04-15T06:00:00.000Z"
+      },
+      {
+        "amount": "71.786666666666666666",
+        "expirationBlock": 1715752800,
+        "expirationDate": "2024-05-15T06:00:00.000Z"
+      },
+      {
+        "amount": "71.786666666666666666",
+        "expirationBlock": 1718344800,
+        "expirationDate": "2024-06-14T06:00:00.000Z"
+      },
+      {
+        "amount": "71.786666666666666666",
+        "expirationBlock": 1720936800,
+        "expirationDate": "2024-07-14T06:00:00.000Z"
+      },
+      {
+        "amount": "71.786666666666666666",
+        "expirationBlock": 1723528800,
+        "expirationDate": "2024-08-13T06:00:00.000Z"
+      },
+      {
+        "amount": "71.786666666666666666",
+        "expirationBlock": 1726120800,
+        "expirationDate": "2024-09-12T06:00:00.000Z"
+      },
+      {
+        "amount": "71.786666666666666666",
+        "expirationBlock": 1728712800,
+        "expirationDate": "2024-10-12T06:00:00.000Z"
+      },
+      {
+        "amount": "71.786666666666666666",
+        "expirationBlock": 1731304800,
+        "expirationDate": "2024-11-11T06:00:00.000Z"
+      }
+    ],
+    "isSuccess": true,
+    "error": ""
+  },
+  "0x5318E5b4321f0c9d866F65b571a4b4fEC2689617": {
+    "name": "Noah Gale",
+    "unlockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x00"
+    },
+    "lockedAmount": {
+      "type": "BigNumber",
+      "hex": "0xe97e685b79f2800000"
+    },
+    "txHash": "0xbeaf85df05dbff5001bd31bc4a1f4309f2345618b186966052d345a3d391d0ca",
+    "schedules": [
+      {
+        "amount": "179.466666666666666666",
+        "expirationBlock": 1671688800,
+        "expirationDate": "2022-12-22T06:00:00.000Z"
+      },
+      {
+        "amount": "179.466666666666666666",
+        "expirationBlock": 1674280800,
+        "expirationDate": "2023-01-21T06:00:00.000Z"
+      },
+      {
+        "amount": "179.466666666666666666",
+        "expirationBlock": 1676872800,
+        "expirationDate": "2023-02-20T06:00:00.000Z"
+      },
+      {
+        "amount": "179.466666666666666666",
+        "expirationBlock": 1679464800,
+        "expirationDate": "2023-03-22T06:00:00.000Z"
+      },
+      {
+        "amount": "179.466666666666666666",
+        "expirationBlock": 1682056800,
+        "expirationDate": "2023-04-21T06:00:00.000Z"
+      },
+      {
+        "amount": "179.466666666666666666",
+        "expirationBlock": 1684648800,
+        "expirationDate": "2023-05-21T06:00:00.000Z"
+      },
+      {
+        "amount": "179.466666666666666666",
+        "expirationBlock": 1687240800,
+        "expirationDate": "2023-06-20T06:00:00.000Z"
+      },
+      {
+        "amount": "179.466666666666666666",
+        "expirationBlock": 1689832800,
+        "expirationDate": "2023-07-20T06:00:00.000Z"
+      },
+      {
+        "amount": "179.466666666666666666",
+        "expirationBlock": 1692424800,
+        "expirationDate": "2023-08-19T06:00:00.000Z"
+      },
+      {
+        "amount": "179.466666666666666666",
+        "expirationBlock": 1695016800,
+        "expirationDate": "2023-09-18T06:00:00.000Z"
+      },
+      {
+        "amount": "179.466666666666666666",
+        "expirationBlock": 1697608800,
+        "expirationDate": "2023-10-18T06:00:00.000Z"
+      },
+      {
+        "amount": "179.466666666666666666",
+        "expirationBlock": 1700200800,
+        "expirationDate": "2023-11-17T06:00:00.000Z"
+      },
+      {
+        "amount": "179.466666666666666666",
+        "expirationBlock": 1702792800,
+        "expirationDate": "2023-12-17T06:00:00.000Z"
+      },
+      {
+        "amount": "179.466666666666666666",
+        "expirationBlock": 1705384800,
+        "expirationDate": "2024-01-16T06:00:00.000Z"
+      },
+      {
+        "amount": "179.466666666666666666",
+        "expirationBlock": 1707976800,
+        "expirationDate": "2024-02-15T06:00:00.000Z"
+      },
+      {
+        "amount": "179.466666666666666666",
+        "expirationBlock": 1710568800,
+        "expirationDate": "2024-03-16T06:00:00.000Z"
+      },
+      {
+        "amount": "179.466666666666666666",
+        "expirationBlock": 1713160800,
+        "expirationDate": "2024-04-15T06:00:00.000Z"
+      },
+      {
+        "amount": "179.466666666666666666",
+        "expirationBlock": 1715752800,
+        "expirationDate": "2024-05-15T06:00:00.000Z"
+      },
+      {
+        "amount": "179.466666666666666666",
+        "expirationBlock": 1718344800,
+        "expirationDate": "2024-06-14T06:00:00.000Z"
+      },
+      {
+        "amount": "179.466666666666666666",
+        "expirationBlock": 1720936800,
+        "expirationDate": "2024-07-14T06:00:00.000Z"
+      },
+      {
+        "amount": "179.466666666666666666",
+        "expirationBlock": 1723528800,
+        "expirationDate": "2024-08-13T06:00:00.000Z"
+      },
+      {
+        "amount": "179.466666666666666666",
+        "expirationBlock": 1726120800,
+        "expirationDate": "2024-09-12T06:00:00.000Z"
+      },
+      {
+        "amount": "179.466666666666666666",
+        "expirationBlock": 1728712800,
+        "expirationDate": "2024-10-12T06:00:00.000Z"
+      },
+      {
+        "amount": "179.466666666666666666",
+        "expirationBlock": 1731304800,
+        "expirationDate": "2024-11-11T06:00:00.000Z"
+      }
+    ],
+    "isSuccess": true,
+    "error": ""
+  },
+  "0x2B00B61433036c032f29F39971ED7fA81618CB7c": {
+    "name": "Winslow C Strong",
+    "unlockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x00"
+    },
+    "lockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x5d65c357ca61000000"
+    },
+    "txHash": "0xc9a996358d9669f0bfa1e01f74d839387d7545dcfa35f7ddaa9f9329cd4ec301",
+    "schedules": [
+      {
+        "amount": "71.786666666666666666",
+        "expirationBlock": 1671688800,
+        "expirationDate": "2022-12-22T06:00:00.000Z"
+      },
+      {
+        "amount": "71.786666666666666666",
+        "expirationBlock": 1674280800,
+        "expirationDate": "2023-01-21T06:00:00.000Z"
+      },
+      {
+        "amount": "71.786666666666666666",
+        "expirationBlock": 1676872800,
+        "expirationDate": "2023-02-20T06:00:00.000Z"
+      },
+      {
+        "amount": "71.786666666666666666",
+        "expirationBlock": 1679464800,
+        "expirationDate": "2023-03-22T06:00:00.000Z"
+      },
+      {
+        "amount": "71.786666666666666666",
+        "expirationBlock": 1682056800,
+        "expirationDate": "2023-04-21T06:00:00.000Z"
+      },
+      {
+        "amount": "71.786666666666666666",
+        "expirationBlock": 1684648800,
+        "expirationDate": "2023-05-21T06:00:00.000Z"
+      },
+      {
+        "amount": "71.786666666666666666",
+        "expirationBlock": 1687240800,
+        "expirationDate": "2023-06-20T06:00:00.000Z"
+      },
+      {
+        "amount": "71.786666666666666666",
+        "expirationBlock": 1689832800,
+        "expirationDate": "2023-07-20T06:00:00.000Z"
+      },
+      {
+        "amount": "71.786666666666666666",
+        "expirationBlock": 1692424800,
+        "expirationDate": "2023-08-19T06:00:00.000Z"
+      },
+      {
+        "amount": "71.786666666666666666",
+        "expirationBlock": 1695016800,
+        "expirationDate": "2023-09-18T06:00:00.000Z"
+      },
+      {
+        "amount": "71.786666666666666666",
+        "expirationBlock": 1697608800,
+        "expirationDate": "2023-10-18T06:00:00.000Z"
+      },
+      {
+        "amount": "71.786666666666666666",
+        "expirationBlock": 1700200800,
+        "expirationDate": "2023-11-17T06:00:00.000Z"
+      },
+      {
+        "amount": "71.786666666666666666",
+        "expirationBlock": 1702792800,
+        "expirationDate": "2023-12-17T06:00:00.000Z"
+      },
+      {
+        "amount": "71.786666666666666666",
+        "expirationBlock": 1705384800,
+        "expirationDate": "2024-01-16T06:00:00.000Z"
+      },
+      {
+        "amount": "71.786666666666666666",
+        "expirationBlock": 1707976800,
+        "expirationDate": "2024-02-15T06:00:00.000Z"
+      },
+      {
+        "amount": "71.786666666666666666",
+        "expirationBlock": 1710568800,
+        "expirationDate": "2024-03-16T06:00:00.000Z"
+      },
+      {
+        "amount": "71.786666666666666666",
+        "expirationBlock": 1713160800,
+        "expirationDate": "2024-04-15T06:00:00.000Z"
+      },
+      {
+        "amount": "71.786666666666666666",
+        "expirationBlock": 1715752800,
+        "expirationDate": "2024-05-15T06:00:00.000Z"
+      },
+      {
+        "amount": "71.786666666666666666",
+        "expirationBlock": 1718344800,
+        "expirationDate": "2024-06-14T06:00:00.000Z"
+      },
+      {
+        "amount": "71.786666666666666666",
+        "expirationBlock": 1720936800,
+        "expirationDate": "2024-07-14T06:00:00.000Z"
+      },
+      {
+        "amount": "71.786666666666666666",
+        "expirationBlock": 1723528800,
+        "expirationDate": "2024-08-13T06:00:00.000Z"
+      },
+      {
+        "amount": "71.786666666666666666",
+        "expirationBlock": 1726120800,
+        "expirationDate": "2024-09-12T06:00:00.000Z"
+      },
+      {
+        "amount": "71.786666666666666666",
+        "expirationBlock": 1728712800,
+        "expirationDate": "2024-10-12T06:00:00.000Z"
+      },
+      {
+        "amount": "71.786666666666666666",
+        "expirationBlock": 1731304800,
+        "expirationDate": "2024-11-11T06:00:00.000Z"
+      }
+    ],
+    "isSuccess": true,
+    "error": ""
+  },
+  "0x4257bc72ea94e5f7459190dee12236ee7ee0203c": {
+    "name": "Toby Lewis",
+    "unlockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x00"
+    },
+    "lockedAmount": {
+      "type": "BigNumber",
+      "hex": "0xbacb86af94c2000000"
+    },
+    "txHash": "0x1e42911acdef82f9f037fe017971552fe318aa7c46d0ec3cf5a538d6cee6578c",
+    "schedules": [
+      {
+        "amount": "143.573333333333333333",
+        "expirationBlock": 1671688800,
+        "expirationDate": "2022-12-22T06:00:00.000Z"
+      },
+      {
+        "amount": "143.573333333333333333",
+        "expirationBlock": 1674280800,
+        "expirationDate": "2023-01-21T06:00:00.000Z"
+      },
+      {
+        "amount": "143.573333333333333333",
+        "expirationBlock": 1676872800,
+        "expirationDate": "2023-02-20T06:00:00.000Z"
+      },
+      {
+        "amount": "143.573333333333333333",
+        "expirationBlock": 1679464800,
+        "expirationDate": "2023-03-22T06:00:00.000Z"
+      },
+      {
+        "amount": "143.573333333333333333",
+        "expirationBlock": 1682056800,
+        "expirationDate": "2023-04-21T06:00:00.000Z"
+      },
+      {
+        "amount": "143.573333333333333333",
+        "expirationBlock": 1684648800,
+        "expirationDate": "2023-05-21T06:00:00.000Z"
+      },
+      {
+        "amount": "143.573333333333333333",
+        "expirationBlock": 1687240800,
+        "expirationDate": "2023-06-20T06:00:00.000Z"
+      },
+      {
+        "amount": "143.573333333333333333",
+        "expirationBlock": 1689832800,
+        "expirationDate": "2023-07-20T06:00:00.000Z"
+      },
+      {
+        "amount": "143.573333333333333333",
+        "expirationBlock": 1692424800,
+        "expirationDate": "2023-08-19T06:00:00.000Z"
+      },
+      {
+        "amount": "143.573333333333333333",
+        "expirationBlock": 1695016800,
+        "expirationDate": "2023-09-18T06:00:00.000Z"
+      },
+      {
+        "amount": "143.573333333333333333",
+        "expirationBlock": 1697608800,
+        "expirationDate": "2023-10-18T06:00:00.000Z"
+      },
+      {
+        "amount": "143.573333333333333333",
+        "expirationBlock": 1700200800,
+        "expirationDate": "2023-11-17T06:00:00.000Z"
+      },
+      {
+        "amount": "143.573333333333333333",
+        "expirationBlock": 1702792800,
+        "expirationDate": "2023-12-17T06:00:00.000Z"
+      },
+      {
+        "amount": "143.573333333333333333",
+        "expirationBlock": 1705384800,
+        "expirationDate": "2024-01-16T06:00:00.000Z"
+      },
+      {
+        "amount": "143.573333333333333333",
+        "expirationBlock": 1707976800,
+        "expirationDate": "2024-02-15T06:00:00.000Z"
+      },
+      {
+        "amount": "143.573333333333333333",
+        "expirationBlock": 1710568800,
+        "expirationDate": "2024-03-16T06:00:00.000Z"
+      },
+      {
+        "amount": "143.573333333333333333",
+        "expirationBlock": 1713160800,
+        "expirationDate": "2024-04-15T06:00:00.000Z"
+      },
+      {
+        "amount": "143.573333333333333333",
+        "expirationBlock": 1715752800,
+        "expirationDate": "2024-05-15T06:00:00.000Z"
+      },
+      {
+        "amount": "143.573333333333333333",
+        "expirationBlock": 1718344800,
+        "expirationDate": "2024-06-14T06:00:00.000Z"
+      },
+      {
+        "amount": "143.573333333333333333",
+        "expirationBlock": 1720936800,
+        "expirationDate": "2024-07-14T06:00:00.000Z"
+      },
+      {
+        "amount": "143.573333333333333333",
+        "expirationBlock": 1723528800,
+        "expirationDate": "2024-08-13T06:00:00.000Z"
+      },
+      {
+        "amount": "143.573333333333333333",
+        "expirationBlock": 1726120800,
+        "expirationDate": "2024-09-12T06:00:00.000Z"
+      },
+      {
+        "amount": "143.573333333333333333",
+        "expirationBlock": 1728712800,
+        "expirationDate": "2024-10-12T06:00:00.000Z"
+      },
+      {
+        "amount": "143.573333333333333333",
+        "expirationBlock": 1731304800,
+        "expirationDate": "2024-11-11T06:00:00.000Z"
+      }
+    ],
+    "isSuccess": true,
+    "error": ""
+  },
+  "0x37Facc790b36Dc08446381c4873962F2BC94A5D2": {
+    "name": "Andrea Dusi",
+    "unlockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x00"
+    },
+    "lockedAmount": {
+      "type": "BigNumber",
+      "hex": "0xe97e685b79f2800000"
+    },
+    "txHash": "0xa3c386f18f52406487ad8da2956f5274accb8f4f106feb834f527cbb7c4b469e",
+    "schedules": [
+      {
+        "amount": "179.466666666666666666",
+        "expirationBlock": 1671688800,
+        "expirationDate": "2022-12-22T06:00:00.000Z"
+      },
+      {
+        "amount": "179.466666666666666666",
+        "expirationBlock": 1674280800,
+        "expirationDate": "2023-01-21T06:00:00.000Z"
+      },
+      {
+        "amount": "179.466666666666666666",
+        "expirationBlock": 1676872800,
+        "expirationDate": "2023-02-20T06:00:00.000Z"
+      },
+      {
+        "amount": "179.466666666666666666",
+        "expirationBlock": 1679464800,
+        "expirationDate": "2023-03-22T06:00:00.000Z"
+      },
+      {
+        "amount": "179.466666666666666666",
+        "expirationBlock": 1682056800,
+        "expirationDate": "2023-04-21T06:00:00.000Z"
+      },
+      {
+        "amount": "179.466666666666666666",
+        "expirationBlock": 1684648800,
+        "expirationDate": "2023-05-21T06:00:00.000Z"
+      },
+      {
+        "amount": "179.466666666666666666",
+        "expirationBlock": 1687240800,
+        "expirationDate": "2023-06-20T06:00:00.000Z"
+      },
+      {
+        "amount": "179.466666666666666666",
+        "expirationBlock": 1689832800,
+        "expirationDate": "2023-07-20T06:00:00.000Z"
+      },
+      {
+        "amount": "179.466666666666666666",
+        "expirationBlock": 1692424800,
+        "expirationDate": "2023-08-19T06:00:00.000Z"
+      },
+      {
+        "amount": "179.466666666666666666",
+        "expirationBlock": 1695016800,
+        "expirationDate": "2023-09-18T06:00:00.000Z"
+      },
+      {
+        "amount": "179.466666666666666666",
+        "expirationBlock": 1697608800,
+        "expirationDate": "2023-10-18T06:00:00.000Z"
+      },
+      {
+        "amount": "179.466666666666666666",
+        "expirationBlock": 1700200800,
+        "expirationDate": "2023-11-17T06:00:00.000Z"
+      },
+      {
+        "amount": "179.466666666666666666",
+        "expirationBlock": 1702792800,
+        "expirationDate": "2023-12-17T06:00:00.000Z"
+      },
+      {
+        "amount": "179.466666666666666666",
+        "expirationBlock": 1705384800,
+        "expirationDate": "2024-01-16T06:00:00.000Z"
+      },
+      {
+        "amount": "179.466666666666666666",
+        "expirationBlock": 1707976800,
+        "expirationDate": "2024-02-15T06:00:00.000Z"
+      },
+      {
+        "amount": "179.466666666666666666",
+        "expirationBlock": 1710568800,
+        "expirationDate": "2024-03-16T06:00:00.000Z"
+      },
+      {
+        "amount": "179.466666666666666666",
+        "expirationBlock": 1713160800,
+        "expirationDate": "2024-04-15T06:00:00.000Z"
+      },
+      {
+        "amount": "179.466666666666666666",
+        "expirationBlock": 1715752800,
+        "expirationDate": "2024-05-15T06:00:00.000Z"
+      },
+      {
+        "amount": "179.466666666666666666",
+        "expirationBlock": 1718344800,
+        "expirationDate": "2024-06-14T06:00:00.000Z"
+      },
+      {
+        "amount": "179.466666666666666666",
+        "expirationBlock": 1720936800,
+        "expirationDate": "2024-07-14T06:00:00.000Z"
+      },
+      {
+        "amount": "179.466666666666666666",
+        "expirationBlock": 1723528800,
+        "expirationDate": "2024-08-13T06:00:00.000Z"
+      },
+      {
+        "amount": "179.466666666666666666",
+        "expirationBlock": 1726120800,
+        "expirationDate": "2024-09-12T06:00:00.000Z"
+      },
+      {
+        "amount": "179.466666666666666666",
+        "expirationBlock": 1728712800,
+        "expirationDate": "2024-10-12T06:00:00.000Z"
+      },
+      {
+        "amount": "179.466666666666666666",
+        "expirationBlock": 1731304800,
+        "expirationDate": "2024-11-11T06:00:00.000Z"
+      }
+    ],
+    "isSuccess": true,
+    "error": ""
+  }
+}

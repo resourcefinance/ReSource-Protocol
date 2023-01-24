@@ -1,0 +1,230 @@
+{
+  "0x7763DBB3f3Ca60613573590285F50EdB84E18c55": {
+    "name": "Edward Altman",
+    "unlockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x00"
+    },
+    "lockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x0b1283f0b28733560000"
+    },
+    "txHash": "0xe9dcd69b1485b7db3cbf796c998b5be4447a9d5fdbf2578fac459dcc0665def4",
+    "schedules": [
+      {
+        "amount": "4357.298333333333333333",
+        "expirationBlock": 1669096800,
+        "expirationDate": "2022-11-22T06:00:00.000Z"
+      },
+      {
+        "amount": "4357.298333333333333333",
+        "expirationBlock": 1671688800,
+        "expirationDate": "2022-12-22T06:00:00.000Z"
+      },
+      {
+        "amount": "4357.298333333333333333",
+        "expirationBlock": 1674280800,
+        "expirationDate": "2023-01-21T06:00:00.000Z"
+      },
+      {
+        "amount": "4357.298333333333333333",
+        "expirationBlock": 1676872800,
+        "expirationDate": "2023-02-20T06:00:00.000Z"
+      },
+      {
+        "amount": "4357.298333333333333333",
+        "expirationBlock": 1679464800,
+        "expirationDate": "2023-03-22T06:00:00.000Z"
+      },
+      {
+        "amount": "4357.298333333333333333",
+        "expirationBlock": 1682056800,
+        "expirationDate": "2023-04-21T06:00:00.000Z"
+      },
+      {
+        "amount": "4357.298333333333333333",
+        "expirationBlock": 1684648800,
+        "expirationDate": "2023-05-21T06:00:00.000Z"
+      },
+      {
+        "amount": "4357.298333333333333333",
+        "expirationBlock": 1687240800,
+        "expirationDate": "2023-06-20T06:00:00.000Z"
+      },
+      {
+        "amount": "4357.298333333333333333",
+        "expirationBlock": 1689832800,
+        "expirationDate": "2023-07-20T06:00:00.000Z"
+      },
+      {
+        "amount": "4357.298333333333333333",
+        "expirationBlock": 1692424800,
+        "expirationDate": "2023-08-19T06:00:00.000Z"
+      },
+      {
+        "amount": "4357.298333333333333333",
+        "expirationBlock": 1695016800,
+        "expirationDate": "2023-09-18T06:00:00.000Z"
+      },
+      {
+        "amount": "4357.298333333333333333",
+        "expirationBlock": 1697608800,
+        "expirationDate": "2023-10-18T06:00:00.000Z"
+      }
+    ],
+    "isSuccess": true,
+    "error": ""
+  },
+  "0xF28f723BaB731D7d8E5E94E4507DebDa26E1b29A": {
+    "name": "Baruch Lerner",
+    "unlockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x00"
+    },
+    "lockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x46dce7cb35e6df0000"
+    },
+    "txHash": "0x5be1098956a82cad4e93efba95948422b27ab976869bfe59297bef27002ef1fa",
+    "schedules": [
+      {
+        "amount": "108.9325",
+        "expirationBlock": 1669096800,
+        "expirationDate": "2022-11-22T06:00:00.000Z"
+      },
+      {
+        "amount": "108.9325",
+        "expirationBlock": 1671688800,
+        "expirationDate": "2022-12-22T06:00:00.000Z"
+      },
+      {
+        "amount": "108.9325",
+        "expirationBlock": 1674280800,
+        "expirationDate": "2023-01-21T06:00:00.000Z"
+      },
+      {
+        "amount": "108.9325",
+        "expirationBlock": 1676872800,
+        "expirationDate": "2023-02-20T06:00:00.000Z"
+      },
+      {
+        "amount": "108.9325",
+        "expirationBlock": 1679464800,
+        "expirationDate": "2023-03-22T06:00:00.000Z"
+      },
+      {
+        "amount": "108.9325",
+        "expirationBlock": 1682056800,
+        "expirationDate": "2023-04-21T06:00:00.000Z"
+      },
+      {
+        "amount": "108.9325",
+        "expirationBlock": 1684648800,
+        "expirationDate": "2023-05-21T06:00:00.000Z"
+      },
+      {
+        "amount": "108.9325",
+        "expirationBlock": 1687240800,
+        "expirationDate": "2023-06-20T06:00:00.000Z"
+      },
+      {
+        "amount": "108.9325",
+        "expirationBlock": 1689832800,
+        "expirationDate": "2023-07-20T06:00:00.000Z"
+      },
+      {
+        "amount": "108.9325",
+        "expirationBlock": 1692424800,
+        "expirationDate": "2023-08-19T06:00:00.000Z"
+      },
+      {
+        "amount": "108.9325",
+        "expirationBlock": 1695016800,
+        "expirationDate": "2023-09-18T06:00:00.000Z"
+      },
+      {
+        "amount": "108.9325",
+        "expirationBlock": 1697608800,
+        "expirationDate": "2023-10-18T06:00:00.000Z"
+      }
+    ],
+    "isSuccess": true,
+    "error": ""
+  },
+  "0x980A2200E71135D0Bf98550B0aD715903459ca3d": {
+    "name": "NESTOR JOSÉ VIEITES PEREIRA",
+    "unlockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x00"
+    },
+    "lockedAmount": {
+      "type": "BigNumber",
+      "hex": "0x02a5a058fc295ed00000"
+    },
+    "txHash": "0x5b269221fcd1e40eabdf36e7221e40ad8fb0fcd9df27d3fa0bd307c0f8e61ff9",
+    "schedules": [
+      {
+        "amount": "1041.666666666666666666",
+        "expirationBlock": 1669096800,
+        "expirationDate": "2022-11-22T06:00:00.000Z"
+      },
+      {
+        "amount": "1041.666666666666666666",
+        "expirationBlock": 1671688800,
+        "expirationDate": "2022-12-22T06:00:00.000Z"
+      },
+      {
+        "amount": "1041.666666666666666666",
+        "expirationBlock": 1674280800,
+        "expirationDate": "2023-01-21T06:00:00.000Z"
+      },
+      {
+        "amount": "1041.666666666666666666",
+        "expirationBlock": 1676872800,
+        "expirationDate": "2023-02-20T06:00:00.000Z"
+      },
+      {
+        "amount": "1041.666666666666666666",
+        "expirationBlock": 1679464800,
+        "expirationDate": "2023-03-22T06:00:00.000Z"
+      },
+      {
+        "amount": "1041.666666666666666666",
+        "expirationBlock": 1682056800,
+        "expirationDate": "2023-04-21T06:00:00.000Z"
+      },
+      {
+        "amount": "1041.666666666666666666",
+        "expirationBlock": 1684648800,
+        "expirationDate": "2023-05-21T06:00:00.000Z"
+      },
+      {
+        "amount": "1041.666666666666666666",
+        "expirationBlock": 1687240800,
+        "expirationDate": "2023-06-20T06:00:00.000Z"
+      },
+      {
+        "amount": "1041.666666666666666666",
+        "expirationBlock": 1689832800,
+        "expirationDate": "2023-07-20T06:00:00.000Z"
+      },
+      {
+        "amount": "1041.666666666666666666",
+        "expirationBlock": 1692424800,
+        "expirationDate": "2023-08-19T06:00:00.000Z"
+      },
+      {
+        "amount": "1041.666666666666666666",
+        "expirationBlock": 1695016800,
+        "expirationDate": "2023-09-18T06:00:00.000Z"
+      },
+      {
+        "amount": "1041.666666666666666666",
+        "expirationBlock": 1697608800,
+        "expirationDate": "2023-10-18T06:00:00.000Z"
+      }
+    ],
+    "isSuccess": true,
+    "error": ""
+  }
+}
